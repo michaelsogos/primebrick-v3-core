@@ -102,9 +102,22 @@ export type ModulePageHost = {
    * NOT for sharing rune state.
    *
    * `components` MAY also carry remote-agnostic plain functions the host
-   * owns (e.g. `appendListFilterParams`, `settingsTabMenuSegment`) and
-   * Svelte snippets the remote renders via `{@render}` — snippets are
-   * compile-time values, not rune state, so they cross safely.
+   * owns (e.g. `appendListFilterParams`, `settingsTabMenuSegment`).
+   *
+   * SNIPPETS DO NOT CROSS — in either direction. A Svelte snippet invoked
+   * under the other bundle's render reads its own runtime's
+   * `active_effect` (null while the other bundle is rendering) and dies on
+   * `Cannot read properties of null (reading 'nodes')`. Verified by live
+   * E2E — what worked in the synchronous-mount spike fails in production
+   * render order. The supported bridges are `mount_host` (host root inside
+   * remote DOM) and the symmetric remote-mount slot (remote root inside
+   * host DOM, see `components.remote` below).
+   *
+   * Reserved key: `remote` — the host loader assigns the imported module
+   * namespace to `components.remote` after the chunk resolves, so
+   * host-side code (e.g. shim snippets running under host render) can
+   * reach additional chunk exports such as a `cell_mount(el, props)`
+   * function for remote content inside host trees.
    */
   components?: Record<string, unknown>;
   /**
@@ -114,7 +127,10 @@ export type ModulePageHost = {
    * internals; this host-bound `mount()` bridge is the supported path.
    *
    * The returned handle pushes prop updates reactively (`update`) and
-   * destroys the root (`destroy`). Props are plain values + remote snippets.
+   * destroys the root (`destroy`). Props are plain values — NOT remote
+   * snippets (see the `components` doc: cross-bundle snippet invocation
+   * crashes; remote content inside the mounted host tree goes through a
+   * remote `cell_mount`-style export + a host anchor component instead).
    */
   mount_host?: (
     component: unknown,

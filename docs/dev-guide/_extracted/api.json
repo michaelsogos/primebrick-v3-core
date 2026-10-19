@@ -3635,7 +3635,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/ext-json.ts",
 					"line": 30,
-					"character": 16
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L30"
 				}
 			],
 			"signatures": [
@@ -3673,7 +3674,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/ext-json.ts",
 							"line": 30,
-							"character": 16
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L30"
 						}
 					],
 					"typeParameters": [
@@ -3722,7 +3724,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/ext-json.ts",
 					"line": 63,
-					"character": 16
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L63"
 				}
 			],
 			"signatures": [
@@ -3752,7 +3755,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/ext-json.ts",
 							"line": 63,
-							"character": 16
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L63"
 						}
 					],
 					"parameters": [
@@ -3802,7 +3806,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/list-filter-params.ts",
 							"line": 34,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/list-filter-params.ts#L34"
 						}
 					],
 					"type": {
@@ -3846,7 +3851,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/list-filter-params.ts",
 							"line": 36,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/list-filter-params.ts#L36"
 						}
 					],
 					"type": {
@@ -3883,7 +3889,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/list-filter-params.ts",
 							"line": 38,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/list-filter-params.ts#L38"
 						}
 					],
 					"type": {
@@ -3936,7 +3943,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/list-filter-params.ts",
 							"line": 40,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/list-filter-params.ts#L40"
 						}
 					],
 					"type": {
@@ -3960,7 +3968,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/list-filter-params.ts",
 					"line": 32,
-					"character": 17
+					"character": 17,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/list-filter-params.ts#L32"
 				}
 			]
 		},
@@ -3974,7 +3983,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/list-filter-params.ts",
 					"line": 43,
-					"character": 16
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/list-filter-params.ts#L43"
 				}
 			],
 			"signatures": [
@@ -3988,7 +3998,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/list-filter-params.ts",
 							"line": 43,
-							"character": 16
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/list-filter-params.ts#L43"
 						}
 					],
 					"parameters": [
@@ -5657,24 +5668,72 @@
 							},
 							{
 								"kind": "text",
-								"text": ") and\nSvelte snippets the remote renders via "
+								"text": ").\n\nSNIPPETS DO NOT CROSS — in either direction. A Svelte snippet invoked\nunder the other bundle's render reads its own runtime's\n"
 							},
 							{
 								"kind": "code",
-								"text": "`{@render}`"
+								"text": "`active_effect`"
 							},
 							{
 								"kind": "text",
-								"text": " — snippets are\ncompile-time values, not rune state, so they cross safely."
+								"text": " (null while the other bundle is rendering) and dies on\n"
+							},
+							{
+								"kind": "code",
+								"text": "`Cannot read properties of null (reading 'nodes')`"
+							},
+							{
+								"kind": "text",
+								"text": ". Verified by live\nE2E — what worked in the synchronous-mount spike fails in production\nrender order. The supported bridges are "
+							},
+							{
+								"kind": "code",
+								"text": "`mount_host`"
+							},
+							{
+								"kind": "text",
+								"text": " (host root inside\nremote DOM) and the symmetric remote-mount slot (remote root inside\nhost DOM, see "
+							},
+							{
+								"kind": "code",
+								"text": "`components.remote`"
+							},
+							{
+								"kind": "text",
+								"text": " below).\n\nReserved key: "
+							},
+							{
+								"kind": "code",
+								"text": "`remote`"
+							},
+							{
+								"kind": "text",
+								"text": " — the host loader assigns the imported module\nnamespace to "
+							},
+							{
+								"kind": "code",
+								"text": "`components.remote`"
+							},
+							{
+								"kind": "text",
+								"text": " after the chunk resolves, so\nhost-side code (e.g. shim snippets running under host render) can\nreach additional chunk exports such as a "
+							},
+							{
+								"kind": "code",
+								"text": "`cell_mount(el, props)`"
+							},
+							{
+								"kind": "text",
+								"text": "\nfunction for remote content inside host trees."
 							}
 						]
 					},
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 109,
+							"line": 122,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L109"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L122"
 						}
 					],
 					"type": {
@@ -5742,16 +5801,32 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Props are plain values + remote snippets."
+								"text": "). Props are plain values — NOT remote\nsnippets (see the "
+							},
+							{
+								"kind": "code",
+								"text": "`components`"
+							},
+							{
+								"kind": "text",
+								"text": " doc: cross-bundle snippet invocation\ncrashes; remote content inside the mounted host tree goes through a\nremote "
+							},
+							{
+								"kind": "code",
+								"text": "`cell_mount`"
+							},
+							{
+								"kind": "text",
+								"text": "-style export + a host anchor component instead)."
 							}
 						]
 					},
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 119,
+							"line": 135,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L119"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L135"
 						}
 					],
 					"type": {
@@ -5902,9 +5977,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 132,
+							"line": 148,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L132"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L148"
 						}
 					],
 					"type": {
@@ -5977,9 +6052,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 134,
+							"line": 150,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L134"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L150"
 						}
 					],
 					"type": {
@@ -6040,9 +6115,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 130,
+					"line": 146,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L130"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L146"
 				}
 			]
 		},
@@ -6095,9 +6170,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 142,
+					"line": 158,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L142"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L158"
 				}
 			],
 			"type": {
@@ -6166,7 +6241,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/search-gate.ts",
 					"line": 13,
-					"character": 16
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/search-gate.ts#L13"
 				}
 			],
 			"signatures": [
@@ -6204,7 +6280,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/search-gate.ts",
 							"line": 13,
-							"character": 16
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/search-gate.ts#L13"
 						}
 					],
 					"parameters": [
