@@ -53,6 +53,45 @@ export type PageRouteDeclaration = {
 };
 
 /**
+ * One sidebar navigation link contributed by a module. `children` is the
+ * collapsible-group mechanism (the shell renders children under the parent).
+ */
+export type ModuleNavLink = {
+  id: string;
+  label_key: string;
+  href: string;
+  icon?: string;
+  children?: ModuleNavLink[];
+};
+
+/**
+ * A module's self-described navigation declaration — the payload a service
+ * publishes in `service.register` (`endpoints.nav`) so the FE can render
+ * the module's sidebar nav and the census can resolve its routes WITHOUT
+ * the BE hardcoding another module's pages. This is the wiring that lets
+ * each module present its own nav — a remote page is owned by the service
+ * that ships it, never declared inside a host module's registry.
+ *
+ * `route_prefixes` drive active-module resolution (longest-prefix match —
+ * a page under a shared prefix like `/system/jobs` resolves to the owning
+ * module, not to the module owning the broader `/system` prefix).
+ */
+export type ModuleNavDeclaration = {
+  /** Module code — implicit when declared on a service's registry row. */
+  module?: string;
+  /** Sidebar module-switcher icon (lucide name) — falls back to the service icon. */
+  icon?: string;
+  /** FE path prefixes this module owns (longest match wins). */
+  route_prefixes: string[];
+  /** Sidebar nav links shown while this module is active. */
+  nav: ModuleNavLink[];
+  /** Full route census — nav-declared AND non-derivable paths. */
+  routes?: PageRouteDeclaration[];
+  /** Shell-reserved module (e.g. settings) — never set by services. */
+  is_reserved?: boolean;
+};
+
+/**
  * Notification payload accepted by `ctx.notify` — the minimal shape of the
  * host's `pushNotification` input. Plain values only.
  */

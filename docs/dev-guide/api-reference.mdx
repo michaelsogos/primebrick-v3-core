@@ -223,6 +223,24 @@ UI column renderer type. NOTE: this is the UI type, not the DB type —
 
 **Type:** `"text" \| "badge" \| "boolean" \| "color" \| "date" \| "datetime" \| "number"`
 
+### `ModuleNavDeclaration`
+
+A module's self-described navigation declaration — the payload a service
+publishes in `service.register` (`endpoints.nav`) so the FE can render
+the module's sidebar nav and the census can resolve its routes WITHOUT
+the BE hardcoding another module's pages. This is the wiring that lets
+each module present its own nav — a remote page is owned by the service
+that ships it, never declared inside a host module's registry.
+
+`route_prefixes` drive active-module resolution (longest-prefix match —
+a page under a shared prefix like `/system/jobs` resolves to the owning
+module, not to the module owning the broader `/system` prefix).
+
+### `ModuleNavLink`
+
+One sidebar navigation link contributed by a module. `children` is the
+collapsible-group mechanism (the shell renders children under the parent).
+
 ### `ModulePageHost`
 
 Host-side context handed to a remote page's `mountPage(el, ctx)`.
