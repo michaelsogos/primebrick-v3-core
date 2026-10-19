@@ -114,38 +114,6 @@ The paged list response returned by every entity list endpoint.
 | page_size | `number` |  |
 | total | `bigint` |  |
 
-### `MetaColumn`
-
-Entity field descriptor — the root-level `columns` dictionary.
-Transversal to every page type: table cells, form tooltips, labels.
-
-| Field | Type | Description |
-|-------|------|-------------|
-| key | `string` | Entity field key — must match the entity property name. |
-| label_key | `string` | i18n key for the column/field label. |
-| type | `MetaColumnType` |  |
-| order | `number` | Deterministic display position — explicit per column, array position
- MUST NOT matter. Rendering groups sticky → normal → audited, each group
- sorted by `order`. Convention: `uuid` is `order: -1` (canonical first
- sticky column, hidden but selectable); `display_field` is `order: 0`. |
-| sortable | `boolean` | Column supports ORDER BY (default true when omitted). |
-| filterable | `boolean` | Column supports filter operations in the filters sheet. |
-| searchable | `boolean` | Included in "search in fields" scope + backend default search
- (default true; set false for non-text-physical or sensitive fields). |
-| default_visible | `boolean` | Visible by default (default true). |
-| sticky | `boolean` | Pinned at the left of the table, rendered before normal columns. |
-| hideable | `boolean` | If false, the column cannot be hidden via the column picker. |
-| audited | `boolean` | System-managed auditing column (created_at, updated_by, …) —
- rendered last. |
-| tooltip | `string` | i18n key of the hint tooltip body. |
-| tooltip_title | `string` | i18n key of the tooltip title. |
-| tooltip_priority | `TooltipPriority` | Tooltip visual priority (affects icon/color). |
-| show_form_tooltip | `boolean` | Show the tooltip on form pages. |
-| show_list_tooltip | `boolean` | Show the tooltip on list/table pages. |
-| badge | `{ values: Record<string, { label_key: string; label_text: string; color: string }> }` | `type: "badge"` — per-value label/color mapping. |
-| datetime_iana_toggle | `{ record_iana_field: string }` | `type: "datetime"` — FE IANA formatting toggle bound to a per-row
- timezone field (IANA id comes from the API row). |
-
 ### `RowCustomAction`
 
 UI configuration for a non-standard row CTA (route-backed bare op).
@@ -223,6 +191,16 @@ Filter operators available for advanced filters.
 Global connector joining the advanced-filter group.
 
 **Type:** `"AND" \| "OR"`
+
+### `MetaColumn`
+
+Entity field descriptor — the root-level `columns` dictionary.
+Transversal to every page type: table cells, form tooltips, labels.
+
+Declared as a type alias (not interface): object literal types get an
+implicit index signature, keeping `MetaColumn` assignable to
+`Record<string, unknown>` — host/remotes pass columns through generic
+cell-snippet args typed as `Record<string, unknown>`.
 
 ### `MetaColumnType`
 

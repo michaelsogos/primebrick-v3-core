@@ -112,13 +112,22 @@ export type TooltipPriority =
 /**
  * Entity field descriptor — the root-level `columns` dictionary.
  * Transversal to every page type: table cells, form tooltips, labels.
+ *
+ * Declared as a type alias (not interface): object literal types get an
+ * implicit index signature, keeping `MetaColumn` assignable to
+ * `Record<string, unknown>` — host/remotes pass columns through generic
+ * cell-snippet args typed as `Record<string, unknown>`.
  */
-export interface MetaColumn {
+export type MetaColumn = {
   /** Entity field key — must match the entity property name. */
   key: string;
   /** i18n key for the column/field label. */
   label_key: string;
-  type: MetaColumnType;
+  /** Renderer discriminator — `MetaColumnType` documents the built-in set,
+   *  but the field is intentionally open (`| string`): modules may emit
+   *  custom cell types (e.g. `run_stats_sparkline`) resolved by
+   *  consumer-registered cell renderers. */
+  type: MetaColumnType | string;
   /** Deterministic display position — explicit per column, array position
    *  MUST NOT matter. Rendering groups sticky → normal → audited, each group
    *  sorted by `order`. Convention: `uuid` is `order: -1` (canonical first
@@ -175,7 +184,7 @@ export interface MetaColumn {
   datetime_iana_toggle?: {
     record_iana_field: string;
   };
-}
+};
 
 /** UI configuration for a non-standard row CTA (route-backed bare op). */
 export interface RowCustomAction {
