@@ -209,6 +209,51 @@ UI column renderer type. NOTE: this is the UI type, not the DB type —
 
 **Type:** `"text" \| "badge" \| "boolean" \| "color" \| "date" \| "datetime" \| "number"`
 
+### `ModulePageHost`
+
+Host-side context handed to a remote page's `mountPage(el, ctx)`.
+Versioned via `host_version` — remote chunks can refuse incompatible hosts.
+
+HARD CONSTRAINT — plain values and functions ONLY: Svelte rune state
+(`$state`/`$derived`/`$effect`) is bundle-local and cannot cross this
+boundary. UI building blocks come from `@primebrick/ui` bundled inside the
+remote chunk, not from ctx; `components` is reserved for the few
+host-coupled cases (see `ModulePageHost.components`).
+
+### `ModulePageNotifyInput`
+
+Notification payload accepted by `ctx.notify` — the minimal shape of the
+host's `pushNotification` input. Plain values only.
+
+### `MountPageFn`
+
+The `esm-mount` chunk's entry contract — `export function mountPage(el, ctx)`.
+May return the `mount()` result (disposed via `unmount()`), a custom dispose
+function, or a promise of either.
+
+**Type:** `(el: HTMLElement, ctx: ModulePageHost) => unknown`
+
+### `PageRouteComponentFormat`
+
+Remote component delivery format. Extensible — new literals are additive
+and non-breaking. `esm-mount`: a precompiled ESM chunk that exports
+`mountPage(el, ctx)` (or a default component as fallback).
+
+**Type:** `"esm-mount"`
+
+### `PageRouteDeclaration`
+
+One declared frontend route owned by a module. Modules MUST declare every
+FE path they own that is not deducible from nav links or entity
+conventions — the AI route census (GET /system/routes) depends on it.
+`param` marks dynamic segments using the FE convention ([uuid], [code]).
+
+### `PageRouteKind`
+
+Page archetype vocabulary — what the route renders, regardless of delivery.
+
+**Type:** `"list" \| "detail" \| "create" \| "page"`
+
 ### `RoundingMode`
 
 **Type:** `"UP" \| "DOWN" \| "CEILING" \| "FLOOR" \| "HALF_UP" \| "HALF_DOWN" \| "HALF_EVEN"`

@@ -38,6 +38,10 @@
     "./decimal": {
       "types": "./dist/decimal.d.ts",
       "import": "./dist/decimal.js"
+    },
+    "./page-route": {
+      "types": "./dist/page-route.d.ts",
+      "import": "./dist/page-route.js"
     }
   },
   "files": [
