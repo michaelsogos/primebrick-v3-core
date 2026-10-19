@@ -96,11 +96,42 @@ export type ModulePageHost = {
   /** `pushNotification` equivalent — toasts + error-panel event cards. */
   notify: (input: ModulePageNotifyInput) => void;
   /**
-   * Optional host-coupled components (opaque values at this boundary — they
-   * are host-compiled Svelte components). Only for cases the remote page
-   * cannot self-render; NOT for sharing rune state.
+   * Optional host-coupled components and helpers (opaque values at this
+   * boundary — components are host-compiled Svelte components, helpers are
+   * plain functions). Only for cases the remote page cannot self-render;
+   * NOT for sharing rune state.
+   *
+   * `components` MAY also carry remote-agnostic plain functions the host
+   * owns (e.g. `appendListFilterParams`, `settingsTabMenuSegment`) and
+   * Svelte snippets the remote renders via `{@render}` — snippets are
+   * compile-time values, not rune state, so they cross safely.
    */
   components?: Record<string, unknown>;
+  /**
+   * Mount a host-compiled component as a separate Svelte root inside remote
+   * DOM. Rendering a host component inline (`<HostComp/>`) inside remote
+   * markup CANNOT work — each bundle has its own Svelte runtime/component
+   * internals; this host-bound `mount()` bridge is the supported path.
+   *
+   * The returned handle pushes prop updates reactively (`update`) and
+   * destroys the root (`destroy`). Props are plain values + remote snippets.
+   */
+  mount_host?: (
+    component: unknown,
+    el: HTMLElement,
+    props: Record<string, unknown>
+  ) => HostMountHandle;
+};
+
+/**
+ * Handle returned by `ModulePageHost.mount_host` — imperative channel to a
+ * host-mounted component root.
+ */
+export type HostMountHandle = {
+  /** Push new props — the host applies them reactively. */
+  update: (props: Record<string, unknown>) => void;
+  /** Destroy the mounted root (unmount + cleanup). */
+  destroy: () => void | Promise<void>;
 };
 
 /**

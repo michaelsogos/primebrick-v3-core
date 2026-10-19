@@ -101,6 +101,15 @@ comboboxes, lists, chips. |
 | table | `TableMeta` | Table options — omit when the entity has no table page
  (e.g. a self-service form meta). |
 
+### `ListFilterParamsOptions`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| filterValues | `Record<string, unknown>` | Toolbar quick-filter values keyed by column key. |
+| columns | `typeOperator` | Entity columns (needed to map filterValues to the right operator). |
+| advancedFilters | `typeOperator` | FiltersPanel conditions. |
+| connector | `string` | Global connector for advanced filters (`AND` | `OR`). |
+
 ### `ListResponse`
 
 The paged list response returned by every entity list endpoint.
@@ -185,6 +194,11 @@ static meta + runtime-injected `display_name`, `actions`, `collaboration`.
 Filter operators available for advanced filters.
 
 **Type:** `"=" \| "!=" \| ">" \| "<" \| ">=" \| "<=" \| "contains" \| "startsWith" \| "endsWith" \| "BETWEEN"`
+
+### `HostMountHandle`
+
+Handle returned by `ModulePageHost.mount_host` — imperative channel to a
+host-mounted component root.
 
 ### `ListConnector`
 
@@ -353,6 +367,14 @@ with `enabled: false` (explicitly unavailable) instead of being omitted.
 | a | `DecimalInput` |  |
 | b | `DecimalInput` |  |
 
+### `appendListFilterParams(params, opts, startIdx): number`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| params | `URLSearchParams` |  |
+| opts | `ListFilterParamsOptions` |  |
+| startIdx | `number` |  |
+
 ### `asSnakeCaseSingular(value): SnakeCaseSingular`
 
 Branded constructor for SnakeCaseSingular.
@@ -387,6 +409,21 @@ Numeric comparison ignoring scale: `cmp(1.0, 1.00) === 0`. Returns -1 | 0 | 1.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | input | `DecimalInput` |  |
+
+### `defaultSearchGate(trimmed): boolean`
+
+search-gate — canonical "should this search query hit the server" predicate.
+
+Mirrors the backend list-search gate: ≥3 "real" characters, or an escaped
+wildcard (`\*` / `\?`) with ≥1 real char. Prevents per-keystroke queries
+while still allowing single-char wildcard searches.
+
+Canonical home for both the host FE and remote module pages — the gate
+must match the server-side rule byte-for-byte.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| trimmed | `string` | the search string, already `.trim()`ed by the caller |
 
 ### `defaultVisibleColumnKeys(columns): string[]`
 
@@ -423,6 +460,30 @@ Numeric equality ignoring scale — `eq(1.0, 1.00)` is `true`.
 |-----------|------|-------------|
 | a | `DecimalInput` |  |
 | b | `DecimalInput` |  |
+
+### `extJsonParse(text): T`
+
+Parse an Ext-JSON string.
+
+ALL integers are returned as native `bigint` (via reviver).
+Floats (values with decimal point or scientific notation) are `number`.
+Strings, booleans, null are unaffected.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| text | `string` |  |
+
+### `extJsonStringify(data): string`
+
+Serialize a value to an Ext-JSON string.
+BigInt values serialize as JSON numbers (42n → "42"); floats stay numbers.
+
+Use for request bodies carrying bigint values — the BE's ext-json body
+parser revives them to native `bigint`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| data | `unknown` |  |
 
 ### `floor(d): Decimal`
 
