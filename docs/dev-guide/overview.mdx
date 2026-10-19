@@ -1,0 +1,41 @@
+---
+title: Overview
+description: @primebrick/core — the environment-neutral shared contract package at the root of the Primebrick v3 library tree.
+---
+
+`@primebrick/core` hosts the types, constants and pure helpers that every
+other Primebrick package and app consumes: frontend, backend, microservices,
+DAL and SDK.
+
+<Mermaid chart={`graph LR
+  CORE["@primebrick/core"] --> DAL["@primebrick/dal-pg"]
+  CORE --> SDK["@primebrick/sdk"]
+  CORE --> UI["@primebrick/ui"]
+  CORE --> BE["primebrick-be-v3"]
+  CORE --> US["primebrick-us-v3"]
+  CORE --> FE["primebrick-fe-v3"]
+`} />
+
+## Invariants
+
+- **Zero runtime dependencies** — types + pure functions only.
+- **Environment-neutral** — no DOM, no Node APIs, no framework imports.
+- **snake_case end-to-end** — contract field names match the DB column names
+  and the JSON wire shape exactly; no DTO renaming.
+
+## Modules
+
+| Subpath | Contents |
+|---------|----------|
+| `@primebrick/core/entity-meta` | `EntityMeta`, `EntityMetaResponse`, `MetaColumn`, `EntityAction`, `STANDARD_OPS`, `isEntityOpEnabled`, … |
+| `@primebrick/core/list` | `ListResponse`, `DeletionFilterMode`, `ListConnector`, `FilterOperator`, `AdvancedFilter` |
+| `@primebrick/core/columns` | `SnakeCaseSingular` brand + column ordering/visibility/operator helpers |
+| `@primebrick/core` | Barrel re-exporting everything |
+
+## Why one canonical schema
+
+Entity metadata used to be declared twice — once in the BE authoring types
+(`*.meta.ts`) and once in the FE consumption types. The shapes drifted
+(`required_permission`, `badge.values`, `permissions` optionality). Core
+collapses them into a single declaration that both sides compile against:
+BE `*.meta.ts` files satisfy `EntityMeta`; the FE reads `EntityMetaResponse`.

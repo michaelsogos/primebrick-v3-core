@@ -1,0 +1,33 @@
+---
+title: List query contract
+description: Shared list request/response types — ListResponse, DeletionFilterMode, filters, connectors.
+---
+
+## Response
+
+`ListResponse<TRow>` is the wire shape of every entity list endpoint:
+
+```ts
+interface ListResponse<TRow> {
+  rows: TRow[];
+  page: number;
+  page_size: number;
+  total: bigint;
+}
+```
+
+`total` is a native `bigint` — parse responses with a bigint-aware JSON
+parser (`extJsonParse`), never `JSON.parse`.
+
+## Deleted records
+
+`DeletionFilterMode = 'non_deleted' | 'deleted' | 'all'` is the UI-facing
+mode; on the wire it maps to the `deleted_records` query param
+(`EXCLUDED` | `ONLY` | `INCLUDED`; absent = server default `EXCLUDED`).
+
+## Filters
+
+`AdvancedFilter` describes one filter entry (`field`, `operator`, `value`);
+entries combine under a `ListConnector` (`'AND' | 'OR'`). Operators are
+type-dependent — `getOperatorsForColumnType()` returns the allowed set per
+column UI type.

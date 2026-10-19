@@ -1,0 +1,4641 @@
+{
+	"schemaVersion": "2.0",
+	"id": 0,
+	"name": "@primebrick/core API Reference",
+	"variant": "project",
+	"kind": 1,
+	"flags": {},
+	"children": [
+		{
+			"id": 121,
+			"name": "SnakeCaseSingular",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Branded type that enforces snake_case singular (no uppercase letters).\nUsed for "
+					},
+					{
+						"kind": "code",
+						"text": "`translation_key`"
+					},
+					{
+						"kind": "text",
+						"text": " in entity meta — the i18n key prefix.\n\nThe brand is applied via "
+					},
+					{
+						"kind": "code",
+						"text": "`asSnakeCaseSingular()`"
+					},
+					{
+						"kind": "text",
+						"text": ", which performs a\nruntime check rejecting strings containing A-Z. This catches camelCase\n("
+					},
+					{
+						"kind": "code",
+						"text": "`userProfile`"
+					},
+					{
+						"kind": "text",
+						"text": "), PascalCase ("
+					},
+					{
+						"kind": "code",
+						"text": "`RoleMapping`"
+					},
+					{
+						"kind": "text",
+						"text": "), and UPPER_CASE\n("
+					},
+					{
+						"kind": "code",
+						"text": "`USER_PROFILE`"
+					},
+					{
+						"kind": "text",
+						"text": ") at both compile time and runtime."
+					}
+				],
+				"blockTags": [
+					{
+						"tag": "@example",
+						"content": [
+							{
+								"kind": "code",
+								"text": "```ts\nconst tk = asSnakeCaseSingular(\"user_profile\");  // ✅\nconst tk = asSnakeCaseSingular(\"userProfile\");   // ❌ throws at runtime\n```"
+							}
+						]
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "columns.ts",
+					"line": 26,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "intersection",
+				"types": [
+					{
+						"type": "intrinsic",
+						"name": "string"
+					},
+					{
+						"type": "reflection",
+						"declaration": {
+							"id": 122,
+							"name": "__type",
+							"variant": "declaration",
+							"kind": 65536,
+							"flags": {},
+							"children": [
+								{
+									"id": 123,
+									"name": "__snakeCaseSingularBrand",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {
+										"isReadonly": true
+									},
+									"sources": [
+										{
+											"fileName": "columns.ts",
+											"line": 27,
+											"character": 11
+										}
+									],
+									"type": {
+										"type": "typeOperator",
+										"operator": "unique",
+										"target": {
+											"type": "intrinsic",
+											"name": "symbol"
+										}
+									}
+								}
+							],
+							"groups": [
+								{
+									"title": "Properties",
+									"children": [
+										123
+									]
+								}
+							]
+						}
+					}
+				]
+			}
+		},
+		{
+			"id": 99,
+			"name": "isSnakeCaseSingular",
+			"variant": "declaration",
+			"kind": 64,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "columns.ts",
+					"line": 33,
+					"character": 16
+				}
+			],
+			"signatures": [
+				{
+					"id": 100,
+					"name": "isSnakeCaseSingular",
+					"variant": "signature",
+					"kind": 4096,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Runtime validator for "
+							},
+							{
+								"kind": "inline-tag",
+								"tag": "@link",
+								"text": "SnakeCaseSingular",
+								"target": 121
+							},
+							{
+								"kind": "text",
+								"text": " — rejects strings with\n uppercase letters. Use in meta-loading code to catch BE meta that\n violates the convention."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "columns.ts",
+							"line": 33,
+							"character": 16
+						}
+					],
+					"parameters": [
+						{
+							"id": 101,
+							"name": "value",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"type": {
+						"type": "predicate",
+						"name": "value",
+						"asserts": false,
+						"targetType": {
+							"type": "reference",
+							"target": 121,
+							"name": "SnakeCaseSingular",
+							"package": "@primebrick/core"
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 102,
+			"name": "asSnakeCaseSingular",
+			"variant": "declaration",
+			"kind": 64,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "columns.ts",
+					"line": 40,
+					"character": 16
+				}
+			],
+			"signatures": [
+				{
+					"id": 103,
+					"name": "asSnakeCaseSingular",
+					"variant": "signature",
+					"kind": 4096,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Branded constructor for "
+							},
+							{
+								"kind": "inline-tag",
+								"tag": "@link",
+								"text": "SnakeCaseSingular",
+								"target": 121
+							},
+							{
+								"kind": "text",
+								"text": ".\n Throws if the value contains uppercase letters\n (camelCase/PascalCase/UPPER_CASE)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "columns.ts",
+							"line": 40,
+							"character": 16
+						}
+					],
+					"parameters": [
+						{
+							"id": 104,
+							"name": "value",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 121,
+						"name": "SnakeCaseSingular",
+						"package": "@primebrick/core"
+					}
+				}
+			]
+		},
+		{
+			"id": 105,
+			"name": "orderedColumns",
+			"variant": "declaration",
+			"kind": 64,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "columns.ts",
+					"line": 54,
+					"character": 16
+				}
+			],
+			"signatures": [
+				{
+					"id": 106,
+					"name": "orderedColumns",
+					"variant": "signature",
+					"kind": 4096,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Columns in display order: sticky group → normal group → audited group,\neach sorted by "
+							},
+							{
+								"kind": "code",
+								"text": "`order`"
+							},
+							{
+								"kind": "text",
+								"text": "."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "columns.ts",
+							"line": 54,
+							"character": 16
+						}
+					],
+					"parameters": [
+						{
+							"id": 107,
+							"name": "columns",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "typeOperator",
+										"operator": "readonly",
+										"target": {
+											"type": "array",
+											"elementType": {
+												"type": "reference",
+												"target": 24,
+												"name": "MetaColumn",
+												"package": "@primebrick/core"
+											}
+										}
+									},
+									{
+										"type": "literal",
+										"value": null
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "reference",
+							"target": 24,
+							"name": "MetaColumn",
+							"package": "@primebrick/core"
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 108,
+			"name": "defaultVisibleColumnKeys",
+			"variant": "declaration",
+			"kind": 64,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "columns.ts",
+					"line": 67,
+					"character": 16
+				}
+			],
+			"signatures": [
+				{
+					"id": 109,
+					"name": "defaultVisibleColumnKeys",
+					"variant": "signature",
+					"kind": 4096,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Keys visible by default — from column flags."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "columns.ts",
+							"line": 67,
+							"character": 16
+						}
+					],
+					"parameters": [
+						{
+							"id": 110,
+							"name": "columns",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "reference",
+									"target": 24,
+									"name": "MetaColumn",
+									"package": "@primebrick/core"
+								}
+							}
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "string"
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 111,
+			"name": "sanitizeVisibleKeys",
+			"variant": "declaration",
+			"kind": 64,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "columns.ts",
+					"line": 74,
+					"character": 16
+				}
+			],
+			"signatures": [
+				{
+					"id": 112,
+					"name": "sanitizeVisibleKeys",
+					"variant": "signature",
+					"kind": 4096,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Drop unknown keys and fall back to defaults when nothing left."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "columns.ts",
+							"line": 74,
+							"character": 16
+						}
+					],
+					"parameters": [
+						{
+							"id": 113,
+							"name": "visibleKeys",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "intrinsic",
+									"name": "string"
+								}
+							}
+						},
+						{
+							"id": 114,
+							"name": "columns",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "reference",
+									"target": 24,
+									"name": "MetaColumn",
+									"package": "@primebrick/core"
+								}
+							}
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "string"
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 115,
+			"name": "searchableTextColumns",
+			"variant": "declaration",
+			"kind": 64,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "columns.ts",
+					"line": 86,
+					"character": 16
+				}
+			],
+			"signatures": [
+				{
+					"id": 116,
+					"name": "searchableTextColumns",
+					"variant": "signature",
+					"kind": 4096,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Text-physical searchable columns — the scope selector + default\n \"all fields\" search set."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "columns.ts",
+							"line": 86,
+							"character": 16
+						}
+					],
+					"parameters": [
+						{
+							"id": 117,
+							"name": "columns",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "reference",
+									"target": 24,
+									"name": "MetaColumn",
+									"package": "@primebrick/core"
+								}
+							}
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "reference",
+							"target": 24,
+							"name": "MetaColumn",
+							"package": "@primebrick/core"
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 118,
+			"name": "getOperatorsForColumnType",
+			"variant": "declaration",
+			"kind": 64,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "columns.ts",
+					"line": 91,
+					"character": 16
+				}
+			],
+			"signatures": [
+				{
+					"id": 119,
+					"name": "getOperatorsForColumnType",
+					"variant": "signature",
+					"kind": 4096,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Operators available for a given column UI type."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "columns.ts",
+							"line": 91,
+							"character": 16
+						}
+					],
+					"parameters": [
+						{
+							"id": 120,
+							"name": "columnType",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "reference",
+							"target": 93,
+							"name": "FilterOperator",
+							"package": "@primebrick/core"
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": 5,
+			"name": "ViewName",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Table view names supported by entity list pages."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 18,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "union",
+				"types": [
+					{
+						"type": "literal",
+						"value": "table"
+					},
+					{
+						"type": "literal",
+						"value": "cards"
+					},
+					{
+						"type": "literal",
+						"value": "cards_list"
+					}
+				]
+			}
+		},
+		{
+			"id": 6,
+			"name": "SortDir",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Sort direction for server-side list queries and header UI."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 21,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "union",
+				"types": [
+					{
+						"type": "literal",
+						"value": "asc"
+					},
+					{
+						"type": "literal",
+						"value": "desc"
+					}
+				]
+			}
+		},
+		{
+			"id": 7,
+			"name": "EntityActionSentinel",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Sentinel gates a route may declare instead of concrete permissions.\nValues mirror the "
+					},
+					{
+						"kind": "code",
+						"text": "`Permission`"
+					},
+					{
+						"kind": "text",
+						"text": " enum in "
+					},
+					{
+						"kind": "code",
+						"text": "`@primebrick/sdk`"
+					},
+					{
+						"kind": "text",
+						"text": "."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 27,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "union",
+				"types": [
+					{
+						"type": "literal",
+						"value": "_public"
+					},
+					{
+						"type": "literal",
+						"value": "_authenticated_user"
+					},
+					{
+						"type": "literal",
+						"value": "_authenticated_admin"
+					}
+				]
+			}
+		},
+		{
+			"id": 8,
+			"name": "EntityActionEndpoint",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Backing route of an "
+					},
+					{
+						"kind": "code",
+						"text": "`EntityAction`"
+					},
+					{
+						"kind": "text",
+						"text": " — emitted by the BE route scan."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 9,
+					"name": "method",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "HTTP method of the backing route ("
+							},
+							{
+								"kind": "code",
+								"text": "`GET`"
+							},
+							{
+								"kind": "text",
+								"text": ", "
+							},
+							{
+								"kind": "code",
+								"text": "`POST`"
+							},
+							{
+								"kind": "text",
+								"text": ", "
+							},
+							{
+								"kind": "code",
+								"text": "`PUT`"
+							},
+							{
+								"kind": "text",
+								"text": ", "
+							},
+							{
+								"kind": "code",
+								"text": "`DELETE`"
+							},
+							{
+								"kind": "text",
+								"text": ", ...)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 35,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 10,
+					"name": "path",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Full registered API path with "
+							},
+							{
+								"kind": "code",
+								"text": "`:param`"
+							},
+							{
+								"kind": "text",
+								"text": " placeholders verbatim\n (e.g. "
+							},
+							{
+								"kind": "code",
+								"text": "`/api/v1/auth/users/:uuid/restore`"
+							},
+							{
+								"kind": "text",
+								"text": "). Consumers substitute\n placeholders from the row ("
+							},
+							{
+								"kind": "code",
+								"text": "`:uuid`"
+							},
+							{
+								"kind": "text",
+								"text": " ← "
+							},
+							{
+								"kind": "code",
+								"text": "`meta.uid`"
+							},
+							{
+								"kind": "text",
+								"text": ")."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 39,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						9,
+						10
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 33,
+					"character": 17
+				}
+			]
+		},
+		{
+			"id": 11,
+			"name": "EntityAction",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "One entry of "
+					},
+					{
+						"kind": "code",
+						"text": "`meta.actions`"
+					},
+					{
+						"kind": "text",
+						"text": " — the derived capability contract.\nEVERY standard op is present; "
+					},
+					{
+						"kind": "code",
+						"text": "`enabled: false`"
+					},
+					{
+						"kind": "text",
+						"text": " means the op is\nunavailable for everyone (route missing or product-disabled)."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 12,
+					"name": "op",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Operation name — canonical ("
+							},
+							{
+								"kind": "code",
+								"text": "`list`"
+							},
+							{
+								"kind": "text",
+								"text": ", "
+							},
+							{
+								"kind": "code",
+								"text": "`get`"
+							},
+							{
+								"kind": "text",
+								"text": ", "
+							},
+							{
+								"kind": "code",
+								"text": "`delete.bulk`"
+							},
+							{
+								"kind": "text",
+								"text": ", ...) or the\n last path segment for non-standard routes ("
+							},
+							{
+								"kind": "code",
+								"text": "`change_password`"
+							},
+							{
+								"kind": "text",
+								"text": ")."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 50,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 13,
+					"name": "permissions",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Declared non-sentinel permissions, verbatim (OR semantics)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 52,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "string"
+						}
+					}
+				},
+				{
+					"id": 14,
+					"name": "sentinel",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Sentinel gate when the route declares one instead of real perms."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 54,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 7,
+						"name": "EntityActionSentinel",
+						"package": "@primebrick/core"
+					}
+				},
+				{
+					"id": 15,
+					"name": "enabled",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Visibility flag — false hides the CTA for everyone."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 56,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 16,
+					"name": "endpoint",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "The registered route that backs this op — present on every "
+							},
+							{
+								"kind": "code",
+								"text": "`enabled`"
+							},
+							{
+								"kind": "text",
+								"text": "\n action, absent when no route exists ("
+							},
+							{
+								"kind": "code",
+								"text": "`enabled: false`"
+							},
+							{
+								"kind": "text",
+								"text": "). Consumers\n dispatch writes to the declared endpoint instead of recomputing the\n "
+							},
+							{
+								"kind": "code",
+								"text": "`/api/v1/entities/{entity}`"
+							},
+							{
+								"kind": "text",
+								"text": " convention — required for ops living under\n non-standard prefixes (e.g. "
+							},
+							{
+								"kind": "code",
+								"text": "`/api/v1/auth/users`"
+							},
+							{
+								"kind": "text",
+								"text": ")."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 62,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 8,
+						"name": "EntityActionEndpoint",
+						"package": "@primebrick/core"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						12,
+						13,
+						14,
+						15,
+						16
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 47,
+					"character": 17
+				}
+			]
+		},
+		{
+			"id": 17,
+			"name": "ActionsOverrides",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Per-op enable overrides — may ONLY toggle "
+					},
+					{
+						"kind": "code",
+						"text": "`enabled`"
+					},
+					{
+						"kind": "text",
+						"text": " on route-backed ops."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 66,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "reference",
+				"target": {
+					"packageName": "typescript",
+					"packagePath": "lib/lib.es5.d.ts",
+					"qualifiedName": "Record"
+				},
+				"typeArguments": [
+					{
+						"type": "intrinsic",
+						"name": "string"
+					},
+					{
+						"type": "reflection",
+						"declaration": {
+							"id": 18,
+							"name": "__type",
+							"variant": "declaration",
+							"kind": 65536,
+							"flags": {},
+							"children": [
+								{
+									"id": 19,
+									"name": "enabled",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {
+										"isOptional": true
+									},
+									"sources": [
+										{
+											"fileName": "entity-meta.ts",
+											"line": 66,
+											"character": 48
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									}
+								}
+							],
+							"groups": [
+								{
+									"title": "Properties",
+									"children": [
+										19
+									]
+								}
+							]
+						}
+					}
+				],
+				"name": "Record",
+				"package": "typescript"
+			}
+		},
+		{
+			"id": 20,
+			"name": "STANDARD_OPS",
+			"variant": "declaration",
+			"kind": 32,
+			"flags": {
+				"isConst": true
+			},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "The canonical vocabulary of standard entity ops. Every op is always\npresent in "
+					},
+					{
+						"kind": "code",
+						"text": "`meta.actions`"
+					},
+					{
+						"kind": "text",
+						"text": " — ops whose route is not registered are emitted\nwith "
+					},
+					{
+						"kind": "code",
+						"text": "`enabled: false`"
+					},
+					{
+						"kind": "text",
+						"text": " (explicitly unavailable) instead of being omitted."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 73,
+					"character": 13
+				}
+			],
+			"type": {
+				"type": "typeOperator",
+				"operator": "readonly",
+				"target": {
+					"type": "tuple",
+					"elements": [
+						{
+							"type": "literal",
+							"value": "list"
+						},
+						{
+							"type": "literal",
+							"value": "meta"
+						},
+						{
+							"type": "literal",
+							"value": "get"
+						},
+						{
+							"type": "literal",
+							"value": "create.single"
+						},
+						{
+							"type": "literal",
+							"value": "update.single"
+						},
+						{
+							"type": "literal",
+							"value": "delete.single"
+						},
+						{
+							"type": "literal",
+							"value": "purge.single"
+						},
+						{
+							"type": "literal",
+							"value": "restore.single"
+						},
+						{
+							"type": "literal",
+							"value": "read.audit"
+						},
+						{
+							"type": "literal",
+							"value": "export"
+						},
+						{
+							"type": "literal",
+							"value": "delete.bulk"
+						},
+						{
+							"type": "literal",
+							"value": "restore.bulk"
+						},
+						{
+							"type": "literal",
+							"value": "duplicate.bulk"
+						}
+					]
+				}
+			},
+			"defaultValue": "..."
+		},
+		{
+			"id": 21,
+			"name": "StandardOp",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 89,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "indexedAccess",
+				"indexType": {
+					"type": "intrinsic",
+					"name": "number"
+				},
+				"objectType": {
+					"type": "query",
+					"queryType": {
+						"type": "reference",
+						"target": 20,
+						"name": "STANDARD_OPS",
+						"package": "@primebrick/core"
+					}
+				}
+			}
+		},
+		{
+			"id": 22,
+			"name": "MetaColumnType",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "UI column renderer type. NOTE: this is the UI type, not the DB type —\n e.g. "
+					},
+					{
+						"kind": "code",
+						"text": "`roles`"
+					},
+					{
+						"kind": "text",
+						"text": " is "
+					},
+					{
+						"kind": "code",
+						"text": "`\"text\"`"
+					},
+					{
+						"kind": "text",
+						"text": " here but "
+					},
+					{
+						"kind": "code",
+						"text": "`jsonb`"
+					},
+					{
+						"kind": "text",
+						"text": " on disk (never ILIKE-searchable)."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 93,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "union",
+				"types": [
+					{
+						"type": "literal",
+						"value": "text"
+					},
+					{
+						"type": "literal",
+						"value": "badge"
+					},
+					{
+						"type": "literal",
+						"value": "boolean"
+					},
+					{
+						"type": "literal",
+						"value": "color"
+					},
+					{
+						"type": "literal",
+						"value": "date"
+					},
+					{
+						"type": "literal",
+						"value": "datetime"
+					},
+					{
+						"type": "literal",
+						"value": "number"
+					}
+				]
+			}
+		},
+		{
+			"id": 23,
+			"name": "TooltipPriority",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Tooltip visual severity — drives icon and title color in priority\n tooltip renderers."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 104,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "union",
+				"types": [
+					{
+						"type": "literal",
+						"value": "INFORMATION"
+					},
+					{
+						"type": "literal",
+						"value": "WARNING"
+					},
+					{
+						"type": "literal",
+						"value": "ERROR"
+					},
+					{
+						"type": "literal",
+						"value": "QUESTION"
+					},
+					{
+						"type": "literal",
+						"value": "HINT"
+					},
+					{
+						"type": "literal",
+						"value": "SUCCESS"
+					}
+				]
+			}
+		},
+		{
+			"id": 24,
+			"name": "MetaColumn",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Entity field descriptor — the root-level "
+					},
+					{
+						"kind": "code",
+						"text": "`columns`"
+					},
+					{
+						"kind": "text",
+						"text": " dictionary.\nTransversal to every page type: table cells, form tooltips, labels."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 25,
+					"name": "key",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Entity field key — must match the entity property name."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 118,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 26,
+					"name": "label_key",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "i18n key for the column/field label."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 120,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 27,
+					"name": "type",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 121,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 22,
+						"name": "MetaColumnType",
+						"package": "@primebrick/core"
+					}
+				},
+				{
+					"id": 28,
+					"name": "order",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Deterministic display position — explicit per column, array position\n MUST NOT matter. Rendering groups sticky → normal → audited, each group\n sorted by "
+							},
+							{
+								"kind": "code",
+								"text": "`order`"
+							},
+							{
+								"kind": "text",
+								"text": ". Convention: "
+							},
+							{
+								"kind": "code",
+								"text": "`uuid`"
+							},
+							{
+								"kind": "text",
+								"text": " is "
+							},
+							{
+								"kind": "code",
+								"text": "`order: -1`"
+							},
+							{
+								"kind": "text",
+								"text": " (canonical first\n sticky column, hidden but selectable); "
+							},
+							{
+								"kind": "code",
+								"text": "`display_field`"
+							},
+							{
+								"kind": "text",
+								"text": " is "
+							},
+							{
+								"kind": "code",
+								"text": "`order: 0`"
+							},
+							{
+								"kind": "text",
+								"text": "."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 126,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "number"
+					}
+				},
+				{
+					"id": 29,
+					"name": "sortable",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Column supports ORDER BY (default true when omitted)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 130,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 30,
+					"name": "filterable",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Column supports filter operations in the filters sheet."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 132,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 31,
+					"name": "searchable",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Included in \"search in fields\" scope + backend default search\n (default true; set false for non-text-physical or sensitive fields)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 135,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 32,
+					"name": "default_visible",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Visible by default (default true)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 137,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 33,
+					"name": "sticky",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Pinned at the left of the table, rendered before normal columns."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 139,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 34,
+					"name": "hideable",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "If false, the column cannot be hidden via the column picker."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 141,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 35,
+					"name": "audited",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "System-managed auditing column (created_at, updated_by, …) —\n rendered last."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 144,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 36,
+					"name": "tooltip",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "i18n key of the hint tooltip body."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 148,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 37,
+					"name": "tooltip_title",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "i18n key of the tooltip title."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 150,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 38,
+					"name": "tooltip_priority",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Tooltip visual priority (affects icon/color)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 152,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 23,
+						"name": "TooltipPriority",
+						"package": "@primebrick/core"
+					}
+				},
+				{
+					"id": 39,
+					"name": "show_form_tooltip",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Show the tooltip on form pages."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 154,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 40,
+					"name": "show_list_tooltip",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Show the tooltip on list/table pages."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 156,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 41,
+					"name": "badge",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "code",
+								"text": "`type: \"badge\"`"
+							},
+							{
+								"kind": "text",
+								"text": " — per-value label/color mapping."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 160,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reflection",
+						"declaration": {
+							"id": 42,
+							"name": "__type",
+							"variant": "declaration",
+							"kind": 65536,
+							"flags": {},
+							"children": [
+								{
+									"id": 43,
+									"name": "values",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "entity-meta.ts",
+											"line": 161,
+											"character": 4
+										}
+									],
+									"type": {
+										"type": "reference",
+										"target": {
+											"packageName": "typescript",
+											"packagePath": "lib/lib.es5.d.ts",
+											"qualifiedName": "Record"
+										},
+										"typeArguments": [
+											{
+												"type": "intrinsic",
+												"name": "string"
+											},
+											{
+												"type": "reflection",
+												"declaration": {
+													"id": 44,
+													"name": "__type",
+													"variant": "declaration",
+													"kind": 65536,
+													"flags": {},
+													"children": [
+														{
+															"id": 45,
+															"name": "label_key",
+															"variant": "declaration",
+															"kind": 1024,
+															"flags": {},
+															"comment": {
+																"summary": [
+																	{
+																		"kind": "text",
+																		"text": "i18n key for the value label."
+																	}
+																]
+															},
+															"sources": [
+																{
+																	"fileName": "entity-meta.ts",
+																	"line": 165,
+																	"character": 8
+																}
+															],
+															"type": {
+																"type": "intrinsic",
+																"name": "string"
+															}
+														},
+														{
+															"id": 46,
+															"name": "label_text",
+															"variant": "declaration",
+															"kind": 1024,
+															"flags": {
+																"isOptional": true
+															},
+															"comment": {
+																"summary": [
+																	{
+																		"kind": "text",
+																		"text": "Literal label override — wins over "
+																	},
+																	{
+																		"kind": "code",
+																		"text": "`label_key`"
+																	},
+																	{
+																		"kind": "text",
+																		"text": " when present."
+																	}
+																]
+															},
+															"sources": [
+																{
+																	"fileName": "entity-meta.ts",
+																	"line": 167,
+																	"character": 8
+																}
+															],
+															"type": {
+																"type": "intrinsic",
+																"name": "string"
+															}
+														},
+														{
+															"id": 47,
+															"name": "color",
+															"variant": "declaration",
+															"kind": 1024,
+															"flags": {},
+															"comment": {
+																"summary": [
+																	{
+																		"kind": "text",
+																		"text": "Badge color."
+																	}
+																]
+															},
+															"sources": [
+																{
+																	"fileName": "entity-meta.ts",
+																	"line": 169,
+																	"character": 8
+																}
+															],
+															"type": {
+																"type": "intrinsic",
+																"name": "string"
+															}
+														}
+													],
+													"groups": [
+														{
+															"title": "Properties",
+															"children": [
+																45,
+																46,
+																47
+															]
+														}
+													]
+												}
+											}
+										],
+										"name": "Record",
+										"package": "typescript"
+									}
+								}
+							],
+							"groups": [
+								{
+									"title": "Properties",
+									"children": [
+										43
+									]
+								}
+							]
+						}
+					}
+				},
+				{
+					"id": 48,
+					"name": "datetime_iana_toggle",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "code",
+								"text": "`type: \"datetime\"`"
+							},
+							{
+								"kind": "text",
+								"text": " — FE IANA formatting toggle bound to a per-row\n timezone field (IANA id comes from the API row)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 175,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reflection",
+						"declaration": {
+							"id": 49,
+							"name": "__type",
+							"variant": "declaration",
+							"kind": 65536,
+							"flags": {},
+							"children": [
+								{
+									"id": 50,
+									"name": "record_iana_field",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "entity-meta.ts",
+											"line": 176,
+											"character": 4
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"groups": [
+								{
+									"title": "Properties",
+									"children": [
+										50
+									]
+								}
+							]
+						}
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						25,
+						26,
+						27,
+						28,
+						29,
+						30,
+						31,
+						32,
+						33,
+						34,
+						35,
+						36,
+						37,
+						38,
+						39,
+						40,
+						41,
+						48
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 116,
+					"character": 17
+				}
+			]
+		},
+		{
+			"id": 51,
+			"name": "RowCustomAction",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "UI configuration for a non-standard row CTA (route-backed bare op)."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 52,
+					"name": "action_name",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Action/op name — matches the bare op derived from the route\n (e.g. "
+							},
+							{
+								"kind": "code",
+								"text": "`change_password`"
+							},
+							{
+								"kind": "text",
+								"text": ")."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 184,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 53,
+					"name": "translation_key",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "i18n key for the CTA label."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 186,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 54,
+					"name": "icon",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Icon name (Lucide in the reference FE)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 188,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 55,
+					"name": "text_color",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Optional CSS color class for the label."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 190,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 56,
+					"name": "disabled_when_deleted",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Disable the CTA on soft-deleted rows."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 192,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 57,
+					"name": "required_permission",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Permission required to see/use the action (filtered client-side\n against the user's permission set)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 195,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "union",
+						"types": [
+							{
+								"type": "intrinsic",
+								"name": "string"
+							},
+							{
+								"type": "array",
+								"elementType": {
+									"type": "intrinsic",
+									"name": "string"
+								}
+							}
+						]
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						52,
+						53,
+						54,
+						55,
+						56,
+						57
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 181,
+					"character": 17
+				}
+			]
+		},
+		{
+			"id": 58,
+			"name": "TableMeta",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Table options — present only on entities with a table page."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 59,
+					"name": "default_view",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Initial view (default \"table\")."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 201,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 5,
+						"name": "ViewName",
+						"package": "@primebrick/core"
+					}
+				},
+				{
+					"id": 60,
+					"name": "default_sort",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 202,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reflection",
+						"declaration": {
+							"id": 61,
+							"name": "__type",
+							"variant": "declaration",
+							"kind": 65536,
+							"flags": {},
+							"children": [
+								{
+									"id": 62,
+									"name": "key",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "entity-meta.ts",
+											"line": 202,
+											"character": 19
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 63,
+									"name": "dir",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "entity-meta.ts",
+											"line": 202,
+											"character": 32
+										}
+									],
+									"type": {
+										"type": "reference",
+										"target": 6,
+										"name": "SortDir",
+										"package": "@primebrick/core"
+									}
+								}
+							],
+							"groups": [
+								{
+									"title": "Properties",
+									"children": [
+										62,
+										63
+									]
+								}
+							]
+						}
+					}
+				},
+				{
+					"id": 64,
+					"name": "default_page_size",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 203,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "number"
+					}
+				},
+				{
+					"id": 65,
+					"name": "page_size_options",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 204,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "number"
+						}
+					}
+				},
+				{
+					"id": 66,
+					"name": "row_custom_actions",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "UI config for non-standard row actions (e.g. change password).\n Standard ops (edit/delete/duplicate/preview) are derived from\n "
+							},
+							{
+								"kind": "code",
+								"text": "`meta.actions`"
+							},
+							{
+								"kind": "text",
+								"text": " — never declared here."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 208,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "reference",
+							"target": 51,
+							"name": "RowCustomAction",
+							"package": "@primebrick/core"
+						}
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						59,
+						60,
+						64,
+						65,
+						66
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 199,
+					"character": 17
+				}
+			]
+		},
+		{
+			"id": 67,
+			"name": "CollaborationMeta",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Collaboration fragment injected by "
+					},
+					{
+						"kind": "code",
+						"text": "`assembleMeta`"
+					},
+					{
+						"kind": "text",
+						"text": " at serve time."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 68,
+					"name": "enabled",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 213,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				},
+				{
+					"id": 69,
+					"name": "expose_editing_value",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 214,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						68,
+						69
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 212,
+					"character": 17
+				}
+			]
+		},
+		{
+			"id": 70,
+			"name": "EntityMeta",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Static entity meta — the shape every "
+					},
+					{
+						"kind": "code",
+						"text": "`*.meta.ts`"
+					},
+					{
+						"kind": "text",
+						"text": " file MUST satisfy.\nThe schema is CLOSED for authored metas: undeclared properties are\ncompile errors, so new meta props require extending this type first."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 71,
+					"name": "entity",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Entity name, snake_case singular (e.g. "
+							},
+							{
+								"kind": "code",
+								"text": "`user_profile`"
+							},
+							{
+								"kind": "text",
+								"text": ")."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 224,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 72,
+					"name": "translation_key",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "i18n prefix, snake_case singular — used to build dynamic keys."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 226,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 73,
+					"name": "title_key",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Optional i18n key overriding the canonical page title.\nWhen absent, list/create/edit titles are built from the generic\n"
+							},
+							{
+								"kind": "code",
+								"text": "`system.entities.page_title.{list|create|edit}`"
+							},
+							{
+								"kind": "text",
+								"text": " templates interpolated\nwith "
+							},
+							{
+								"kind": "code",
+								"text": "`system.entities.<translation_key>.{plural|singular}`"
+							},
+							{
+								"kind": "text",
+								"text": ".\nSet only for custom pages needing a bespoke title — CRUD entity metas\nmust not declare it."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 235,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 74,
+					"name": "uid",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Field key holding the entity primary key (usually "
+							},
+							{
+								"kind": "code",
+								"text": "`uuid`"
+							},
+							{
+								"kind": "text",
+								"text": ")."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 237,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 75,
+					"name": "display_field",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Canonical display field — the column key identifying the entity's\n human-readable label. Drives first-column/sticky table identity and\n default display resolution."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 241,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 76,
+					"name": "display_name",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Display expression template ("
+							},
+							{
+								"kind": "code",
+								"text": "`${field}`"
+							},
+							{
+								"kind": "text",
+								"text": " syntax, dot-paths allowed).\nOPTIONAL here: "
+							},
+							{
+								"kind": "code",
+								"text": "`assembleMeta`"
+							},
+							{
+								"kind": "text",
+								"text": " materializes it as\n"
+							},
+							{
+								"kind": "code",
+								"text": "`\"${\" + display_field + \"}\"`"
+							},
+							{
+								"kind": "text",
+								"text": " when absent — it is always present in the\nserved response. Used automatically for edit-page titles; reusable for\ncomboboxes, lists, chips."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 249,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 77,
+					"name": "actions_overrides",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Per-op enable overrides — may ONLY toggle "
+							},
+							{
+								"kind": "code",
+								"text": "`enabled`"
+							},
+							{
+								"kind": "text",
+								"text": " on route-backed\n ops; a missing route already produces "
+							},
+							{
+								"kind": "code",
+								"text": "`enabled: false`"
+							},
+							{
+								"kind": "text",
+								"text": "."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 252,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 17,
+						"name": "ActionsOverrides",
+						"package": "@primebrick/core"
+					}
+				},
+				{
+					"id": 78,
+					"name": "columns",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Entity field dictionary (root-level, transversal)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 254,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "reference",
+							"target": 24,
+							"name": "MetaColumn",
+							"package": "@primebrick/core"
+						}
+					}
+				},
+				{
+					"id": 79,
+					"name": "table",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Table options — omit when the entity has no table page\n (e.g. a self-service form meta)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 257,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 58,
+						"name": "TableMeta",
+						"package": "@primebrick/core"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						71,
+						72,
+						73,
+						74,
+						75,
+						76,
+						77,
+						78,
+						79
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 222,
+					"character": 17
+				}
+			]
+		},
+		{
+			"id": 80,
+			"name": "EntityMetaResponse",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "The served "
+					},
+					{
+						"kind": "code",
+						"text": "`GET /api/v1/entities/{entity}/meta`"
+					},
+					{
+						"kind": "text",
+						"text": " response:\nstatic meta + runtime-injected "
+					},
+					{
+						"kind": "code",
+						"text": "`display_name`"
+					},
+					{
+						"kind": "text",
+						"text": ", "
+					},
+					{
+						"kind": "code",
+						"text": "`actions`"
+					},
+					{
+						"kind": "text",
+						"text": ", "
+					},
+					{
+						"kind": "code",
+						"text": "`collaboration`"
+					},
+					{
+						"kind": "text",
+						"text": "."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 264,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "intersection",
+				"types": [
+					{
+						"type": "reference",
+						"target": 70,
+						"name": "EntityMeta",
+						"package": "@primebrick/core"
+					},
+					{
+						"type": "reflection",
+						"declaration": {
+							"id": 81,
+							"name": "__type",
+							"variant": "declaration",
+							"kind": 65536,
+							"flags": {},
+							"children": [
+								{
+									"id": 82,
+									"name": "display_name",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "entity-meta.ts",
+											"line": 265,
+											"character": 2
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 83,
+									"name": "actions",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "entity-meta.ts",
+											"line": 266,
+											"character": 2
+										}
+									],
+									"type": {
+										"type": "array",
+										"elementType": {
+											"type": "reference",
+											"target": 11,
+											"name": "EntityAction",
+											"package": "@primebrick/core"
+										}
+									}
+								},
+								{
+									"id": 84,
+									"name": "collaboration",
+									"variant": "declaration",
+									"kind": 1024,
+									"flags": {},
+									"sources": [
+										{
+											"fileName": "entity-meta.ts",
+											"line": 267,
+											"character": 2
+										}
+									],
+									"type": {
+										"type": "reference",
+										"target": 67,
+										"name": "CollaborationMeta",
+										"package": "@primebrick/core"
+									}
+								}
+							],
+							"groups": [
+								{
+									"title": "Properties",
+									"children": [
+										82,
+										83,
+										84
+									]
+								}
+							]
+						}
+					}
+				]
+			}
+		},
+		{
+			"id": 1,
+			"name": "isEntityOpEnabled",
+			"variant": "declaration",
+			"kind": 64,
+			"flags": {},
+			"sources": [
+				{
+					"fileName": "entity-meta.ts",
+					"line": 279,
+					"character": 16
+				}
+			],
+			"signatures": [
+				{
+					"id": 2,
+					"name": "isEntityOpEnabled",
+					"variant": "signature",
+					"kind": 4096,
+					"flags": {},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Pure enablement check — true when "
+							},
+							{
+								"kind": "code",
+								"text": "`op`"
+							},
+							{
+								"kind": "text",
+								"text": " exists in the served "
+							},
+							{
+								"kind": "code",
+								"text": "`actions`"
+							},
+							{
+								"kind": "text",
+								"text": "\narray and carries "
+							},
+							{
+								"kind": "code",
+								"text": "`enabled: true`"
+							},
+							{
+								"kind": "text",
+								"text": ". FAIL-CLOSED: when "
+							},
+							{
+								"kind": "code",
+								"text": "`actions`"
+							},
+							{
+								"kind": "text",
+								"text": " is absent\n(meta without actions — contract violation) the op is not enabled.\n\nThis deliberately does NOT evaluate user permissions — that step lives in\nthe consumer (e.g. FE "
+							},
+							{
+								"kind": "code",
+								"text": "`isEntityOpAllowed`"
+							},
+							{
+								"kind": "text",
+								"text": " composes this with the session\npermission check)."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "entity-meta.ts",
+							"line": 279,
+							"character": 16
+						}
+					],
+					"parameters": [
+						{
+							"id": 3,
+							"name": "actions",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "union",
+								"types": [
+									{
+										"type": "typeOperator",
+										"operator": "readonly",
+										"target": {
+											"type": "array",
+											"elementType": {
+												"type": "reference",
+												"target": 11,
+												"name": "EntityAction",
+												"package": "@primebrick/core"
+											}
+										}
+									},
+									{
+										"type": "intrinsic",
+										"name": "undefined"
+									}
+								]
+							}
+						},
+						{
+							"id": 4,
+							"name": "op",
+							"variant": "param",
+							"kind": 32768,
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				}
+			]
+		},
+		{
+			"id": 85,
+			"name": "ListConnector",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Global connector joining the advanced-filter group."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "list.ts",
+					"line": 7,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "union",
+				"types": [
+					{
+						"type": "literal",
+						"value": "AND"
+					},
+					{
+						"type": "literal",
+						"value": "OR"
+					}
+				]
+			}
+		},
+		{
+			"id": 86,
+			"name": "DeletionFilterMode",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Soft-deletion visibility mode — maps to the "
+					},
+					{
+						"kind": "code",
+						"text": "`deleted_records`"
+					},
+					{
+						"kind": "text",
+						"text": " list param\non the wire ("
+					},
+					{
+						"kind": "code",
+						"text": "`non_deleted`"
+					},
+					{
+						"kind": "text",
+						"text": " → "
+					},
+					{
+						"kind": "code",
+						"text": "`EXCLUDED`"
+					},
+					{
+						"kind": "text",
+						"text": ", "
+					},
+					{
+						"kind": "code",
+						"text": "`deleted`"
+					},
+					{
+						"kind": "text",
+						"text": " → "
+					},
+					{
+						"kind": "code",
+						"text": "`ONLY`"
+					},
+					{
+						"kind": "text",
+						"text": ",\n"
+					},
+					{
+						"kind": "code",
+						"text": "`all`"
+					},
+					{
+						"kind": "text",
+						"text": " → "
+					},
+					{
+						"kind": "code",
+						"text": "`INCLUDED`"
+					},
+					{
+						"kind": "text",
+						"text": "; absent param means the BE default, currently\n"
+					},
+					{
+						"kind": "code",
+						"text": "`EXCLUDED`"
+					},
+					{
+						"kind": "text",
+						"text": ")."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "list.ts",
+					"line": 15,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "union",
+				"types": [
+					{
+						"type": "literal",
+						"value": "non_deleted"
+					},
+					{
+						"type": "literal",
+						"value": "deleted"
+					},
+					{
+						"type": "literal",
+						"value": "all"
+					}
+				]
+			}
+		},
+		{
+			"id": 87,
+			"name": "ListResponse",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "The paged list response returned by every entity list endpoint.\n"
+					},
+					{
+						"kind": "code",
+						"text": "`total`"
+					},
+					{
+						"kind": "text",
+						"text": " is a "
+					},
+					{
+						"kind": "code",
+						"text": "`bigint`"
+					},
+					{
+						"kind": "text",
+						"text": " — parse JSON responses with a bigint-aware parser\n("
+					},
+					{
+						"kind": "code",
+						"text": "`extJsonParse`"
+					},
+					{
+						"kind": "text",
+						"text": " from "
+					},
+					{
+						"kind": "code",
+						"text": "`@primebrick/sdk`"
+					},
+					{
+						"kind": "text",
+						"text": "), never "
+					},
+					{
+						"kind": "code",
+						"text": "`JSON.parse`"
+					},
+					{
+						"kind": "text",
+						"text": "."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 89,
+					"name": "rows",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "list.ts",
+							"line": 23,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "reference",
+							"target": 88,
+							"name": "TRow",
+							"package": "@primebrick/core",
+							"qualifiedName": "ListResponse.TRow",
+							"refersToTypeParameter": true
+						}
+					}
+				},
+				{
+					"id": 90,
+					"name": "page",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "list.ts",
+							"line": 24,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "number"
+					}
+				},
+				{
+					"id": 91,
+					"name": "page_size",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "list.ts",
+							"line": 25,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "number"
+					}
+				},
+				{
+					"id": 92,
+					"name": "total",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "list.ts",
+							"line": 26,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "bigint"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						89,
+						90,
+						91,
+						92
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "list.ts",
+					"line": 22,
+					"character": 17
+				}
+			],
+			"typeParameters": [
+				{
+					"id": 88,
+					"name": "TRow",
+					"variant": "typeParam",
+					"kind": 131072,
+					"flags": {}
+				}
+			]
+		},
+		{
+			"id": 93,
+			"name": "FilterOperator",
+			"variant": "declaration",
+			"kind": 2097152,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "Filter operators available for advanced filters."
+					}
+				]
+			},
+			"sources": [
+				{
+					"fileName": "list.ts",
+					"line": 30,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "union",
+				"types": [
+					{
+						"type": "literal",
+						"value": "="
+					},
+					{
+						"type": "literal",
+						"value": "!="
+					},
+					{
+						"type": "literal",
+						"value": ">"
+					},
+					{
+						"type": "literal",
+						"value": "<"
+					},
+					{
+						"type": "literal",
+						"value": ">="
+					},
+					{
+						"type": "literal",
+						"value": "<="
+					},
+					{
+						"type": "literal",
+						"value": "contains"
+					},
+					{
+						"type": "literal",
+						"value": "startsWith"
+					},
+					{
+						"type": "literal",
+						"value": "endsWith"
+					},
+					{
+						"type": "literal",
+						"value": "BETWEEN"
+					}
+				]
+			}
+		},
+		{
+			"id": 94,
+			"name": "AdvancedFilter",
+			"variant": "declaration",
+			"kind": 256,
+			"flags": {},
+			"comment": {
+				"summary": [
+					{
+						"kind": "text",
+						"text": "One advanced-filter entry (filters sheet / "
+					},
+					{
+						"kind": "code",
+						"text": "`filters[i][...]`"
+					},
+					{
+						"kind": "text",
+						"text": " URL params)."
+					}
+				]
+			},
+			"children": [
+				{
+					"id": 95,
+					"name": "id",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "list.ts",
+							"line": 44,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 96,
+					"name": "field",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "list.ts",
+							"line": 45,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 97,
+					"name": "operator",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "list.ts",
+							"line": 46,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "reference",
+						"target": 93,
+						"name": "FilterOperator",
+						"package": "@primebrick/core"
+					}
+				},
+				{
+					"id": 98,
+					"name": "value",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "list.ts",
+							"line": 47,
+							"character": 2
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "unknown"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"children": [
+						95,
+						96,
+						97,
+						98
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "list.ts",
+					"line": 43,
+					"character": 17
+				}
+			]
+		}
+	],
+	"groups": [
+		{
+			"title": "Interfaces",
+			"children": [
+				8,
+				11,
+				24,
+				51,
+				58,
+				67,
+				70,
+				87,
+				94
+			]
+		},
+		{
+			"title": "Type Aliases",
+			"children": [
+				121,
+				5,
+				6,
+				7,
+				17,
+				21,
+				22,
+				23,
+				80,
+				85,
+				86,
+				93
+			]
+		},
+		{
+			"title": "Variables",
+			"children": [
+				20
+			]
+		},
+		{
+			"title": "Functions",
+			"children": [
+				99,
+				102,
+				105,
+				108,
+				111,
+				115,
+				118,
+				1
+			]
+		}
+	],
+	"packageName": "@primebrick/core",
+	"packageVersion": "3.0.0",
+	"symbolIdMap": {
+		"0": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/index.ts",
+			"qualifiedName": ""
+		},
+		"1": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "isEntityOpEnabled"
+		},
+		"2": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "isEntityOpEnabled"
+		},
+		"3": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "actions"
+		},
+		"4": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "op"
+		},
+		"5": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "ViewName"
+		},
+		"6": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "SortDir"
+		},
+		"7": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityActionSentinel"
+		},
+		"8": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityActionEndpoint"
+		},
+		"9": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityActionEndpoint.method"
+		},
+		"10": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityActionEndpoint.path"
+		},
+		"11": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityAction"
+		},
+		"12": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityAction.op"
+		},
+		"13": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityAction.permissions"
+		},
+		"14": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityAction.sentinel"
+		},
+		"15": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityAction.enabled"
+		},
+		"16": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityAction.endpoint"
+		},
+		"17": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "ActionsOverrides"
+		},
+		"18": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type"
+		},
+		"19": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.enabled"
+		},
+		"20": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "STANDARD_OPS"
+		},
+		"21": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "StandardOp"
+		},
+		"22": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumnType"
+		},
+		"23": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "TooltipPriority"
+		},
+		"24": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn"
+		},
+		"25": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.key"
+		},
+		"26": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.label_key"
+		},
+		"27": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.type"
+		},
+		"28": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.order"
+		},
+		"29": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.sortable"
+		},
+		"30": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.filterable"
+		},
+		"31": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.searchable"
+		},
+		"32": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.default_visible"
+		},
+		"33": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.sticky"
+		},
+		"34": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.hideable"
+		},
+		"35": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.audited"
+		},
+		"36": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.tooltip"
+		},
+		"37": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.tooltip_title"
+		},
+		"38": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.tooltip_priority"
+		},
+		"39": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.show_form_tooltip"
+		},
+		"40": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.show_list_tooltip"
+		},
+		"41": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.badge"
+		},
+		"42": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type"
+		},
+		"43": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.values"
+		},
+		"44": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type"
+		},
+		"45": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.label_key"
+		},
+		"46": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.label_text"
+		},
+		"47": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.color"
+		},
+		"48": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "MetaColumn.datetime_iana_toggle"
+		},
+		"49": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type"
+		},
+		"50": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.record_iana_field"
+		},
+		"51": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "RowCustomAction"
+		},
+		"52": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "RowCustomAction.action_name"
+		},
+		"53": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "RowCustomAction.translation_key"
+		},
+		"54": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "RowCustomAction.icon"
+		},
+		"55": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "RowCustomAction.text_color"
+		},
+		"56": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "RowCustomAction.disabled_when_deleted"
+		},
+		"57": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "RowCustomAction.required_permission"
+		},
+		"58": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "TableMeta"
+		},
+		"59": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "TableMeta.default_view"
+		},
+		"60": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "TableMeta.default_sort"
+		},
+		"61": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type"
+		},
+		"62": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.key"
+		},
+		"63": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.dir"
+		},
+		"64": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "TableMeta.default_page_size"
+		},
+		"65": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "TableMeta.page_size_options"
+		},
+		"66": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "TableMeta.row_custom_actions"
+		},
+		"67": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "CollaborationMeta"
+		},
+		"68": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "CollaborationMeta.enabled"
+		},
+		"69": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "CollaborationMeta.expose_editing_value"
+		},
+		"70": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta"
+		},
+		"71": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.entity"
+		},
+		"72": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.translation_key"
+		},
+		"73": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.title_key"
+		},
+		"74": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.uid"
+		},
+		"75": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.display_field"
+		},
+		"76": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.display_name"
+		},
+		"77": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.actions_overrides"
+		},
+		"78": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.columns"
+		},
+		"79": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMeta.table"
+		},
+		"80": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "EntityMetaResponse"
+		},
+		"81": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type"
+		},
+		"82": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.display_name"
+		},
+		"83": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.actions"
+		},
+		"84": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/entity-meta.ts",
+			"qualifiedName": "__type.collaboration"
+		},
+		"85": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "ListConnector"
+		},
+		"86": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "DeletionFilterMode"
+		},
+		"87": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "ListResponse"
+		},
+		"88": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "ListResponse.TRow"
+		},
+		"89": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "ListResponse.rows"
+		},
+		"90": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "ListResponse.page"
+		},
+		"91": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "ListResponse.page_size"
+		},
+		"92": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "ListResponse.total"
+		},
+		"93": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "FilterOperator"
+		},
+		"94": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "AdvancedFilter"
+		},
+		"95": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "AdvancedFilter.id"
+		},
+		"96": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "AdvancedFilter.field"
+		},
+		"97": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "AdvancedFilter.operator"
+		},
+		"98": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/list.ts",
+			"qualifiedName": "AdvancedFilter.value"
+		},
+		"99": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "isSnakeCaseSingular"
+		},
+		"100": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "isSnakeCaseSingular"
+		},
+		"101": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "value"
+		},
+		"102": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "asSnakeCaseSingular"
+		},
+		"103": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "asSnakeCaseSingular"
+		},
+		"104": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "value"
+		},
+		"105": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "orderedColumns"
+		},
+		"106": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "orderedColumns"
+		},
+		"107": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "columns"
+		},
+		"108": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "defaultVisibleColumnKeys"
+		},
+		"109": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "defaultVisibleColumnKeys"
+		},
+		"110": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "columns"
+		},
+		"111": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "sanitizeVisibleKeys"
+		},
+		"112": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "sanitizeVisibleKeys"
+		},
+		"113": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "visibleKeys"
+		},
+		"114": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "columns"
+		},
+		"115": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "searchableTextColumns"
+		},
+		"116": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "searchableTextColumns"
+		},
+		"117": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "columns"
+		},
+		"118": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "getOperatorsForColumnType"
+		},
+		"119": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "getOperatorsForColumnType"
+		},
+		"120": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "columnType"
+		},
+		"121": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "SnakeCaseSingular"
+		},
+		"122": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "__type"
+		},
+		"123": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/columns.ts",
+			"qualifiedName": "__type.__snakeCaseSingularBrand"
+		}
+	},
+	"files": {
+		"entries": {
+			"1": "src/index.ts"
+		},
+		"reflections": {
+			"1": 0
+		}
+	}
+}

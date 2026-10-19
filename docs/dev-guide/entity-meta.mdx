@@ -1,0 +1,37 @@
+---
+title: Entity meta contract
+description: The canonical EntityMeta / EntityMetaResponse / EntityAction schema shared by meta authoring (BE) and page rendering (FE).
+---
+
+## Two shapes, one contract
+
+| Type | Producer | Meaning |
+|------|----------|---------|
+| `EntityMeta` | `*.meta.ts` authoring files (BE) | Static, hand-declared meta — `display_name` optional, no `actions`/`collaboration` |
+| `EntityMetaResponse` | `assembleMeta` (BE) → served JSON | Static meta + runtime `display_name`, `actions`, `collaboration` |
+
+The FE never sees `EntityMeta` raw — `/meta` endpoints always return
+`EntityMetaResponse`.
+
+## Actions vocabulary
+
+`meta.actions` is a **derived** capability map: every `STANDARD_OPS` entry is
+present; `enabled: false` means the op is unavailable for everyone (missing
+route or `actions_overrides` disable). Each enabled action carries `endpoint`
+(`{ method, path }`) — the registered route — so consumers dispatch writes to
+the declared path and never hand-build `/api/v1/entities/{entity}/{uuid}` URLs.
+
+`isEntityOpEnabled(actions, op)` is the pure, env-neutral enablement check.
+Permission evaluation against the current user is the consumer's job (e.g. FE
+`isEntityOpAllowed` composes this with the session permission check).
+
+## Columns
+
+`MetaColumn` is transversal — table cells, form tooltips, labels. Ordering is
+explicit (`order`), grouping is sticky → normal → audited via
+`orderedColumns()`. `badge.values` maps a stored value to `{ label_key,
+label_text?, color }`; `datetime_iana_toggle` binds a datetime column to a
+per-row IANA timezone field.
+
+`translation_key` is branded `SnakeCaseSingular` in consumers that opt into
+runtime validation (`asSnakeCaseSingular` throws on any uppercase letter).
