@@ -18,7 +18,7 @@ DAL and SDK.
 
 ## Invariants
 
-- **Zero runtime dependencies** — types + pure functions only.
+- **Single runtime dependency** — `@primebrick/decimal` re-exported (env-neutral, dep-free).
 - **Environment-neutral** — no DOM, no Node APIs, no framework imports.
 - **snake_case end-to-end** — contract field names match the DB column names
   and the JSON wire shape exactly; no DTO renaming.

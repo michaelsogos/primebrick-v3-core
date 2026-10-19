@@ -2,7 +2,7 @@
 
 Environment-neutral shared contracts for Primebrick v3 — the root of the shared
 library tree. Pure TypeScript types, models and helpers; zero runtime
-dependencies; consumable identically from browser, server and CLI code.
+dependencies beyond `@primebrick/decimal` (which it re-exports so downstream libs can pass it to FE/BE/US); consumable identically from browser, server and CLI code.
 
 ## What's inside
 

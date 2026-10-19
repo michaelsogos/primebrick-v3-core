@@ -10,7 +10,7 @@
   "author": "Michael Sogos",
   "repository": {
     "type": "git",
-    "url": "https://github.com/michaelsogos/primebrick-v3-core"
+    "url": "git+https://github.com/michaelsogos/primebrick-v3-core.git"
   },
   "homepage": "https://github.com/michaelsogos/primebrick-v3-core#readme",
   "bugs": {
@@ -34,6 +34,10 @@
     "./columns": {
       "types": "./dist/columns.d.ts",
       "import": "./dist/columns.js"
+    },
+    "./decimal": {
+      "types": "./dist/decimal.d.ts",
+      "import": "./dist/decimal.js"
     }
   },
   "files": [
@@ -54,6 +58,9 @@
     "registry": "https://registry.npmjs.org"
   },
   "packageManager": "pnpm@9.15.9",
+  "dependencies": {
+    "@primebrick/decimal": "3.0.1"
+  },
   "devDependencies": {
     "@types/node": "24.13.3",
     "typedoc": "0.28.20",

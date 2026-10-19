@@ -14,7 +14,7 @@
 environment-neutral contracts consumed by every other package:
 
 ```
-@primebrick/core      (this repo — pure types, models, helpers, zero runtime deps)
+@primebrick/core      (this repo — pure types, models, helpers; one dep: @primebrick/decimal)
    ├── @primebrick/dal-pg
    ├── @primebrick/sdk
    ├── @primebrick/ui
@@ -30,7 +30,7 @@ helpers (`orderedColumns`, `defaultVisibleColumnKeys`, `getOperatorsForColumnTyp
 
 **Hard invariants:**
 
-- **Zero runtime dependencies** — this package must stay dependency-free.
+- **Single runtime dependency** — `@primebrick/decimal` (itself dependency-free and env-neutral). No other dependencies allowed.
 - **Environment-neutral** — no DOM, no Node APIs, no Svelte, no Express. It must
   compile identically for browser, server and CLI consumers.
 - **No I/O, no framework code** — types + pure functions only.

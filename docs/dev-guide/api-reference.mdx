@@ -10,6 +10,14 @@ Every exported symbol from `@primebrick/dal-pg`, rendered mechanically from the
 TypeDoc extraction. This page is regenerated from `docs/dev-guide/_extracted/api.json`
 on every `pnpm extract-docs` run — do not edit by hand.
 
+## Classes
+
+### `Decimal`
+
+### `DecimalError`
+
+Errors raised by @primebrick/decimal.
+
 ## Interfaces
 
 ### `AdvancedFilter`
@@ -175,6 +183,12 @@ Per-op enable overrides — may ONLY toggle `enabled` on route-backed ops.
 
 **Type:** `Record<string, { enabled: boolean }>`
 
+### `DecimalInput`
+
+Anything coercion functions accept: Decimal, native number, bigint, or a decimal string.
+
+**Type:** `Decimal \| number \| bigint \| string`
+
 ### `DeletionFilterMode`
 
 Soft-deletion visibility mode — maps to the `deleted_records` list param
@@ -217,6 +231,10 @@ UI column renderer type. NOTE: this is the UI type, not the DB type —
 
 **Type:** `"text" \| "badge" \| "boolean" \| "color" \| "date" \| "datetime" \| "number"`
 
+### `RoundingMode`
+
+**Type:** `"UP" \| "DOWN" \| "CEILING" \| "FLOOR" \| "HALF_UP" \| "HALF_DOWN" \| "HALF_EVEN"`
+
 ### `SnakeCaseSingular`
 
 Branded type that enforces snake_case singular (no uppercase letters).
@@ -254,6 +272,33 @@ Table view names supported by entity list pages.
 
 ## Constants
 
+### `fromPG`
+
+Alias of `dec()` — parse a PostgreSQL `numeric`/`decimal` text value.
+
+**Type:** `typeof dec`
+
+### `fromString`
+
+**Type:** `typeof dec`
+
+### `fromWire`
+
+Alias of `dec()` — tolerates the `"…d"` wire suffix.
+
+**Type:** `typeof dec`
+
+### `NUMERIC_MIN_SIG_DIGITS`
+
+Minimum significant digits preserved by automatic `div` scale — mirrors
+PostgreSQL `NUMERIC_MIN_SIG_DIGITS` (16). See `pgDivScale`.
+
+**Type:** `16`
+
+### `ONE`
+
+**Type:** `Decimal`
+
 ### `STANDARD_OPS`
 
 The canonical vocabulary of standard entity ops. Every op is always
@@ -262,7 +307,28 @@ with `enabled: false` (explicitly unavailable) instead of being omitted.
 
 **Type:** `typeOperator`
 
+### `TEN`
+
+**Type:** `Decimal`
+
+### `ZERO`
+
+**Type:** `Decimal`
+
 ## Functions
+
+### `abs(d): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
+### `add(a, b): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
 
 ### `asSnakeCaseSingular(value): SnakeCaseSingular`
 
@@ -274,6 +340,31 @@ Branded constructor for SnakeCaseSingular.
 |-----------|------|-------------|
 | value | `string` |  |
 
+### `ceil(d): Decimal`
+
+Smallest integer `>= d`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
+### `cmp(a, b): -1 \| 0 \| 1`
+
+Numeric comparison ignoring scale: `cmp(1.0, 1.00) === 0`. Returns -1 | 0 | 1.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `dec(input): Decimal`
+
+`Decimal` — pass-through. `string` — parsed (PG text form or `"…d"` wire form). `number` — via shortest round-trip `toString` so `0.1` stays `"0.1"`. `bigint` — scale 0.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| input | `DecimalInput` |  |
+
 ### `defaultVisibleColumnKeys(columns): string[]`
 
 Keys visible by default — from column flags.
@@ -282,6 +373,55 @@ Keys visible by default — from column flags.
 |-----------|------|-------------|
 | columns | `MetaColumn[]` |  |
 
+### `div(a, b, opts): Decimal`
+
+`a / b`. Without `scale`, the result uses the PostgreSQL `numeric`
+division rule (`pgDivScale` — e.g. `1/3` → scale 20, `10/4` → 16), so
+Decimal↔DB computations compare equal digit-for-digit. Rounding defaults
+to `HALF_UP`. When the true quotient does not terminate at the target
+scale the result is flagged `periodic` (`isPeriodic(d)` → true).
+
+  div(1, 3)            // 0.33333333333333333333 — periodic
+  div(10, 4)           // 2.5000000000000000
+  div(1, 3, 2)         // 0.33
+  div(a, b, &#123; scale: 6, rounding: "HALF_EVEN" &#125;)
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+| opts | `number \| { scale: number; rounding: RoundingMode }` |  |
+
+### `eq(a, b): boolean`
+
+Numeric equality ignoring scale — `eq(1.0, 1.00)` is `true`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `floor(d): Decimal`
+
+Largest integer `<= d`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
+### `fromBigInt(v, scale): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `bigint` |  |
+| scale | `number` |  |
+
+### `fromNumber(n): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| n | `number` |  |
+
 ### `getOperatorsForColumnType(columnType): FilterOperator[]`
 
 Operators available for a given column UI type.
@@ -289,6 +429,12 @@ Operators available for a given column UI type.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | columnType | `string` |  |
+
+### `isDecimal(v): v is Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `unknown` |  |
 
 ### `isEntityOpEnabled(actions, op): boolean`
 
@@ -305,6 +451,14 @@ permission check).
 | actions | `typeOperator \| undefined` |  |
 | op | `string` |  |
 
+### `isPeriodic(d): boolean`
+
+`true` when the value was produced by a truncated non-terminating division.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
 ### `isSnakeCaseSingular(value): value is SnakeCaseSingular`
 
 Runtime validator for SnakeCaseSingular — rejects strings with
@@ -315,6 +469,50 @@ Runtime validator for SnakeCaseSingular — rejects strings with
 |-----------|------|-------------|
 | value | `string` |  |
 
+### `max(a, b): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `min(a, b): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `mod(a, b): Decimal`
+
+`a mod b` — remainder of truncated division at the common scale.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `mul(a, b): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `neg(d): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
+### `normalize(d): Decimal`
+
+Strip trailing fractional zeros — `1.230` → `1.23`, `12.000` → `12`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
 ### `orderedColumns(columns): MetaColumn[]`
 
 Columns in display order: sticky group → normal group → audited group,
@@ -323,6 +521,55 @@ each sorted by `order`.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | columns | `typeOperator \| null \| undefined` |  |
+
+### `parseDecimal(input): Decimal`
+
+Parse a decimal string into unscaled form.
+Accepts: `"12"`, `"-0.5"`, `".5"`, `"5."`, `"1.5e3"`, `"1E-3"`, `"+4"`.
+Rejects: `NaN`, `Infinity`, empty strings, hex, non-numeric garbage.
+Scale is preserved as written (`"1.230"` → scale 3).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| input | `string` |  |
+
+### `pgDivScale(a, b): number`
+
+PostgreSQL-faithful result scale for `x / y` (mirrors `select_div_scale`):
+`max(16 - 4·qweight, x.scale, y.scale)` — 16 significant digits minimum.
+Verified live: `1/3`→20, `10/4`→16, `1.00/8`→20, `2/1`→16, `100/3`→16.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `pow10(n): bigint`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| n | `number` |  |
+
+### `rescale(d, newScale, mode): Decimal`
+
+Re-express `d` at `newScale`. Growing is exact; shrinking applies `mode`
+(default `HALF_UP`, matching PostgreSQL `round()`).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+| newScale | `number` |  |
+| mode | `RoundingMode` |  |
+
+### `round(d, scale, mode): Decimal`
+
+Round to `scale` fractional digits (default `HALF_UP`).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+| scale | `number` |  |
+| mode | `RoundingMode` |  |
 
 ### `sanitizeVisibleKeys(visibleKeys, columns): string[]`
 
@@ -341,5 +588,51 @@ Text-physical searchable columns — the scope selector + default
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | columns | `MetaColumn[]` |  |
+
+### `signum(d): -1 \| 0 \| 1`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
+### `strictEq(a, b): boolean`
+
+Exact structural equality — value AND scale must match (`strictEq(1.0, 1.00)` is `false`).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `sub(a, b): Decimal`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| a | `DecimalInput` |  |
+| b | `DecimalInput` |  |
+
+### `toPG(d): string`
+
+PostgreSQL parameter form — plain canonical decimal string, no `d` suffix.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
+### `toWire(d): string`
+
+Wire form — `"…d"` suffixed string.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
+
+### `trunc(d): Decimal`
+
+Integer part, toward zero.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| d | `DecimalInput` |  |
 
 <!-- END -->
