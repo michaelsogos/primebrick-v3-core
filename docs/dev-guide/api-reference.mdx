@@ -157,6 +157,9 @@ Table options — present only on entities with a table page.
 | row_custom_actions | `RowCustomAction[]` | UI config for non-standard row actions (e.g. change password).
  Standard ops (edit/delete/duplicate/preview) are derived from
  `meta.actions` — never declared here. |
+| filter_presets | `typeOperator` | Mutually-exclusive preset WHERE filters — each rendered as its own
+ toolbar control; the active option's conditions AND into every list
+ request (see FilterPreset). |
 
 ## Types & Enums
 
@@ -195,11 +198,29 @@ static meta + runtime-injected `display_name`, `actions`, `collaboration`.
 
 **Type:** `EntityMeta & { display_name: string; actions: EntityAction[]; collaboration: CollaborationMeta }`
 
+### `FilterCondition`
+
+One WHERE condition of a filter preset — serialized verbatim as a
+`filters[i]` entry on the `/list` query string (same vocabulary as
+`AdvancedFilter` conditions: field/op/value).
+
 ### `FilterOperator`
 
 Filter operators available for advanced filters.
 
 **Type:** `"=" \| "!=" \| ">" \| "<" \| ">=" \| "<=" \| "contains" \| "startsWith" \| "endsWith" \| "BETWEEN"`
+
+### `FilterPreset`
+
+A mutually-exclusive preset filter group rendered as its own control in
+the table toolbar (tandem with the deletion-filter group). Exactly one
+option is always active — there is no "clear" affordance. Declared in
+`meta.table.filter_presets`; example: a `schedule_type` scope selector
+(recurring / once / all) on a jobs table.
+
+### `FilterPresetOption`
+
+A single selectable option of a table filter preset.
 
 ### `HostMountHandle`
 
@@ -227,7 +248,7 @@ cell-snippet args typed as `Record<string, unknown>`.
 UI column renderer type. NOTE: this is the UI type, not the DB type —
  e.g. `roles` is `"text"` here but `jsonb` on disk (never ILIKE-searchable).
 
-**Type:** `"text" \| "badge" \| "boolean" \| "color" \| "date" \| "datetime" \| "number"`
+**Type:** `"text" \| "badge" \| "boolean" \| "color" \| "date" \| "datetime" \| "number" \| "sparkline"`
 
 ### `ModuleNavDeclaration`
 
@@ -686,6 +707,30 @@ Re-express `d` at `newScale`. Growing is exact; shrinking applies `mode`
 | newScale | `number` |  |
 | mode | `RoundingMode` |  |
 
+### `resolvePresetConditions(presets, selections): FilterCondition[]`
+
+Flatten the WHERE conditions of every preset's ACTIVE option — the
+conditions AND-ed into every `/list` call. `selections` maps
+preset.id → option id; invalid/absent ids resolve per
+resolvePresetSelection.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| presets | `typeOperator \| undefined` |  |
+| selections | `Record<string, string>` |  |
+
+### `resolvePresetSelection(preset, selected): string`
+
+Resolve a preset's active option id — the caller-provided selection when
+it names a declared option, otherwise `default_option` (itself falling
+back to the first option when misconfigured, keeping the always-one
+invariant rather than failing closed).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| preset | `FilterPreset` |  |
+| selected | `string \| undefined` |  |
+
 ### `round(d, scale, mode): Decimal`
 
 Round to `scale` fractional digits (default `HALF_UP`).
@@ -713,6 +758,17 @@ Text-physical searchable columns — the scope selector + default
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | columns | `MetaColumn[]` |  |
+
+### `serviceApiBase(listBasePath): string`
+
+Service API base of an entity list basePath — strips the trailing
+`/entities/<entity>` segment so service-relative endpoints declared in
+meta (e.g. sparkline `endpoint: "/actions/job-run-stats"`) resolve to
+`/ws/<svc>/api/v1/actions/…` or `/api/v1/actions/…` for BE entities.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| listBasePath | `string` |  |
 
 ### `signum(d): -1 \| 0 \| 1`
 
