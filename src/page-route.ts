@@ -36,6 +36,11 @@ export type PageRouteDeclaration = {
   /** i18n key for a human-readable label, when available. */
   label_key?: string;
   /**
+   * Lucide icon name — used by host chrome that renders the route as an
+   * action (e.g. the toolbar create CTA for `kind:"create"` routes).
+   */
+  icon?: string;
+  /**
    * Remote component delivery — when set, the host mounts the chunk at this
    * same-origin URL (typically `/ws/<service>/api/v1/module-assets/…`)
    * instead of resolving a local component.
