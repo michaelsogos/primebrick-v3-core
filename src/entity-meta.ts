@@ -206,7 +206,9 @@ export type MetaColumn = {
      *  default `"bucket_unit"`. */
     bucket_unit_field?: string;
     /** Stacked series, rendered bottom→top in array order; `color` is a
-     *  tailwind fill-* utility class (e.g. `fill-emerald-500`). */
+     *  tailwind `fill-*` utility class (e.g. `fill-emerald-500`) — the
+     *  reference FE safelists the full fill palette in `app.css`, any
+     *  `fill-{color}-{shade}` resolves. */
     series: readonly { field: string; color: string; label_key?: string }[];
   };
 };
