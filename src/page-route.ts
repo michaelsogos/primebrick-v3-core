@@ -79,8 +79,6 @@ export type ModuleNavLink = {
 export type ModuleNavDeclaration = {
   /** Module code — implicit when declared on a service's registry row. */
   module?: string;
-  /** Sidebar module-switcher icon (lucide name) — falls back to the service icon. */
-  icon?: string;
   /** FE path prefixes this module owns (longest match wins). */
   route_prefixes: string[];
   /** Sidebar nav links shown while this module is active. */
