@@ -385,6 +385,15 @@ with `enabled: false` (explicitly unavailable) instead of being omitted.
 | a | `DecimalInput` |  |
 | b | `DecimalInput` |  |
 
+### `allowedKeyNamespaces(moduleCode): ReadonlySet<string>`
+
+Namespaces a module's meta/nav declarations may REFERENCE — the module's
+own namespace plus the CORE vocabularies (`app`, `system`).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| moduleCode | `string` |  |
+
 ### `appendListFilterParams(params, opts, startIdx): number`
 
 | Parameter | Type | Description |
@@ -571,6 +580,14 @@ Runtime validator for SnakeCaseSingular — rejects strings with
 |-----------|------|-------------|
 | value | `string` |  |
 
+### `keyNamespaceOf(key): string \| null`
+
+First dotted segment of a translation key — `job.entities.x` → `job`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| key | `string` |  |
+
 ### `max(a, b): Decimal`
 
 | Parameter | Type | Description |
@@ -728,6 +745,14 @@ Wire form — `"…d"` suffixed string.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
+
+### `translationKeyNamespace(schema): string`
+
+Owning PG schema → the only translation-key namespace writable there.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| schema | `string` |  |
 
 ### `trunc(d): Decimal`
 
