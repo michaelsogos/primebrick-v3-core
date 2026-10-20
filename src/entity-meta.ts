@@ -234,6 +234,15 @@ export interface EntityMeta {
   /** i18n prefix, snake_case singular — used to build dynamic keys. */
   translation_key: string;
   /**
+   * Namespace OWNING this entity's label keys — the module's own namespace
+   * (`job` → `job.entities.<translation_key>.*`). Absent → `system`
+   * (BE/core-owned entities keep `system.entities.*`).
+   * This is a READ-side reference declared by the owning module — the
+   * namespace write boundary (see `translation-keys.ts`) guarantees the
+   * keys actually live in that module's `<code>.translations` schema.
+   */
+  entities_ns?: string;
+  /**
    * Optional i18n key overriding the canonical page title.
    * When absent, list/create/edit titles are built from the generic
    * `system.entities.page_title.{list|create|edit}` templates interpolated
