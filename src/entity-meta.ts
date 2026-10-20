@@ -227,13 +227,15 @@ export type FilterCondition = {
 export type FilterPresetOption = {
   /** Stable option id — persisted selection key, never an i18n value. */
   id: string;
-  /** i18n key for the option label. */
+  /** i18n key for the option label — `button_group`: NEVER rendered (the
+   *  group is icon-only by design; the label feeds `aria-label`/`title`
+   *  fallback); `combobox`: the item's primary line. */
   label_key: string;
-  /** Lucide icon name — `button_group`: rendered with the label;
-   *  `combobox`: enriches the dropdown item. */
+  /** Lucide icon name — `button_group`: REQUIRED, it is the only visible
+   *  affordance (icon-only standard); `combobox`: enriches the dropdown item. */
   icon?: string;
-  /** i18n key for the tooltip — `button_group`: `title`;
-   *  `combobox`: secondary line of the item. */
+  /** i18n key for the tooltip — `button_group`: `title` (the only place the
+   *  option's meaning is spelled out); `combobox`: secondary line of the item. */
   tooltip_key?: string;
   /**
    * AND-ed conditions appended to EVERY `/list` call while selected
@@ -254,7 +256,10 @@ export type FilterPreset = {
   /** Preset id — unique within the entity; keys the toolbar group and the
    *  persisted selection (`{storageKeyPrefix}filterPresets[preset.id]`). */
   id: string;
-  /** Render mode. */
+  /** Render mode — `button_group` is the toolbar standard: segmented
+   *  icon-only buttons (`icon` per option is REQUIRED, meaning carried by
+   *  `title` tooltip + `aria-pressed`); `combobox` for long option lists
+   *  where a labelled dropdown reads better. */
   display: "button_group" | "combobox";
   /** i18n key labeling the whole group (a11y label / combobox placeholder). */
   label_key?: string;

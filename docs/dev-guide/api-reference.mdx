@@ -112,8 +112,8 @@ comboboxes, lists, chips. |
 | Field | Type | Description |
 |-------|------|-------------|
 | filterValues | `Record<string, unknown>` | Toolbar quick-filter values keyed by column key. |
-| columns | `typeOperator` | Entity columns (needed to map filterValues to the right operator). |
-| advancedFilters | `typeOperator` | FiltersPanel conditions. |
+| columns | `readonly MetaColumn[]` | Entity columns (needed to map filterValues to the right operator). |
+| advancedFilters | `readonly AdvancedFilter[]` | FiltersPanel conditions. |
 | connector | `string` | Global connector for advanced filters (`AND` | `OR`). |
 
 ### `ListResponse`
@@ -157,7 +157,7 @@ Table options — present only on entities with a table page.
 | row_custom_actions | `RowCustomAction[]` | UI config for non-standard row actions (e.g. change password).
  Standard ops (edit/delete/duplicate/preview) are derived from
  `meta.actions` — never declared here. |
-| filter_presets | `typeOperator` | Mutually-exclusive preset WHERE filters — each rendered as its own
+| filter_presets | `readonly FilterPreset[]` | Mutually-exclusive preset WHERE filters — each rendered as its own
  toolbar control; the active option's conditions AND into every list
  request (see FilterPreset). |
 
@@ -327,7 +327,7 @@ runtime check rejecting strings containing A-Z. This catches camelCase
 (`userProfile`), PascalCase (`RoleMapping`), and UPPER_CASE
 (`USER_PROFILE`) at both compile time and runtime.
 
-**Type:** `string & { __snakeCaseSingularBrand: typeOperator }`
+**Type:** `string & { __snakeCaseSingularBrand: unique symbol }`
 
 ### `SortDir`
 
@@ -387,7 +387,7 @@ The canonical vocabulary of standard entity ops. Every op is always
 present in `meta.actions` — ops whose route is not registered are emitted
 with `enabled: false` (explicitly unavailable) instead of being omitted.
 
-**Type:** `typeOperator`
+**Type:** `readonly ["list", "meta", "get", "create.single", "update.single", "delete.single", "purge.single", "restore.single", "read.audit", "export", "delete.bulk", "restore.bulk", "duplicate.bulk"]`
 
 ### `TEN`
 
@@ -586,7 +586,7 @@ permission check).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| actions | `typeOperator \| undefined` |  |
+| actions | `readonly EntityAction[] \| undefined` |  |
 | op | `string` |  |
 
 ### `isPeriodic(d): boolean`
@@ -666,7 +666,7 @@ each sorted by `order`.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| columns | `typeOperator \| null \| undefined` |  |
+| columns | `readonly MetaColumn[] \| null \| undefined` |  |
 
 ### `parseDecimal(input): Decimal`
 
@@ -716,7 +716,7 @@ resolvePresetSelection.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| presets | `typeOperator \| undefined` |  |
+| presets | `readonly FilterPreset[] \| undefined` |  |
 | selections | `Record<string, string>` |  |
 
 ### `resolvePresetSelection(preset, selected): string`
