@@ -38,6 +38,22 @@
     "./decimal": {
       "types": "./dist/decimal.d.ts",
       "import": "./dist/decimal.js"
+    },
+    "./page-route": {
+      "types": "./dist/page-route.d.ts",
+      "import": "./dist/page-route.js"
+    },
+    "./ext-json": {
+      "types": "./dist/ext-json.d.ts",
+      "import": "./dist/ext-json.js"
+    },
+    "./list-filter-params": {
+      "types": "./dist/list-filter-params.d.ts",
+      "import": "./dist/list-filter-params.js"
+    },
+    "./search-gate": {
+      "types": "./dist/search-gate.d.ts",
+      "import": "./dist/search-gate.js"
     }
   },
   "files": [
@@ -59,9 +75,11 @@
   },
   "packageManager": "pnpm@9.15.9",
   "dependencies": {
-    "@primebrick/decimal": "3.0.1"
+    "@primebrick/decimal": "3.0.1",
+    "json-bigint": "1.0.0"
   },
   "devDependencies": {
+    "@types/json-bigint": "1.0.4",
     "@types/node": "24.13.3",
     "typedoc": "0.28.20",
     "typescript": "6.0.3",

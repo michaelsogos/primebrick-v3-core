@@ -97,7 +97,8 @@ export type MetaColumnType =
   | "color"
   | "date"
   | "datetime"
-  | "number";
+  | "number"
+  | "sparkline";
 
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
@@ -125,8 +126,8 @@ export type MetaColumn = {
   label_key: string;
   /** Renderer discriminator — `MetaColumnType` documents the built-in set,
    *  but the field is intentionally open (`| string`): modules may emit
-   *  custom cell types (e.g. `run_stats_sparkline`) resolved by
-   *  consumer-registered cell renderers. */
+   *  custom cell types resolved by consumer-registered cell renderers
+   *  (e.g. a `cell` snippet override on EntityListTable). */
   type: MetaColumnType | string;
   /** Deterministic display position — explicit per column, array position
    *  MUST NOT matter. Rendering groups sticky → normal → audited, each group
@@ -184,6 +185,91 @@ export type MetaColumn = {
   datetime_iana_toggle?: {
     record_iana_field: string;
   };
+  /** `type: "sparkline"` — per-row stacked mini-histogram fed by ONE batch
+   *  POST per rows load (virtual column: no DB field expected). The list
+   *  engine performs the fetch automatically — zero per-page wiring. */
+  sparkline?: {
+    /** POST path relative to the service API base — e.g.
+     *  `/actions/job-run-stats` resolves to `/ws/job/api/v1/actions/…`
+     *  for `/ws/` entities, `/api/v1/…` for BE entities. */
+    endpoint: string;
+    /** Request body field receiving the collected row keys
+     *  (e.g. `schedule_subjects`). */
+    request_field: string;
+    /** Row field supplying each key (e.g. `schedule_subject`). */
+    row_key: string;
+    /** Response field holding the `{key: buckets[]}` map — default `"stats"`. */
+    response_field?: string;
+    /** Bucket time field for axis labels — default `"bucket_start"`. */
+    bucket_field?: string;
+    /** Response field carrying the bucket unit (`hour|day|week|month`) —
+     *  default `"bucket_unit"`. */
+    bucket_unit_field?: string;
+    /** Stacked series, rendered bottom→top in array order; `color` is a
+     *  tailwind `fill-*` utility class (e.g. `fill-emerald-500`) — the
+     *  reference FE safelists the full fill palette in `app.css`, any
+     *  `fill-{color}-{shade}` resolves. */
+    series: readonly { field: string; color: string; label_key?: string }[];
+  };
+};
+
+/**
+ * One WHERE condition of a filter preset — serialized verbatim as a
+ * `filters[i]` entry on the `/list` query string (same vocabulary as
+ * `AdvancedFilter` conditions: field/op/value).
+ */
+export type FilterCondition = {
+  field: string;
+  /** Wire operator — `=`, `!=`, `IN`, `NOT IN`, `ILIKE`, `BETWEEN`, … */
+  op: string;
+  value: string | number | boolean | readonly (string | number | boolean)[];
+};
+
+/** A single selectable option of a table filter preset. */
+export type FilterPresetOption = {
+  /** Stable option id — persisted selection key, never an i18n value. */
+  id: string;
+  /** i18n key for the option label — `button_group`: NEVER rendered (the
+   *  group is icon-only by design; the label feeds `aria-label`/`title`
+   *  fallback); `combobox`: the item's primary line. */
+  label_key: string;
+  /** Lucide icon name — `button_group`: REQUIRED, it is the only visible
+   *  affordance (icon-only standard); `combobox`: enriches the dropdown item. */
+  icon?: string;
+  /** i18n key for the tooltip — `button_group`: `title` (the only place the
+   *  option's meaning is spelled out); `combobox`: secondary line of the item. */
+  tooltip_key?: string;
+  /**
+   * AND-ed conditions appended to EVERY `/list` call while selected
+   * (refresh, pagination, sort, user filters — all combine). Omit or `[]`
+   * for the "all" escape option — still a real selection, applies nothing.
+   */
+  where?: readonly FilterCondition[];
+};
+
+/**
+ * A mutually-exclusive preset filter group rendered as its own control in
+ * the table toolbar (tandem with the deletion-filter group). Exactly one
+ * option is always active — there is no "clear" affordance. Declared in
+ * `meta.table.filter_presets`; example: a `schedule_type` scope selector
+ * (recurring / once / all) on a jobs table.
+ */
+export type FilterPreset = {
+  /** Preset id — unique within the entity; keys the toolbar group and the
+   *  persisted selection (`{storageKeyPrefix}filterPresets[preset.id]`). */
+  id: string;
+  /** Render mode — `button_group` is the toolbar standard: segmented
+   *  icon-only buttons (`icon` per option is REQUIRED, meaning carried by
+   *  `title` tooltip + `aria-pressed`); `combobox` for long option lists
+   *  where a labelled dropdown reads better. */
+  display: "button_group" | "combobox";
+  /** i18n key labeling the whole group (a11y label / combobox placeholder). */
+  label_key?: string;
+  /** Selectable options — declare at least two. */
+  options: readonly FilterPresetOption[];
+  /** Option id selected before any user choice and as the fallback for an
+   *  invalid persisted selection — REQUIRED, must exist in `options`. */
+  default_option: string;
 };
 
 /** UI configuration for a non-standard row CTA (route-backed bare op). */
@@ -215,6 +301,10 @@ export interface TableMeta {
    *  Standard ops (edit/delete/duplicate/preview) are derived from
    *  `meta.actions` — never declared here. */
   row_custom_actions?: RowCustomAction[];
+  /** Mutually-exclusive preset WHERE filters — each rendered as its own
+   *  toolbar control; the active option's conditions AND into every list
+   *  request (see {@link FilterPreset}). */
+  filter_presets?: readonly FilterPreset[];
 }
 
 /** Collaboration fragment injected by `assembleMeta` at serve time. */
@@ -233,6 +323,15 @@ export interface EntityMeta {
   entity: string;
   /** i18n prefix, snake_case singular — used to build dynamic keys. */
   translation_key: string;
+  /**
+   * Namespace OWNING this entity's label keys — the module's own namespace
+   * (`job` → `job.entities.<translation_key>.*`). Absent → `system`
+   * (BE/core-owned entities keep `system.entities.*`).
+   * This is a READ-side reference declared by the owning module — the
+   * namespace write boundary (see `translation-keys.ts`) guarantees the
+   * keys actually live in that module's `<code>.translations` schema.
+   */
+  entities_ns?: string;
   /**
    * Optional i18n key overriding the canonical page title.
    * When absent, list/create/edit titles are built from the generic
