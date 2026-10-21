@@ -5122,7 +5122,7 @@
 			]
 		},
 		{
-			"id": 268,
+			"id": 271,
 			"name": "resolvePresetSelection",
 			"variant": "declaration",
 			"kind": 64,
@@ -5137,7 +5137,7 @@
 			],
 			"signatures": [
 				{
-					"id": 269,
+					"id": 272,
 					"name": "resolvePresetSelection",
 					"variant": "signature",
 					"kind": 4096,
@@ -5168,7 +5168,7 @@
 					],
 					"parameters": [
 						{
-							"id": 270,
+							"id": 273,
 							"name": "preset",
 							"variant": "param",
 							"kind": 32768,
@@ -5181,7 +5181,7 @@
 							}
 						},
 						{
-							"id": 271,
+							"id": 274,
 							"name": "selected",
 							"variant": "param",
 							"kind": 32768,
@@ -5209,7 +5209,7 @@
 			]
 		},
 		{
-			"id": 272,
+			"id": 275,
 			"name": "resolvePresetConditions",
 			"variant": "declaration",
 			"kind": 64,
@@ -5224,7 +5224,7 @@
 			],
 			"signatures": [
 				{
-					"id": 273,
+					"id": 276,
 					"name": "resolvePresetConditions",
 					"variant": "signature",
 					"kind": 4096,
@@ -5255,7 +5255,7 @@
 								"kind": "inline-tag",
 								"tag": "@link",
 								"text": "resolvePresetSelection",
-								"target": 268
+								"target": 271
 							},
 							{
 								"kind": "text",
@@ -5273,7 +5273,7 @@
 					],
 					"parameters": [
 						{
-							"id": 274,
+							"id": 277,
 							"name": "presets",
 							"variant": "param",
 							"kind": 32768,
@@ -5302,7 +5302,7 @@
 							}
 						},
 						{
-							"id": 275,
+							"id": 278,
 							"name": "selections",
 							"variant": "param",
 							"kind": 32768,
@@ -5342,7 +5342,7 @@
 			]
 		},
 		{
-			"id": 276,
+			"id": 279,
 			"name": "serviceApiBase",
 			"variant": "declaration",
 			"kind": 64,
@@ -5357,7 +5357,7 @@
 			],
 			"signatures": [
 				{
-					"id": 277,
+					"id": 280,
 					"name": "serviceApiBase",
 					"variant": "signature",
 					"kind": 4096,
@@ -5412,7 +5412,7 @@
 					],
 					"parameters": [
 						{
-							"id": 278,
+							"id": 281,
 							"name": "listBasePath",
 							"variant": "param",
 							"kind": 32768,
@@ -6300,7 +6300,15 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One declared frontend route owned by a module. Modules MUST declare every\nFE path they own that is not deducible from nav links or entity\nconventions — the AI route census (GET /system/routes) depends on it.\n"
+						"text": "One declared frontend route owned by a module. Modules MUST declare every\nFE path they own that is not deducible from nav links or entity\nconventions — the AI route census (derived from the consolidated\n"
+					},
+					{
+						"kind": "code",
+						"text": "`GET /api/v1/modules`"
+					},
+					{
+						"kind": "text",
+						"text": " discovery payload) depends on it.\n"
 					},
 					{
 						"kind": "code",
@@ -6322,9 +6330,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 32,
+							"line": 33,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L32"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L33"
 						}
 					],
 					"type": {
@@ -6341,9 +6349,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 33,
+							"line": 34,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L33"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L34"
 						}
 					],
 					"type": {
@@ -6372,9 +6380,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 35,
+							"line": 36,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L35"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L36"
 						}
 					],
 					"type": {
@@ -6401,9 +6409,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 37,
+							"line": 38,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L37"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L38"
 						}
 					],
 					"type": {
@@ -6438,9 +6446,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 42,
+							"line": 43,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L42"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L43"
 						}
 					],
 					"type": {
@@ -6475,9 +6483,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 48,
+							"line": 49,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L48"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L49"
 						}
 					],
 					"type": {
@@ -6522,9 +6530,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 50,
+							"line": 51,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L50"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L51"
 						}
 					],
 					"type": {
@@ -6569,9 +6577,54 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 57,
+							"line": 58,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L57"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L58"
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 191,
+					"name": "access",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Access-axis gate — "
+							},
+							{
+								"kind": "code",
+								"text": "`access.{app}.{module}.{page}`"
+							},
+							{
+								"kind": "text",
+								"text": " key (see\n"
+							},
+							{
+								"kind": "code",
+								"text": "`ModuleNavDeclaration.access`"
+							},
+							{
+								"kind": "text",
+								"text": "). Absent = open to authenticated users."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "primebrick-v3-core/src/page-route.ts",
+							"line": 63,
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L63"
 						}
 					],
 					"type": {
@@ -6591,21 +6644,22 @@
 						187,
 						188,
 						189,
-						190
+						190,
+						191
 					]
 				}
 			],
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 31,
+					"line": 32,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L31"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L32"
 				}
 			]
 		},
 		{
-			"id": 191,
+			"id": 192,
 			"name": "ModuleNavLink",
 			"variant": "declaration",
 			"kind": 2097152,
@@ -6628,7 +6682,7 @@
 			},
 			"children": [
 				{
-					"id": 193,
+					"id": 194,
 					"name": "id",
 					"variant": "declaration",
 					"kind": 1024,
@@ -6636,28 +6690,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 65,
+							"line": 71,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L65"
-						}
-					],
-					"type": {
-						"type": "intrinsic",
-						"name": "string"
-					}
-				},
-				{
-					"id": 194,
-					"name": "label_key",
-					"variant": "declaration",
-					"kind": 1024,
-					"flags": {},
-					"sources": [
-						{
-							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 66,
-							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L66"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L71"
 						}
 					],
 					"type": {
@@ -6667,16 +6702,16 @@
 				},
 				{
 					"id": 195,
-					"name": "href",
+					"name": "label_key",
 					"variant": "declaration",
 					"kind": 1024,
 					"flags": {},
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 67,
+							"line": 72,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L67"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L72"
 						}
 					],
 					"type": {
@@ -6686,18 +6721,16 @@
 				},
 				{
 					"id": 196,
-					"name": "icon",
+					"name": "href",
 					"variant": "declaration",
 					"kind": 1024,
-					"flags": {
-						"isOptional": true
-					},
+					"flags": {},
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 68,
+							"line": 73,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L68"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L73"
 						}
 					],
 					"type": {
@@ -6707,6 +6740,64 @@
 				},
 				{
 					"id": 197,
+					"name": "icon",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "primebrick-v3-core/src/page-route.ts",
+							"line": 74,
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L74"
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 198,
+					"name": "access",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Access-axis gate — "
+							},
+							{
+								"kind": "code",
+								"text": "`access.{app}.{module}.{page}`"
+							},
+							{
+								"kind": "text",
+								"text": " key. The nav link (and\nthe page it points to) is visible only when the user's grants cover it;\nabsent = open to any authenticated user."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "primebrick-v3-core/src/page-route.ts",
+							"line": 80,
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L80"
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 199,
 					"name": "children",
 					"variant": "declaration",
 					"kind": 1024,
@@ -6716,16 +6807,16 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 69,
+							"line": 81,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L69"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L81"
 						}
 					],
 					"type": {
 						"type": "array",
 						"elementType": {
 							"type": "reference",
-							"target": 191,
+							"target": 192,
 							"name": "ModuleNavLink",
 							"package": "@primebrick/core"
 						}
@@ -6736,25 +6827,26 @@
 				{
 					"title": "Properties",
 					"children": [
-						193,
 						194,
 						195,
 						196,
-						197
+						197,
+						198,
+						199
 					]
 				}
 			],
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 64,
+					"line": 70,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L64"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L70"
 				}
 			]
 		},
 		{
-			"id": 198,
+			"id": 200,
 			"name": "ModuleNavDeclaration",
 			"variant": "declaration",
 			"kind": 2097152,
@@ -6809,7 +6901,7 @@
 			},
 			"children": [
 				{
-					"id": 200,
+					"id": 202,
 					"name": "module",
 					"variant": "declaration",
 					"kind": 1024,
@@ -6827,9 +6919,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 86,
+							"line": 98,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L86"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L98"
 						}
 					],
 					"type": {
@@ -6838,7 +6930,7 @@
 					}
 				},
 				{
-					"id": 201,
+					"id": 203,
 					"name": "route_prefixes",
 					"variant": "declaration",
 					"kind": 1024,
@@ -6854,9 +6946,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 88,
+							"line": 100,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L88"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L100"
 						}
 					],
 					"type": {
@@ -6868,7 +6960,92 @@
 					}
 				},
 				{
-					"id": 202,
+					"id": 204,
+					"name": "access",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"comment": {
+						"summary": [
+							{
+								"kind": "text",
+								"text": "Module-level access gate — the "
+							},
+							{
+								"kind": "code",
+								"text": "`access.{app}.{module}`"
+							},
+							{
+								"kind": "text",
+								"text": " key a user must\nhold to see the module AT ALL (whole subtree; e.g.\n"
+							},
+							{
+								"kind": "code",
+								"text": "`access.system.settings`"
+							},
+							{
+								"kind": "text",
+								"text": "). A page grant alone ("
+							},
+							{
+								"kind": "code",
+								"text": "`access.system.job.runs`"
+							},
+							{
+								"kind": "text",
+								"text": ")\ndoes NOT satisfy a module-level gate — use nav/route-level "
+							},
+							{
+								"kind": "code",
+								"text": "`access`"
+							},
+							{
+								"kind": "text",
+								"text": "\nfor partial visibility instead. Absent = module visible to any\nauthenticated user; its nav/routes may still filter per-page.\n\nThe access axis is a separate vocabulary inside the same permission\npipeline as entity RBAC ("
+							},
+							{
+								"kind": "code",
+								"text": "`role_mappings`"
+							},
+							{
+								"kind": "text",
+								"text": " grants, wildcard matching) —\n"
+							},
+							{
+								"kind": "code",
+								"text": "`is_admin`"
+							},
+							{
+								"kind": "text",
+								"text": " implies "
+							},
+							{
+								"kind": "code",
+								"text": "`access.system.*`"
+							},
+							{
+								"kind": "text",
+								"text": " ONLY; other roots need explicit\ngrants even for admins."
+							}
+						]
+					},
+					"sources": [
+						{
+							"fileName": "primebrick-v3-core/src/page-route.ts",
+							"line": 114,
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L114"
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 205,
 					"name": "nav",
 					"variant": "declaration",
 					"kind": 1024,
@@ -6884,23 +7061,23 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 90,
+							"line": 116,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L90"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L116"
 						}
 					],
 					"type": {
 						"type": "array",
 						"elementType": {
 							"type": "reference",
-							"target": 191,
+							"target": 192,
 							"name": "ModuleNavLink",
 							"package": "@primebrick/core"
 						}
 					}
 				},
 				{
-					"id": 203,
+					"id": 206,
 					"name": "routes",
 					"variant": "declaration",
 					"kind": 1024,
@@ -6918,9 +7095,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 92,
+							"line": 118,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L92"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L118"
 						}
 					],
 					"type": {
@@ -6934,7 +7111,7 @@
 					}
 				},
 				{
-					"id": 204,
+					"id": 207,
 					"name": "is_reserved",
 					"variant": "declaration",
 					"kind": 1024,
@@ -6952,9 +7129,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 94,
+							"line": 120,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L94"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L120"
 						}
 					],
 					"type": {
@@ -6967,25 +7144,26 @@
 				{
 					"title": "Properties",
 					"children": [
-						200,
-						201,
 						202,
 						203,
-						204
+						204,
+						205,
+						206,
+						207
 					]
 				}
 			],
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 84,
+					"line": 96,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L84"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L96"
 				}
 			]
 		},
 		{
-			"id": 205,
+			"id": 208,
 			"name": "ModulePageNotifyInput",
 			"variant": "declaration",
 			"kind": 2097152,
@@ -7016,7 +7194,7 @@
 			},
 			"children": [
 				{
-					"id": 207,
+					"id": 210,
 					"name": "impact",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7024,9 +7202,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 102,
+							"line": 128,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L102"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L128"
 						}
 					],
 					"type": {
@@ -7056,7 +7234,7 @@
 					}
 				},
 				{
-					"id": 208,
+					"id": 211,
 					"name": "message",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7066,72 +7244,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 103,
+							"line": 129,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L103"
-						}
-					],
-					"type": {
-						"type": "intrinsic",
-						"name": "string"
-					}
-				},
-				{
-					"id": 209,
-					"name": "messageKey",
-					"variant": "declaration",
-					"kind": 1024,
-					"flags": {
-						"isOptional": true
-					},
-					"sources": [
-						{
-							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 104,
-							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L104"
-						}
-					],
-					"type": {
-						"type": "intrinsic",
-						"name": "string"
-					}
-				},
-				{
-					"id": 210,
-					"name": "scope",
-					"variant": "declaration",
-					"kind": 1024,
-					"flags": {
-						"isOptional": true
-					},
-					"sources": [
-						{
-							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 105,
-							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L105"
-						}
-					],
-					"type": {
-						"type": "intrinsic",
-						"name": "string"
-					}
-				},
-				{
-					"id": 211,
-					"name": "scopeKey",
-					"variant": "declaration",
-					"kind": 1024,
-					"flags": {
-						"isOptional": true
-					},
-					"sources": [
-						{
-							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 106,
-							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L106"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L129"
 						}
 					],
 					"type": {
@@ -7141,7 +7256,7 @@
 				},
 				{
 					"id": 212,
-					"name": "detail",
+					"name": "messageKey",
 					"variant": "declaration",
 					"kind": 1024,
 					"flags": {
@@ -7150,9 +7265,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 107,
+							"line": 130,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L107"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L130"
 						}
 					],
 					"type": {
@@ -7162,6 +7277,69 @@
 				},
 				{
 					"id": 213,
+					"name": "scope",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "primebrick-v3-core/src/page-route.ts",
+							"line": 131,
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L131"
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 214,
+					"name": "scopeKey",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "primebrick-v3-core/src/page-route.ts",
+							"line": 132,
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L132"
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 215,
+					"name": "detail",
+					"variant": "declaration",
+					"kind": 1024,
+					"flags": {
+						"isOptional": true
+					},
+					"sources": [
+						{
+							"fileName": "primebrick-v3-core/src/page-route.ts",
+							"line": 133,
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L133"
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				},
+				{
+					"id": 216,
 					"name": "toast",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7171,9 +7349,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 108,
+							"line": 134,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L108"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L134"
 						}
 					],
 					"type": {
@@ -7186,34 +7364,34 @@
 				{
 					"title": "Properties",
 					"children": [
-						207,
-						208,
-						209,
 						210,
 						211,
 						212,
-						213
+						213,
+						214,
+						215,
+						216
 					]
 				}
 			],
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 101,
+					"line": 127,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L101"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L127"
 				}
 			],
 			"indexSignatures": [
 				{
-					"id": 214,
+					"id": 217,
 					"name": "__index",
 					"variant": "signature",
 					"kind": 8192,
 					"flags": {},
 					"parameters": [
 						{
-							"id": 215,
+							"id": 218,
 							"name": "key",
 							"variant": "param",
 							"kind": 32768,
@@ -7232,7 +7410,7 @@
 			]
 		},
 		{
-			"id": 216,
+			"id": 219,
 			"name": "ModulePageHost",
 			"variant": "declaration",
 			"kind": 2097152,
@@ -7311,7 +7489,7 @@
 			},
 			"children": [
 				{
-					"id": 218,
+					"id": 221,
 					"name": "host_version",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7319,9 +7497,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 123,
+							"line": 149,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L123"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L149"
 						}
 					],
 					"type": {
@@ -7330,7 +7508,7 @@
 					}
 				},
 				{
-					"id": 219,
+					"id": 222,
 					"name": "nav",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7346,9 +7524,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 125,
+							"line": 151,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L125"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L151"
 						}
 					],
 					"type": {
@@ -7359,7 +7537,7 @@
 					}
 				},
 				{
-					"id": 220,
+					"id": 223,
 					"name": "meta",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7377,9 +7555,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 127,
+							"line": 153,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L127"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L153"
 						}
 					],
 					"type": {
@@ -7390,7 +7568,7 @@
 					}
 				},
 				{
-					"id": 221,
+					"id": 224,
 					"name": "api",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7414,29 +7592,29 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 132,
+							"line": 158,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L132"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L158"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 222,
+							"id": 225,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"signatures": [
 								{
-									"id": 223,
+									"id": 226,
 									"name": "__type",
 									"variant": "signature",
 									"kind": 4096,
 									"flags": {},
 									"parameters": [
 										{
-											"id": 224,
+											"id": 227,
 											"name": "path",
 											"variant": "param",
 											"kind": 32768,
@@ -7447,7 +7625,7 @@
 											}
 										},
 										{
-											"id": 225,
+											"id": 228,
 											"name": "init",
 											"variant": "param",
 											"kind": 32768,
@@ -7494,7 +7672,7 @@
 					}
 				},
 				{
-					"id": 226,
+					"id": 229,
 					"name": "i18n",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7510,22 +7688,22 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 134,
+							"line": 160,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L134"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L160"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 227,
+							"id": 230,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"children": [
 								{
-									"id": 228,
+									"id": 231,
 									"name": "t",
 									"variant": "declaration",
 									"kind": 1024,
@@ -7533,29 +7711,29 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/page-route.ts",
-											"line": 135,
+											"line": 161,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L135"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L161"
 										}
 									],
 									"type": {
 										"type": "reflection",
 										"declaration": {
-											"id": 229,
+											"id": 232,
 											"name": "__type",
 											"variant": "declaration",
 											"kind": 65536,
 											"flags": {},
 											"signatures": [
 												{
-													"id": 230,
+													"id": 233,
 													"name": "__type",
 													"variant": "signature",
 													"kind": 4096,
 													"flags": {},
 													"parameters": [
 														{
-															"id": 231,
+															"id": 234,
 															"name": "key",
 															"variant": "param",
 															"kind": 32768,
@@ -7566,7 +7744,7 @@
 															}
 														},
 														{
-															"id": 232,
+															"id": 235,
 															"name": "params",
 															"variant": "param",
 															"kind": 32768,
@@ -7605,7 +7783,7 @@
 									}
 								},
 								{
-									"id": 233,
+									"id": 236,
 									"name": "locale",
 									"variant": "declaration",
 									"kind": 1024,
@@ -7613,9 +7791,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/page-route.ts",
-											"line": 136,
+											"line": 162,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L136"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L162"
 										}
 									],
 									"type": {
@@ -7628,8 +7806,8 @@
 								{
 									"title": "Properties",
 									"children": [
-										228,
-										233
+										231,
+										236
 									]
 								}
 							]
@@ -7637,7 +7815,7 @@
 					}
 				},
 				{
-					"id": 234,
+					"id": 237,
 					"name": "notify",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7657,36 +7835,36 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 139,
+							"line": 165,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L139"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L165"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 235,
+							"id": 238,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"signatures": [
 								{
-									"id": 236,
+									"id": 239,
 									"name": "__type",
 									"variant": "signature",
 									"kind": 4096,
 									"flags": {},
 									"parameters": [
 										{
-											"id": 237,
+											"id": 240,
 											"name": "input",
 											"variant": "param",
 											"kind": 32768,
 											"flags": {},
 											"type": {
 												"type": "reference",
-												"target": 205,
+												"target": 208,
 												"name": "ModulePageNotifyInput",
 												"package": "@primebrick/core"
 											}
@@ -7702,7 +7880,7 @@
 					}
 				},
 				{
-					"id": 238,
+					"id": 241,
 					"name": "components",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7800,9 +7978,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 164,
+							"line": 190,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L164"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L190"
 						}
 					],
 					"type": {
@@ -7827,7 +8005,7 @@
 					}
 				},
 				{
-					"id": 239,
+					"id": 242,
 					"name": "mount_host",
 					"variant": "declaration",
 					"kind": 1024,
@@ -7893,29 +8071,29 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 177,
+							"line": 203,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L177"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L203"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 240,
+							"id": 243,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"signatures": [
 								{
-									"id": 241,
+									"id": 244,
 									"name": "__type",
 									"variant": "signature",
 									"kind": 4096,
 									"flags": {},
 									"parameters": [
 										{
-											"id": 242,
+											"id": 245,
 											"name": "component",
 											"variant": "param",
 											"kind": 32768,
@@ -7926,7 +8104,7 @@
 											}
 										},
 										{
-											"id": 243,
+											"id": 246,
 											"name": "el",
 											"variant": "param",
 											"kind": 32768,
@@ -7943,7 +8121,7 @@
 											}
 										},
 										{
-											"id": 244,
+											"id": 247,
 											"name": "props",
 											"variant": "param",
 											"kind": 32768,
@@ -7972,7 +8150,7 @@
 									],
 									"type": {
 										"type": "reference",
-										"target": 245,
+										"target": 248,
 										"name": "HostMountHandle",
 										"package": "@primebrick/core"
 									}
@@ -7986,28 +8164,28 @@
 				{
 					"title": "Properties",
 					"children": [
-						218,
-						219,
-						220,
 						221,
-						226,
-						234,
-						238,
-						239
+						222,
+						223,
+						224,
+						229,
+						237,
+						241,
+						242
 					]
 				}
 			],
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 122,
+					"line": 148,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L122"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L148"
 				}
 			]
 		},
 		{
-			"id": 245,
+			"id": 248,
 			"name": "HostMountHandle",
 			"variant": "declaration",
 			"kind": 2097152,
@@ -8030,7 +8208,7 @@
 			},
 			"children": [
 				{
-					"id": 247,
+					"id": 250,
 					"name": "update",
 					"variant": "declaration",
 					"kind": 1024,
@@ -8046,29 +8224,29 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 190,
+							"line": 216,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L190"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L216"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 248,
+							"id": 251,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"signatures": [
 								{
-									"id": 249,
+									"id": 252,
 									"name": "__type",
 									"variant": "signature",
 									"kind": 4096,
 									"flags": {},
 									"parameters": [
 										{
-											"id": 250,
+											"id": 253,
 											"name": "props",
 											"variant": "param",
 											"kind": 32768,
@@ -8105,7 +8283,7 @@
 					}
 				},
 				{
-					"id": 251,
+					"id": 254,
 					"name": "destroy",
 					"variant": "declaration",
 					"kind": 1024,
@@ -8121,22 +8299,22 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/page-route.ts",
-							"line": 192,
+							"line": 218,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L192"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L218"
 						}
 					],
 					"type": {
 						"type": "reflection",
 						"declaration": {
-							"id": 252,
+							"id": 255,
 							"name": "__type",
 							"variant": "declaration",
 							"kind": 65536,
 							"flags": {},
 							"signatures": [
 								{
-									"id": 253,
+									"id": 256,
 									"name": "__type",
 									"variant": "signature",
 									"kind": 4096,
@@ -8176,22 +8354,22 @@
 				{
 					"title": "Properties",
 					"children": [
-						247,
-						251
+						250,
+						254
 					]
 				}
 			],
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 188,
+					"line": 214,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L188"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L214"
 				}
 			]
 		},
 		{
-			"id": 254,
+			"id": 257,
 			"name": "MountPageFn",
 			"variant": "declaration",
 			"kind": 2097152,
@@ -8239,29 +8417,29 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 200,
+					"line": 226,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L200"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L226"
 				}
 			],
 			"type": {
 				"type": "reflection",
 				"declaration": {
-					"id": 255,
+					"id": 258,
 					"name": "__type",
 					"variant": "declaration",
 					"kind": 65536,
 					"flags": {},
 					"signatures": [
 						{
-							"id": 256,
+							"id": 259,
 							"name": "__type",
 							"variant": "signature",
 							"kind": 4096,
 							"flags": {},
 							"parameters": [
 								{
-									"id": 257,
+									"id": 260,
 									"name": "el",
 									"variant": "param",
 									"kind": 32768,
@@ -8278,14 +8456,14 @@
 									}
 								},
 								{
-									"id": 258,
+									"id": 261,
 									"name": "ctx",
 									"variant": "param",
 									"kind": 32768,
 									"flags": {},
 									"type": {
 										"type": "reference",
-										"target": 216,
+										"target": 219,
 										"name": "ModulePageHost",
 										"package": "@primebrick/core"
 									}
@@ -8390,7 +8568,7 @@
 			]
 		},
 		{
-			"id": 259,
+			"id": 262,
 			"name": "translationKeyNamespace",
 			"variant": "declaration",
 			"kind": 64,
@@ -8405,7 +8583,7 @@
 			],
 			"signatures": [
 				{
-					"id": 260,
+					"id": 263,
 					"name": "translationKeyNamespace",
 					"variant": "signature",
 					"kind": 4096,
@@ -8428,7 +8606,7 @@
 					],
 					"parameters": [
 						{
-							"id": 261,
+							"id": 264,
 							"name": "schema",
 							"variant": "param",
 							"kind": 32768,
@@ -8447,7 +8625,7 @@
 			]
 		},
 		{
-			"id": 262,
+			"id": 265,
 			"name": "allowedKeyNamespaces",
 			"variant": "declaration",
 			"kind": 64,
@@ -8462,7 +8640,7 @@
 			],
 			"signatures": [
 				{
-					"id": 263,
+					"id": 266,
 					"name": "allowedKeyNamespaces",
 					"variant": "signature",
 					"kind": 4096,
@@ -8501,7 +8679,7 @@
 					],
 					"parameters": [
 						{
-							"id": 264,
+							"id": 267,
 							"name": "moduleCode",
 							"variant": "param",
 							"kind": 32768,
@@ -8532,7 +8710,7 @@
 			]
 		},
 		{
-			"id": 265,
+			"id": 268,
 			"name": "keyNamespaceOf",
 			"variant": "declaration",
 			"kind": 64,
@@ -8547,7 +8725,7 @@
 			],
 			"signatures": [
 				{
-					"id": 266,
+					"id": 269,
 					"name": "keyNamespaceOf",
 					"variant": "signature",
 					"kind": 4096,
@@ -8586,7 +8764,7 @@
 					],
 					"parameters": [
 						{
-							"id": 267,
+							"id": 270,
 							"name": "key",
 							"variant": "param",
 							"kind": 32768,
@@ -8614,7 +8792,7 @@
 			]
 		},
 		{
-			"id": 325,
+			"id": 328,
 			"name": "DecimalInput",
 			"variant": "declaration",
 			"kind": 2097152,
@@ -8639,7 +8817,7 @@
 				"types": [
 					{
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					},
@@ -8659,14 +8837,14 @@
 			}
 		},
 		{
-			"id": 279,
+			"id": 282,
 			"name": "Decimal",
 			"variant": "declaration",
 			"kind": 128,
 			"flags": {},
 			"children": [
 				{
-					"id": 285,
+					"id": 288,
 					"name": "v",
 					"variant": "declaration",
 					"kind": 1024,
@@ -8702,7 +8880,7 @@
 					}
 				},
 				{
-					"id": 286,
+					"id": 289,
 					"name": "scale",
 					"variant": "declaration",
 					"kind": 1024,
@@ -8738,7 +8916,7 @@
 					}
 				},
 				{
-					"id": 287,
+					"id": 290,
 					"name": "periodic",
 					"variant": "declaration",
 					"kind": 1024,
@@ -8766,7 +8944,7 @@
 					}
 				},
 				{
-					"id": 280,
+					"id": 283,
 					"name": "constructor",
 					"variant": "declaration",
 					"kind": 512,
@@ -8780,7 +8958,7 @@
 					],
 					"signatures": [
 						{
-							"id": 281,
+							"id": 284,
 							"name": "Decimal",
 							"variant": "signature",
 							"kind": 16384,
@@ -8834,7 +9012,7 @@
 							],
 							"parameters": [
 								{
-									"id": 282,
+									"id": 285,
 									"name": "v",
 									"variant": "param",
 									"kind": 32768,
@@ -8845,7 +9023,7 @@
 									}
 								},
 								{
-									"id": 283,
+									"id": 286,
 									"name": "scale",
 									"variant": "param",
 									"kind": 32768,
@@ -8856,7 +9034,7 @@
 									}
 								},
 								{
-									"id": 284,
+									"id": 287,
 									"name": "periodic",
 									"variant": "param",
 									"kind": 32768,
@@ -8871,7 +9049,7 @@
 							],
 							"type": {
 								"type": "reference",
-								"target": 279,
+								"target": 282,
 								"name": "Decimal",
 								"package": "@primebrick/decimal"
 							}
@@ -8879,7 +9057,7 @@
 					]
 				},
 				{
-					"id": 288,
+					"id": 291,
 					"name": "toString",
 					"variant": "declaration",
 					"kind": 2048,
@@ -8893,7 +9071,7 @@
 					],
 					"signatures": [
 						{
-							"id": 289,
+							"id": 292,
 							"name": "toString",
 							"variant": "signature",
 							"kind": 4096,
@@ -8929,7 +9107,7 @@
 					]
 				},
 				{
-					"id": 290,
+					"id": 293,
 					"name": "toJSON",
 					"variant": "declaration",
 					"kind": 2048,
@@ -8943,7 +9121,7 @@
 					],
 					"signatures": [
 						{
-							"id": 291,
+							"id": 294,
 							"name": "toJSON",
 							"variant": "signature",
 							"kind": 4096,
@@ -8995,7 +9173,7 @@
 					]
 				},
 				{
-					"id": 292,
+					"id": 295,
 					"name": "toNumber",
 					"variant": "declaration",
 					"kind": 2048,
@@ -9009,7 +9187,7 @@
 					],
 					"signatures": [
 						{
-							"id": 293,
+							"id": 296,
 							"name": "toNumber",
 							"variant": "signature",
 							"kind": 4096,
@@ -9041,23 +9219,23 @@
 				{
 					"title": "Constructors",
 					"children": [
-						280
+						283
 					]
 				},
 				{
 					"title": "Properties",
 					"children": [
-						285,
-						286,
-						287
+						288,
+						289,
+						290
 					]
 				},
 				{
 					"title": "Methods",
 					"children": [
-						288,
-						290,
-						292
+						291,
+						293,
+						295
 					]
 				}
 			],
@@ -9070,7 +9248,7 @@
 			]
 		},
 		{
-			"id": 322,
+			"id": 325,
 			"name": "pow10",
 			"variant": "declaration",
 			"kind": 64,
@@ -9084,7 +9262,7 @@
 			],
 			"signatures": [
 				{
-					"id": 323,
+					"id": 326,
 					"name": "pow10",
 					"variant": "signature",
 					"kind": 4096,
@@ -9098,7 +9276,7 @@
 					],
 					"parameters": [
 						{
-							"id": 324,
+							"id": 327,
 							"name": "n",
 							"variant": "param",
 							"kind": 32768,
@@ -9117,7 +9295,7 @@
 			]
 		},
 		{
-			"id": 297,
+			"id": 300,
 			"name": "parseDecimal",
 			"variant": "declaration",
 			"kind": 64,
@@ -9131,7 +9309,7 @@
 			],
 			"signatures": [
 				{
-					"id": 298,
+					"id": 301,
 					"name": "parseDecimal",
 					"variant": "signature",
 					"kind": 4096,
@@ -9233,7 +9411,7 @@
 					],
 					"parameters": [
 						{
-							"id": 299,
+							"id": 302,
 							"name": "input",
 							"variant": "param",
 							"kind": 32768,
@@ -9246,7 +9424,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -9254,7 +9432,7 @@
 			]
 		},
 		{
-			"id": 294,
+			"id": 297,
 			"name": "dec",
 			"variant": "declaration",
 			"kind": 64,
@@ -9268,7 +9446,7 @@
 			],
 			"signatures": [
 				{
-					"id": 295,
+					"id": 298,
 					"name": "dec",
 					"variant": "signature",
 					"kind": 4096,
@@ -9350,14 +9528,14 @@
 					],
 					"parameters": [
 						{
-							"id": 296,
+							"id": 299,
 							"name": "input",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -9365,7 +9543,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -9373,7 +9551,7 @@
 			]
 		},
 		{
-			"id": 300,
+			"id": 303,
 			"name": "fromPG",
 			"variant": "declaration",
 			"kind": 32,
@@ -9423,14 +9601,14 @@
 				"type": "query",
 				"queryType": {
 					"type": "reference",
-					"target": 294,
+					"target": 297,
 					"name": "dec",
 					"package": "@primebrick/decimal"
 				}
 			}
 		},
 		{
-			"id": 301,
+			"id": 304,
 			"name": "fromWire",
 			"variant": "declaration",
 			"kind": 32,
@@ -9472,14 +9650,14 @@
 				"type": "query",
 				"queryType": {
 					"type": "reference",
-					"target": 294,
+					"target": 297,
 					"name": "dec",
 					"package": "@primebrick/decimal"
 				}
 			}
 		},
 		{
-			"id": 302,
+			"id": 305,
 			"name": "fromString",
 			"variant": "declaration",
 			"kind": 32,
@@ -9497,14 +9675,14 @@
 				"type": "query",
 				"queryType": {
 					"type": "reference",
-					"target": 294,
+					"target": 297,
 					"name": "dec",
 					"package": "@primebrick/decimal"
 				}
 			}
 		},
 		{
-			"id": 303,
+			"id": 306,
 			"name": "fromNumber",
 			"variant": "declaration",
 			"kind": 64,
@@ -9518,7 +9696,7 @@
 			],
 			"signatures": [
 				{
-					"id": 304,
+					"id": 307,
 					"name": "fromNumber",
 					"variant": "signature",
 					"kind": 4096,
@@ -9532,7 +9710,7 @@
 					],
 					"parameters": [
 						{
-							"id": 305,
+							"id": 308,
 							"name": "n",
 							"variant": "param",
 							"kind": 32768,
@@ -9545,7 +9723,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -9553,7 +9731,7 @@
 			]
 		},
 		{
-			"id": 306,
+			"id": 309,
 			"name": "fromBigInt",
 			"variant": "declaration",
 			"kind": 64,
@@ -9567,7 +9745,7 @@
 			],
 			"signatures": [
 				{
-					"id": 307,
+					"id": 310,
 					"name": "fromBigInt",
 					"variant": "signature",
 					"kind": 4096,
@@ -9581,7 +9759,7 @@
 					],
 					"parameters": [
 						{
-							"id": 308,
+							"id": 311,
 							"name": "v",
 							"variant": "param",
 							"kind": 32768,
@@ -9592,7 +9770,7 @@
 							}
 						},
 						{
-							"id": 309,
+							"id": 312,
 							"name": "scale",
 							"variant": "param",
 							"kind": 32768,
@@ -9607,7 +9785,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -9615,7 +9793,7 @@
 			]
 		},
 		{
-			"id": 310,
+			"id": 313,
 			"name": "isDecimal",
 			"variant": "declaration",
 			"kind": 64,
@@ -9629,7 +9807,7 @@
 			],
 			"signatures": [
 				{
-					"id": 311,
+					"id": 314,
 					"name": "isDecimal",
 					"variant": "signature",
 					"kind": 4096,
@@ -9643,7 +9821,7 @@
 					],
 					"parameters": [
 						{
-							"id": 312,
+							"id": 315,
 							"name": "v",
 							"variant": "param",
 							"kind": 32768,
@@ -9660,7 +9838,7 @@
 						"asserts": false,
 						"targetType": {
 							"type": "reference",
-							"target": 279,
+							"target": 282,
 							"name": "Decimal",
 							"package": "@primebrick/decimal"
 						}
@@ -9669,7 +9847,7 @@
 			]
 		},
 		{
-			"id": 313,
+			"id": 316,
 			"name": "isPeriodic",
 			"variant": "declaration",
 			"kind": 64,
@@ -9683,7 +9861,7 @@
 			],
 			"signatures": [
 				{
-					"id": 314,
+					"id": 317,
 					"name": "isPeriodic",
 					"variant": "signature",
 					"kind": 4096,
@@ -9709,14 +9887,14 @@
 					],
 					"parameters": [
 						{
-							"id": 315,
+							"id": 318,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -9730,7 +9908,7 @@
 			]
 		},
 		{
-			"id": 316,
+			"id": 319,
 			"name": "toPG",
 			"variant": "declaration",
 			"kind": 64,
@@ -9744,7 +9922,7 @@
 			],
 			"signatures": [
 				{
-					"id": 317,
+					"id": 320,
 					"name": "toPG",
 					"variant": "signature",
 					"kind": 4096,
@@ -9774,14 +9952,14 @@
 					],
 					"parameters": [
 						{
-							"id": 318,
+							"id": 321,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -9795,7 +9973,7 @@
 			]
 		},
 		{
-			"id": 319,
+			"id": 322,
 			"name": "toWire",
 			"variant": "declaration",
 			"kind": 64,
@@ -9809,7 +9987,7 @@
 			],
 			"signatures": [
 				{
-					"id": 320,
+					"id": 323,
 					"name": "toWire",
 					"variant": "signature",
 					"kind": 4096,
@@ -9839,14 +10017,14 @@
 					],
 					"parameters": [
 						{
-							"id": 321,
+							"id": 324,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -9860,7 +10038,7 @@
 			]
 		},
 		{
-			"id": 411,
+			"id": 414,
 			"name": "DecimalError",
 			"variant": "declaration",
 			"kind": 128,
@@ -9875,7 +10053,7 @@
 			},
 			"children": [
 				{
-					"id": 416,
+					"id": 419,
 					"name": "code",
 					"variant": "declaration",
 					"kind": 1024,
@@ -9916,7 +10094,7 @@
 					}
 				},
 				{
-					"id": 412,
+					"id": 415,
 					"name": "constructor",
 					"variant": "declaration",
 					"kind": 512,
@@ -9930,7 +10108,7 @@
 					],
 					"signatures": [
 						{
-							"id": 413,
+							"id": 416,
 							"name": "DecimalError",
 							"variant": "signature",
 							"kind": 16384,
@@ -9944,7 +10122,7 @@
 							],
 							"parameters": [
 								{
-									"id": 414,
+									"id": 417,
 									"name": "code",
 									"variant": "param",
 									"kind": 32768,
@@ -9976,7 +10154,7 @@
 									}
 								},
 								{
-									"id": 415,
+									"id": 418,
 									"name": "message",
 									"variant": "param",
 									"kind": 32768,
@@ -9989,7 +10167,7 @@
 							],
 							"type": {
 								"type": "reference",
-								"target": 411,
+								"target": 414,
 								"name": "DecimalError",
 								"package": "@primebrick/decimal"
 							},
@@ -10009,7 +10187,7 @@
 					}
 				},
 				{
-					"id": 420,
+					"id": 423,
 					"name": "cause",
 					"variant": "declaration",
 					"kind": 1024,
@@ -10036,7 +10214,7 @@
 					}
 				},
 				{
-					"id": 417,
+					"id": 420,
 					"name": "name",
 					"variant": "declaration",
 					"kind": 1024,
@@ -10062,7 +10240,7 @@
 					}
 				},
 				{
-					"id": 418,
+					"id": 421,
 					"name": "message",
 					"variant": "declaration",
 					"kind": 1024,
@@ -10088,7 +10266,7 @@
 					}
 				},
 				{
-					"id": 419,
+					"id": 422,
 					"name": "stack",
 					"variant": "declaration",
 					"kind": 1024,
@@ -10119,17 +10297,17 @@
 				{
 					"title": "Constructors",
 					"children": [
-						412
+						415
 					]
 				},
 				{
 					"title": "Properties",
 					"children": [
-						416,
+						419,
+						423,
 						420,
-						417,
-						418,
-						419
+						421,
+						422
 					]
 				}
 			],
@@ -10154,7 +10332,7 @@
 			]
 		},
 		{
-			"id": 384,
+			"id": 387,
 			"name": "setScale",
 			"variant": "reference",
 			"kind": 4194304,
@@ -10166,10 +10344,10 @@
 					"character": 90
 				}
 			],
-			"target": 379
+			"target": 382
 		},
 		{
-			"id": 410,
+			"id": 413,
 			"name": "RoundingMode",
 			"variant": "declaration",
 			"kind": 2097152,
@@ -10216,7 +10394,7 @@
 			}
 		},
 		{
-			"id": 409,
+			"id": 412,
 			"name": "NUMERIC_MIN_SIG_DIGITS",
 			"variant": "declaration",
 			"kind": 32,
@@ -10269,7 +10447,7 @@
 			"defaultValue": "16"
 		},
 		{
-			"id": 406,
+			"id": 409,
 			"name": "ZERO",
 			"variant": "declaration",
 			"kind": 32,
@@ -10285,13 +10463,13 @@
 			],
 			"type": {
 				"type": "reference",
-				"target": 279,
+				"target": 282,
 				"name": "Decimal",
 				"package": "@primebrick/decimal"
 			}
 		},
 		{
-			"id": 407,
+			"id": 410,
 			"name": "ONE",
 			"variant": "declaration",
 			"kind": 32,
@@ -10307,13 +10485,13 @@
 			],
 			"type": {
 				"type": "reference",
-				"target": 279,
+				"target": 282,
 				"name": "Decimal",
 				"package": "@primebrick/decimal"
 			}
 		},
 		{
-			"id": 408,
+			"id": 411,
 			"name": "TEN",
 			"variant": "declaration",
 			"kind": 32,
@@ -10329,13 +10507,13 @@
 			],
 			"type": {
 				"type": "reference",
-				"target": 279,
+				"target": 282,
 				"name": "Decimal",
 				"package": "@primebrick/decimal"
 			}
 		},
 		{
-			"id": 379,
+			"id": 382,
 			"name": "rescale",
 			"variant": "declaration",
 			"kind": 64,
@@ -10349,7 +10527,7 @@
 			],
 			"signatures": [
 				{
-					"id": 380,
+					"id": 383,
 					"name": "rescale",
 					"variant": "signature",
 					"kind": 4096,
@@ -10411,20 +10589,20 @@
 					],
 					"parameters": [
 						{
-							"id": 381,
+							"id": 384,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 382,
+							"id": 385,
 							"name": "newScale",
 							"variant": "param",
 							"kind": 32768,
@@ -10435,7 +10613,7 @@
 							}
 						},
 						{
-							"id": 383,
+							"id": 386,
 							"name": "mode",
 							"variant": "param",
 							"kind": 32768,
@@ -10444,7 +10622,7 @@
 							},
 							"type": {
 								"type": "reference",
-								"target": 410,
+								"target": 413,
 								"name": "RoundingMode",
 								"package": "@primebrick/decimal"
 							}
@@ -10452,7 +10630,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -10460,7 +10638,7 @@
 			]
 		},
 		{
-			"id": 385,
+			"id": 388,
 			"name": "normalize",
 			"variant": "declaration",
 			"kind": 64,
@@ -10474,7 +10652,7 @@
 			],
 			"signatures": [
 				{
-					"id": 386,
+					"id": 389,
 					"name": "normalize",
 					"variant": "signature",
 					"kind": 4096,
@@ -10528,14 +10706,14 @@
 					],
 					"parameters": [
 						{
-							"id": 387,
+							"id": 390,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -10543,7 +10721,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -10551,7 +10729,7 @@
 			]
 		},
 		{
-			"id": 388,
+			"id": 391,
 			"name": "round",
 			"variant": "declaration",
 			"kind": 64,
@@ -10565,7 +10743,7 @@
 			],
 			"signatures": [
 				{
-					"id": 389,
+					"id": 392,
 					"name": "round",
 					"variant": "signature",
 					"kind": 4096,
@@ -10603,20 +10781,20 @@
 					],
 					"parameters": [
 						{
-							"id": 390,
+							"id": 393,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 391,
+							"id": 394,
 							"name": "scale",
 							"variant": "param",
 							"kind": 32768,
@@ -10627,7 +10805,7 @@
 							}
 						},
 						{
-							"id": 392,
+							"id": 395,
 							"name": "mode",
 							"variant": "param",
 							"kind": 32768,
@@ -10636,7 +10814,7 @@
 							},
 							"type": {
 								"type": "reference",
-								"target": 410,
+								"target": 413,
 								"name": "RoundingMode",
 								"package": "@primebrick/decimal"
 							}
@@ -10644,7 +10822,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -10652,7 +10830,7 @@
 			]
 		},
 		{
-			"id": 393,
+			"id": 396,
 			"name": "trunc",
 			"variant": "declaration",
 			"kind": 64,
@@ -10666,7 +10844,7 @@
 			],
 			"signatures": [
 				{
-					"id": 394,
+					"id": 397,
 					"name": "trunc",
 					"variant": "signature",
 					"kind": 4096,
@@ -10688,14 +10866,14 @@
 					],
 					"parameters": [
 						{
-							"id": 395,
+							"id": 398,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -10703,7 +10881,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -10711,7 +10889,7 @@
 			]
 		},
 		{
-			"id": 396,
+			"id": 399,
 			"name": "floor",
 			"variant": "declaration",
 			"kind": 64,
@@ -10725,7 +10903,7 @@
 			],
 			"signatures": [
 				{
-					"id": 397,
+					"id": 400,
 					"name": "floor",
 					"variant": "signature",
 					"kind": 4096,
@@ -10755,14 +10933,14 @@
 					],
 					"parameters": [
 						{
-							"id": 398,
+							"id": 401,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -10770,7 +10948,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -10778,7 +10956,7 @@
 			]
 		},
 		{
-			"id": 399,
+			"id": 402,
 			"name": "ceil",
 			"variant": "declaration",
 			"kind": 64,
@@ -10792,7 +10970,7 @@
 			],
 			"signatures": [
 				{
-					"id": 400,
+					"id": 403,
 					"name": "ceil",
 					"variant": "signature",
 					"kind": 4096,
@@ -10822,14 +11000,14 @@
 					],
 					"parameters": [
 						{
-							"id": 401,
+							"id": 404,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -10837,7 +11015,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -10845,7 +11023,7 @@
 			]
 		},
 		{
-			"id": 326,
+			"id": 329,
 			"name": "add",
 			"variant": "declaration",
 			"kind": 64,
@@ -10859,7 +11037,7 @@
 			],
 			"signatures": [
 				{
-					"id": 327,
+					"id": 330,
 					"name": "add",
 					"variant": "signature",
 					"kind": 4096,
@@ -10873,27 +11051,27 @@
 					],
 					"parameters": [
 						{
-							"id": 328,
+							"id": 331,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 329,
+							"id": 332,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -10901,7 +11079,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -10909,7 +11087,7 @@
 			]
 		},
 		{
-			"id": 330,
+			"id": 333,
 			"name": "sub",
 			"variant": "declaration",
 			"kind": 64,
@@ -10923,7 +11101,7 @@
 			],
 			"signatures": [
 				{
-					"id": 331,
+					"id": 334,
 					"name": "sub",
 					"variant": "signature",
 					"kind": 4096,
@@ -10937,27 +11115,27 @@
 					],
 					"parameters": [
 						{
-							"id": 332,
+							"id": 335,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 333,
+							"id": 336,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -10965,7 +11143,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -10973,7 +11151,7 @@
 			]
 		},
 		{
-			"id": 334,
+			"id": 337,
 			"name": "mul",
 			"variant": "declaration",
 			"kind": 64,
@@ -10987,7 +11165,7 @@
 			],
 			"signatures": [
 				{
-					"id": 335,
+					"id": 338,
 					"name": "mul",
 					"variant": "signature",
 					"kind": 4096,
@@ -11001,27 +11179,27 @@
 					],
 					"parameters": [
 						{
-							"id": 336,
+							"id": 339,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 337,
+							"id": 340,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11029,7 +11207,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -11037,7 +11215,7 @@
 			]
 		},
 		{
-			"id": 350,
+			"id": 353,
 			"name": "neg",
 			"variant": "declaration",
 			"kind": 64,
@@ -11051,7 +11229,7 @@
 			],
 			"signatures": [
 				{
-					"id": 351,
+					"id": 354,
 					"name": "neg",
 					"variant": "signature",
 					"kind": 4096,
@@ -11065,14 +11243,14 @@
 					],
 					"parameters": [
 						{
-							"id": 352,
+							"id": 355,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11080,7 +11258,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -11088,7 +11266,7 @@
 			]
 		},
 		{
-			"id": 353,
+			"id": 356,
 			"name": "abs",
 			"variant": "declaration",
 			"kind": 64,
@@ -11102,7 +11280,7 @@
 			],
 			"signatures": [
 				{
-					"id": 354,
+					"id": 357,
 					"name": "abs",
 					"variant": "signature",
 					"kind": 4096,
@@ -11116,14 +11294,14 @@
 					],
 					"parameters": [
 						{
-							"id": 355,
+							"id": 358,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11131,7 +11309,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -11139,7 +11317,7 @@
 			]
 		},
 		{
-			"id": 402,
+			"id": 405,
 			"name": "pgDivScale",
 			"variant": "declaration",
 			"kind": 64,
@@ -11153,7 +11331,7 @@
 			],
 			"signatures": [
 				{
-					"id": 403,
+					"id": 406,
 					"name": "pgDivScale",
 					"variant": "signature",
 					"kind": 4096,
@@ -11239,27 +11417,27 @@
 					],
 					"parameters": [
 						{
-							"id": 404,
+							"id": 407,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 405,
+							"id": 408,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11273,7 +11451,7 @@
 			]
 		},
 		{
-			"id": 338,
+			"id": 341,
 			"name": "div",
 			"variant": "declaration",
 			"kind": 64,
@@ -11287,7 +11465,7 @@
 			],
 			"signatures": [
 				{
-					"id": 339,
+					"id": 342,
 					"name": "div",
 					"variant": "signature",
 					"kind": 4096,
@@ -11377,33 +11555,33 @@
 					],
 					"parameters": [
 						{
-							"id": 340,
+							"id": 343,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 341,
+							"id": 344,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 342,
+							"id": 345,
 							"name": "opts",
 							"variant": "param",
 							"kind": 32768,
@@ -11420,14 +11598,14 @@
 									{
 										"type": "reflection",
 										"declaration": {
-											"id": 343,
+											"id": 346,
 											"name": "__type",
 											"variant": "declaration",
 											"kind": 65536,
 											"flags": {},
 											"children": [
 												{
-													"id": 344,
+													"id": 347,
 													"name": "scale",
 													"variant": "declaration",
 													"kind": 1024,
@@ -11447,7 +11625,7 @@
 													}
 												},
 												{
-													"id": 345,
+													"id": 348,
 													"name": "rounding",
 													"variant": "declaration",
 													"kind": 1024,
@@ -11463,7 +11641,7 @@
 													],
 													"type": {
 														"type": "reference",
-														"target": 410,
+														"target": 413,
 														"name": "RoundingMode",
 														"package": "@primebrick/decimal"
 													}
@@ -11473,8 +11651,8 @@
 												{
 													"title": "Properties",
 													"children": [
-														344,
-														345
+														347,
+														348
 													]
 												}
 											]
@@ -11486,7 +11664,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -11494,7 +11672,7 @@
 			]
 		},
 		{
-			"id": 346,
+			"id": 349,
 			"name": "mod",
 			"variant": "declaration",
 			"kind": 64,
@@ -11508,7 +11686,7 @@
 			],
 			"signatures": [
 				{
-					"id": 347,
+					"id": 350,
 					"name": "mod",
 					"variant": "signature",
 					"kind": 4096,
@@ -11534,27 +11712,27 @@
 					],
 					"parameters": [
 						{
-							"id": 348,
+							"id": 351,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 349,
+							"id": 352,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11562,7 +11740,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -11570,7 +11748,7 @@
 			]
 		},
 		{
-			"id": 356,
+			"id": 359,
 			"name": "cmp",
 			"variant": "declaration",
 			"kind": 64,
@@ -11584,7 +11762,7 @@
 			],
 			"signatures": [
 				{
-					"id": 357,
+					"id": 360,
 					"name": "cmp",
 					"variant": "signature",
 					"kind": 4096,
@@ -11614,27 +11792,27 @@
 					],
 					"parameters": [
 						{
-							"id": 358,
+							"id": 361,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 359,
+							"id": 362,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11661,7 +11839,7 @@
 			]
 		},
 		{
-			"id": 360,
+			"id": 363,
 			"name": "eq",
 			"variant": "declaration",
 			"kind": 64,
@@ -11675,7 +11853,7 @@
 			],
 			"signatures": [
 				{
-					"id": 361,
+					"id": 364,
 					"name": "eq",
 					"variant": "signature",
 					"kind": 4096,
@@ -11713,27 +11891,27 @@
 					],
 					"parameters": [
 						{
-							"id": 362,
+							"id": 365,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 363,
+							"id": 366,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11747,7 +11925,7 @@
 			]
 		},
 		{
-			"id": 364,
+			"id": 367,
 			"name": "strictEq",
 			"variant": "declaration",
 			"kind": 64,
@@ -11761,7 +11939,7 @@
 			],
 			"signatures": [
 				{
-					"id": 365,
+					"id": 368,
 					"name": "strictEq",
 					"variant": "signature",
 					"kind": 4096,
@@ -11799,27 +11977,27 @@
 					],
 					"parameters": [
 						{
-							"id": 366,
+							"id": 369,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 367,
+							"id": 370,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11833,7 +12011,7 @@
 			]
 		},
 		{
-			"id": 368,
+			"id": 371,
 			"name": "signum",
 			"variant": "declaration",
 			"kind": 64,
@@ -11847,7 +12025,7 @@
 			],
 			"signatures": [
 				{
-					"id": 369,
+					"id": 372,
 					"name": "signum",
 					"variant": "signature",
 					"kind": 4096,
@@ -11861,14 +12039,14 @@
 					],
 					"parameters": [
 						{
-							"id": 370,
+							"id": 373,
 							"name": "d",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11895,7 +12073,7 @@
 			]
 		},
 		{
-			"id": 371,
+			"id": 374,
 			"name": "min",
 			"variant": "declaration",
 			"kind": 64,
@@ -11909,7 +12087,7 @@
 			],
 			"signatures": [
 				{
-					"id": 372,
+					"id": 375,
 					"name": "min",
 					"variant": "signature",
 					"kind": 4096,
@@ -11923,27 +12101,27 @@
 					],
 					"parameters": [
 						{
-							"id": 373,
+							"id": 376,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 374,
+							"id": 377,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -11951,7 +12129,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -11959,7 +12137,7 @@
 			]
 		},
 		{
-			"id": 375,
+			"id": 378,
 			"name": "max",
 			"variant": "declaration",
 			"kind": 64,
@@ -11973,7 +12151,7 @@
 			],
 			"signatures": [
 				{
-					"id": 376,
+					"id": 379,
 					"name": "max",
 					"variant": "signature",
 					"kind": 4096,
@@ -11987,27 +12165,27 @@
 					],
 					"parameters": [
 						{
-							"id": 377,
+							"id": 380,
 							"name": "a",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
 						},
 						{
-							"id": 378,
+							"id": 381,
 							"name": "b",
 							"variant": "param",
 							"kind": 32768,
 							"flags": {},
 							"type": {
 								"type": "reference",
-								"target": 325,
+								"target": 328,
 								"name": "DecimalInput",
 								"package": "@primebrick/decimal"
 							}
@@ -12015,7 +12193,7 @@
 					],
 					"type": {
 						"type": "reference",
-						"target": 279,
+						"target": 282,
 						"name": "Decimal",
 						"package": "@primebrick/decimal"
 					}
@@ -12027,8 +12205,8 @@
 		{
 			"title": "Classes",
 			"children": [
-				279,
-				411
+				282,
+				414
 			]
 		},
 		{
@@ -12067,27 +12245,27 @@
 				179,
 				180,
 				181,
-				191,
-				198,
-				205,
-				216,
-				245,
-				254,
-				325,
-				410
+				192,
+				200,
+				208,
+				219,
+				248,
+				257,
+				328,
+				413
 			]
 		},
 		{
 			"title": "Variables",
 			"children": [
 				20,
-				300,
-				301,
-				302,
+				303,
+				304,
+				305,
+				412,
 				409,
-				406,
-				407,
-				408
+				410,
+				411
 			]
 		},
 		{
@@ -12103,49 +12281,49 @@
 				1,
 				169,
 				173,
-				268,
-				272,
-				276,
+				271,
+				275,
+				279,
 				134,
 				176,
-				259,
 				262,
 				265,
-				322,
+				268,
+				325,
+				300,
 				297,
-				294,
-				303,
 				306,
-				310,
+				309,
 				313,
 				316,
 				319,
-				379,
-				385,
+				322,
+				382,
 				388,
-				393,
+				391,
 				396,
 				399,
-				326,
-				330,
-				334,
-				350,
-				353,
 				402,
-				338,
-				346,
+				329,
+				333,
+				337,
+				353,
 				356,
-				360,
-				364,
-				368,
+				405,
+				341,
+				349,
+				359,
+				363,
+				367,
 				371,
-				375
+				374,
+				378
 			]
 		},
 		{
 			"title": "References",
 			"children": [
-				384
+				387
 			]
 		}
 	],
@@ -13085,172 +13263,172 @@
 		"191": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "ModuleNavLink"
+			"qualifiedName": "__type.access"
 		},
-		"193": {
+		"192": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.id"
+			"qualifiedName": "ModuleNavLink"
 		},
 		"194": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.label_key"
+			"qualifiedName": "__type.id"
 		},
 		"195": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.href"
+			"qualifiedName": "__type.label_key"
 		},
 		"196": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.icon"
+			"qualifiedName": "__type.href"
 		},
 		"197": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.children"
+			"qualifiedName": "__type.icon"
 		},
 		"198": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "ModuleNavDeclaration"
+			"qualifiedName": "__type.access"
+		},
+		"199": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/page-route.ts",
+			"qualifiedName": "__type.children"
 		},
 		"200": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.module"
-		},
-		"201": {
-			"packageName": "@primebrick/core",
-			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.route_prefixes"
+			"qualifiedName": "ModuleNavDeclaration"
 		},
 		"202": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.nav"
+			"qualifiedName": "__type.module"
 		},
 		"203": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.routes"
+			"qualifiedName": "__type.route_prefixes"
 		},
 		"204": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.is_reserved"
+			"qualifiedName": "__type.access"
 		},
 		"205": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "ModulePageNotifyInput"
+			"qualifiedName": "__type.nav"
+		},
+		"206": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/page-route.ts",
+			"qualifiedName": "__type.routes"
 		},
 		"207": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.impact"
+			"qualifiedName": "__type.is_reserved"
 		},
 		"208": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.message"
-		},
-		"209": {
-			"packageName": "@primebrick/core",
-			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.messageKey"
+			"qualifiedName": "ModulePageNotifyInput"
 		},
 		"210": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.scope"
+			"qualifiedName": "__type.impact"
 		},
 		"211": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.scopeKey"
+			"qualifiedName": "__type.message"
 		},
 		"212": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.detail"
+			"qualifiedName": "__type.messageKey"
 		},
 		"213": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.toast"
+			"qualifiedName": "__type.scope"
 		},
 		"214": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.__index"
+			"qualifiedName": "__type.scopeKey"
+		},
+		"215": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/page-route.ts",
+			"qualifiedName": "__type.detail"
 		},
 		"216": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "ModulePageHost"
+			"qualifiedName": "__type.toast"
 		},
-		"218": {
+		"217": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.host_version"
+			"qualifiedName": "__type.__index"
 		},
 		"219": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.nav"
-		},
-		"220": {
-			"packageName": "@primebrick/core",
-			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.meta"
+			"qualifiedName": "ModulePageHost"
 		},
 		"221": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.api"
+			"qualifiedName": "__type.host_version"
 		},
 		"222": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.nav"
 		},
 		"223": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.meta"
 		},
 		"224": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "path"
+			"qualifiedName": "__type.api"
 		},
 		"225": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "init"
+			"qualifiedName": "__type"
 		},
 		"226": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.i18n"
+			"qualifiedName": "__type"
 		},
 		"227": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "path"
 		},
 		"228": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.t"
+			"qualifiedName": "init"
 		},
 		"229": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.i18n"
 		},
 		"230": {
 			"packageName": "@primebrick/core",
@@ -13260,102 +13438,102 @@
 		"231": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "key"
+			"qualifiedName": "__type.t"
 		},
 		"232": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "params"
+			"qualifiedName": "__type"
 		},
 		"233": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.locale"
+			"qualifiedName": "__type"
 		},
 		"234": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.notify"
+			"qualifiedName": "key"
 		},
 		"235": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "params"
 		},
 		"236": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.locale"
 		},
 		"237": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "input"
+			"qualifiedName": "__type.notify"
 		},
 		"238": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.components"
+			"qualifiedName": "__type"
 		},
 		"239": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.mount_host"
+			"qualifiedName": "__type"
 		},
 		"240": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "input"
 		},
 		"241": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "__type.components"
 		},
 		"242": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "component"
+			"qualifiedName": "__type.mount_host"
 		},
 		"243": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "el"
+			"qualifiedName": "__type"
 		},
 		"244": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "props"
+			"qualifiedName": "__type"
 		},
 		"245": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "HostMountHandle"
+			"qualifiedName": "component"
+		},
+		"246": {
+			"packageName": "@primebrick/core",
+			"packagePath": "src/page-route.ts",
+			"qualifiedName": "el"
 		},
 		"247": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.update"
+			"qualifiedName": "props"
 		},
 		"248": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
-		},
-		"249": {
-			"packageName": "@primebrick/core",
-			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "HostMountHandle"
 		},
 		"250": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "props"
+			"qualifiedName": "__type.update"
 		},
 		"251": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type.destroy"
+			"qualifiedName": "__type"
 		},
 		"252": {
 			"packageName": "@primebrick/core",
@@ -13365,12 +13543,12 @@
 		"253": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "props"
 		},
 		"254": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "MountPageFn"
+			"qualifiedName": "__type.destroy"
 		},
 		"255": {
 			"packageName": "@primebrick/core",
@@ -13385,212 +13563,212 @@
 		"257": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "el"
+			"qualifiedName": "MountPageFn"
 		},
 		"258": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/page-route.ts",
-			"qualifiedName": "ctx"
+			"qualifiedName": "__type"
 		},
 		"259": {
 			"packageName": "@primebrick/core",
-			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "translationKeyNamespace"
+			"packagePath": "src/page-route.ts",
+			"qualifiedName": "__type"
 		},
 		"260": {
 			"packageName": "@primebrick/core",
-			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "translationKeyNamespace"
+			"packagePath": "src/page-route.ts",
+			"qualifiedName": "el"
 		},
 		"261": {
 			"packageName": "@primebrick/core",
-			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "schema"
+			"packagePath": "src/page-route.ts",
+			"qualifiedName": "ctx"
 		},
 		"262": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "allowedKeyNamespaces"
+			"qualifiedName": "translationKeyNamespace"
 		},
 		"263": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "allowedKeyNamespaces"
+			"qualifiedName": "translationKeyNamespace"
 		},
 		"264": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "moduleCode"
+			"qualifiedName": "schema"
 		},
 		"265": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "keyNamespaceOf"
+			"qualifiedName": "allowedKeyNamespaces"
 		},
 		"266": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "keyNamespaceOf"
+			"qualifiedName": "allowedKeyNamespaces"
 		},
 		"267": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/translation-keys.ts",
-			"qualifiedName": "key"
+			"qualifiedName": "moduleCode"
 		},
 		"268": {
 			"packageName": "@primebrick/core",
-			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "resolvePresetSelection"
+			"packagePath": "src/translation-keys.ts",
+			"qualifiedName": "keyNamespaceOf"
 		},
 		"269": {
 			"packageName": "@primebrick/core",
-			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "resolvePresetSelection"
+			"packagePath": "src/translation-keys.ts",
+			"qualifiedName": "keyNamespaceOf"
 		},
 		"270": {
 			"packageName": "@primebrick/core",
-			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "preset"
+			"packagePath": "src/translation-keys.ts",
+			"qualifiedName": "key"
 		},
 		"271": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "selected"
+			"qualifiedName": "resolvePresetSelection"
 		},
 		"272": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "resolvePresetConditions"
+			"qualifiedName": "resolvePresetSelection"
 		},
 		"273": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "resolvePresetConditions"
+			"qualifiedName": "preset"
 		},
 		"274": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "presets"
+			"qualifiedName": "selected"
 		},
 		"275": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "selections"
+			"qualifiedName": "resolvePresetConditions"
 		},
 		"276": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "serviceApiBase"
+			"qualifiedName": "resolvePresetConditions"
 		},
 		"277": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "serviceApiBase"
+			"qualifiedName": "presets"
 		},
 		"278": {
 			"packageName": "@primebrick/core",
 			"packagePath": "src/filter-presets.ts",
-			"qualifiedName": "listBasePath"
+			"qualifiedName": "selections"
 		},
 		"279": {
-			"packageName": "@primebrick/decimal",
-			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal"
+			"packageName": "@primebrick/core",
+			"packagePath": "src/filter-presets.ts",
+			"qualifiedName": "serviceApiBase"
 		},
 		"280": {
-			"packageName": "@primebrick/decimal",
-			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.__constructor"
+			"packageName": "@primebrick/core",
+			"packagePath": "src/filter-presets.ts",
+			"qualifiedName": "serviceApiBase"
 		},
 		"281": {
-			"packageName": "@primebrick/decimal",
-			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal"
+			"packageName": "@primebrick/core",
+			"packagePath": "src/filter-presets.ts",
+			"qualifiedName": "listBasePath"
 		},
 		"282": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "v"
+			"qualifiedName": "Decimal"
 		},
 		"283": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "scale"
+			"qualifiedName": "Decimal.__constructor"
 		},
 		"284": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "periodic"
+			"qualifiedName": "Decimal"
 		},
 		"285": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.v"
+			"qualifiedName": "v"
 		},
 		"286": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.scale"
+			"qualifiedName": "scale"
 		},
 		"287": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.periodic"
+			"qualifiedName": "periodic"
 		},
 		"288": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.toString"
+			"qualifiedName": "Decimal.v"
 		},
 		"289": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.toString"
+			"qualifiedName": "Decimal.scale"
 		},
 		"290": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.toJSON"
+			"qualifiedName": "Decimal.periodic"
 		},
 		"291": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.toJSON"
+			"qualifiedName": "Decimal.toString"
 		},
 		"292": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.toNumber"
+			"qualifiedName": "Decimal.toString"
 		},
 		"293": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "Decimal.toNumber"
+			"qualifiedName": "Decimal.toJSON"
 		},
 		"294": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "dec"
+			"qualifiedName": "Decimal.toJSON"
 		},
 		"295": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "dec"
+			"qualifiedName": "Decimal.toNumber"
 		},
 		"296": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "input"
+			"qualifiedName": "Decimal.toNumber"
 		},
 		"297": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "parseDecimal"
+			"qualifiedName": "dec"
 		},
 		"298": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "parseDecimal"
+			"qualifiedName": "dec"
 		},
 		"299": {
 			"packageName": "@primebrick/decimal",
@@ -13600,92 +13778,92 @@
 		"300": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "fromPG"
+			"qualifiedName": "parseDecimal"
 		},
 		"301": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "fromWire"
+			"qualifiedName": "parseDecimal"
 		},
 		"302": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "fromString"
+			"qualifiedName": "input"
 		},
 		"303": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "fromNumber"
+			"qualifiedName": "fromPG"
 		},
 		"304": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "fromNumber"
+			"qualifiedName": "fromWire"
 		},
 		"305": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "n"
+			"qualifiedName": "fromString"
 		},
 		"306": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "fromBigInt"
+			"qualifiedName": "fromNumber"
 		},
 		"307": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "fromBigInt"
+			"qualifiedName": "fromNumber"
 		},
 		"308": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "v"
+			"qualifiedName": "n"
 		},
 		"309": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "scale"
+			"qualifiedName": "fromBigInt"
 		},
 		"310": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "isDecimal"
+			"qualifiedName": "fromBigInt"
 		},
 		"311": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "isDecimal"
+			"qualifiedName": "v"
 		},
 		"312": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "v"
+			"qualifiedName": "scale"
 		},
 		"313": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "isPeriodic"
+			"qualifiedName": "isDecimal"
 		},
 		"314": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "isPeriodic"
+			"qualifiedName": "isDecimal"
 		},
 		"315": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "d"
+			"qualifiedName": "v"
 		},
 		"316": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "toPG"
+			"qualifiedName": "isPeriodic"
 		},
 		"317": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "toPG"
+			"qualifiedName": "isPeriodic"
 		},
 		"318": {
 			"packageName": "@primebrick/decimal",
@@ -13695,12 +13873,12 @@
 		"319": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "toWire"
+			"qualifiedName": "toPG"
 		},
 		"320": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "toWire"
+			"qualifiedName": "toPG"
 		},
 		"321": {
 			"packageName": "@primebrick/decimal",
@@ -13710,167 +13888,167 @@
 		"322": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "pow10"
+			"qualifiedName": "toWire"
 		},
 		"323": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "pow10"
+			"qualifiedName": "toWire"
 		},
 		"324": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "n"
+			"qualifiedName": "d"
 		},
 		"325": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/decimal.ts",
-			"qualifiedName": "DecimalInput"
+			"qualifiedName": "pow10"
 		},
 		"326": {
 			"packageName": "@primebrick/decimal",
-			"packagePath": "src/ops.ts",
-			"qualifiedName": "add"
+			"packagePath": "src/decimal.ts",
+			"qualifiedName": "pow10"
 		},
 		"327": {
 			"packageName": "@primebrick/decimal",
-			"packagePath": "src/ops.ts",
-			"qualifiedName": "add"
+			"packagePath": "src/decimal.ts",
+			"qualifiedName": "n"
 		},
 		"328": {
 			"packageName": "@primebrick/decimal",
-			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"packagePath": "src/decimal.ts",
+			"qualifiedName": "DecimalInput"
 		},
 		"329": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "add"
 		},
 		"330": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "sub"
+			"qualifiedName": "add"
 		},
 		"331": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "sub"
+			"qualifiedName": "a"
 		},
 		"332": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "b"
 		},
 		"333": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "sub"
 		},
 		"334": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "mul"
+			"qualifiedName": "sub"
 		},
 		"335": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "mul"
+			"qualifiedName": "a"
 		},
 		"336": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "b"
 		},
 		"337": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "mul"
 		},
 		"338": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "div"
+			"qualifiedName": "mul"
 		},
 		"339": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "div"
+			"qualifiedName": "a"
 		},
 		"340": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "b"
 		},
 		"341": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "div"
 		},
 		"342": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "opts"
+			"qualifiedName": "div"
 		},
 		"343": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "__type"
+			"qualifiedName": "a"
 		},
 		"344": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "__type.scale"
+			"qualifiedName": "b"
 		},
 		"345": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "__type.rounding"
+			"qualifiedName": "opts"
 		},
 		"346": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "mod"
+			"qualifiedName": "__type"
 		},
 		"347": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "mod"
+			"qualifiedName": "__type.scale"
 		},
 		"348": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "__type.rounding"
 		},
 		"349": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "mod"
 		},
 		"350": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "neg"
+			"qualifiedName": "mod"
 		},
 		"351": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "neg"
+			"qualifiedName": "a"
 		},
 		"352": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "d"
+			"qualifiedName": "b"
 		},
 		"353": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "abs"
+			"qualifiedName": "neg"
 		},
 		"354": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "abs"
+			"qualifiedName": "neg"
 		},
 		"355": {
 			"packageName": "@primebrick/decimal",
@@ -13880,172 +14058,172 @@
 		"356": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "cmp"
+			"qualifiedName": "abs"
 		},
 		"357": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "cmp"
+			"qualifiedName": "abs"
 		},
 		"358": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "d"
 		},
 		"359": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "cmp"
 		},
 		"360": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "eq"
+			"qualifiedName": "cmp"
 		},
 		"361": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "eq"
+			"qualifiedName": "a"
 		},
 		"362": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "b"
 		},
 		"363": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "eq"
 		},
 		"364": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "strictEq"
+			"qualifiedName": "eq"
 		},
 		"365": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "strictEq"
+			"qualifiedName": "a"
 		},
 		"366": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "b"
 		},
 		"367": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "strictEq"
 		},
 		"368": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "signum"
+			"qualifiedName": "strictEq"
 		},
 		"369": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "signum"
+			"qualifiedName": "a"
 		},
 		"370": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "d"
+			"qualifiedName": "b"
 		},
 		"371": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "min"
+			"qualifiedName": "signum"
 		},
 		"372": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "min"
+			"qualifiedName": "signum"
 		},
 		"373": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "d"
 		},
 		"374": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "min"
 		},
 		"375": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "max"
+			"qualifiedName": "min"
 		},
 		"376": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "max"
+			"qualifiedName": "a"
 		},
 		"377": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "b"
 		},
 		"378": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "max"
 		},
 		"379": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "rescale"
+			"qualifiedName": "max"
 		},
 		"380": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "rescale"
+			"qualifiedName": "a"
 		},
 		"381": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "d"
+			"qualifiedName": "b"
 		},
 		"382": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "newScale"
+			"qualifiedName": "rescale"
 		},
 		"383": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "mode"
+			"qualifiedName": "rescale"
 		},
 		"384": {
-			"packageName": "@primebrick/decimal",
-			"packagePath": "src/index.ts",
-			"qualifiedName": "setScale"
-		},
-		"385": {
-			"packageName": "@primebrick/decimal",
-			"packagePath": "src/ops.ts",
-			"qualifiedName": "normalize"
-		},
-		"386": {
-			"packageName": "@primebrick/decimal",
-			"packagePath": "src/ops.ts",
-			"qualifiedName": "normalize"
-		},
-		"387": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
 			"qualifiedName": "d"
 		},
+		"385": {
+			"packageName": "@primebrick/decimal",
+			"packagePath": "src/ops.ts",
+			"qualifiedName": "newScale"
+		},
+		"386": {
+			"packageName": "@primebrick/decimal",
+			"packagePath": "src/ops.ts",
+			"qualifiedName": "mode"
+		},
+		"387": {
+			"packageName": "@primebrick/decimal",
+			"packagePath": "src/index.ts",
+			"qualifiedName": "setScale"
+		},
 		"388": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "round"
+			"qualifiedName": "normalize"
 		},
 		"389": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "round"
+			"qualifiedName": "normalize"
 		},
 		"390": {
 			"packageName": "@primebrick/decimal",
@@ -14055,37 +14233,37 @@
 		"391": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "scale"
+			"qualifiedName": "round"
 		},
 		"392": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "mode"
+			"qualifiedName": "round"
 		},
 		"393": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "trunc"
+			"qualifiedName": "d"
 		},
 		"394": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "trunc"
+			"qualifiedName": "scale"
 		},
 		"395": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "d"
+			"qualifiedName": "mode"
 		},
 		"396": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "floor"
+			"qualifiedName": "trunc"
 		},
 		"397": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "floor"
+			"qualifiedName": "trunc"
 		},
 		"398": {
 			"packageName": "@primebrick/decimal",
@@ -14095,12 +14273,12 @@
 		"399": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "ceil"
+			"qualifiedName": "floor"
 		},
 		"400": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "ceil"
+			"qualifiedName": "floor"
 		},
 		"401": {
 			"packageName": "@primebrick/decimal",
@@ -14110,94 +14288,109 @@
 		"402": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "pgDivScale"
+			"qualifiedName": "ceil"
 		},
 		"403": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "pgDivScale"
+			"qualifiedName": "ceil"
 		},
 		"404": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "a"
+			"qualifiedName": "d"
 		},
 		"405": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "b"
+			"qualifiedName": "pgDivScale"
 		},
 		"406": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "ZERO"
+			"qualifiedName": "pgDivScale"
 		},
 		"407": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "ONE"
+			"qualifiedName": "a"
 		},
 		"408": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "TEN"
+			"qualifiedName": "b"
 		},
 		"409": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "NUMERIC_MIN_SIG_DIGITS"
+			"qualifiedName": "ZERO"
 		},
 		"410": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/ops.ts",
-			"qualifiedName": "RoundingMode"
+			"qualifiedName": "ONE"
 		},
 		"411": {
 			"packageName": "@primebrick/decimal",
-			"packagePath": "src/errors.ts",
-			"qualifiedName": "DecimalError"
+			"packagePath": "src/ops.ts",
+			"qualifiedName": "TEN"
 		},
 		"412": {
 			"packageName": "@primebrick/decimal",
-			"packagePath": "src/errors.ts",
-			"qualifiedName": "DecimalError.__constructor"
+			"packagePath": "src/ops.ts",
+			"qualifiedName": "NUMERIC_MIN_SIG_DIGITS"
 		},
 		"413": {
 			"packageName": "@primebrick/decimal",
-			"packagePath": "src/errors.ts",
-			"qualifiedName": "DecimalError"
+			"packagePath": "src/ops.ts",
+			"qualifiedName": "RoundingMode"
 		},
 		"414": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/errors.ts",
-			"qualifiedName": "code"
+			"qualifiedName": "DecimalError"
 		},
 		"415": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/errors.ts",
-			"qualifiedName": "message"
+			"qualifiedName": "DecimalError.__constructor"
 		},
 		"416": {
 			"packageName": "@primebrick/decimal",
 			"packagePath": "src/errors.ts",
-			"qualifiedName": "DecimalError.code"
+			"qualifiedName": "DecimalError"
 		},
 		"417": {
+			"packageName": "@primebrick/decimal",
+			"packagePath": "src/errors.ts",
+			"qualifiedName": "code"
+		},
+		"418": {
+			"packageName": "@primebrick/decimal",
+			"packagePath": "src/errors.ts",
+			"qualifiedName": "message"
+		},
+		"419": {
+			"packageName": "@primebrick/decimal",
+			"packagePath": "src/errors.ts",
+			"qualifiedName": "DecimalError.code"
+		},
+		"420": {
 			"packageName": "typescript",
 			"packagePath": "lib/lib.es5.d.ts",
 			"qualifiedName": "Error.name"
 		},
-		"418": {
+		"421": {
 			"packageName": "typescript",
 			"packagePath": "lib/lib.es5.d.ts",
 			"qualifiedName": "Error.message"
 		},
-		"419": {
+		"422": {
 			"packageName": "typescript",
 			"packagePath": "lib/lib.es5.d.ts",
 			"qualifiedName": "Error.stack"
 		},
-		"420": {
+		"423": {
 			"packageName": "typescript",
 			"packagePath": "lib/lib.es2022.error.d.ts",
 			"qualifiedName": "Error.cause"

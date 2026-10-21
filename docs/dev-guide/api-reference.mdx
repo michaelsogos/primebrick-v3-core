@@ -304,7 +304,8 @@ and non-breaking. `esm-mount`: a precompiled ESM chunk that exports
 
 One declared frontend route owned by a module. Modules MUST declare every
 FE path they own that is not deducible from nav links or entity
-conventions — the AI route census (GET /system/routes) depends on it.
+conventions — the AI route census (derived from the consolidated
+`GET /api/v1/modules` discovery payload) depends on it.
 `param` marks dynamic segments using the FE convention ([uuid], [code]).
 
 ### `PageRouteKind`

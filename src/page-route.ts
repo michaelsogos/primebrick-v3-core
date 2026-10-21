@@ -25,7 +25,8 @@ export type PageRouteComponentFormat = "esm-mount";
 /**
  * One declared frontend route owned by a module. Modules MUST declare every
  * FE path they own that is not deducible from nav links or entity
- * conventions — the AI route census (GET /system/routes) depends on it.
+ * conventions — the AI route census (derived from the consolidated
+ * `GET /api/v1/modules` discovery payload) depends on it.
  * `param` marks dynamic segments using the FE convention ([uuid], [code]).
  */
 export type PageRouteDeclaration = {
@@ -55,6 +56,11 @@ export type PageRouteDeclaration = {
    * error and nothing is mounted.
    */
   integrity?: string;
+  /**
+   * Access-axis gate — `access.{app}.{module}.{page}` key (see
+   * `ModuleNavDeclaration.access`). Absent = open to authenticated users.
+   */
+  access?: string;
 };
 
 /**
@@ -66,6 +72,12 @@ export type ModuleNavLink = {
   label_key: string;
   href: string;
   icon?: string;
+  /**
+   * Access-axis gate — `access.{app}.{module}.{page}` key. The nav link (and
+   * the page it points to) is visible only when the user's grants cover it;
+   * absent = open to any authenticated user.
+   */
+  access?: string;
   children?: ModuleNavLink[];
 };
 
@@ -86,6 +98,20 @@ export type ModuleNavDeclaration = {
   module?: string;
   /** FE path prefixes this module owns (longest match wins). */
   route_prefixes: string[];
+  /**
+   * Module-level access gate — the `access.{app}.{module}` key a user must
+   * hold to see the module AT ALL (whole subtree; e.g.
+   * `access.system.settings`). A page grant alone (`access.system.job.runs`)
+   * does NOT satisfy a module-level gate — use nav/route-level `access`
+   * for partial visibility instead. Absent = module visible to any
+   * authenticated user; its nav/routes may still filter per-page.
+   *
+   * The access axis is a separate vocabulary inside the same permission
+   * pipeline as entity RBAC (`role_mappings` grants, wildcard matching) —
+   * `is_admin` implies `access.system.*` ONLY; other roots need explicit
+   * grants even for admins.
+   */
+  access?: string;
   /** Sidebar nav links shown while this module is active. */
   nav: ModuleNavLink[];
   /** Full route census — nav-declared AND non-derivable paths. */
