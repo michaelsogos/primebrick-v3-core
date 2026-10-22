@@ -61,7 +61,69 @@ export type PageRouteDeclaration = {
    * `ModuleNavDeclaration.access`). Absent = open to authenticated users.
    */
   access?: string;
+  /**
+   * Archetype-agnostic page props — the metadata a route needs beyond the
+   * shared fields. `layout` composes the page from mountable sections.
+   */
+  page_props?: PageRouteProps;
 };
+
+/**
+ * Section mount target — `remote:<export>` = a named mount export of the
+ * page's own chunk (`mod.mountModels(el, ctx, section)`); `host:<key>` = a
+ * component registered in the host's section registry. The `remote:` form is
+ * the default for module-owned blocks; `host:` composes host-owned building
+ * blocks without shipping a chunk at all.
+ */
+export type PageSectionSource = `remote:${string}` | `host:${string}`;
+
+/** One mountable block inside a `layout` — placement is grid-cell based. */
+export type PageSectionDecl = {
+  /** Unique within the layout — also the DOM/test hook (`data-section-id`). */
+  id: string;
+  source: PageSectionSource;
+  /** Plain-values props forwarded to the section mount/component. */
+  props?: Record<string, unknown>;
+  /** `grid-column` span — `span: 2` ⇒ `grid-column: span 2`. */
+  span?: number;
+  /** Explicit `grid-column`/`grid-row` start — overrides auto-flow order. */
+  col?: number;
+  row?: number;
+};
+
+/**
+ * Spatial arrangement of a page's sections — ONE archetype: CSS grid.
+ * A vertical stack is the degenerate case (`columns` defaults to `"1fr"`,
+ * sections auto-flow in declaration order); a split is `columns: "280px
+ * 1fr"`; a dashboard is `columns: "repeat(3, 1fr)"` + per-section `span`.
+ * New container classes, when genuinely needed, arrive as new optional
+ * fields — the contract never grows a second placement vocabulary.
+ */
+export type PageLayoutDecl = {
+  /** CSS `grid-template-columns` — default `"1fr"` (single-column stack). */
+  columns?: string;
+  /** CSS `grid-template-rows`. */
+  rows?: string;
+  /** CSS `gap` — default `"1.5rem"`. */
+  gap?: string;
+  /** Sections in auto-flow order; `col`/`row` override per section. */
+  sections: PageSectionDecl[];
+};
+
+/** `page_props` — free-form per-route metadata with a typed `layout` axis. */
+export type PageRouteProps = {
+  layout?: PageLayoutDecl;
+};
+
+/**
+ * A chunk's section-mount export — same host ctx as `mountPage`, plus the
+ * section's own declaration (`id`, `props`, placement) as third argument.
+ */
+export type MountSectionFn = (
+  el: HTMLElement,
+  ctx: ModulePageHost,
+  section: PageSectionDecl
+) => unknown;
 
 /**
  * One sidebar navigation link contributed by a module. `children` is the
@@ -118,6 +180,48 @@ export type ModuleNavDeclaration = {
   routes?: PageRouteDeclaration[];
   /** Shell-reserved module (e.g. settings) — never set by services. */
   is_reserved?: boolean;
+};
+
+/**
+ * `ctx.components.mfaStepUp` — host-bound step-up MFA bridge. The remote
+ * calls it exactly like the host's `useMfaStepUp().executeWithToken`:
+ * `requestFn` runs once with `token = null`; on a `403` response carrying
+ * `mfa_step_up_required` the host shows ITS OWN step-up dialog (host root,
+ * host runtime — nothing crosses the boundary), awaits verification, then
+ * retries `requestFn` with the action-authorization token. The promise
+ * resolves with the final Response — success or failure.
+ */
+export type MfaStepUpFn = (
+  requestFn: (token: string | null) => Promise<Response>,
+  context: { action: string; target_resource: string },
+) => Promise<Response>;
+
+/**
+ * `ctx.components.openSheet` — opens a host-registered sheet panel by key
+ * (e.g. `"shell.aiCerebellum"`). The panel registry and sheet state live in
+ * the host — a remote page requests the panel, it never ships one. `props`
+ * are plain values (callback fns are allowed — they cross the boundary);
+ * `options` are the host's sheet options (`side`, `contentClass`, `modal`,
+ * `keepMountedState`). Unknown keys are rejected with a host notification —
+ * the remote cannot smuggle an unregistered panel.
+ */
+export type OpenSheetFn = (
+  panelKey: string,
+  props?: Record<string, unknown>,
+  options?: Record<string, unknown>,
+) => void;
+
+/**
+ * `ModulePageHost.components` — the reserved well-known keys plus open
+ * caller-provided entries. `remote` is assigned by the host loader after
+ * the chunk resolves; `mfaStepUp`/`openSheet` are built-ins the host always
+ * provides (a caller may override them in tests).
+ */
+export type ModulePageHostComponents = {
+  remote?: unknown;
+  mfaStepUp?: MfaStepUpFn;
+  openSheet?: OpenSheetFn;
+  [key: string]: unknown;
 };
 
 /**
@@ -186,8 +290,12 @@ export type ModulePageHost = {
    * host-side code (e.g. shim snippets running under host render) can
    * reach additional chunk exports such as a `cell_mount(el, props)`
    * function for remote content inside host trees.
+   *
+   * Built-in keys the host always provides: `mfaStepUp` (step-up MFA for
+   * guarded remote ops) and `openSheet` (host sheet panels) — see
+   * {@link ModulePageHostComponents} / {@link MfaStepUpFn} / {@link OpenSheetFn}.
    */
-  components?: Record<string, unknown>;
+  components?: ModulePageHostComponents;
   /**
    * Mount a host-compiled component as a separate Svelte root inside remote
    * DOM. Rendering a host component inline (`<HostComp/>`) inside remote
