@@ -212,15 +212,24 @@ export type OpenSheetFn = (
 ) => void;
 
 /**
+ * `ctx.components.hostApi` — the host's authenticated full-path fetch
+ * (`apiFetch`): reaches BE-owned `/api/v1/…` endpoints that `ctx.api`
+ * (ws-bound to the owning service) cannot. Remote pages bind it through
+ * `bindRemoteCtx(ctx)` → `getServiceApi('host')`.
+ */
+export type HostApiFn = (path: string, init?: RequestInit) => Promise<Response>;
+
+/**
  * `ModulePageHost.components` — the reserved well-known keys plus open
  * caller-provided entries. `remote` is assigned by the host loader after
- * the chunk resolves; `mfaStepUp`/`openSheet` are built-ins the host always
- * provides (a caller may override them in tests).
+ * the chunk resolves; `mfaStepUp`/`openSheet`/`hostApi` are built-ins the
+ * host always provides (a caller may override them in tests).
  */
 export type ModulePageHostComponents = {
   remote?: unknown;
   mfaStepUp?: MfaStepUpFn;
   openSheet?: OpenSheetFn;
+  hostApi?: HostApiFn;
   [key: string]: unknown;
 };
 
