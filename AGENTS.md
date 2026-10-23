@@ -30,7 +30,7 @@ helpers (`orderedColumns`, `defaultVisibleColumnKeys`, `getOperatorsForColumnTyp
 
 **Hard invariants:**
 
-- **Single runtime dependency** — `@primebrick/decimal` (itself dependency-free and env-neutral). No other dependencies allowed.
+- **Two runtime dependencies only** — `@primebrick/decimal` (re-exported, env-neutral) and `json-bigint` (the ext-json wire codec — bigint-safe serialization crossing every FE↔BE↔remote boundary). No other dependencies allowed.
 - **Environment-neutral** — no DOM, no Node APIs, no Svelte, no Express. It must
   compile identically for browser, server and CLI consumers.
 - **No I/O, no framework code** — types + pure functions only.
