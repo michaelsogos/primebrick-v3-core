@@ -115,6 +115,50 @@ export type PageRouteProps = {
   layout?: PageLayoutDecl;
 };
 
+/** Sheet side — the two chrome slots the host sheet engine owns. */
+export type ModuleSheetSide = "left" | "right";
+
+/**
+ * Chrome defaults a sheet declaration may suggest. The caller's `openSheet`
+ * options always win over these — they are a hint, not a policy.
+ * `content_class` maps to the host engine's `contentClass` option.
+ */
+export type ModuleSheetDefaults = {
+  side?: ModuleSheetSide;
+  modal?: boolean;
+  content_class?: string;
+};
+
+/**
+ * A remote sheet panel declared by a service inside `endpoints.nav.sheets`
+ * — the sheet analogue of a remote {@link PageRouteDeclaration}: the host
+ * owns the sheet ENGINE (open/close/chrome/state), the owning service owns
+ * the CONTENT — an `esm-mount` chunk exporting `mountSheet(el, ctx)`,
+ * mounted at runtime into the host's global sheet surface.
+ *
+ * `key` is the open-sheet address, `<module>.<name>` namespaced so a
+ * declared key can never collide across services (enforced at enrollment
+ * by the nav-declaration validator). Anyone holding the key can open it —
+ * host `openSheet`, `ctx.components.openSheet` — visibility is gated by
+ * `access`, never by import reachability.
+ */
+export type ModuleSheetDecl = {
+  /** The open-sheet address — `<module>.<name>` (validator-enforced). */
+  key: string;
+  /** Remote sheet chunk — same-origin `/ws/<service>/api/v1/module-assets/…`. */
+  component_url: string;
+  /** Delivery format — see {@link PageRouteComponentFormat}. */
+  component_format?: PageRouteComponentFormat;
+  /** Optional sha256 integrity of `component_url` — same verify path as pages. */
+  integrity?: string;
+  /** Access-axis gate — `access.{app}.{module}[.{page}]` under the module's own namespace. */
+  access?: string;
+  /** i18n key for a human-readable title, when available. */
+  label_key?: string;
+  /** Suggested chrome — overridden by the caller's open options. */
+  default_options?: ModuleSheetDefaults;
+};
+
 /**
  * A chunk's section-mount export — same host ctx as `mountPage`, plus the
  * section's own declaration (`id`, `props`, placement) as third argument.
@@ -178,6 +222,12 @@ export type ModuleNavDeclaration = {
   nav: ModuleNavLink[];
   /** Full route census — nav-declared AND non-derivable paths. */
   routes?: PageRouteDeclaration[];
+  /**
+   * Remote sheet panels this module owns — engine is host-side, content
+   * is service-delivered (`mountSheet` chunks). Travels the same
+   * discovery channel as `routes`; access-filtered per decl.
+   */
+  sheets?: ModuleSheetDecl[];
   /** Shell-reserved module (e.g. settings) — never set by services. */
   is_reserved?: boolean;
 };
@@ -197,13 +247,15 @@ export type MfaStepUpFn = (
 ) => Promise<Response>;
 
 /**
- * `ctx.components.openSheet` — opens a host-registered sheet panel by key
- * (e.g. `"shell.aiCerebellum"`). The panel registry and sheet state live in
- * the host — a remote page requests the panel, it never ships one. `props`
- * are plain values (callback fns are allowed — they cross the boundary);
+ * `ctx.components.openSheet` — opens a sheet panel by key: a host-registered
+ * panel (`shell.*`/`entity.*`/`config.*`) or a remote-declared sheet
+ * (`<module>.<name>` from `nav.sheets[]`, mounted at runtime). The panel
+ * registry, remote declarations and sheet state all live in the host — a
+ * remote page requests the panel, it never ships the engine. `props` are
+ * plain values (callback fns are allowed — they cross the boundary);
  * `options` are the host's sheet options (`side`, `contentClass`, `modal`,
  * `keepMountedState`). Unknown keys are rejected with a host notification —
- * the remote cannot smuggle an unregistered panel.
+ * the remote cannot smuggle an undeclared panel.
  */
 export type OpenSheetFn = (
   panelKey: string,
@@ -220,12 +272,12 @@ export type OpenSheetFn = (
 export type HostApiFn = (path: string, init?: RequestInit) => Promise<Response>;
 
 /**
- * `ModulePageHost.components` — the reserved well-known keys plus open
- * caller-provided entries. `remote` is assigned by the host loader after
- * the chunk resolves; `mfaStepUp`/`openSheet`/`hostApi` are built-ins the
- * host always provides (a caller may override them in tests).
+ * `ctx.components` — the reserved well-known keys plus open caller-provided
+ * entries. `remote` is assigned by the host loader after the chunk
+ * resolves; `mfaStepUp`/`openSheet`/`hostApi` are built-ins the host
+ * always provides (a caller may override them in tests).
  */
-export type ModulePageHostComponents = {
+export type ModuleHostComponents = {
   remote?: unknown;
   mfaStepUp?: MfaStepUpFn;
   openSheet?: OpenSheetFn;
@@ -237,7 +289,7 @@ export type ModulePageHostComponents = {
  * Notification payload accepted by `ctx.notify` — the minimal shape of the
  * host's `pushNotification` input. Plain values only.
  */
-export type ModulePageNotifyInput = {
+export type ModuleNotifyInput = {
   impact: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW" | "NONE";
   message?: string;
   messageKey?: string;
@@ -249,21 +301,18 @@ export type ModulePageNotifyInput = {
 };
 
 /**
- * Host-side context handed to a remote page's `mountPage(el, ctx)`.
- * Versioned via `host_version` — remote chunks can refuse incompatible hosts.
+ * Host-side context base handed to EVERY remote mount — pages
+ * (`mountPage`) and sheets (`mountSheet`) alike. Versioned via
+ * `host_version` — remote chunks can refuse incompatible hosts.
  *
  * HARD CONSTRAINT — plain values and functions ONLY: Svelte rune state
  * (`$state`/`$derived`/`$effect`) is bundle-local and cannot cross this
- * boundary. UI building blocks come from `@primebrick/ui` bundled inside the
- * remote chunk, not from ctx; `components` is reserved for the few
- * host-coupled cases (see `ModulePageHost.components`).
+ * boundary. UI building blocks come from `@primebrick/ui` bundled inside
+ * the remote chunk, not from ctx; `components` is reserved for the few
+ * host-coupled cases (see `components` doc).
  */
-export type ModulePageHost = {
+export type ModuleHostBase = {
   host_version: 1;
-  /** This page's own route declaration as resolved by the host. */
-  nav: PageRouteDeclaration;
-  /** Entity metadata, present when the route is entity-bound. */
-  meta?: EntityMeta;
   /**
    * Authenticated fetch bound to the owning service's `/ws/<code>` base when
    * derivable (paths are service-relative), else the host's raw API base.
@@ -275,7 +324,7 @@ export type ModulePageHost = {
     locale: string;
   };
   /** `pushNotification` equivalent — toasts + error-panel event cards. */
-  notify: (input: ModulePageNotifyInput) => void;
+  notify: (input: ModuleNotifyInput) => void;
   /**
    * Optional host-coupled components and helpers (opaque values at this
    * boundary — components are host-compiled Svelte components, helpers are
@@ -301,10 +350,11 @@ export type ModulePageHost = {
    * function for remote content inside host trees.
    *
    * Built-in keys the host always provides: `mfaStepUp` (step-up MFA for
-   * guarded remote ops) and `openSheet` (host sheet panels) — see
-   * {@link ModulePageHostComponents} / {@link MfaStepUpFn} / {@link OpenSheetFn}.
+   * guarded remote ops), `openSheet` (sheet panels) and `hostApi`
+   * (full-path BE fetch) — see {@link ModuleHostComponents} /
+   * {@link MfaStepUpFn} / {@link OpenSheetFn} / {@link HostApiFn}.
    */
-  components?: ModulePageHostComponents;
+  components?: ModuleHostComponents;
   /**
    * Mount a host-compiled component as a separate Svelte root inside remote
    * DOM. Rendering a host component inline (`<HostComp/>`) inside remote
@@ -325,6 +375,42 @@ export type ModulePageHost = {
 };
 
 /**
+ * Host ctx handed to a remote page's `mountPage(el, ctx)` — the shared
+ * {@link ModuleHostBase} plus the page's own route axis (`nav`/`meta`).
+ */
+export type ModulePageHost = ModuleHostBase & {
+  /** This page's own route declaration as resolved by the host. */
+  nav: PageRouteDeclaration;
+  /** Entity metadata, present when the route is entity-bound. */
+  meta?: EntityMeta;
+};
+
+/**
+ * Host ctx handed to a remote sheet's `mountSheet(el, ctx)` — the shared
+ * {@link ModuleHostBase} plus the `sheet` control surface: the declared
+ * key, the caller's props (opaque at the boundary — the owning module
+ * knows their shape), the current chrome, and the commands to mutate the
+ * host-owned frame. No `nav`/`meta` — a sheet is not a route; domain
+ * context arrives through `sheet.props`.
+ */
+export type ModuleSheetHost = ModuleHostBase & {
+  sheet: {
+    /** The declared sheet key (`<module>.<name>`) as resolved by the host. */
+    key: string;
+    /** Caller props forwarded verbatim — functions may cross. */
+    props: Record<string, unknown>;
+    side: ModuleSheetSide;
+    modal: boolean;
+    /** Close the sheet — equivalent to the host close affordance. */
+    close: () => void;
+    /** Replace this sheet's props — the host remounts the sheet content. */
+    replace: (props: Record<string, unknown>) => void;
+    /** Expanded chrome mode — widens the surface, implies modal. */
+    setExpanded: (expanded: boolean) => void;
+  };
+};
+
+/**
  * Handle returned by `ModulePageHost.mount_host` — imperative channel to a
  * host-mounted component root.
  */
@@ -341,3 +427,11 @@ export type HostMountHandle = {
  * function, or a promise of either.
  */
 export type MountPageFn = (el: HTMLElement, ctx: ModulePageHost) => unknown;
+
+/**
+ * The sheet chunk's entry contract — `export function mountSheet(el, ctx)`.
+ * The chunk is declared in `endpoints.nav.sheets[]` ({@link ModuleSheetDecl})
+ * and mounted inside the host's global sheet surface. Same dispose rules as
+ * {@link MountPageFn}.
+ */
+export type MountSheetFn = (el: HTMLElement, ctx: ModuleSheetHost) => unknown;
