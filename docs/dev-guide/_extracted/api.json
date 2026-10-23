@@ -10260,7 +10260,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
 					"line": 28,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L28"
 				}
 			],
 			"type": {
@@ -10283,6 +10284,26 @@
 						},
 						{
 							"type": "literal",
+							"value": "svelte/internal/flags/legacy"
+						},
+						{
+							"type": "literal",
+							"value": "svelte/events"
+						},
+						{
+							"type": "literal",
+							"value": "svelte/reactivity"
+						},
+						{
+							"type": "literal",
+							"value": "svelte/store"
+						},
+						{
+							"type": "literal",
+							"value": "svelte/attachments"
+						},
+						{
+							"type": "literal",
 							"value": "@primebrick/core"
 						},
 						{
@@ -10292,6 +10313,26 @@
 						{
 							"type": "literal",
 							"value": "@primebrick/ui/transformers"
+						},
+						{
+							"type": "literal",
+							"value": "@primebrick/ui/vendor/clsx"
+						},
+						{
+							"type": "literal",
+							"value": "@primebrick/ui/vendor/tailwind-merge"
+						},
+						{
+							"type": "literal",
+							"value": "@primebrick/ui/vendor/tailwind-variants"
+						},
+						{
+							"type": "literal",
+							"value": "@primebrick/ui/vendor/lucide"
+						},
+						{
+							"type": "literal",
+							"value": "@primebrick/ui/vendor/bits-ui"
 						}
 					]
 				}
@@ -10307,8 +10348,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 37,
-					"character": 12
+					"line": 52,
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L52"
 				}
 			],
 			"type": {
@@ -10355,8 +10397,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 45,
-					"character": 13
+					"line": 60,
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L60"
 				}
 			],
 			"type": {
@@ -10368,6 +10411,26 @@
 						{
 							"type": "literal",
 							"value": "@huggingface/transformers"
+						},
+						{
+							"type": "literal",
+							"value": "clsx"
+						},
+						{
+							"type": "literal",
+							"value": "tailwind-merge"
+						},
+						{
+							"type": "literal",
+							"value": "tailwind-variants"
+						},
+						{
+							"type": "literal",
+							"value": "@lucide/svelte"
+						},
+						{
+							"type": "literal",
+							"value": "bits-ui"
 						}
 					]
 				}
@@ -10383,8 +10446,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 48,
-					"character": 16
+					"line": 70,
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L70"
 				}
 			],
 			"signatures": [
@@ -10405,8 +10469,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-							"line": 48,
-							"character": 16
+							"line": 70,
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L70"
 						}
 					],
 					"parameters": [
@@ -10438,8 +10503,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 58,
-					"character": 12
+					"line": 80,
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L80"
 				}
 			],
 			"type": {
@@ -10469,8 +10535,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 68,
-					"character": 16
+					"line": 90,
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L90"
 				}
 			],
 			"signatures": [
@@ -10491,8 +10558,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-							"line": 68,
-							"character": 16
+							"line": 90,
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L90"
 						}
 					],
 					"parameters": [
@@ -10547,8 +10615,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-							"line": 87,
-							"character": 1
+							"line": 109,
+							"character": 1,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L109"
 						}
 					],
 					"type": {
@@ -10584,8 +10653,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 86,
-					"character": 12
+					"line": 108,
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L108"
 				}
 			]
 		},
@@ -10614,8 +10684,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 91,
-					"character": 12
+					"line": 113,
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L113"
 				}
 			],
 			"type": {
@@ -10648,8 +10719,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 93,
-											"character": 3
+											"line": 115,
+											"character": 3,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L115"
 										}
 									],
 									"type": {
@@ -10666,8 +10738,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 93,
-											"character": 16
+											"line": 115,
+											"character": 16,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L115"
 										}
 									],
 									"type": {
@@ -10701,8 +10774,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 96,
-					"character": 12
+					"line": 118,
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L118"
 				}
 			],
 			"type": {
@@ -10726,8 +10800,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 97,
-											"character": 5
+											"line": 119,
+											"character": 5,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L119"
 										}
 									],
 									"type": {
@@ -10744,8 +10819,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 97,
-											"character": 24
+											"line": 119,
+											"character": 24,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L119"
 										}
 									],
 									"type": {
@@ -10762,8 +10838,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 97,
-											"character": 41
+											"line": 119,
+											"character": 41,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L119"
 										}
 									],
 									"type": {
@@ -10802,8 +10879,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 98,
-											"character": 5
+											"line": 120,
+											"character": 5,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L120"
 										}
 									],
 									"type": {
@@ -10820,8 +10898,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 98,
-											"character": 24
+											"line": 120,
+											"character": 24,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L120"
 										}
 									],
 									"type": {
@@ -10838,8 +10917,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 98,
-											"character": 41
+											"line": 120,
+											"character": 41,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L120"
 										}
 									],
 									"type": {
@@ -10856,8 +10936,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-											"line": 98,
-											"character": 59
+											"line": 120,
+											"character": 59,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L120"
 										}
 									],
 									"type": {
@@ -10891,8 +10972,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-					"line": 107,
-					"character": 16
+					"line": 129,
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L129"
 				}
 			],
 			"signatures": [
@@ -10921,8 +11003,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/vendor-plane.ts",
-							"line": 107,
-							"character": 16
+							"line": 129,
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/vendor-plane.ts#L129"
 						}
 					],
 					"parameters": [

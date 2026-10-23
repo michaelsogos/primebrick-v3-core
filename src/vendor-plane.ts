@@ -21,17 +21,36 @@
  */
 
 /**
- * Closed allowlist of bare specifiers remote chunks may import. The union
- * of a package's specifiers maps to ONE bundle file per package, so the
- * browser dedupes by URL — a single runtime instance is guaranteed.
+ * Closed allowlist of bare specifiers remote chunks may import. A
+ * package's specifiers normally union into ONE bundle file so the browser
+ * dedupes by URL — a single runtime instance is guaranteed. Exception:
+ * `svelte`'s public subpaths (events/reactivity/store/attachments) get
+ * their own files — their export names collide with the internal signal
+ * API (`get`/`derived` exist in both), and a flat union module cannot hold
+ * both. Shared internals still dedupe through the bundler's shared chunks.
  */
 export const VENDOR_SPECIFIERS = [
 	"svelte",
 	"svelte/internal/client",
 	"svelte/internal/disclose-version",
+	// emitted by the svelte compiler into .svelte output that touches
+	// legacy-mode constructs (bits-ui compiled sources)
+	"svelte/internal/flags/legacy",
+	// public svelte subpaths vendored libs (and remote components) legally
+	// import — unioned into the single svelte.js bundle like the internals.
+	// ('svelte/elements' is types-only — no runtime export exists.)
+	"svelte/events",
+	"svelte/reactivity",
+	"svelte/store",
+	"svelte/attachments",
 	"@primebrick/core",
 	"@primebrick/ui",
 	"@primebrick/ui/transformers",
+	"@primebrick/ui/vendor/clsx",
+	"@primebrick/ui/vendor/tailwind-merge",
+	"@primebrick/ui/vendor/tailwind-variants",
+	"@primebrick/ui/vendor/lucide",
+	"@primebrick/ui/vendor/bits-ui",
 ] as const;
 
 export type VendorSpecifier = (typeof VENDOR_SPECIFIERS)[number];
@@ -42,7 +61,14 @@ export type VendorSpecifier = (typeof VENDOR_SPECIFIERS)[number];
  * vendored behind `@primebrick/ui/transformers`). A raw import would bundle
  * a second runtime copy (split caches, split env config) — reject it.
  */
-export const VENDOR_BLOCKED_PACKAGES = ["@huggingface/transformers"] as const;
+export const VENDOR_BLOCKED_PACKAGES = [
+	"@huggingface/transformers",
+	"clsx",
+	"tailwind-merge",
+	"tailwind-variants",
+	"@lucide/svelte",
+	"bits-ui",
+] as const;
 
 /** Top-level npm package of a specifier ('svelte/internal/client' → 'svelte'). */
 export function specifierTopPackage(specifier: string): string {

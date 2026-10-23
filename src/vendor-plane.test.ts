@@ -33,9 +33,15 @@ describe("resolveVendorSpecifier", () => {
 	});
 	it("rejects blocked direct package imports", () => {
 		expect(resolveVendorSpecifier("@huggingface/transformers")).toBe("reject");
+		// raw vendor libs are served through their sanctioned subpaths —
+		// a raw import would bundle a second copy (split instances)
+		expect(resolveVendorSpecifier("clsx")).toBe("reject");
+		expect(resolveVendorSpecifier("tailwind-merge")).toBe("reject");
+		expect(resolveVendorSpecifier("tailwind-variants")).toBe("reject");
+		expect(resolveVendorSpecifier("@lucide/svelte")).toBe("reject");
+		expect(resolveVendorSpecifier("bits-ui")).toBe("reject");
 	});
 	it("bundles leaf deps", () => {
-		expect(resolveVendorSpecifier("clsx")).toBe("bundle");
 		expect(resolveVendorSpecifier("zod")).toBe("bundle");
 	});
 });
