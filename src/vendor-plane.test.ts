@@ -15,8 +15,8 @@ const manifest: VendorManifest = {
 		version: "5.57.2",
 	},
 	"@primebrick/ui": { url: "/vendor/primebrick-ui.js", version: "3.0.0" },
-	"@primebrick/ui/transformers": {
-		url: "/vendor/transformers.js",
+	"@primebrick/ui/vendor/transformers": {
+		url: "/vendor/vendor-transformers.js",
 		version: "4.3.1",
 	},
 };
@@ -49,7 +49,7 @@ describe("resolveVendorSpecifier", () => {
 describe("specifierTopPackage", () => {
 	it("handles scoped and unscoped names", () => {
 		expect(specifierTopPackage("svelte/internal/client")).toBe("svelte");
-		expect(specifierTopPackage("@primebrick/ui/transformers")).toBe("@primebrick/ui");
+		expect(specifierTopPackage("@primebrick/ui/vendor/transformers")).toBe("@primebrick/ui");
 	});
 });
 

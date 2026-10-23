@@ -45,7 +45,7 @@ export const VENDOR_SPECIFIERS = [
 	"svelte/attachments",
 	"@primebrick/core",
 	"@primebrick/ui",
-	"@primebrick/ui/transformers",
+	"@primebrick/ui/vendor/transformers",
 	"@primebrick/ui/vendor/clsx",
 	"@primebrick/ui/vendor/tailwind-merge",
 	"@primebrick/ui/vendor/tailwind-variants",
@@ -58,7 +58,7 @@ export type VendorSpecifier = (typeof VENDOR_SPECIFIERS)[number];
 /**
  * Packages that MUST NOT be imported raw inside a remote chunk — they are
  * already served through a sanctioned vendor specifier (e.g. transformers is
- * vendored behind `@primebrick/ui/transformers`). A raw import would bundle
+ * vendored behind `@primebrick/ui/vendor/transformers`). A raw import would bundle
  * a second runtime copy (split caches, split env config) — reject it.
  */
 export const VENDOR_BLOCKED_PACKAGES = [

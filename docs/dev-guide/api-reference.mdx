@@ -486,18 +486,22 @@ with `enabled: false` (explicitly unavailable) instead of being omitted.
 
 Packages that MUST NOT be imported raw inside a remote chunk — they are
 already served through a sanctioned vendor specifier (e.g. transformers is
-vendored behind `@primebrick/ui/transformers`). A raw import would bundle
+vendored behind `@primebrick/ui/vendor/transformers`). A raw import would bundle
 a second runtime copy (split caches, split env config) — reject it.
 
 **Type:** `readonly ["@huggingface/transformers", "clsx", "tailwind-merge", "tailwind-variants", "@lucide/svelte", "bits-ui"]`
 
 ### `VENDOR_SPECIFIERS`
 
-Closed allowlist of bare specifiers remote chunks may import. The union
-of a package's specifiers maps to ONE bundle file per package, so the
-browser dedupes by URL — a single runtime instance is guaranteed.
+Closed allowlist of bare specifiers remote chunks may import. A
+package's specifiers normally union into ONE bundle file so the browser
+dedupes by URL — a single runtime instance is guaranteed. Exception:
+`svelte`'s public subpaths (events/reactivity/store/attachments) get
+their own files — their export names collide with the internal signal
+API (`get`/`derived` exist in both), and a flat union module cannot hold
+both. Shared internals still dedupe through the bundler's shared chunks.
 
-**Type:** `readonly ["svelte", "svelte/internal/client", "svelte/internal/disclose-version", "svelte/internal/flags/legacy", "svelte/events", "svelte/reactivity", "svelte/store", "svelte/attachments", "@primebrick/core", "@primebrick/ui", "@primebrick/ui/transformers", "@primebrick/ui/vendor/clsx", "@primebrick/ui/vendor/tailwind-merge", "@primebrick/ui/vendor/tailwind-variants", "@primebrick/ui/vendor/lucide", "@primebrick/ui/vendor/bits-ui"]`
+**Type:** `readonly ["svelte", "svelte/internal/client", "svelte/internal/disclose-version", "svelte/internal/flags/legacy", "svelte/events", "svelte/reactivity", "svelte/store", "svelte/attachments", "@primebrick/core", "@primebrick/ui", "@primebrick/ui/vendor/transformers", "@primebrick/ui/vendor/clsx", "@primebrick/ui/vendor/tailwind-merge", "@primebrick/ui/vendor/tailwind-variants", "@primebrick/ui/vendor/lucide", "@primebrick/ui/vendor/bits-ui"]`
 
 ### `ZERO`
 
