@@ -57,11 +57,6 @@ export type PageRouteDeclaration = {
    */
   integrity?: string;
   /**
-   * Access-axis gate — `access.{app}.{module}.{page}` key (see
-   * `ModuleNavDeclaration.access`). Absent = open to authenticated users.
-   */
-  access?: string;
-  /**
    * Archetype-agnostic page props — the metadata a route needs beyond the
    * shared fields. `layout` composes the page from mountable sections.
    */
@@ -140,7 +135,8 @@ export type ModuleSheetDefaults = {
  * declared key can never collide across services (enforced at enrollment
  * by the nav-declaration validator). Anyone holding the key can open it —
  * host `openSheet`, `ctx.components.openSheet` — visibility is gated by
- * `access`, never by import reachability.
+ * the sheet's derived access key (`access.<ns>.<name>`), never by import
+ * reachability.
  */
 export type ModuleSheetDecl = {
   /** The open-sheet address — `<module>.<name>` (validator-enforced). */
@@ -151,8 +147,6 @@ export type ModuleSheetDecl = {
   component_format?: PageRouteComponentFormat;
   /** Optional sha256 integrity of `component_url` — same verify path as pages. */
   integrity?: string;
-  /** Access-axis gate — `access.{app}.{module}[.{page}]` under the module's own namespace. */
-  access?: string;
   /** i18n key for a human-readable title, when available. */
   label_key?: string;
   /** Suggested chrome — overridden by the caller's open options. */
@@ -179,11 +173,13 @@ export type ModuleNavLink = {
   href: string;
   icon?: string;
   /**
-   * Access-axis gate — `access.{app}.{module}.{page}` key. The nav link (and
-   * the page it points to) is visible only when the user's grants cover it;
-   * absent = open to any authenticated user.
+   * Marks the module's DEFAULT leaf — exactly one leaf nav item must carry
+   * it (validator-enforced). GOTO(module) resolves the default leaf's
+   * href; when the user's grants filter that leaf out, the first
+   * accessible leaf wins. Leaf items only — never on a parent carrying
+   * `children`.
    */
-  access?: string;
+  default?: boolean;
   children?: ModuleNavLink[];
 };
 
@@ -205,19 +201,24 @@ export type ModuleNavDeclaration = {
   /** FE path prefixes this module owns (longest match wins). */
   route_prefixes: string[];
   /**
-   * Module-level access gate — the `access.{app}.{module}` key a user must
-   * hold to see the module AT ALL (whole subtree; e.g.
-   * `access.system.settings`). A page grant alone (`access.system.job.runs`)
-   * does NOT satisfy a module-level gate — use nav/route-level `access`
-   * for partial visibility instead. Absent = module visible to any
-   * authenticated user; its nav/routes may still filter per-page.
+   * The module's access NAMESPACE — REQUIRED. The `access.{app}.{module}`
+   * prefix under which every leaf key is derived (`accessLeafKey`):
+   * `/system/job/rules` ⇒ `access.system.job.rules`,
+   * `job.runDetail` ⇒ `access.system.job.runDetail`. A module that
+   * declares nav/routes/sheets is exposed surface, so the namespace is
+   * mandatory and must equal `accessNamespace(code, part_of)` (validated
+   * at enrollment AND by write-time decl tests).
+   *
+   * Module visibility is DERIVED, never a gate key: the module exists for
+   * a user iff at least one of its leaf keys is covered by their grants.
+   * Coverage is exact-or-wildcard only — `access.system.job` bare is a
+   * namespace, not a grant; `access.system.job.*` covers every leaf.
    *
    * The access axis is a separate vocabulary inside the same permission
    * pipeline as entity RBAC (`role_mappings` grants, wildcard matching) —
-   * `is_admin` implies `access.system.*` ONLY; other roots need explicit
-   * grants even for admins.
+   * `is_admin` implies NOTHING here: access grants are always explicit.
    */
-  access?: string;
+  access: string;
   /** Sidebar nav links shown while this module is active. */
   nav: ModuleNavLink[];
   /** Full route census — nav-declared AND non-derivable paths. */
