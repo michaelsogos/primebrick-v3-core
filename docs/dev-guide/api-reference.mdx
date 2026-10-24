@@ -169,6 +169,31 @@ Per-op enable overrides — may ONLY toggle `enabled` on route-backed ops.
 
 **Type:** `Record<string, { enabled: boolean }>`
 
+### `ConfigEntry`
+
+Standard Config Table entry.
+
+The BE coerces `value` to its native JS type before serialization:
+  - `bigint` → native `bigint` (preserved by ext-json response parsing)
+  - `number` → native `number`
+  - `money`  → native `number` (amount only; currency is in `type_config`)
+  - `secret` → `null` (masked by BE)
+  - other    → `string`
+
+Write path: callers send the native type (bigint/number/string); the BE
+serializes it to the DB string form via `serializeConfigValue`.
+
+### `ConfigEntryType`
+
+Config value type vocabulary — drives widget selection and validation.
+Mirrors the SDK `ConfigType` and the BE `type` column.
+
+- `bigint`: integer values backed by JS `BigInt` (renamed from `integer`)
+- `number`: decimal/float values backed by JS `Number`
+- `money`:  numeric amount with currency metadata in `type_config`
+
+**Type:** `"string" \| "text" \| "boolean" \| "bigint" \| "number" \| "money" \| "badge" \| "single_select" \| "multi_select" \| "url" \| "secret" \| "json" \| "date" \| "datetime" \| "time" \| "email" \| "phone"`
+
 ### `DecimalInput`
 
 Anything coercion functions accept: Decimal, native number, bigint, or a decimal string.
@@ -332,7 +357,8 @@ mounted at runtime into the host's global sheet surface.
 declared key can never collide across services (enforced at enrollment
 by the nav-declaration validator). Anyone holding the key can open it —
 host `openSheet`, `ctx.components.openSheet` — visibility is gated by
-`access`, never by import reachability.
+the sheet's derived access key (`access.<ns>.<name>`), never by import
+reachability.
 
 ### `ModuleSheetDefaults`
 

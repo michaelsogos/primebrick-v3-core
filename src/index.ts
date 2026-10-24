@@ -9,3 +9,4 @@ export * from "./page-route.js";
 export * from "./vendor-plane.js";
 export * from "./translation-keys.js";
 export * from "./filter-presets.js";
+export * from "./config-entry.js";
