@@ -1,0 +1,89 @@
+{
+  "name": "@primebrick/core",
+  "version": "3.0.0",
+  "description": "Environment-neutral shared contracts for Primebrick v3 — entity meta schema, entity actions vocabulary, list query types, branded primitives. Consumable by frontend, backend, microservices, DAL and SDK.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": "24"
+  },
+  "author": "Michael Sogos",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelsogos/primebrick-v3-core.git"
+  },
+  "homepage": "https://github.com/michaelsogos/primebrick-v3-core#readme",
+  "bugs": {
+    "url": "https://github.com/michaelsogos/primebrick-v3-core/issues"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./entity-meta": {
+      "types": "./dist/entity-meta.d.ts",
+      "import": "./dist/entity-meta.js"
+    },
+    "./list": {
+      "types": "./dist/list.d.ts",
+      "import": "./dist/list.js"
+    },
+    "./columns": {
+      "types": "./dist/columns.d.ts",
+      "import": "./dist/columns.js"
+    },
+    "./decimal": {
+      "types": "./dist/decimal.d.ts",
+      "import": "./dist/decimal.js"
+    },
+    "./page-route": {
+      "types": "./dist/page-route.d.ts",
+      "import": "./dist/page-route.js"
+    },
+    "./ext-json": {
+      "types": "./dist/ext-json.d.ts",
+      "import": "./dist/ext-json.js"
+    },
+    "./list-filter-params": {
+      "types": "./dist/list-filter-params.d.ts",
+      "import": "./dist/list-filter-params.js"
+    },
+    "./search-gate": {
+      "types": "./dist/search-gate.d.ts",
+      "import": "./dist/search-gate.js"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "version:auto": "node scripts/version-sync.mjs",
+    "prebuild": "node scripts/version-sync.mjs && pnpm check:standards && pnpm extract-docs",
+    "build": "tsc",
+    "prepare": "tsc",
+    "test": "pnpm check:standards && vitest run",
+    "test:watch": "vitest",
+    "extract-docs": "node scripts/extract-api-docs.mjs && node scripts/render-api-reference.mjs",
+    "check:standards": "node tools/check-standards.ts src --profile=lib"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "dependencies": {
+    "@primebrick/decimal": "workspace:*",
+    "json-bigint": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/json-bigint": "1.0.4",
+    "@types/node": "24.13.3",
+    "typedoc": "0.28.20",
+    "typescript": "6.0.3",
+    "vite": "8.3.4",
+    "vitest": "4.1.10"
+  }
+}
