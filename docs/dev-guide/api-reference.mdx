@@ -267,6 +267,8 @@ Global connector joining the advanced-filter group.
 
 **Type:** `"AND" \| "OR"`
 
+### `LucideRewriteResult`
+
 ### `MetaColumn`
 
 Entity field descriptor — the root-level `columns` dictionary.
@@ -582,6 +584,22 @@ a second runtime copy (split caches, split env config) — reject it.
 
 **Type:** `readonly ["@huggingface/transformers", "clsx", "tailwind-merge", "tailwind-variants", "@lucide/svelte", "bits-ui"]`
 
+### `VENDOR_SPECIFIER_PREFIXES`
+
+Open-ended specifier prefixes — everything under a prefix is a sanctioned
+vendor specifier without central allowlisting per item. Unlike
+VENDOR_SPECIFIERS (one bundle file per specifier), each prefix
+maps to a `/vendor/…/` URL directory: the specifier suffix resolves
+verbatim after the prefix.
+
+`@primebrick/ui/vendor/lucide/icons/` covers every lucide icon file the
+host vendor build emits at `/vendor/icons/lucide/<dist-name>.js` —
+remote chunks never resolve icons through a barrel (a barrel would force
+the whole catalog on every consumer), they emit one specifier per used
+icon. New lucide releases add icons with zero changes to this contract.
+
+**Type:** `readonly ["@primebrick/ui/vendor/lucide/icons/"]`
+
 ### `VENDOR_SPECIFIERS`
 
 Closed allowlist of bare specifiers remote chunks may import. A
@@ -592,7 +610,7 @@ their own files — their export names collide with the internal signal
 API (`get`/`derived` exist in both), and a flat union module cannot hold
 both. Shared internals still dedupe through the bundler's shared chunks.
 
-**Type:** `readonly ["svelte", "svelte/internal/client", "svelte/internal/disclose-version", "svelte/internal/flags/legacy", "svelte/events", "svelte/reactivity", "svelte/store", "svelte/attachments", "svelte/motion", "svelte/easing", "@primebrick/core", "@primebrick/ui", "@primebrick/ui/vendor/transformers", "@primebrick/ui/vendor/clsx", "@primebrick/ui/vendor/tailwind-merge", "@primebrick/ui/vendor/tailwind-variants", "@primebrick/ui/vendor/lucide", "@primebrick/ui/vendor/bits-ui"]`
+**Type:** `readonly ["svelte", "svelte/internal/client", "svelte/internal/disclose-version", "svelte/internal/flags/legacy", "svelte/events", "svelte/reactivity", "svelte/store", "svelte/attachments", "svelte/motion", "svelte/easing", "@primebrick/core", "@primebrick/ui", "@primebrick/ui/vendor/transformers", "@primebrick/ui/vendor/clsx", "@primebrick/ui/vendor/tailwind-merge", "@primebrick/ui/vendor/tailwind-variants", "@primebrick/ui/vendor/bits-ui"]`
 
 ### `ZERO`
 
@@ -829,6 +847,18 @@ First dotted segment of a translation key — `job.entities.x` → `job`.
 |-----------|------|-------------|
 | key | `string` |  |
 
+### `lucideIconSpecifier(exportName): string`
+
+CamelCase lucide export name → emitted icon specifier.
+`Cpu` → `@primebrick/ui/vendor/lucide/icons/cpu.js`;
+`CheckCircle2` → `…/check-circle-2.js`. Matches the dist filename
+convention (`dist/icons/<kebab>.js`) so aliases (`alarm-check`) resolve
+identically — validation of existence is the remote build's job.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| exportName | `string` |  |
+
 ### `max(a, b): Decimal`
 
 | Parameter | Type | Description |
@@ -954,6 +984,20 @@ single function so the plane stays deterministic.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | specifier | `string` |  |
+
+### `rewriteLucideBarrelImports(code): LucideRewriteResult`
+
+Remote-build transform: decomposes named imports of the lucide vendor
+barrel into one bare specifier per icon — the chunk then carries only
+the icons it actually uses. Type imports are stripped (they exist only
+for the compiler, which checks the ORIGINAL source pre-transform).
+
+Non-decomposable forms (`import X`, `import * as X`, `export … from`)
+throw — the barrel surface cannot survive into an emitted chunk.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| code | `string` |  |
 
 ### `round(d, scale, mode): Decimal`
 

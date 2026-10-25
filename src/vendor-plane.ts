@@ -51,11 +51,27 @@ export const VENDOR_SPECIFIERS = [
 	"@primebrick/ui/vendor/clsx",
 	"@primebrick/ui/vendor/tailwind-merge",
 	"@primebrick/ui/vendor/tailwind-variants",
-	"@primebrick/ui/vendor/lucide",
 	"@primebrick/ui/vendor/bits-ui",
 ] as const;
 
 export type VendorSpecifier = (typeof VENDOR_SPECIFIERS)[number];
+
+/**
+ * Open-ended specifier prefixes — everything under a prefix is a sanctioned
+ * vendor specifier without central allowlisting per item. Unlike
+ * {@link VENDOR_SPECIFIERS} (one bundle file per specifier), each prefix
+ * maps to a `/vendor/…/` URL directory: the specifier suffix resolves
+ * verbatim after the prefix.
+ *
+ * `@primebrick/ui/vendor/lucide/icons/` covers every lucide icon file the
+ * host vendor build emits at `/vendor/icons/lucide/<dist-name>.js` —
+ * remote chunks never resolve icons through a barrel (a barrel would force
+ * the whole catalog on every consumer), they emit one specifier per used
+ * icon. New lucide releases add icons with zero changes to this contract.
+ */
+export const VENDOR_SPECIFIER_PREFIXES = [
+	"@primebrick/ui/vendor/lucide/icons/",
+] as const;
 
 /**
  * Packages that MUST NOT be imported raw inside a remote chunk — they are
@@ -97,6 +113,11 @@ export function resolveVendorSpecifier(specifier: string): VendorResolution {
 	if ((VENDOR_SPECIFIERS as readonly string[]).includes(specifier)) {
 		return "external";
 	}
+	for (const prefix of VENDOR_SPECIFIER_PREFIXES) {
+		if (specifier.startsWith(prefix) && specifier.length > prefix.length) {
+			return "external";
+		}
+	}
 	const top = specifierTopPackage(specifier);
 	if (
 		VENDOR_TOP_PACKAGES.has(top) ||
@@ -137,13 +158,102 @@ export function diffVendorRequirements(
 	manifest: VendorManifest,
 ): VendorMismatch[] {
 	const mismatches: VendorMismatch[] = [];
+	const prefixes = Object.keys(manifest).filter((k) => k.endsWith("/"));
 	for (const [specifier, required] of Object.entries(requires)) {
-		const provided = manifest[specifier]?.version;
-		if (provided == null) {
+		// Exact key first, then prefix keys (`…/` entries match every
+		// specifier underneath — the open-ended lucide icons surface).
+		const entry =
+			manifest[specifier] ??
+			prefixes.reduce<(typeof manifest)[string] | undefined>(
+				(hit, p) => (specifier.startsWith(p) ? manifest[p] : hit),
+				undefined,
+			);
+		if (entry == null) {
 			mismatches.push({ specifier, kind: "missing", required });
-		} else if (provided !== required) {
-			mismatches.push({ specifier, kind: "version", required, provided });
+		} else if (entry.version !== required) {
+			mismatches.push({
+				specifier,
+				kind: "version",
+				required,
+				provided: entry.version,
+			});
 		}
 	}
 	return mismatches;
+}
+
+/**
+ * CamelCase lucide export name → emitted icon specifier.
+ * `Cpu` → `@primebrick/ui/vendor/lucide/icons/cpu.js`;
+ * `CheckCircle2` → `…/check-circle-2.js`. Matches the dist filename
+ * convention (`dist/icons/<kebab>.js`) so aliases (`alarm-check`) resolve
+ * identically — validation of existence is the remote build's job.
+ */
+export function lucideIconSpecifier(exportName: string): string {
+	const kebab = exportName
+		.replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
+		.replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+		.replace(/([a-zA-Z])([0-9]+)$/, "$1-$2")
+		.toLowerCase();
+	return `@primebrick/ui/vendor/lucide/icons/${kebab}.js`;
+}
+
+const LUCIDE_BARREL = "@primebrick/ui/vendor/lucide";
+const LUCIDE_IMPORT_RE =
+	/import\s*(type\s*)?\{([^}]*)\}\s*from\s*(["'])@primebrick\/ui\/vendor\/lucide\3\s*;?/g;
+const LUCIDE_FORBIDDEN_RE =
+	/import\s+[^"']*from\s*["']@primebrick\/ui\/vendor\/lucide["']/;
+
+export type LucideRewriteResult = {
+	code: string;
+	/** Emitted icon specifiers — validate each against lucide dist. */
+	icon_specifiers: string[];
+};
+
+/**
+ * Remote-build transform: decomposes named imports of the lucide vendor
+ * barrel into one bare specifier per icon — the chunk then carries only
+ * the icons it actually uses. Type imports are stripped (they exist only
+ * for the compiler, which checks the ORIGINAL source pre-transform).
+ *
+ * Non-decomposable forms (`import X`, `import * as X`, `export … from`)
+ * throw — the barrel surface cannot survive into an emitted chunk.
+ */
+export function rewriteLucideBarrelImports(code: string): LucideRewriteResult {
+	if (!code.includes(LUCIDE_BARREL)) {
+		return { code, icon_specifiers: [] };
+	}
+	const icon_specifiers: string[] = [];
+	const rewritten = code.replace(
+		LUCIDE_IMPORT_RE,
+		(_m, isType: string | undefined, names: string) => {
+			if (isType !== undefined) return ""; // `import type {…}` — no runtime
+			const out: string[] = [];
+			for (const raw of names.split(",")) {
+				const part = raw.trim();
+				if (!part) continue;
+				const spec = part.replace(/^type\s+/, "");
+				if (spec !== part) continue; // inline `type` specifier — no runtime
+				const m = /^(\w+)(?:\s+as\s+(\w+))?$/.exec(spec);
+				if (!m) {
+					throw new Error(
+						`[vendor-plane] cannot decompose lucide import specifier "${part}"`,
+					);
+				}
+				const specifier = lucideIconSpecifier(m[1]);
+				icon_specifiers.push(specifier);
+				out.push(
+					`import { default as ${m[2] ?? m[1]} } from '${specifier}';`,
+				);
+			}
+			return out.join("\n");
+		},
+	);
+	if (LUCIDE_FORBIDDEN_RE.test(rewritten)) {
+		throw new Error(
+			`[vendor-plane] "${LUCIDE_BARREL}" supports named imports only — ` +
+				`default/namespace imports cannot be decomposed to per-icon specifiers`,
+		);
+	}
+	return { code: rewritten, icon_specifiers };
 }

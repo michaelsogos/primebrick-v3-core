@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
 	VENDOR_SPECIFIERS,
 	diffVendorRequirements,
+	lucideIconSpecifier,
 	resolveVendorSpecifier,
+	rewriteLucideBarrelImports,
 	specifierTopPackage,
 	type VendorManifest,
 } from "./vendor-plane.js";
@@ -19,6 +21,10 @@ const manifest: VendorManifest = {
 		url: "/vendor/vendor-transformers.js",
 		version: "4.3.1",
 	},
+	"@primebrick/ui/vendor/lucide/icons/": {
+		url: "/vendor/icons/lucide/",
+		version: "1.59.0",
+	},
 };
 
 describe("resolveVendorSpecifier", () => {
@@ -27,9 +33,23 @@ describe("resolveVendorSpecifier", () => {
 			expect(resolveVendorSpecifier(s)).toBe("external");
 		}
 	});
+	it("externalizes every specifier under a sanctioned prefix", () => {
+		expect(
+			resolveVendorSpecifier("@primebrick/ui/vendor/lucide/icons/cpu.js"),
+		).toBe("external");
+		expect(
+			resolveVendorSpecifier("@primebrick/ui/vendor/lucide/icons/alarm-check.js"),
+		).toBe("external");
+		// the bare prefix itself is not a specifier
+		expect(
+			resolveVendorSpecifier("@primebrick/ui/vendor/lucide/icons/"),
+		).not.toBe("external");
+	});
 	it("rejects non-allowlisted specifiers inside vendor packages", () => {
 		expect(resolveVendorSpecifier("svelte/internal/client/dom/x")).toBe("reject");
 		expect(resolveVendorSpecifier("@primebrick/ui/internal")).toBe("reject");
+		// the lucide barrel is gone — emitting it must fail, not resolve
+		expect(resolveVendorSpecifier("@primebrick/ui/vendor/lucide")).toBe("reject");
 	});
 	it("rejects blocked direct package imports", () => {
 		expect(resolveVendorSpecifier("@huggingface/transformers")).toBe("reject");
@@ -78,5 +98,81 @@ describe("diffVendorRequirements", () => {
 			manifest,
 		);
 		expect(mismatches).toHaveLength(2);
+	});
+	it("satisfies prefix-manifest specifiers and flags stale versions", () => {
+		expect(
+			diffVendorRequirements(
+				{ "@primebrick/ui/vendor/lucide/icons/cpu.js": "1.59.0" },
+				manifest,
+			),
+		).toEqual([]);
+		expect(
+			diffVendorRequirements(
+				{ "@primebrick/ui/vendor/lucide/icons/cpu.js": "1.60.0" },
+				manifest,
+			),
+		).toEqual([
+			{
+				specifier: "@primebrick/ui/vendor/lucide/icons/cpu.js",
+				kind: "version",
+				required: "1.60.0",
+				provided: "1.59.0",
+			},
+		]);
+	});
+});
+
+describe("lucideIconSpecifier", () => {
+	it("converts export names to dist filenames", () => {
+		expect(lucideIconSpecifier("Cpu")).toBe(
+			"@primebrick/ui/vendor/lucide/icons/cpu.js",
+		);
+		expect(lucideIconSpecifier("CheckCircle2")).toBe(
+			"@primebrick/ui/vendor/lucide/icons/check-circle-2.js",
+		);
+		expect(lucideIconSpecifier("AArrowDown")).toBe(
+			"@primebrick/ui/vendor/lucide/icons/a-arrow-down.js",
+		);
+		expect(lucideIconSpecifier("CircleGauge")).toBe(
+			"@primebrick/ui/vendor/lucide/icons/circle-gauge.js",
+		);
+	});
+});
+
+describe("rewriteLucideBarrelImports", () => {
+	const P = "@primebrick/ui/vendor/lucide";
+	it("decomposes named imports into per-icon specifiers", () => {
+		const { code, icon_specifiers } = rewriteLucideBarrelImports(
+			`import { Cpu, CheckCircle2 as Ok } from '${P}';\n`,
+		);
+		expect(code).toBe(
+			`import { default as Cpu } from '${P}/icons/cpu.js';\n` +
+				`import { default as Ok } from '${P}/icons/check-circle-2.js';\n`,
+		);
+		expect(icon_specifiers).toEqual([
+			`${P}/icons/cpu.js`,
+			`${P}/icons/check-circle-2.js`,
+		]);
+	});
+	it("strips whole-statement and inline type imports", () => {
+		const { code, icon_specifiers } = rewriteLucideBarrelImports(
+			`import type { IconNode } from '${P}';\n` +
+				`import { Cpu, type IconProps } from '${P}';\n`,
+		);
+		expect(icon_specifiers).toEqual([`${P}/icons/cpu.js`]);
+		expect(code).not.toContain("IconNode");
+		expect(code).not.toContain("IconProps");
+	});
+	it("returns input untouched when the barrel is absent", () => {
+		const src = `import { Cpu } from './local.js';\n`;
+		expect(rewriteLucideBarrelImports(src).code).toBe(src);
+	});
+	it("throws on non-decomposable barrel forms", () => {
+		expect(() =>
+			rewriteLucideBarrelImports(`import Lucide from '${P}';\n`),
+		).toThrow("named imports only");
+		expect(() =>
+			rewriteLucideBarrelImports(`import * as L from '${P}';\n`),
+		).toThrow("named imports only");
 	});
 });
