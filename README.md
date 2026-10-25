@@ -1,17 +1,9 @@
 # @primebrick/core
 
-Environment-neutral shared contracts for Primebrick v3 — the root of the shared
-library tree. Pure TypeScript types, models and helpers; zero runtime
-dependencies beyond `@primebrick/decimal` (which it re-exports so downstream libs can pass it to FE/BE/US); consumable identically from browser, server and CLI code.
-
-## What's inside
-
-| Area | Exports |
-|------|---------|
-| Entity meta contract | `EntityMeta`, `EntityMetaResponse`, `MetaColumn`, `MetaColumnType`, `TableMeta`, `RowCustomAction`, `CollaborationMeta`, `TooltipPriority` |
-| Entity actions | `EntityAction`, `EntityActionEndpoint`, `EntityActionSentinel`, `STANDARD_OPS`, `StandardOp`, `ActionsOverrides`, `isEntityOpEnabled` |
-| List query | `ListResponse<TRow>`, `DeletionFilterMode`, `ListConnector`, `FilterOperator`, `AdvancedFilter`, `ViewName`, `SortDir` |
-| Brands & helpers | `SnakeCaseSingular`, `isSnakeCaseSingular`, `asSnakeCaseSingular`, `orderedColumns`, `defaultVisibleColumnKeys`, `sanitizeVisibleKeys`, `searchableTextColumns`, `getOperatorsForColumnType` |
+Environment-neutral shared contracts for Primebrick v3 — the root of the
+shared library tree. Pure TypeScript types, models and helpers consumable
+identically from browser, server and CLI code; `@primebrick/decimal` is
+re-exported so downstream libs can pass it to FE/BE/US.
 
 ## Install
 
@@ -19,29 +11,22 @@ dependencies beyond `@primebrick/decimal` (which it re-exports so downstream lib
 pnpm add @primebrick/core
 ```
 
-## Usage
+## Documentation
 
-```ts
-import {
-  STANDARD_OPS,
-  isEntityOpEnabled,
-  type EntityMetaResponse,
-} from "@primebrick/core";
+The export surface is contract code — it is documented where it is
+maintained, not duplicated here:
 
-const meta: EntityMetaResponse = await fetch(`/api/v1/entities/${entity}/meta`).then(r => r.json());
-if (isEntityOpEnabled(meta.actions, "create.single")) {
-  // render the create CTA
-}
-```
-
-Subpath exports: `@primebrick/core/entity-meta`, `@primebrick/core/list`,
-`@primebrick/core/columns`.
+- [AGENTS.md](./AGENTS.md) — agent entry point, repo conventions
+- [docs/dev-guide/](./docs/dev-guide/) — generated API reference + hand-written
+  guides (entity-meta contract, vendor plane, page-route declaration)
+- `src/index.ts` — the public barrel is the source of truth for exports;
+  `package.json` `exports` lists every importable subpath
 
 ## Versioning
 
-Fixed versions only — see the workspace GitFlow rules. Releases are tagged
-`x.y.z` (no `v` prefix) and published via OIDC Trusted Publishing by
-`.github/workflows/ci.yml`.
+Fixed versions only. Releases are tagged `x.y.z` (no `v` prefix) and
+published via OIDC Trusted Publishing by `.github/workflows/ci.yml`.
+See [docs/gitflow.md](./docs/gitflow.md).
 
 ## License
 

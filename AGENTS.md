@@ -1,5 +1,23 @@
 # AI AGENT INSTRUCTIONS - @primebrick/core
 
+## Documentation is the contract — code is the proof
+
+- Docs (AGENTS.md, .devin/rules/, docs/ai/, docs/dev-guide/, docs/user-guide/)
+  are the source of truth for HOW things work. Source code is NEVER
+  documentation: pages are composed dynamically (mountPage, remote chunks,
+  layout.sections, runtime wiring) — reading a +page.svelte alone tells you
+  little about what actually renders.
+- Need to know how to do something (tests, auth, dev servers, conventions)?
+  Find it in the doc FIRST. Read code only as the "prova del 9" — to verify
+  the code behaves as the doc says. Never the reverse.
+- Doc and code disagree? Report the discrepancy — the doc is probably stale.
+  Do NOT fix docs silently and do NOT create new files in .devin/rules/,
+  docs/, or AGENTS.md on your own initiative: propose the text, write only
+  after approval.
+- Before claiming "a doc is missing", check the indexes:
+  docs/ai/README.md, .devin/rules/, docs/dev-guide/_order.json.
+  The missing doc is usually a doc you haven't read.
+
 ## ⚠️ CRITICAL: NEVER COMMIT AUTOMATICALLY
 
 **AI agents MUST NEVER commit changes without explicit user instruction.**
@@ -30,7 +48,7 @@ helpers (`orderedColumns`, `defaultVisibleColumnKeys`, `getOperatorsForColumnTyp
 
 **Hard invariants:**
 
-- **Single runtime dependency** — `@primebrick/decimal` (itself dependency-free and env-neutral). No other dependencies allowed.
+- **Two runtime dependencies only** — `@primebrick/decimal` (re-exported, env-neutral) and `json-bigint` (the ext-json wire codec — bigint-safe serialization crossing every FE↔BE↔remote boundary). No other dependencies allowed.
 - **Environment-neutral** — no DOM, no Node APIs, no Svelte, no Express. It must
   compile identically for browser, server and CLI consumers.
 - **No I/O, no framework code** — types + pure functions only.

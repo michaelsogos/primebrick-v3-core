@@ -75,7 +75,7 @@
   },
   "packageManager": "pnpm@9.15.9",
   "dependencies": {
-    "@primebrick/decimal": "3.0.1",
+    "@primebrick/decimal": "workspace:*",
     "json-bigint": "1.0.0"
   },
   "devDependencies": {

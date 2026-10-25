@@ -6,5 +6,7 @@ export * from "./decimal.js";
 export * from "./ext-json.js";
 export * from "./search-gate.js";
 export * from "./page-route.js";
+export * from "./vendor-plane.js";
 export * from "./translation-keys.js";
 export * from "./filter-presets.js";
+export * from "./config-entry.js";
