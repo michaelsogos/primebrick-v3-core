@@ -117,8 +117,8 @@ describe("resolvePresetConditions", () => {
 describe("serviceApiBase", () => {
   it("strips the /entities/<entity> tail", () => {
     expect(serviceApiBase("/api/v1/entities/job_rule")).toBe("/api/v1");
-    expect(serviceApiBase("/ws/job/api/v1/entities/job_schedule")).toBe(
-      "/ws/job/api/v1",
+    expect(serviceApiBase("/svc/job/api/v1/entities/job_schedule")).toBe(
+      "/svc/job/api/v1",
     );
     expect(serviceApiBase("/api/v1/entities/customer/")).toBe("/api/v1");
   });

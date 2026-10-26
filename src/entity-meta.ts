@@ -190,8 +190,8 @@ export type MetaColumn = {
    *  engine performs the fetch automatically — zero per-page wiring. */
   sparkline?: {
     /** POST path relative to the service API base — e.g.
-     *  `/actions/job-run-stats` resolves to `/ws/job/api/v1/actions/…`
-     *  for `/ws/` entities, `/api/v1/…` for BE entities. */
+     *  `/actions/job-run-stats` resolves to `/svc/job/api/v1/actions/…`
+     *  for `/svc/` entities, `/api/v1/…` for BE entities. */
     endpoint: string;
     /** Request body field receiving the collected row keys
      *  (e.g. `schedule_subjects`). */

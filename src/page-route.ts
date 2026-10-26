@@ -43,7 +43,7 @@ export type PageRouteDeclaration = {
   icon?: string;
   /**
    * Remote component delivery — when set, the host mounts the chunk at this
-   * same-origin URL (typically `/ws/<service>/api/v1/module-assets/…`)
+   * same-origin URL (typically `/svc/<service>/api/v1/module-assets/…`)
    * instead of resolving a local component.
    */
   component_url?: string;
@@ -141,7 +141,7 @@ export type ModuleSheetDefaults = {
 export type ModuleSheetDecl = {
   /** The open-sheet address — `<module>.<name>` (validator-enforced). */
   key: string;
-  /** Remote sheet chunk — same-origin `/ws/<service>/api/v1/module-assets/…`. */
+  /** Remote sheet chunk — same-origin `/svc/<service>/api/v1/module-assets/…`. */
   component_url: string;
   /** Delivery format — see {@link PageRouteComponentFormat}. */
   component_format?: PageRouteComponentFormat;
@@ -315,7 +315,7 @@ export type ModuleNotifyInput = {
 export type ModuleHostBase = {
   host_version: 1;
   /**
-   * Authenticated fetch bound to the owning service's `/ws/<code>` base when
+   * Authenticated fetch bound to the owning service's `/svc/<code>` base when
    * derivable (paths are service-relative), else the host's raw API base.
    */
   api: (path: string, init?: RequestInit) => Promise<Response>;

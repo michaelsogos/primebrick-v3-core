@@ -1358,7 +1358,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Sentinel gates a route may declare instead of concrete permissions.\r\nValues mirror the "
+						"text": "Sentinel gates a route may declare instead of concrete permissions.\nValues mirror the "
 					},
 					{
 						"kind": "code",
@@ -1504,7 +1504,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " placeholders verbatim\r\n (e.g. "
+								"text": " placeholders verbatim\n (e.g. "
 							},
 							{
 								"kind": "code",
@@ -1512,7 +1512,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Consumers substitute\r\n placeholders from the row ("
+								"text": "). Consumers substitute\n placeholders from the row ("
 							},
 							{
 								"kind": "code",
@@ -1582,7 +1582,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the derived capability contract.\r\nEVERY standard op is present; "
+						"text": " — the derived capability contract.\nEVERY standard op is present; "
 					},
 					{
 						"kind": "code",
@@ -1590,7 +1590,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " means the op is\r\nunavailable for everyone (route missing or product-disabled)."
+						"text": " means the op is\nunavailable for everyone (route missing or product-disabled)."
 					}
 				]
 			},
@@ -1629,7 +1629,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", ...) or the\r\n last path segment for non-standard routes ("
+								"text": ", ...) or the\n last path segment for non-standard routes ("
 							},
 							{
 								"kind": "code",
@@ -1762,7 +1762,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n action, absent when no route exists ("
+								"text": "\n action, absent when no route exists ("
 							},
 							{
 								"kind": "code",
@@ -1770,7 +1770,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Consumers\r\n dispatch writes to the declared endpoint instead of recomputing the\r\n "
+								"text": "). Consumers\n dispatch writes to the declared endpoint instead of recomputing the\n "
 							},
 							{
 								"kind": "code",
@@ -1778,7 +1778,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " convention — required for ops living under\r\n non-standard prefixes (e.g. "
+								"text": " convention — required for ops living under\n non-standard prefixes (e.g. "
 							},
 							{
 								"kind": "code",
@@ -1927,7 +1927,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "The canonical vocabulary of standard entity ops. Every op is always\r\npresent in "
+						"text": "The canonical vocabulary of standard entity ops. Every op is always\npresent in "
 					},
 					{
 						"kind": "code",
@@ -1935,7 +1935,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — ops whose route is not registered are emitted\r\nwith "
+						"text": " — ops whose route is not registered are emitted\nwith "
 					},
 					{
 						"kind": "code",
@@ -2059,7 +2059,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "UI column renderer type. NOTE: this is the UI type, not the DB type —\r\n e.g. "
+						"text": "UI column renderer type. NOTE: this is the UI type, not the DB type —\n e.g. "
 					},
 					{
 						"kind": "code",
@@ -2143,7 +2143,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Tooltip visual severity — drives icon and title color in priority\r\n tooltip renderers."
+						"text": "Tooltip visual severity — drives icon and title color in priority\n tooltip renderers."
 					}
 				]
 			},
@@ -2203,7 +2203,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " dictionary.\r\nTransversal to every page type: table cells, form tooltips, labels.\r\n\r\nDeclared as a type alias (not interface): object literal types get an\r\nimplicit index signature, keeping "
+						"text": " dictionary.\nTransversal to every page type: table cells, form tooltips, labels.\n\nDeclared as a type alias (not interface): object literal types get an\nimplicit index signature, keeping "
 					},
 					{
 						"kind": "code",
@@ -2211,7 +2211,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " assignable to\r\n"
+						"text": " assignable to\n"
 					},
 					{
 						"kind": "code",
@@ -2219,7 +2219,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — host/remotes pass columns through generic\r\ncell-snippet args typed as "
+						"text": " — host/remotes pass columns through generic\ncell-snippet args typed as "
 					},
 					{
 						"kind": "code",
@@ -2304,7 +2304,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " documents the built-in set,\r\n but the field is intentionally open ("
+								"text": " documents the built-in set,\n but the field is intentionally open ("
 							},
 							{
 								"kind": "code",
@@ -2312,7 +2312,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "): modules may emit\r\n custom cell types resolved by consumer-registered cell renderers\r\n (e.g. a "
+								"text": "): modules may emit\n custom cell types resolved by consumer-registered cell renderers\n (e.g. a "
 							},
 							{
 								"kind": "code",
@@ -2358,7 +2358,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Deterministic display position — explicit per column, array position\r\n MUST NOT matter. Rendering groups sticky → normal → audited, each group\r\n sorted by "
+								"text": "Deterministic display position — explicit per column, array position\n MUST NOT matter. Rendering groups sticky → normal → audited, each group\n sorted by "
 							},
 							{
 								"kind": "code",
@@ -2382,7 +2382,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (canonical first\r\n sticky column, hidden but selectable); "
+								"text": " (canonical first\n sticky column, hidden but selectable); "
 							},
 							{
 								"kind": "code",
@@ -2485,7 +2485,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Included in \"search in fields\" scope + backend default search\r\n (default true; set false for non-text-physical or sensitive fields)."
+								"text": "Included in \"search in fields\" scope + backend default search\n (default true; set false for non-text-physical or sensitive fields)."
 							}
 						]
 					},
@@ -2601,7 +2601,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "System-managed auditing column (created_at, updated_by, …) —\r\n rendered last."
+								"text": "System-managed auditing column (created_at, updated_by, …) —\n rendered last."
 							}
 						]
 					},
@@ -2974,7 +2974,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — FE IANA formatting toggle bound to a per-row\r\n timezone field (IANA id comes from the API row)."
+								"text": " — FE IANA formatting toggle bound to a per-row\n timezone field (IANA id comes from the API row)."
 							}
 						]
 					},
@@ -3042,7 +3042,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — per-row stacked mini-histogram fed by ONE batch\r\n POST per rows load (virtual column: no DB field expected). The list\r\n engine performs the fetch automatically — zero per-page wiring."
+								"text": " — per-row stacked mini-histogram fed by ONE batch\n POST per rows load (virtual column: no DB field expected). The list\n engine performs the fetch automatically — zero per-page wiring."
 							}
 						]
 					},
@@ -3073,7 +3073,7 @@
 										"summary": [
 											{
 												"kind": "text",
-												"text": "POST path relative to the service API base — e.g.\r\n "
+												"text": "POST path relative to the service API base — e.g.\n "
 											},
 											{
 												"kind": "code",
@@ -3085,15 +3085,15 @@
 											},
 											{
 												"kind": "code",
-												"text": "`/ws/job/api/v1/actions/…`"
+												"text": "`/svc/job/api/v1/actions/…`"
 											},
 											{
 												"kind": "text",
-												"text": "\r\n for "
+												"text": "\n for "
 											},
 											{
 												"kind": "code",
-												"text": "`/ws/`"
+												"text": "`/svc/`"
 											},
 											{
 												"kind": "text",
@@ -3132,7 +3132,7 @@
 										"summary": [
 											{
 												"kind": "text",
-												"text": "Request body field receiving the collected row keys\r\n (e.g. "
+												"text": "Request body field receiving the collected row keys\n (e.g. "
 											},
 											{
 												"kind": "code",
@@ -3294,7 +3294,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ") —\r\n default "
+												"text": ") —\n default "
 											},
 											{
 												"kind": "code",
@@ -3337,7 +3337,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " is a\r\n tailwind "
+												"text": " is a\n tailwind "
 											},
 											{
 												"kind": "code",
@@ -3353,7 +3353,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ") — the\r\n reference FE safelists the full fill palette in "
+												"text": ") — the\n reference FE safelists the full fill palette in "
 											},
 											{
 												"kind": "code",
@@ -3361,7 +3361,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ", any\r\n "
+												"text": ", any\n "
 											},
 											{
 												"kind": "code",
@@ -3534,7 +3534,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One WHERE condition of a filter preset — serialized verbatim as a\r\n"
+						"text": "One WHERE condition of a filter preset — serialized verbatim as a\n"
 					},
 					{
 						"kind": "code",
@@ -3550,7 +3550,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " query string (same vocabulary as\r\n"
+						"text": " query string (same vocabulary as\n"
 					},
 					{
 						"kind": "code",
@@ -3793,7 +3793,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": NEVER rendered (the\r\n group is icon-only by design; the label feeds "
+								"text": ": NEVER rendered (the\n group is icon-only by design; the label feeds "
 							},
 							{
 								"kind": "code",
@@ -3809,7 +3809,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n fallback); "
+								"text": "\n fallback); "
 							},
 							{
 								"kind": "code",
@@ -3854,7 +3854,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": REQUIRED, it is the only visible\r\n affordance (icon-only standard); "
+								"text": ": REQUIRED, it is the only visible\n affordance (icon-only standard); "
 							},
 							{
 								"kind": "code",
@@ -3907,7 +3907,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (the only place the\r\n option's meaning is spelled out); "
+								"text": " (the only place the\n option's meaning is spelled out); "
 							},
 							{
 								"kind": "code",
@@ -3952,7 +3952,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " call while selected\r\n(refresh, pagination, sort, user filters — all combine). Omit or "
+								"text": " call while selected\n(refresh, pagination, sort, user filters — all combine). Omit or "
 							},
 							{
 								"kind": "code",
@@ -3960,7 +3960,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nfor the \"all\" escape option — still a real selection, applies nothing."
+								"text": "\nfor the \"all\" escape option — still a real selection, applies nothing."
 							}
 						]
 					},
@@ -4018,7 +4018,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A mutually-exclusive preset filter group rendered as its own control in\r\nthe table toolbar (tandem with the deletion-filter group). Exactly one\r\noption is always active — there is no \"clear\" affordance. Declared in\r\n"
+						"text": "A mutually-exclusive preset filter group rendered as its own control in\nthe table toolbar (tandem with the deletion-filter group). Exactly one\noption is always active — there is no \"clear\" affordance. Declared in\n"
 					},
 					{
 						"kind": "code",
@@ -4034,7 +4034,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " scope selector\r\n(recurring / once / all) on a jobs table."
+						"text": " scope selector\n(recurring / once / all) on a jobs table."
 					}
 				]
 			},
@@ -4049,7 +4049,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Preset id — unique within the entity; keys the toolbar group and the\r\n persisted selection ("
+								"text": "Preset id — unique within the entity; keys the toolbar group and the\n persisted selection ("
 							},
 							{
 								"kind": "code",
@@ -4092,7 +4092,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is the toolbar standard: segmented\r\n icon-only buttons ("
+								"text": " is the toolbar standard: segmented\n icon-only buttons ("
 							},
 							{
 								"kind": "code",
@@ -4100,7 +4100,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " per option is REQUIRED, meaning carried by\r\n "
+								"text": " per option is REQUIRED, meaning carried by\n "
 							},
 							{
 								"kind": "code",
@@ -4124,7 +4124,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " for long option lists\r\n where a labelled dropdown reads better."
+								"text": " for long option lists\n where a labelled dropdown reads better."
 							}
 						]
 					},
@@ -4225,7 +4225,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Option id selected before any user choice and as the fallback for an\r\n invalid persisted selection — REQUIRED, must exist in "
+								"text": "Option id selected before any user choice and as the fallback for an\n invalid persisted selection — REQUIRED, must exist in "
 							},
 							{
 								"kind": "code",
@@ -4297,7 +4297,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Action/op name — matches the bare op derived from the route\r\n (e.g. "
+								"text": "Action/op name — matches the bare op derived from the route\n (e.g. "
 							},
 							{
 								"kind": "code",
@@ -4446,7 +4446,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Permission required to see/use the action (filtered client-side\r\n against the user's permission set)."
+								"text": "Permission required to see/use the action (filtered client-side\n against the user's permission set)."
 							}
 						]
 					},
@@ -4679,7 +4679,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "UI config for non-standard row actions (e.g. change password).\r\n Standard ops (edit/delete/duplicate/preview) are derived from\r\n "
+								"text": "UI config for non-standard row actions (e.g. change password).\n Standard ops (edit/delete/duplicate/preview) are derived from\n "
 							},
 							{
 								"kind": "code",
@@ -4721,7 +4721,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Mutually-exclusive preset WHERE filters — each rendered as its own\r\n toolbar control; the active option's conditions AND into every list\r\n request (see "
+								"text": "Mutually-exclusive preset WHERE filters — each rendered as its own\n toolbar control; the active option's conditions AND into every list\n request (see "
 							},
 							{
 								"kind": "inline-tag",
@@ -4878,7 +4878,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " file MUST satisfy.\r\nThe schema is CLOSED for authored metas: undeclared properties are\r\ncompile errors, so new meta props require extending this type first."
+						"text": " file MUST satisfy.\nThe schema is CLOSED for authored metas: undeclared properties are\ncompile errors, so new meta props require extending this type first."
 					}
 				]
 			},
@@ -4957,7 +4957,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Namespace OWNING this entity's label keys — the module's own namespace\r\n("
+								"text": "Namespace OWNING this entity's label keys — the module's own namespace\n("
 							},
 							{
 								"kind": "code",
@@ -4981,7 +4981,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n(BE/core-owned entities keep "
+								"text": "\n(BE/core-owned entities keep "
 							},
 							{
 								"kind": "code",
@@ -4989,7 +4989,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\r\nThis is a READ-side reference declared by the owning module — the\r\nnamespace write boundary (see "
+								"text": ").\nThis is a READ-side reference declared by the owning module — the\nnamespace write boundary (see "
 							},
 							{
 								"kind": "code",
@@ -4997,7 +4997,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") guarantees the\r\nkeys actually live in that module's "
+								"text": ") guarantees the\nkeys actually live in that module's "
 							},
 							{
 								"kind": "code",
@@ -5034,7 +5034,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Optional i18n key overriding the canonical page title.\r\nWhen absent, list/create/edit titles are built from the generic\r\n"
+								"text": "Optional i18n key overriding the canonical page title.\nWhen absent, list/create/edit titles are built from the generic\n"
 							},
 							{
 								"kind": "code",
@@ -5042,7 +5042,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " templates interpolated\r\nwith "
+								"text": " templates interpolated\nwith "
 							},
 							{
 								"kind": "code",
@@ -5050,7 +5050,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\r\nSet only for custom pages needing a bespoke title — CRUD entity metas\r\nmust not declare it."
+								"text": ".\nSet only for custom pages needing a bespoke title — CRUD entity metas\nmust not declare it."
 							}
 						]
 					},
@@ -5112,7 +5112,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Canonical display field — the column key identifying the entity's\r\n human-readable label. Drives first-column/sticky table identity and\r\n default display resolution."
+								"text": "Canonical display field — the column key identifying the entity's\n human-readable label. Drives first-column/sticky table identity and\n default display resolution."
 							}
 						]
 					},
@@ -5149,7 +5149,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " syntax, dot-paths allowed).\r\nOPTIONAL here: "
+								"text": " syntax, dot-paths allowed).\nOPTIONAL here: "
 							},
 							{
 								"kind": "code",
@@ -5157,7 +5157,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " materializes it as\r\n"
+								"text": " materializes it as\n"
 							},
 							{
 								"kind": "code",
@@ -5165,7 +5165,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " when absent — it is always present in the\r\nserved response. Used automatically for edit-page titles; reusable for\r\ncomboboxes, lists, chips."
+								"text": " when absent — it is always present in the\nserved response. Used automatically for edit-page titles; reusable for\ncomboboxes, lists, chips."
 							}
 						]
 					},
@@ -5202,7 +5202,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " on route-backed\r\n ops; a missing route already produces "
+								"text": " on route-backed\n ops; a missing route already produces "
 							},
 							{
 								"kind": "code",
@@ -5273,7 +5273,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Table options — omit when the entity has no table page\r\n (e.g. a self-service form meta)."
+								"text": "Table options — omit when the entity has no table page\n (e.g. a self-service form meta)."
 							}
 						]
 					},
@@ -5337,7 +5337,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " response:\r\nstatic meta + runtime-injected "
+						"text": " response:\nstatic meta + runtime-injected "
 					},
 					{
 						"kind": "code",
@@ -5512,7 +5512,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\narray and carries "
+								"text": "\narray and carries "
 							},
 							{
 								"kind": "code",
@@ -5528,7 +5528,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is absent\r\n(meta without actions — contract violation) the op is not enabled.\r\n\r\nThis deliberately does NOT evaluate user permissions — that step lives in\r\nthe consumer (e.g. FE "
+								"text": " is absent\n(meta without actions — contract violation) the op is not enabled.\n\nThis deliberately does NOT evaluate user permissions — that step lives in\nthe consumer (e.g. FE "
 							},
 							{
 								"kind": "code",
@@ -5536,7 +5536,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " composes this with the session\r\npermission check)."
+								"text": " composes this with the session\npermission check)."
 							}
 						]
 					},
@@ -5776,7 +5776,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Resolve a preset's active option id — the caller-provided selection when\r\nit names a declared option, otherwise "
+								"text": "Resolve a preset's active option id — the caller-provided selection when\nit names a declared option, otherwise "
 							},
 							{
 								"kind": "code",
@@ -5784,7 +5784,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (itself falling\r\nback to the first option when misconfigured, keeping the always-one\r\ninvariant rather than failing closed)."
+								"text": " (itself falling\nback to the first option when misconfigured, keeping the always-one\ninvariant rather than failing closed)."
 							}
 						]
 					},
@@ -5863,7 +5863,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Flatten the WHERE conditions of every preset's ACTIVE option — the\r\nconditions AND-ed into every "
+								"text": "Flatten the WHERE conditions of every preset's ACTIVE option — the\nconditions AND-ed into every "
 							},
 							{
 								"kind": "code",
@@ -5879,7 +5879,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " maps\r\npreset.id → option id; invalid/absent ids resolve per\r\n"
+								"text": " maps\npreset.id → option id; invalid/absent ids resolve per\n"
 							},
 							{
 								"kind": "inline-tag",
@@ -5996,7 +5996,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Service API base of an entity list basePath — strips the trailing\r\n"
+								"text": "Service API base of an entity list basePath — strips the trailing\n"
 							},
 							{
 								"kind": "code",
@@ -6004,7 +6004,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " segment so service-relative endpoints declared in\r\nmeta (e.g. sparkline "
+								"text": " segment so service-relative endpoints declared in\nmeta (e.g. sparkline "
 							},
 							{
 								"kind": "code",
@@ -6012,11 +6012,11 @@
 							},
 							{
 								"kind": "text",
-								"text": ") resolve to\r\n"
+								"text": ") resolve to\n"
 							},
 							{
 								"kind": "code",
-								"text": "`/ws/<svc>/api/v1/actions/…`"
+								"text": "`/svc/<svc>/api/v1/actions/…`"
 							},
 							{
 								"kind": "text",
@@ -6887,7 +6887,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Remote component delivery format. Extensible — new literals are additive\r\nand non-breaking. "
+						"text": "Remote component delivery format. Extensible — new literals are additive\nand non-breaking. "
 					},
 					{
 						"kind": "code",
@@ -6895,7 +6895,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": a precompiled ESM chunk that exports\r\n"
+						"text": ": a precompiled ESM chunk that exports\n"
 					},
 					{
 						"kind": "code",
@@ -6930,7 +6930,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One declared frontend route owned by a module. Modules MUST declare every\r\nFE path they own that is not deducible from nav links or entity\r\nconventions — the AI route census (derived from the consolidated\r\n"
+						"text": "One declared frontend route owned by a module. Modules MUST declare every\nFE path they own that is not deducible from nav links or entity\nconventions — the AI route census (derived from the consolidated\n"
 					},
 					{
 						"kind": "code",
@@ -6938,7 +6938,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " discovery payload) depends on it.\r\n"
+						"text": " discovery payload) depends on it.\n"
 					},
 					{
 						"kind": "code",
@@ -7061,7 +7061,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Lucide icon name — used by host chrome that renders the route as an\r\naction (e.g. the toolbar create CTA for "
+								"text": "Lucide icon name — used by host chrome that renders the route as an\naction (e.g. the toolbar create CTA for "
 							},
 							{
 								"kind": "code",
@@ -7098,15 +7098,15 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Remote component delivery — when set, the host mounts the chunk at this\r\nsame-origin URL (typically "
+								"text": "Remote component delivery — when set, the host mounts the chunk at this\nsame-origin URL (typically "
 							},
 							{
 								"kind": "code",
-								"text": "`/ws/<service>/api/v1/module-assets/…`"
+								"text": "`/svc/<service>/api/v1/module-assets/…`"
 							},
 							{
 								"kind": "text",
-								"text": ")\r\ninstead of resolving a local component."
+								"text": ")\ninstead of resolving a local component."
 							}
 						]
 					},
@@ -7200,7 +7200,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n(SRI form) or bare lowercase hex. The host verifies the fetched bytes via\r\nWeb Crypto before importing; a mismatch renders an in-content integrity\r\nerror and nothing is mounted."
+								"text": "\n(SRI form) or bare lowercase hex. The host verifies the fetched bytes via\nWeb Crypto before importing; a mismatch renders an in-content integrity\nerror and nothing is mounted."
 							}
 						]
 					},
@@ -7229,7 +7229,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Archetype-agnostic page props — the metadata a route needs beyond the\r\nshared fields. "
+								"text": "Archetype-agnostic page props — the metadata a route needs beyond the\nshared fields. "
 							},
 							{
 								"kind": "code",
@@ -7300,7 +7300,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " = a named mount export of the\r\npage's own chunk ("
+						"text": " = a named mount export of the\npage's own chunk ("
 					},
 					{
 						"kind": "code",
@@ -7316,7 +7316,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " = a\r\ncomponent registered in the host's section registry. The "
+						"text": " = a\ncomponent registered in the host's section registry. The "
 					},
 					{
 						"kind": "code",
@@ -7324,7 +7324,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " form is\r\nthe default for module-owned blocks; "
+						"text": " form is\nthe default for module-owned blocks; "
 					},
 					{
 						"kind": "code",
@@ -7332,7 +7332,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " composes host-owned building\r\nblocks without shipping a chunk at all."
+						"text": " composes host-owned building\nblocks without shipping a chunk at all."
 					}
 				]
 			},
@@ -7648,7 +7648,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Spatial arrangement of a page's sections — ONE archetype: CSS grid.\r\nA vertical stack is the degenerate case ("
+						"text": "Spatial arrangement of a page's sections — ONE archetype: CSS grid.\nA vertical stack is the degenerate case ("
 					},
 					{
 						"kind": "code",
@@ -7664,11 +7664,11 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\r\nsections auto-flow in declaration order); a split is "
+						"text": ",\nsections auto-flow in declaration order); a split is "
 					},
 					{
 						"kind": "code",
-						"text": "`columns: \"280px\r\n1fr\"`"
+						"text": "`columns: \"280px\n1fr\"`"
 					},
 					{
 						"kind": "text",
@@ -7688,7 +7688,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\r\nNew container classes, when genuinely needed, arrive as new optional\r\nfields — the contract never grows a second placement vocabulary."
+						"text": ".\nNew container classes, when genuinely needed, arrive as new optional\nfields — the contract never grows a second placement vocabulary."
 					}
 				]
 			},
@@ -8011,7 +8011,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\noptions always win over these — they are a hint, not a policy.\r\n"
+						"text": "\noptions always win over these — they are a hint, not a policy.\n"
 					},
 					{
 						"kind": "code",
@@ -8135,7 +8135,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n— the sheet analogue of a remote "
+						"text": "\n— the sheet analogue of a remote "
 					},
 					{
 						"kind": "inline-tag",
@@ -8145,7 +8145,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": the host\r\nowns the sheet ENGINE (open/close/chrome/state), the owning service owns\r\nthe CONTENT — an "
+						"text": ": the host\nowns the sheet ENGINE (open/close/chrome/state), the owning service owns\nthe CONTENT — an "
 					},
 					{
 						"kind": "code",
@@ -8161,7 +8161,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\r\nmounted at runtime into the host's global sheet surface.\r\n\r\n"
+						"text": ",\nmounted at runtime into the host's global sheet surface.\n\n"
 					},
 					{
 						"kind": "code",
@@ -8177,7 +8177,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " namespaced so a\r\ndeclared key can never collide across services (enforced at enrollment\r\nby the nav-declaration validator). Anyone holding the key can open it —\r\nhost "
+						"text": " namespaced so a\ndeclared key can never collide across services (enforced at enrollment\nby the nav-declaration validator). Anyone holding the key can open it —\nhost "
 					},
 					{
 						"kind": "code",
@@ -8193,7 +8193,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — visibility is gated by\r\nthe sheet's derived access key ("
+						"text": " — visibility is gated by\nthe sheet's derived access key ("
 					},
 					{
 						"kind": "code",
@@ -8201,7 +8201,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), never by import\r\nreachability."
+						"text": "), never by import\nreachability."
 					}
 				]
 			},
@@ -8255,7 +8255,7 @@
 							},
 							{
 								"kind": "code",
-								"text": "`/ws/<service>/api/v1/module-assets/…`"
+								"text": "`/svc/<service>/api/v1/module-assets/…`"
 							},
 							{
 								"kind": "text",
@@ -8455,7 +8455,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", plus the\r\nsection's own declaration ("
+						"text": ", plus the\nsection's own declaration ("
 					},
 					{
 						"kind": "code",
@@ -8570,7 +8570,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is the\r\ncollapsible-group mechanism (the shell renders children under the parent)."
+						"text": " is the\ncollapsible-group mechanism (the shell renders children under the parent)."
 					}
 				]
 			},
@@ -8665,7 +8665,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Marks the module's DEFAULT leaf — exactly one leaf nav item must carry\r\nit (validator-enforced). GOTO(module) resolves the default leaf's\r\nhref; when the user's grants filter that leaf out, the first\r\naccessible leaf wins. Leaf items only — never on a parent carrying\r\n"
+								"text": "Marks the module's DEFAULT leaf — exactly one leaf nav item must carry\nit (validator-enforced). GOTO(module) resolves the default leaf's\nhref; when the user's grants filter that leaf out, the first\naccessible leaf wins. Leaf items only — never on a parent carrying\n"
 							},
 							{
 								"kind": "code",
@@ -8749,7 +8749,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A module's self-described navigation declaration — the payload a service\r\npublishes in "
+						"text": "A module's self-described navigation declaration — the payload a service\npublishes in "
 					},
 					{
 						"kind": "code",
@@ -8765,7 +8765,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") so the FE can render\r\nthe module's sidebar nav and the census can resolve its routes WITHOUT\r\nthe BE hardcoding another module's pages. This is the wiring that lets\r\neach module present its own nav — a remote page is owned by the service\r\nthat ships it, never declared inside a host module's registry.\r\n\r\n"
+						"text": ") so the FE can render\nthe module's sidebar nav and the census can resolve its routes WITHOUT\nthe BE hardcoding another module's pages. This is the wiring that lets\neach module present its own nav — a remote page is owned by the service\nthat ships it, never declared inside a host module's registry.\n\n"
 					},
 					{
 						"kind": "code",
@@ -8773,7 +8773,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " drive active-module resolution (longest-prefix match —\r\na page under a shared prefix like "
+						"text": " drive active-module resolution (longest-prefix match —\na page under a shared prefix like "
 					},
 					{
 						"kind": "code",
@@ -8781,7 +8781,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " resolves to the owning\r\nmodule, not to the module owning the broader "
+						"text": " resolves to the owning\nmodule, not to the module owning the broader "
 					},
 					{
 						"kind": "code",
@@ -8871,7 +8871,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nprefix under which every leaf key is derived ("
+								"text": "\nprefix under which every leaf key is derived ("
 							},
 							{
 								"kind": "code",
@@ -8879,7 +8879,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "):\r\n"
+								"text": "):\n"
 							},
 							{
 								"kind": "code",
@@ -8895,7 +8895,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ",\r\n"
+								"text": ",\n"
 							},
 							{
 								"kind": "code",
@@ -8911,7 +8911,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". A module that\r\ndeclares nav/routes/sheets is exposed surface, so the namespace is\r\nmandatory and must equal "
+								"text": ". A module that\ndeclares nav/routes/sheets is exposed surface, so the namespace is\nmandatory and must equal "
 							},
 							{
 								"kind": "code",
@@ -8919,7 +8919,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (validated\r\nat enrollment AND by write-time decl tests).\r\n\r\nModule visibility is DERIVED, never a gate key: the module exists for\r\na user iff at least one of its leaf keys is covered by their grants.\r\nCoverage is exact-or-wildcard only — "
+								"text": " (validated\nat enrollment AND by write-time decl tests).\n\nModule visibility is DERIVED, never a gate key: the module exists for\na user iff at least one of its leaf keys is covered by their grants.\nCoverage is exact-or-wildcard only — "
 							},
 							{
 								"kind": "code",
@@ -8927,7 +8927,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " bare is a\r\nnamespace, not a grant; "
+								"text": " bare is a\nnamespace, not a grant; "
 							},
 							{
 								"kind": "code",
@@ -8935,7 +8935,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " covers every leaf.\r\n\r\nThe access axis is a separate vocabulary inside the same permission\r\npipeline as entity RBAC ("
+								"text": " covers every leaf.\n\nThe access axis is a separate vocabulary inside the same permission\npipeline as entity RBAC ("
 							},
 							{
 								"kind": "code",
@@ -8943,7 +8943,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " grants, wildcard matching) —\r\n"
+								"text": " grants, wildcard matching) —\n"
 							},
 							{
 								"kind": "code",
@@ -9046,7 +9046,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Remote sheet panels this module owns — engine is host-side, content\r\nis service-delivered ("
+								"text": "Remote sheet panels this module owns — engine is host-side, content\nis service-delivered ("
 							},
 							{
 								"kind": "code",
@@ -9054,7 +9054,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " chunks). Travels the same\r\ndiscovery channel as "
+								"text": " chunks). Travels the same\ndiscovery channel as "
 							},
 							{
 								"kind": "code",
@@ -9151,7 +9151,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — host-bound step-up MFA bridge. The remote\r\ncalls it exactly like the host's "
+						"text": " — host-bound step-up MFA bridge. The remote\ncalls it exactly like the host's "
 					},
 					{
 						"kind": "code",
@@ -9159,7 +9159,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ":\r\n"
+						"text": ":\n"
 					},
 					{
 						"kind": "code",
@@ -9183,7 +9183,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " response carrying\r\n"
+						"text": " response carrying\n"
 					},
 					{
 						"kind": "code",
@@ -9191,7 +9191,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " the host shows ITS OWN step-up dialog (host root,\r\nhost runtime — nothing crosses the boundary), awaits verification, then\r\nretries "
+						"text": " the host shows ITS OWN step-up dialog (host root,\nhost runtime — nothing crosses the boundary), awaits verification, then\nretries "
 					},
 					{
 						"kind": "code",
@@ -9199,7 +9199,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " with the action-authorization token. The promise\r\nresolves with the final Response — success or failure."
+						"text": " with the action-authorization token. The promise\nresolves with the final Response — success or failure."
 					}
 				]
 			},
@@ -9405,7 +9405,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — opens a sheet panel by key: a host-registered\r\npanel ("
+						"text": " — opens a sheet panel by key: a host-registered\npanel ("
 					},
 					{
 						"kind": "code",
@@ -9429,7 +9429,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") or a remote-declared sheet\r\n("
+						"text": ") or a remote-declared sheet\n("
 					},
 					{
 						"kind": "code",
@@ -9445,7 +9445,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", mounted at runtime). The panel\r\nregistry, remote declarations and sheet state all live in the host — a\r\nremote page requests the panel, it never ships the engine. "
+						"text": ", mounted at runtime). The panel\nregistry, remote declarations and sheet state all live in the host — a\nremote page requests the panel, it never ships the engine. "
 					},
 					{
 						"kind": "code",
@@ -9453,7 +9453,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are\r\nplain values (callback fns are allowed — they cross the boundary);\r\n"
+						"text": " are\nplain values (callback fns are allowed — they cross the boundary);\n"
 					},
 					{
 						"kind": "code",
@@ -9485,7 +9485,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\r\n"
+						"text": ",\n"
 					},
 					{
 						"kind": "code",
@@ -9493,7 +9493,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "). Unknown keys are rejected with a host notification —\r\nthe remote cannot smuggle an undeclared panel."
+						"text": "). Unknown keys are rejected with a host notification —\nthe remote cannot smuggle an undeclared panel."
 					}
 				]
 			},
@@ -9614,7 +9614,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the host's authenticated full-path fetch\r\n("
+						"text": " — the host's authenticated full-path fetch\n("
 					},
 					{
 						"kind": "code",
@@ -9638,7 +9638,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n(ws-bound to the owning service) cannot. Remote pages bind it through\r\n"
+						"text": "\n(ws-bound to the owning service) cannot. Remote pages bind it through\n"
 					},
 					{
 						"kind": "code",
@@ -9754,7 +9754,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the reserved well-known keys plus open caller-provided\r\nentries. "
+						"text": " — the reserved well-known keys plus open caller-provided\nentries. "
 					},
 					{
 						"kind": "code",
@@ -9762,7 +9762,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is assigned by the host loader after the chunk\r\nresolves; "
+						"text": " is assigned by the host loader after the chunk\nresolves; "
 					},
 					{
 						"kind": "code",
@@ -9786,7 +9786,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are built-ins the host\r\nalways provides (a caller may override them in tests)."
+						"text": " are built-ins the host\nalways provides (a caller may override them in tests)."
 					}
 				]
 			},
@@ -9946,7 +9946,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the minimal shape of the\r\nhost's "
+						"text": " — the minimal shape of the\nhost's "
 					},
 					{
 						"kind": "code",
@@ -10185,7 +10185,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Host-side context base handed to EVERY remote mount — pages\r\n("
+						"text": "Host-side context base handed to EVERY remote mount — pages\n("
 					},
 					{
 						"kind": "code",
@@ -10201,7 +10201,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") alike. Versioned via\r\n"
+						"text": ") alike. Versioned via\n"
 					},
 					{
 						"kind": "code",
@@ -10209,7 +10209,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — remote chunks can refuse incompatible hosts.\r\n\r\nHARD CONSTRAINT — plain values and functions ONLY: Svelte rune state\r\n("
+						"text": " — remote chunks can refuse incompatible hosts.\n\nHARD CONSTRAINT — plain values and functions ONLY: Svelte rune state\n("
 					},
 					{
 						"kind": "code",
@@ -10233,7 +10233,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") is bundle-local and cannot cross this\r\nboundary. UI building blocks come from "
+						"text": ") is bundle-local and cannot cross this\nboundary. UI building blocks come from "
 					},
 					{
 						"kind": "code",
@@ -10241,7 +10241,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " bundled inside\r\nthe remote chunk, not from ctx; "
+						"text": " bundled inside\nthe remote chunk, not from ctx; "
 					},
 					{
 						"kind": "code",
@@ -10249,7 +10249,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is reserved for the few\r\nhost-coupled cases (see "
+						"text": " is reserved for the few\nhost-coupled cases (see "
 					},
 					{
 						"kind": "code",
@@ -10295,11 +10295,11 @@
 							},
 							{
 								"kind": "code",
-								"text": "`/ws/<code>`"
+								"text": "`/svc/<code>`"
 							},
 							{
 								"kind": "text",
-								"text": " base when\r\nderivable (paths are service-relative), else the host's raw API base."
+								"text": " base when\nderivable (paths are service-relative), else the host's raw API base."
 							}
 						]
 					},
@@ -10605,7 +10605,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Optional host-coupled components and helpers (opaque values at this\r\nboundary — components are host-compiled Svelte components, helpers are\r\nplain functions). Only for cases the remote page cannot self-render;\r\nNOT for sharing rune state.\r\n\r\n"
+								"text": "Optional host-coupled components and helpers (opaque values at this\nboundary — components are host-compiled Svelte components, helpers are\nplain functions). Only for cases the remote page cannot self-render;\nNOT for sharing rune state.\n\n"
 							},
 							{
 								"kind": "code",
@@ -10613,7 +10613,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " MAY also carry remote-agnostic plain functions the host\r\nowns (e.g. "
+								"text": " MAY also carry remote-agnostic plain functions the host\nowns (e.g. "
 							},
 							{
 								"kind": "code",
@@ -10629,7 +10629,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\r\n\r\nSNIPPETS DO NOT CROSS — in either direction. A Svelte snippet invoked\r\nunder the other bundle's render reads its own runtime's\r\n"
+								"text": ").\n\nSNIPPETS DO NOT CROSS — in either direction. A Svelte snippet invoked\nunder the other bundle's render reads its own runtime's\n"
 							},
 							{
 								"kind": "code",
@@ -10637,7 +10637,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (null while the other bundle is rendering) and dies on\r\n"
+								"text": " (null while the other bundle is rendering) and dies on\n"
 							},
 							{
 								"kind": "code",
@@ -10645,7 +10645,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". Verified by live\r\nE2E — what worked in the synchronous-mount spike fails in production\r\nrender order. The supported bridges are "
+								"text": ". Verified by live\nE2E — what worked in the synchronous-mount spike fails in production\nrender order. The supported bridges are "
 							},
 							{
 								"kind": "code",
@@ -10653,7 +10653,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (host root inside\r\nremote DOM) and the symmetric remote-mount slot (remote root inside\r\nhost DOM, see "
+								"text": " (host root inside\nremote DOM) and the symmetric remote-mount slot (remote root inside\nhost DOM, see "
 							},
 							{
 								"kind": "code",
@@ -10661,7 +10661,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " below).\r\n\r\nReserved key: "
+								"text": " below).\n\nReserved key: "
 							},
 							{
 								"kind": "code",
@@ -10669,7 +10669,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — the host loader assigns the imported module\r\nnamespace to "
+								"text": " — the host loader assigns the imported module\nnamespace to "
 							},
 							{
 								"kind": "code",
@@ -10677,7 +10677,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " after the chunk resolves, so\r\nhost-side code (e.g. shim snippets running under host render) can\r\nreach additional chunk exports such as a "
+								"text": " after the chunk resolves, so\nhost-side code (e.g. shim snippets running under host render) can\nreach additional chunk exports such as a "
 							},
 							{
 								"kind": "code",
@@ -10685,7 +10685,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nfunction for remote content inside host trees.\r\n\r\nBuilt-in keys the host always provides: "
+								"text": "\nfunction for remote content inside host trees.\n\nBuilt-in keys the host always provides: "
 							},
 							{
 								"kind": "code",
@@ -10693,7 +10693,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (step-up MFA for\r\nguarded remote ops), "
+								"text": " (step-up MFA for\nguarded remote ops), "
 							},
 							{
 								"kind": "code",
@@ -10709,7 +10709,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n(full-path BE fetch) — see "
+								"text": "\n(full-path BE fetch) — see "
 							},
 							{
 								"kind": "inline-tag",
@@ -10719,7 +10719,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " /\r\n"
+								"text": " /\n"
 							},
 							{
 								"kind": "inline-tag",
@@ -10780,7 +10780,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Mount a host-compiled component as a separate Svelte root inside remote\r\nDOM. Rendering a host component inline ("
+								"text": "Mount a host-compiled component as a separate Svelte root inside remote\nDOM. Rendering a host component inline ("
 							},
 							{
 								"kind": "code",
@@ -10788,7 +10788,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") inside remote\r\nmarkup CANNOT work — each bundle has its own Svelte runtime/component\r\ninternals; this host-bound "
+								"text": ") inside remote\nmarkup CANNOT work — each bundle has its own Svelte runtime/component\ninternals; this host-bound "
 							},
 							{
 								"kind": "code",
@@ -10796,7 +10796,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " bridge is the supported path.\r\n\r\nThe returned handle pushes prop updates reactively ("
+								"text": " bridge is the supported path.\n\nThe returned handle pushes prop updates reactively ("
 							},
 							{
 								"kind": "code",
@@ -10804,7 +10804,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") and\r\ndestroys the root ("
+								"text": ") and\ndestroys the root ("
 							},
 							{
 								"kind": "code",
@@ -10812,7 +10812,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Props are plain values — NOT remote\r\nsnippets (see the "
+								"text": "). Props are plain values — NOT remote\nsnippets (see the "
 							},
 							{
 								"kind": "code",
@@ -10820,7 +10820,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " doc: cross-bundle snippet invocation\r\ncrashes; remote content inside the mounted host tree goes through a\r\nremote "
+								"text": " doc: cross-bundle snippet invocation\ncrashes; remote content inside the mounted host tree goes through a\nremote "
 							},
 							{
 								"kind": "code",
@@ -10964,7 +10964,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the shared\r\n"
+						"text": " — the shared\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -11113,7 +11113,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the shared\r\n"
+						"text": " — the shared\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -11131,7 +11131,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " control surface: the declared\r\nkey, the caller's props (opaque at the boundary — the owning module\r\nknows their shape), the current chrome, and the commands to mutate the\r\nhost-owned frame. No "
+						"text": " control surface: the declared\nkey, the caller's props (opaque at the boundary — the owning module\nknows their shape), the current chrome, and the commands to mutate the\nhost-owned frame. No "
 					},
 					{
 						"kind": "code",
@@ -11147,7 +11147,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — a sheet is not a route; domain\r\ncontext arrives through "
+						"text": " — a sheet is not a route; domain\ncontext arrives through "
 					},
 					{
 						"kind": "code",
@@ -11556,7 +11556,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — imperative channel to a\r\nhost-mounted component root."
+						"text": " — imperative channel to a\nhost-mounted component root."
 					}
 				]
 			},
@@ -11748,7 +11748,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\r\nMay return the "
+						"text": ".\nMay return the "
 					},
 					{
 						"kind": "code",
@@ -11764,7 +11764,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), a custom dispose\r\nfunction, or a promise of either.\r\n\r\nNOTE: a raw "
+						"text": "), a custom dispose\nfunction, or a promise of either.\n\nNOTE: a raw "
 					},
 					{
 						"kind": "code",
@@ -11772,7 +11772,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " result is only safe when it was registered by the\r\nSAME svelte module instance that will call "
+						"text": " result is only safe when it was registered by the\nSAME svelte module instance that will call "
 					},
 					{
 						"kind": "code",
@@ -11780,7 +11780,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " on it. Remote\r\nchunks resolve svelte through the vendor import map while the host runs\r\nits own bundled copy — two "
+						"text": " on it. Remote\nchunks resolve svelte through the vendor import map while the host runs\nits own bundled copy — two "
 					},
 					{
 						"kind": "code",
@@ -11788,7 +11788,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " registries — so chunk\r\ncode MUST go through "
+						"text": " registries — so chunk\ncode MUST go through "
 					},
 					{
 						"kind": "code",
@@ -11796,7 +11796,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (or return an equivalent\r\ndispose closure over the mounting bundle's "
+						"text": " (or return an equivalent\ndispose closure over the mounting bundle's "
 					},
 					{
 						"kind": "code",
@@ -11804,7 +11804,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), never hand the\r\nhost a foreign mount record."
+						"text": "), never hand the\nhost a foreign mount record."
 					}
 				]
 			},
@@ -11890,7 +11890,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\r\nThe chunk is declared in "
+						"text": ".\nThe chunk is declared in "
 					},
 					{
 						"kind": "code",
@@ -11908,7 +11908,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ")\r\nand mounted inside the host's global sheet surface. Same dispose rules as\r\n"
+						"text": ")\nand mounted inside the host's global sheet surface. Same dispose rules as\n"
 					},
 					{
 						"kind": "inline-tag",
