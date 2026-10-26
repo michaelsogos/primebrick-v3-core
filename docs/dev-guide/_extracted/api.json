@@ -16,7 +16,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Branded type that enforces snake_case singular (no uppercase letters).\nUsed for "
+						"text": "Branded type that enforces snake_case singular (no uppercase letters).\r\nUsed for "
 					},
 					{
 						"kind": "code",
@@ -24,7 +24,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " in entity meta — the i18n key prefix.\n\nThe brand is applied via "
+						"text": " in entity meta — the i18n key prefix.\r\n\r\nThe brand is applied via "
 					},
 					{
 						"kind": "code",
@@ -32,7 +32,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", which performs a\nruntime check rejecting strings containing A-Z. This catches camelCase\n("
+						"text": ", which performs a\r\nruntime check rejecting strings containing A-Z. This catches camelCase\r\n("
 					},
 					{
 						"kind": "code",
@@ -48,7 +48,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), and UPPER_CASE\n("
+						"text": "), and UPPER_CASE\r\n("
 					},
 					{
 						"kind": "code",
@@ -65,7 +65,7 @@
 						"content": [
 							{
 								"kind": "code",
-								"text": "```ts\nconst tk = asSnakeCaseSingular(\"user_profile\");  // ✅\nconst tk = asSnakeCaseSingular(\"userProfile\");   // ❌ throws at runtime\n```"
+								"text": "```ts\nconst tk = asSnakeCaseSingular(\"user_profile\");  // ✅\r\nconst tk = asSnakeCaseSingular(\"userProfile\");   // ❌ throws at runtime\n```"
 							}
 						]
 					}
@@ -169,7 +169,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — rejects strings with\n uppercase letters. Use in meta-loading code to catch BE meta that\n violates the convention."
+								"text": " — rejects strings with\r\n uppercase letters. Use in meta-loading code to catch BE meta that\r\n violates the convention."
 							}
 						]
 					},
@@ -243,7 +243,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\n Throws if the value contains uppercase letters\n (camelCase/PascalCase/UPPER_CASE)."
+								"text": ".\r\n Throws if the value contains uppercase letters\r\n (camelCase/PascalCase/UPPER_CASE)."
 							}
 						]
 					},
@@ -302,7 +302,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Columns in display order: sticky group → normal group → audited group,\neach sorted by "
+								"text": "Columns in display order: sticky group → normal group → audited group,\r\neach sorted by "
 							},
 							{
 								"kind": "code",
@@ -538,7 +538,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Text-physical searchable columns — the scope selector + default\n \"all fields\" search set."
+								"text": "Text-physical searchable columns — the scope selector + default\r\n \"all fields\" search set."
 							}
 						]
 					},
@@ -652,7 +652,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Config value type vocabulary — drives widget selection and validation.\nMirrors the SDK "
+						"text": "Config value type vocabulary — drives widget selection and validation.\r\nMirrors the SDK "
 					},
 					{
 						"kind": "code",
@@ -668,7 +668,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " column.\n\n- "
+						"text": " column.\r\n\r\n- "
 					},
 					{
 						"kind": "code",
@@ -692,7 +692,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ")\n- "
+						"text": ")\r\n- "
 					},
 					{
 						"kind": "code",
@@ -708,7 +708,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\n- "
+						"text": "\r\n- "
 					},
 					{
 						"kind": "code",
@@ -816,7 +816,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Standard Config Table entry.\n\nThe BE coerces "
+						"text": "Standard Config Table entry.\r\n\r\nThe BE coerces "
 					},
 					{
 						"kind": "code",
@@ -824,7 +824,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " to its native JS type before serialization:\n  - "
+						"text": " to its native JS type before serialization:\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -840,7 +840,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (preserved by ext-json response parsing)\n  - "
+						"text": " (preserved by ext-json response parsing)\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -856,7 +856,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\n  - "
+						"text": "\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -880,7 +880,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ")\n  - "
+						"text": ")\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -896,7 +896,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (masked by BE)\n  - other    → "
+						"text": " (masked by BE)\r\n  - other    → "
 					},
 					{
 						"kind": "code",
@@ -904,7 +904,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\n\nWrite path: callers send the native type (bigint/number/string); the BE\nserializes it to the DB string form via "
+						"text": "\r\n\r\nWrite path: callers send the native type (bigint/number/string); the BE\r\nserializes it to the DB string form via "
 					},
 					{
 						"kind": "code",
@@ -6389,7 +6389,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " list param\non the wire ("
+						"text": " list param\r\non the wire ("
 					},
 					{
 						"kind": "code",
@@ -6421,7 +6421,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\n"
+						"text": ",\r\n"
 					},
 					{
 						"kind": "code",
@@ -6437,7 +6437,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "; absent param means the BE default, currently\n"
+						"text": "; absent param means the BE default, currently\r\n"
 					},
 					{
 						"kind": "code",
@@ -6485,7 +6485,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "The paged list response returned by every entity list endpoint.\n"
+						"text": "The paged list response returned by every entity list endpoint.\r\n"
 					},
 					{
 						"kind": "code",
@@ -6501,7 +6501,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — parse JSON responses with a bigint-aware parser\n("
+						"text": " — parse JSON responses with a bigint-aware parser\r\n("
 					},
 					{
 						"kind": "code",
@@ -11764,16 +11764,56 @@
 					},
 					{
 						"kind": "text",
-						"text": "), a custom dispose\r\nfunction, or a promise of either."
+						"text": "), a custom dispose\r\nfunction, or a promise of either.\r\n\r\nNOTE: a raw "
+					},
+					{
+						"kind": "code",
+						"text": "`mount()`"
+					},
+					{
+						"kind": "text",
+						"text": " result is only safe when it was registered by the\r\nSAME svelte module instance that will call "
+					},
+					{
+						"kind": "code",
+						"text": "`unmount()`"
+					},
+					{
+						"kind": "text",
+						"text": " on it. Remote\r\nchunks resolve svelte through the vendor import map while the host runs\r\nits own bundled copy — two "
+					},
+					{
+						"kind": "code",
+						"text": "`mounted_components`"
+					},
+					{
+						"kind": "text",
+						"text": " registries — so chunk\r\ncode MUST go through "
+					},
+					{
+						"kind": "code",
+						"text": "`mountModuleContent`"
+					},
+					{
+						"kind": "text",
+						"text": " (or return an equivalent\r\ndispose closure over the mounting bundle's "
+					},
+					{
+						"kind": "code",
+						"text": "`unmount`"
+					},
+					{
+						"kind": "text",
+						"text": "), never hand the\r\nhost a foreign mount record."
 					}
 				]
 			},
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 430,
+					"line": 438,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L430"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L438"
 				}
 			],
 			"type": {
@@ -11885,9 +11925,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/page-route.ts",
-					"line": 438,
+					"line": 446,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L438"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/page-route.ts#L446"
 				}
 			],
 			"type": {
@@ -12271,7 +12311,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Closed allowlist of bare specifiers remote chunks may import. A\npackage's specifiers normally union into ONE bundle file so the browser\ndedupes by URL — a single runtime instance is guaranteed. Exception:\n"
+						"text": "Closed allowlist of bare specifiers remote chunks may import. A\r\npackage's specifiers normally union into ONE bundle file so the browser\r\ndedupes by URL — a single runtime instance is guaranteed. Exception:\r\n"
 					},
 					{
 						"kind": "code",
@@ -12279,7 +12319,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "'s public subpaths (events/reactivity/store/attachments) get\ntheir own files — their export names collide with the internal signal\nAPI ("
+						"text": "'s public subpaths (events/reactivity/store/attachments) get\r\ntheir own files — their export names collide with the internal signal\r\nAPI ("
 					},
 					{
 						"kind": "code",
@@ -12295,7 +12335,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " exist in both), and a flat union module cannot hold\nboth. Shared internals still dedupe through the bundler's shared chunks."
+						"text": " exist in both), and a flat union module cannot hold\r\nboth. Shared internals still dedupe through the bundler's shared chunks."
 					}
 				]
 			},
@@ -12429,7 +12469,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Open-ended specifier prefixes — everything under a prefix is a sanctioned\nvendor specifier without central allowlisting per item. Unlike\n"
+						"text": "Open-ended specifier prefixes — everything under a prefix is a sanctioned\r\nvendor specifier without central allowlisting per item. Unlike\r\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -12439,7 +12479,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (one bundle file per specifier), each prefix\nmaps to a "
+						"text": " (one bundle file per specifier), each prefix\r\nmaps to a "
 					},
 					{
 						"kind": "code",
@@ -12447,7 +12487,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " URL directory: the specifier suffix resolves\nverbatim after the prefix.\n\n"
+						"text": " URL directory: the specifier suffix resolves\r\nverbatim after the prefix.\r\n\r\n"
 					},
 					{
 						"kind": "code",
@@ -12455,7 +12495,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " covers every lucide icon file the\nhost vendor build emits at "
+						"text": " covers every lucide icon file the\r\nhost vendor build emits at "
 					},
 					{
 						"kind": "code",
@@ -12463,7 +12503,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " —\nremote chunks never resolve icons through a barrel (a barrel would force\nthe whole catalog on every consumer), they emit one specifier per used\nicon. New lucide releases add icons with zero changes to this contract."
+						"text": " —\r\nremote chunks never resolve icons through a barrel (a barrel would force\r\nthe whole catalog on every consumer), they emit one specifier per used\r\nicon. New lucide releases add icons with zero changes to this contract."
 					}
 				]
 			},
@@ -12502,7 +12542,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Packages that MUST NOT be imported raw inside a remote chunk — they are\nalready served through a sanctioned vendor specifier (e.g. transformers is\nvendored behind "
+						"text": "Packages that MUST NOT be imported raw inside a remote chunk — they are\r\nalready served through a sanctioned vendor specifier (e.g. transformers is\r\nvendored behind "
 					},
 					{
 						"kind": "code",
@@ -12510,7 +12550,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "). A raw import would bundle\na second runtime copy (split caches, split env config) — reject it."
+						"text": "). A raw import would bundle\r\na second runtime copy (split caches, split env config) — reject it."
 					}
 				]
 			},
@@ -12671,7 +12711,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "How a remote chunk's bundler must treat a bare import specifier. Both the\nhost vendor build and every module chunk build derive behavior from this\nsingle function so the plane stays deterministic."
+								"text": "How a remote chunk's bundler must treat a bare import specifier. Both the\r\nhost vendor build and every module chunk build derive behavior from this\r\nsingle function so the plane stays deterministic."
 							}
 						]
 					},
@@ -12719,7 +12759,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — emitted next to each remote chunk at build time,\ndeclaring the vendor specifiers/versions it was compiled against."
+						"text": " — emitted next to each remote chunk at build time,\r\ndeclaring the vendor specifiers/versions it was compiled against."
 					}
 				]
 			},
@@ -13108,7 +13148,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Vendor compatibility check — exact-match policy. A remote chunk compiled\nagainst a different version of a vendored package is incompatible:\n"
+								"text": "Vendor compatibility check — exact-match policy. A remote chunk compiled\r\nagainst a different version of a vendored package is incompatible:\r\n"
 							},
 							{
 								"kind": "code",
@@ -13116,7 +13156,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is not a stable API and each union bundle's export set\nmay change between versions. The remedy is rebuilding the remote chunk —\na semver-tolerant handshake would only defer an opaque import failure."
+								"text": " is not a stable API and each union bundle's export set\r\nmay change between versions. The remedy is rebuilding the remote chunk —\r\na semver-tolerant handshake would only defer an opaque import failure."
 							}
 						]
 					},
@@ -13207,7 +13247,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "CamelCase lucide export name → emitted icon specifier.\n"
+								"text": "CamelCase lucide export name → emitted icon specifier.\r\n"
 							},
 							{
 								"kind": "code",
@@ -13223,7 +13263,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ";\n"
+								"text": ";\r\n"
 							},
 							{
 								"kind": "code",
@@ -13239,7 +13279,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". Matches the dist filename\nconvention ("
+								"text": ". Matches the dist filename\r\nconvention ("
 							},
 							{
 								"kind": "code",
@@ -13255,7 +13295,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") resolve\nidentically — validation of existence is the remote build's job."
+								"text": ") resolve\r\nidentically — validation of existence is the remote build's job."
 							}
 						]
 					},
@@ -13387,7 +13427,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Remote-build transform: decomposes named imports of the lucide vendor\nbarrel into one bare specifier per icon — the chunk then carries only\nthe icons it actually uses. Type imports are stripped (they exist only\nfor the compiler, which checks the ORIGINAL source pre-transform).\n\nNon-decomposable forms ("
+								"text": "Remote-build transform: decomposes named imports of the lucide vendor\r\nbarrel into one bare specifier per icon — the chunk then carries only\r\nthe icons it actually uses. Type imports are stripped (they exist only\r\nfor the compiler, which checks the ORIGINAL source pre-transform).\r\n\r\nNon-decomposable forms ("
 							},
 							{
 								"kind": "code",
@@ -13411,7 +13451,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\nthrow — the barrel surface cannot survive into an emitted chunk."
+								"text": ")\r\nthrow — the barrel surface cannot survive into an emitted chunk."
 							}
 						]
 					},
