@@ -1,6 +1,6 @@
 {
   "name": "@primebrick/core",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Environment-neutral shared contracts for Primebrick v3 — entity meta schema, entity actions vocabulary, list query types, branded primitives. Consumable by frontend, backend, microservices, DAL and SDK.",
   "type": "module",
   "license": "MIT",
