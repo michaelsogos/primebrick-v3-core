@@ -37,10 +37,25 @@ export type PageRouteDeclaration = {
   /** i18n key for a human-readable label, when available. */
   label_key?: string;
   /**
+   * i18n key of the page description line rendered under the header title —
+   * route-level, valid on EVERY `kind` (the old `form.description_key`
+   * privilege is removed).
+   */
+  description_key?: string;
+  /**
    * Lucide icon name — used by host chrome that renders the route as an
    * action (e.g. the toolbar create CTA for `kind:"create"` routes).
    */
   icon?: string;
+  /**
+   * Who owns the page header chrome. `"host"` (default): the host shell
+   * renders the mandatory PageHeader (breadcrumb, star, title, description,
+   * presence) above the page body — including above a remote mount.
+   * `"remote"`: the remote chunk owns its chrome and the host header is
+   * suppressed for this route. Ignored by host-rendered archetypes — their
+   * chrome is always host-owned.
+   */
+  chrome?: "host" | "remote";
   /**
    * Remote component delivery — when set, the host mounts the chunk at this
    * same-origin URL (typically `/svc/<service>/api/v1/module-assets/…`)
@@ -57,57 +72,80 @@ export type PageRouteDeclaration = {
    */
   integrity?: string;
   /**
+   * Chrome the route's standard CTAs open in — `"page"` (default): the
+   * create/edit CTA navigates to the route; `"sheet"`: it opens the SAME
+   * archetype content inside the host sheet surface (the route keeps
+   * working when visited directly — the hint only steers CTA behavior).
+   * Read by host archetypes and list CTAs, never by remote pages.
+   */
+  presentation?: "page" | "sheet";
+  /**
    * Archetype-agnostic page props — the metadata a route needs beyond the
-   * shared fields. `layout` composes the page from mountable sections.
+   * shared fields. `form` carries entity-form placement + policy.
    */
   page_props?: PageRouteProps;
 };
 
 /**
- * Section mount target — `remote:<export>` = a named mount export of the
- * page's own chunk (`mod.mountModels(el, ctx, section)`); `host:<key>` = a
- * component registered in the host's section registry. The `remote:` form is
- * the default for module-owned blocks; `host:` composes host-owned building
- * blocks without shipping a chunk at all.
+ * One field's placement + policy inside an entity form — PAGE-domain
+ * metadata: it positions a field the ENTITY owns; it never redefines the
+ * field's type or validation (those come from `meta.columns` — class-derived
+ * constraints + authored `format`).
+ *
+ * `key` MUST exist in the served `meta.columns` — the host archetype
+ * validates at render time and fails loudly on drift.
  */
-export type PageSectionSource = `remote:${string}` | `host:${string}`;
-
-/** One mountable block inside a `layout` — placement is grid-cell based. */
-export type PageSectionDecl = {
-  /** Unique within the layout — also the DOM/test hook (`data-section-id`). */
-  id: string;
-  source: PageSectionSource;
-  /** Plain-values props forwarded to the section mount/component. */
-  props?: Record<string, unknown>;
-  /** `grid-column` span — `span: 2` ⇒ `grid-column: span 2`. */
-  span?: number;
-  /** Explicit `grid-column`/`grid-row` start — overrides auto-flow order. */
+export type FormFieldPlacement = {
+  /** Entity column key — resolves against served `meta.columns`. */
+  key: string;
+  /** `grid-column` start (2-col standard grid) — overrides auto-flow. */
   col?: number;
-  row?: number;
+  /** `grid-column` span — `span: 2` = full-width row. */
+  span?: number;
+  /** `grid-row` span. */
+  row_span?: number;
+  /** Section id grouping fields under a shared header (i18n key resolved
+   *  by the host archetype). */
+  section?: string;
+  /** Initial value prefill — page-domain form UX (never the DB default). */
+  default_value?: unknown;
+  /** i18n key of the control placeholder. */
+  placeholder_key?: string;
+  /** Required override — defaults to the class-derived `nullable`
+   *  (`false` → required). May only LOOSEN to optional, never tighten
+   *  past the physical contract. */
+  required?: boolean;
+  /** Render the control read-only (e.g. audit-ish fields on edit). */
+  readonly?: boolean;
+  /** Explicit control override — key of the host widget registry; bypasses
+   *  the `format`→control mapping for this field only. */
+  widget?: string;
+  /**
+   * Dynamic option vocabulary for ComboSelect fields — closed union.
+   * `"census.emits"`: the union of every module's `events.emits` from the
+   * `/modules` discovery payload (already client-side at render time).
+   * Free entry stays allowed for wildcard/dynamic subjects.
+   */
+  options_source?: "census.emits";
 };
 
 /**
- * Spatial arrangement of a page's sections — ONE archetype: CSS grid.
- * A vertical stack is the degenerate case (`columns` defaults to `"1fr"`,
- * sections auto-flow in declaration order); a split is `columns: "280px
- * 1fr"`; a dashboard is `columns: "repeat(3, 1fr)"` + per-section `span`.
- * New container classes, when genuinely needed, arrive as new optional
- * fields — the contract never grows a second placement vocabulary.
+ * `page_props.form` — the entity-form page declaration. `fields` is the
+ * ORDERED placement list: only declared keys render (absent columns are
+ * simply not editable on this surface). `validators` names closed-vocab
+ * cross-field rules implemented host-side (e.g. `target_matches_lane`) —
+ * the host rejects unknown validator keys.
  */
-export type PageLayoutDecl = {
-  /** CSS `grid-template-columns` — default `"1fr"` (single-column stack). */
-  columns?: string;
-  /** CSS `grid-template-rows`. */
-  rows?: string;
-  /** CSS `gap` — default `"1.5rem"`. */
-  gap?: string;
-  /** Sections in auto-flow order; `col`/`row` override per section. */
-  sections: PageSectionDecl[];
+export type FormPageDecl = {
+  fields: FormFieldPlacement[];
+  /** Closed-vocab cross-field validator keys — host-implemented registry. */
+  validators?: string[];
 };
 
-/** `page_props` — free-form per-route metadata with a typed `layout` axis. */
+/** `page_props` — free-form per-route metadata with a typed `form` axis. */
 export type PageRouteProps = {
-  layout?: PageLayoutDecl;
+  /** `kind:"create"|"detail"` entity forms — field placement + form policy. */
+  form?: FormPageDecl;
 };
 
 /** Sheet side — the two chrome slots the host sheet engine owns. */
@@ -152,16 +190,6 @@ export type ModuleSheetDecl = {
   /** Suggested chrome — overridden by the caller's open options. */
   default_options?: ModuleSheetDefaults;
 };
-
-/**
- * A chunk's section-mount export — same host ctx as `mountPage`, plus the
- * section's own declaration (`id`, `props`, placement) as third argument.
- */
-export type MountSectionFn = (
-  el: HTMLElement,
-  ctx: ModulePageHost,
-  section: PageSectionDecl
-) => unknown;
 
 /**
  * One sidebar navigation link contributed by a module. `children` is the
@@ -231,6 +259,40 @@ export type ModuleNavDeclaration = {
   sheets?: ModuleSheetDecl[];
   /** Shell-reserved module (e.g. settings) — never set by services. */
   is_reserved?: boolean;
+};
+
+/**
+ * A module's emitted-event declaration — `endpoints.events` in
+ * `service.register` → `service_registry.endpoints.events` → the
+ * `/modules` discovery payload.
+ *
+ * `emits` lists the NATS subjects the service PUBLISHES as domain events
+ * (wildcards allowed: `customer.*`, `crm.customers.changed`) — the
+ * decoupled vocabulary other modules and host pickers (e.g. job rules
+ * `event_subject`/`source_subject`) consume to offer real subjects.
+ * A module never declares who subscribes — that stays decoupled by design.
+ * Subscription-side subjects (`NatsRoute[]`) are internal and never
+ * declared here.
+ */
+/**
+ * One published subject — the ConfigEntry display anatomy mirrored:
+ * `label_key` = short translated display name (primary line), `description_key`
+ * = human description (small secondary line), `subject` = the raw key (mono
+ * line). Both keys point at translations in the EMITTING module's namespace
+ * (`<ns>.events.<name>`); pickers render label + desc + subject.
+ */
+export type EmitDecl = {
+  /** Published subject — concrete or wildcard (`*` segment, `>` tail). */
+  subject: string;
+  /** i18n key of the short display name (primary option line). */
+  label_key?: string;
+  /** i18n key of the human description, in the module's own translations. */
+  description_key?: string;
+};
+
+export type ModuleEventsDecl = {
+  /** Published subjects — concrete or wildcard (`*` segment, `>` tail). */
+  emits?: EmitDecl[];
 };
 
 /**

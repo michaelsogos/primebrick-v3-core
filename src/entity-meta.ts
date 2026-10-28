@@ -100,6 +100,35 @@ export type MetaColumnType =
   | "number"
   | "sparkline";
 
+/**
+ * Authored field-format vocabulary — the SEMANTIC input contract of a
+ * column: which control archetype a form renderer must use and which
+ * validation chain `buildEntityFormSchema` applies. Absent → the renderer
+ * falls back to `type` (text→text input, boolean→switch, badge→options).
+ *
+ * Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
+ * compile error — the US→FE option boundary is enforced by the type.
+ * New formats are additive literals (never breaking).
+ */
+export type MetaColumnFormat =
+  | "text"
+  | "textarea"
+  | "email"
+  | "url"
+  | "phone"
+  | "secret"
+  | "nats_subject"
+  | "schedule_spec"
+  | "json"
+  | "display_name"
+  | "idp_name"
+  | "color_hex"
+  | "number"
+  | "money"
+  | "date"
+  | "datetime"
+  | "time";
+
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
 export type TooltipPriority =
@@ -152,6 +181,40 @@ export type MetaColumn = {
   /** System-managed auditing column (created_at, updated_by, …) —
    *  rendered last. */
   audited?: boolean;
+
+  // ---- form constraint props ----
+  // DERIVED — injected at decl time by the DAL `withColumnConstraints`
+  // helper from the entity class registration. Authors MUST NOT set them:
+  // the helper throws on an authored value contradicting the class.
+  /** Physical nullability — `true` → optional in forms, `false` →
+   *  required. Absent on columns with no physical backing (virtual
+   *  columns like `sparkline`) — those never belong in `page_props.form`. */
+  nullable?: boolean;
+  /** Physical max length from `@Column({length})` — feeds `maxlength`
+   *  on the control and `z.string().max()` in the schema. */
+  max_length?: number;
+  /** Physical PG column type (`varchar`, `text`, `jsonb`, `boolean`, …) —
+   *  informational for the control pick when `format` is absent. */
+  pg_type?: string;
+
+  // AUTHORED — semantic contract the entity class cannot express.
+  /** Field format — see {@link MetaColumnFormat}. */
+  format?: MetaColumnFormat;
+  /** Extra regex applied to text-ish fields (zod `.regex()`). */
+  pattern?: string;
+  /** Semantic minimum length (physical `max_length` is derived). */
+  min_length?: number;
+  /** Numeric bounds for `number`/`money` formats. */
+  min?: number;
+  max?: number;
+  /** `format:"json"` — JSON Schema driving the editor's lint/completion
+   *  AND the structural validation in `buildEntityFormSchema`. */
+  json_schema?: Record<string, unknown>;
+
+  /** Lucide icon name rendered before the label in FORM field labels —
+   *  inherits the label text color (it identifies the field's semantic,
+   *  e.g. `zap` on event-subject fields). Not a table-cell icon. */
+  icon?: string;
 
   // ---- form/list tooltip flags ----
   /** i18n key of the hint tooltip body. */
