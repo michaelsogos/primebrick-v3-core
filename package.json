@@ -54,6 +54,10 @@
     "./search-gate": {
       "types": "./dist/search-gate.d.ts",
       "import": "./dist/search-gate.js"
+    },
+    "./presence": {
+      "types": "./dist/presence.d.ts",
+      "import": "./dist/presence.js"
     }
   },
   "files": [
