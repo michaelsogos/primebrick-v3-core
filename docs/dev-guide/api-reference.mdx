@@ -83,6 +83,11 @@ most recent change without scanning the audit log.
 | version | `number` | The new `version` after the save. |
 | audit_log_id | `number` | The `audit_log_id` of the change (for the GET audit/:auditLogId diff endpoint). |
 | changed_by | `string` | user_uuid of the writer. |
+| changed_by_session | `string` | Tab session of the writer — stamped from `AuditParams.sessionId`, which
+the FE sends as `X-Client-Session` on writes. A save is "self" (silently
+realign, no stale/chip) only when `changed_by` AND `changed_by_session`
+both match this client; a save from another tab of the same user is
+foreign for merge/conflict purposes. |
 | changed_at | `number` | Epoch ms of the save. |
 
 ### `EntityMeta`
@@ -152,6 +157,9 @@ Consumed by the BE SSE bridge and forwarded to connected FE clients.
 | Field | Type | Description |
 |-------|------|-------------|
 | user_uuid | `string` | The user whose presence changed. |
+| session_id | `string` | Tab session that emitted the signal — used by SSE subscribers to exclude
+only echoes of their own session (another tab of the same user is NOT
+excluded). Absent on synthetic deltas (e.g. `__expired__` LEAVEs). |
 | action | `PresenceAction` | The action that triggered this delta. |
 | entry | `PresenceEntry \| null` | The updated entry (for READING/EDITING/HEARTBEAT), or null (for LEAVE). |
 | emitted_at | `number` | Epoch ms of the delta (for dedup / ordering on the FE). |
@@ -177,6 +185,11 @@ Absent until the user's first save while present. The FE compares it to a
 5-minute window (and to the client's own mount time) to render the
 "recently saved" affordance. |
 | tab_count | `number` | Number of open tabs for this user on this entity (deduped by session_id). |
+| session_id | `string` | Tab session that produced this entry (FE-generated uuid, sent as
+`PresenceSignal.session_id`). Presence entries are keyed
+`user_uuid:session_id` — two tabs of the same user are distinct entries,
+so a same-user second tab is visible to the first tab as a different
+session ("you — other tab"). |
 
 ### `PresenceSignal`
 

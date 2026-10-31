@@ -69,6 +69,14 @@ export interface PresenceEntry {
   edited_at?: number;
   /** Number of open tabs for this user on this entity (deduped by session_id). */
   tab_count: number;
+  /**
+   * Tab session that produced this entry (FE-generated uuid, sent as
+   * `PresenceSignal.session_id`). Presence entries are keyed
+   * `user_uuid:session_id` — two tabs of the same user are distinct entries,
+   * so a same-user second tab is visible to the first tab as a different
+   * session ("you — other tab").
+   */
+  session_id?: string;
 }
 
 /**
@@ -85,6 +93,14 @@ export interface EntityChangedMarker {
   audit_log_id: number;
   /** user_uuid of the writer. */
   changed_by: string;
+  /**
+   * Tab session of the writer — stamped from `AuditParams.sessionId`, which
+   * the FE sends as `X-Client-Session` on writes. A save is "self" (silently
+   * realign, no stale/chip) only when `changed_by` AND `changed_by_session`
+   * both match this client; a save from another tab of the same user is
+   * foreign for merge/conflict purposes.
+   */
+  changed_by_session?: string;
   /** Epoch ms of the save. */
   changed_at: number;
 }
@@ -111,6 +127,12 @@ export interface PresenceSnapshot {
 export interface PresenceDelta {
   /** The user whose presence changed. */
   user_uuid: string;
+  /**
+   * Tab session that emitted the signal — used by SSE subscribers to exclude
+   * only echoes of their own session (another tab of the same user is NOT
+   * excluded). Absent on synthetic deltas (e.g. `__expired__` LEAVEs).
+   */
+  session_id?: string;
   /** The action that triggered this delta. */
   action: PresenceAction;
   /** The updated entry (for READING/EDITING/HEARTBEAT), or null (for LEAVE). */
