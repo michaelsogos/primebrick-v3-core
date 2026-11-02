@@ -21,39 +21,53 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
       "import": "./dist/index.js"
     },
     "./entity-meta": {
       "types": "./dist/entity-meta.d.ts",
+      "development": "./src/entity-meta.ts",
       "import": "./dist/entity-meta.js"
     },
     "./list": {
       "types": "./dist/list.d.ts",
+      "development": "./src/list.ts",
       "import": "./dist/list.js"
     },
     "./columns": {
       "types": "./dist/columns.d.ts",
+      "development": "./src/columns.ts",
       "import": "./dist/columns.js"
     },
     "./decimal": {
       "types": "./dist/decimal.d.ts",
+      "development": "./src/decimal.ts",
       "import": "./dist/decimal.js"
     },
     "./page-route": {
       "types": "./dist/page-route.d.ts",
+      "development": "./src/page-route.ts",
       "import": "./dist/page-route.js"
     },
     "./ext-json": {
       "types": "./dist/ext-json.d.ts",
+      "development": "./src/ext-json.ts",
       "import": "./dist/ext-json.js"
     },
     "./list-filter-params": {
       "types": "./dist/list-filter-params.d.ts",
+      "development": "./src/list-filter-params.ts",
       "import": "./dist/list-filter-params.js"
     },
     "./search-gate": {
       "types": "./dist/search-gate.d.ts",
+      "development": "./src/search-gate.ts",
       "import": "./dist/search-gate.js"
+    },
+    "./presence": {
+      "types": "./dist/presence.d.ts",
+      "development": "./src/presence.ts",
+      "import": "./dist/presence.js"
     }
   },
   "files": [

@@ -45,6 +45,7 @@ export const VENDOR_SPECIFIERS = [
 	"svelte/attachments",
 	"svelte/motion",
 	"svelte/easing",
+	"svelte/transition",
 	"@primebrick/core",
 	"@primebrick/ui",
 	"@primebrick/ui/vendor/transformers",
