@@ -102,6 +102,8 @@ export type FormFieldPlacement = {
   col?: number;
   /** `grid-column` span — `span: 2` = full-width row. */
   span?: number;
+  /** `grid-row` start — pins the field to an explicit row (used with `col`/`row_span` for full-height column slots, e.g. a dynamic builder beside the static column). */
+  row?: number;
   /** `grid-row` span. */
   row_span?: number;
   /** Section id grouping fields under a shared header (i18n key resolved
@@ -124,9 +126,17 @@ export type FormFieldPlacement = {
    * Dynamic option vocabulary for ComboSelect fields — closed union.
    * `"census.emits"`: the union of every module's `events.emits` from the
    * `/modules` discovery payload (already client-side at render time).
-   * Free entry stays allowed for wildcard/dynamic subjects.
+   * `"census.callables"`: the union of every module's `callables.callables`
+   * — governed LISTEN subjects a rule/scheduler may invoke.
+   * Census-sourced combos only offer declared values — see `allow_create`.
    */
-  options_source?: "census.emits";
+  options_source?: "census.emits" | "census.callables";
+  /**
+   * ComboSelect `allowCreate` — lets the user type values that are NOT in
+   * the options list (a new value cannot come from a census, so census
+   * sources keep it off). Absent = free entry disabled.
+   */
+  allow_create?: boolean;
 };
 
 /**
@@ -288,11 +298,60 @@ export type EmitDecl = {
   label_key?: string;
   /** i18n key of the human description, in the module's own translations. */
   description_key?: string;
+  /**
+   * Event payload contract (JSON Schema) — lets pickers show the real
+   * payload fields (e.g. a rule-form path picker) instead of free JSONPath.
+   */
+  payload_schema?: Record<string, unknown>;
+  /**
+   * Entity-context pointer — declares WHERE inside the payload the event
+   * carries a domain-entity snapshot. Lets callable fields annotated
+   * `x_semantic: "entity.*"` derive their source deterministically (no
+   * name-matching): `entity.uuid` → `path "$.<key>.uuid"`, `entity.table`
+   * → `const "<table>"`.
+   */
+  entity?: {
+    /** Top-level payload key holding the snapshot (e.g. `customer`). */
+    key: string;
+    /** Entity name (singular, e.g. `customer`) — display/traceability. */
+    entity: string;
+    /** Physical table name (e.g. `customers`) — feeds `entity.table`. */
+    table: string;
+  };
 };
 
 export type ModuleEventsDecl = {
   /** Published subjects — concrete or wildcard (`*` segment, `>` tail). */
   emits?: EmitDecl[];
+};
+
+/**
+ * `endpoints.callables` entry — a LISTEN subject the service is willing to
+ * serve as a work destination (schedulers, rules, external callers). Mirror
+ * axis of `EmitDecl`: emits = what a module publishes, callables = what it
+ * serves. Auto-collected from `makeNatsRoutes`/`makeNatsRequestRoute` route
+ * declarations carrying `payload_schema` — the schema IS the listing opt-in
+ * (a callable without a contract is not mappable). The service declares its
+ * own domain subject only — nothing in this axis knows scheduling exists.
+ */
+export type CallableDecl = {
+  /** The domain NATS subject the service actually subscribes — concrete only. */
+  subject: string;
+  /** Route kind — `pub` fire-and-forget vs `request` correlation-reply. */
+  kind: "pub" | "request";
+  /** RBAC permissions enforced by the route (for form-level warnings). */
+  permissions?: readonly string[];
+  /** Request payload contract (JSON Schema) — the listing opt-in. */
+  payload_schema: Record<string, unknown>;
+  /** i18n key of the short display name (primary option line). */
+  label_key?: string;
+  /** i18n key of the human description, in the module's own translations. */
+  description_key?: string;
+};
+
+export type ModuleCallablesDecl = {
+  /** Listen subjects serving as work destinations — concrete only. */
+  callables?: CallableDecl[];
 };
 
 /**
