@@ -31,6 +31,13 @@ One advanced-filter entry (filters sheet / `filters[i][...]` URL params).
 | operator | `FilterOperator` |  |
 | value | `unknown` |  |
 
+### `CheckEntityFieldsOptions`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| partial | `boolean` | `partial: true` — update semantics: only present keys validated,
+ absent required fields skipped. Default false (create semantics). |
+
 ### `CollaborationMeta`
 
 Collaboration fragment injected by `assembleMeta` at serve time.
@@ -126,6 +133,17 @@ comboboxes, lists, chips. |
 | columns | `MetaColumn[]` | Entity field dictionary (root-level, transversal). |
 | table | `TableMeta` | Table options — omit when the entity has no table page
  (e.g. a self-service form meta). |
+
+### `FieldIssue`
+
+A single validation finding. `path` is the entity field key (or a
+ dotted sub-path inside a JSON-Schema check).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| path | `string` |  |
+| code | `"required" \| "invalid_type" \| "too_small" \| "too_big" \| "invalid_string" \| "invalid_json" \| "schema_mismatch" \| "not_in_vocab"` |  |
+| message | `string` |  |
 
 ### `ListFilterParamsOptions`
 
@@ -461,7 +479,7 @@ Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
 compile error — the US→FE option boundary is enforced by the type.
 New formats are additive literals (never breaking).
 
-**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time"`
+**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "slug" \| "no_space"`
 
 ### `MetaColumnType`
 
@@ -780,6 +798,26 @@ Table view names supported by entity list pages.
 
 ## Constants
 
+### `DOTTED_GLOB_RE`
+
+`dotted_glob` — dotted_key where a whole segment may be the `*`
+ wildcard (`access.system.*`, `access.crm.*`).
+
+**Type:** `RegExp`
+
+### `DOTTED_KEY_RE`
+
+`dotted_key` — dot-separated snake_key segments (`customer.read.all`).
+
+**Type:** `RegExp`
+
+### `EMAIL_REGEX`
+
+Email — same RFC-5322-simplified regex the config validator and the FE
+ refine use (documented shared in `sdk/src/config/config-validator.ts`).
+
+**Type:** `RegExp`
+
 ### `fromPG`
 
 Alias of `dec()` — parse a PostgreSQL `numeric`/`decimal` text value.
@@ -795,6 +833,19 @@ Alias of `dec()` — parse a PostgreSQL `numeric`/`decimal` text value.
 Alias of `dec()` — tolerates the `"…d"` wire suffix.
 
 **Type:** `typeof dec`
+
+### `IDENTIFIER_RE`
+
+`identifier` — edge-alphanumeric machine id: `[a-z0-9]` at both ends,
+ internal `.`/`_`/`-` allowed (`micha-test-rule-1`, `e2e-callable-dispatch`).
+
+**Type:** `RegExp`
+
+### `NO_SPACE_RE`
+
+`no_space` — any non-whitespace token (UA prefixes, client names).
+
+**Type:** `RegExp`
 
 ### `NUMERIC_MIN_SIG_DIGITS`
 
@@ -869,6 +920,20 @@ Semantic derivation slot — declares what context the field wants so
 
 **Type:** `"x_semantic"`
 
+### `SLUG_RE`
+
+`slug` — letter-leading, internal `-` allowed (`test-role`,
+ `administrators`). Superset of snake_key by the hyphen.
+
+**Type:** `RegExp`
+
+### `SNAKE_KEY_RE`
+
+`snake_key` — snake_case key starting with a letter (`favorite_pages`,
+ `oidc_issuer_url`). Digit-leading values are rejected.
+
+**Type:** `RegExp`
+
 ### `STANDARD_OPS`
 
 The canonical vocabulary of standard entity ops. Every op is always
@@ -880,6 +945,12 @@ with `enabled: false` (explicitly unavailable) instead of being omitted.
 ### `TEN`
 
 **Type:** `Decimal`
+
+### `UUID_REGEX`
+
+UUID (any version) — matches zod/JSON-Schema `format:"uuid"`.
+
+**Type:** `RegExp`
 
 ### `VENDOR_BLOCKED_PACKAGES`
 
@@ -995,6 +1066,36 @@ Smallest integer `>= d`.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
+
+### `checkEntityFields(meta, entity, opts): FieldIssue[]`
+
+Validate a wire entity object against `meta.columns`.
+Required = `nullable === false` AND client-writable — `audited`
+columns and `meta.uid` (server-generated identity) are system-managed
+(filled server-side) and never arrive on the wire, so an absent one is
+NOT a violation. A PRESENT empty value still fails `nullable === false`
+— clients must not send managed fields at all. Mirrors the form, where
+required only ever applies to declared placements
+(`placement.required ?? nullable`).
+Unknown entity keys are ignored — system columns (`uuid`, `version`)
+need no column.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| meta | `EntityMeta` |  |
+| entity | `Record<string, unknown>` |  |
+| opts | `CheckEntityFieldsOptions` |  |
+
+### `checkFieldValue(col, value, path): FieldIssue[]`
+
+Validate one column's wire value (JSON fields already parsed).
+ `required` handled by the caller (`checkEntityFields`).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `MetaColumn` |  |
+| value | `unknown` |  |
+| path | `string` |  |
 
 ### `cmp(a, b): -1 \| 0 \| 1`
 
@@ -1130,6 +1231,22 @@ Operators available for a given column UI type.
 |-----------|------|-------------|
 | columnType | `string` |  |
 
+### `isClockTime(v): boolean`
+
+`HH:MM`/`HH:MM:SS` 24h clock.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
+### `isColorHex(v): boolean`
+
+`#RGB`/`#RRGGBB`/`#RRGGBBAA` hex color.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
 ### `isColumnFilterable(col): boolean`
 
 Column participates in the filters sheet — absent means filterable.
@@ -1164,11 +1281,37 @@ Column is visible by default — opt-out (`default_visible: false`)
 |-----------|------|-------------|
 | col | `Pick<MetaColumn, "default_visible" \| "hideable">` |  |
 
+### `isDateTime(v): boolean`
+
+Parseable ISO/RFC3339 datetime.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
 ### `isDecimal(v): v is Decimal`
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | v | `unknown` |  |
+
+### `isDottedGlob(v): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
+### `isDottedKey(v): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
+### `isEmail(v): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
 
 ### `isEntityOpEnabled(actions, op): boolean`
 
@@ -1185,6 +1328,26 @@ permission check).
 | actions | `readonly EntityAction[] \| undefined` |  |
 | op | `string` |  |
 
+### `isIdentifier(v): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
+### `isIsoDate(v): boolean`
+
+`YYYY-MM-DD` with real calendar semantics.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
+### `isNoSpace(v): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
 ### `isPeriodic(d): boolean`
 
 `true` when the value was produced by a truncated non-terminating division.
@@ -1192,6 +1355,22 @@ permission check).
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
+
+### `isPhone(v): boolean`
+
+`+`/`00` optional E.164-ish phone — intentionally permissive (the FE
+ libphonenumber check is richer; server-side stays non-rejecting on
+ format-only signals it cannot verify).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
+### `isSlug(v): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
 
 ### `isSnakeCaseSingular(value): value is SnakeCaseSingular`
 
@@ -1202,6 +1381,54 @@ Runtime validator for SnakeCaseSingular — rejects strings with
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | value | `string` |  |
+
+### `isSnakeKey(v): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
+### `isValidNatsSubject(subject): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| subject | `unknown` |  |
+
+### `isValidScheduleSpec(raw): boolean`
+
+`schedule_spec` grammar: `@every <n>[smhd]`, `@at <RFC3339>` or a
+ 5-field cron — the NATS `Nats-Schedule` header contract. Pure; the UI
+ interpreter (`parseScheduleSpec`/`nextScheduleRuns`) keeps croner.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| raw | `unknown` |  |
+
+### `isValidUrl(v): boolean`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `string` |  |
+
+### `jobTriggerShapeIssues(entity): FieldIssue[]`
+
+`event_subject`/`schedule_spec` are mutually mandatory (at least one);
+`execution_context: "user"` requires an event source to forward auth
+headers from. Pure — shared by the FE `job_trigger_shape` validator and
+the service-side `assertTriggerShape`. On `partial` (update), fields not
+present in `entity` are treated from the merged record the caller passes.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| entity | `Record<string, unknown>` |  |
+
+### `jsonSchemaCheck(value, schema, path): FieldIssue[]`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| value | `unknown` |  |
+| schema | `Record<string, unknown>` |  |
+| path | `string` |  |
 
 ### `keyNamespaceOf(key): string \| null`
 
@@ -1286,6 +1513,21 @@ Scale is preserved as written (`"1.230"` → scale 3).
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | input | `string` |  |
+
+### `payloadMapConformance(map, callableSchema): FieldIssue[]`
+
+Conformance of a `payload_map` document against the callable's emitted
+`payload_schema`. Reports:
+  - every `required` prop not satisfied by a map entry nor covered by
+    `x_inject`/`x_semantic` (declaration-materialized at fire time);
+  - every `const` (leaf, list item, map value, fallback) failing the
+    prop's portable JSON-Schema constraints.
+`path`/`meta` values resolve at runtime — structurally unverifiable here.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| map | `Record<string, unknown> \| PayloadMap \| null \| undefined` |  |
+| callableSchema | `Record<string, unknown>` |  |
 
 ### `pgDivScale(a, b): number`
 
