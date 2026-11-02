@@ -55,7 +55,7 @@ export function resolvePresetConditions(
  * Service API base of an entity list basePath — strips the trailing
  * `/entities/<entity>` segment so service-relative endpoints declared in
  * meta (e.g. sparkline `endpoint: "/actions/job-run-stats"`) resolve to
- * `/ws/<svc>/api/v1/actions/…` or `/api/v1/actions/…` for BE entities.
+ * `/svc/<svc>/api/v1/actions/…` or `/api/v1/actions/…` for BE entities.
  */
 export function serviceApiBase(listBasePath: string): string {
   return listBasePath.replace(/\/entities\/[^/]+\/?$/, "");
