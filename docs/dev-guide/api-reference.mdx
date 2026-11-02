@@ -1130,6 +1130,40 @@ Operators available for a given column UI type.
 |-----------|------|-------------|
 | columnType | `string` |  |
 
+### `isColumnFilterable(col): boolean`
+
+Column participates in the filters sheet — absent means filterable.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `Pick<MetaColumn, "filterable">` |  |
+
+### `isColumnSearchable(col): boolean`
+
+Column joins the search scope — absent means searchable (the caller
+ may still require a text-physical type on top).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `Pick<MetaColumn, "searchable">` |  |
+
+### `isColumnSortable(col): boolean`
+
+Column supports ORDER BY — absent means sortable.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `Pick<MetaColumn, "sortable">` |  |
+
+### `isColumnVisible(col): boolean`
+
+Column is visible by default — opt-out (`default_visible: false`)
+ hides it; `hideable: false` pins it visible regardless.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `Pick<MetaColumn, "default_visible" \| "hideable">` |  |
+
 ### `isDecimal(v): v is Decimal`
 
 | Parameter | Type | Description |
