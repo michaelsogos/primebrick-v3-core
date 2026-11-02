@@ -63,6 +63,7 @@ export function orderedColumns(
   ];
 }
 
+// standards-exempt-file: column-flag-defaults — canonical implementation of the predicates lives here
 // ── canonical column-flag predicates ────────────────────────────────────
 // THE single way to read a table flag. The platform contract is opt-out:
 // an ABSENT flag means the capability is ON (`default true` in
