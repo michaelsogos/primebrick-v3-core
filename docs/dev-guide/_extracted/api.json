@@ -1358,7 +1358,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Sentinel gates a route may declare instead of concrete permissions.\nValues mirror the "
+						"text": "Sentinel gates a route may declare instead of concrete permissions.\r\nValues mirror the "
 					},
 					{
 						"kind": "code",
@@ -1504,7 +1504,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " placeholders verbatim\n (e.g. "
+								"text": " placeholders verbatim\r\n (e.g. "
 							},
 							{
 								"kind": "code",
@@ -1512,7 +1512,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Consumers substitute\n placeholders from the row ("
+								"text": "). Consumers substitute\r\n placeholders from the row ("
 							},
 							{
 								"kind": "code",
@@ -1582,7 +1582,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the derived capability contract.\nEVERY standard op is present; "
+						"text": " — the derived capability contract.\r\nEVERY standard op is present; "
 					},
 					{
 						"kind": "code",
@@ -1590,7 +1590,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " means the op is\nunavailable for everyone (route missing or product-disabled)."
+						"text": " means the op is\r\nunavailable for everyone (route missing or product-disabled)."
 					}
 				]
 			},
@@ -1629,7 +1629,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", ...) or the\n last path segment for non-standard routes ("
+								"text": ", ...) or the\r\n last path segment for non-standard routes ("
 							},
 							{
 								"kind": "code",
@@ -1762,7 +1762,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n action, absent when no route exists ("
+								"text": "\r\n action, absent when no route exists ("
 							},
 							{
 								"kind": "code",
@@ -1770,7 +1770,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Consumers\n dispatch writes to the declared endpoint instead of recomputing the\n "
+								"text": "). Consumers\r\n dispatch writes to the declared endpoint instead of recomputing the\r\n "
 							},
 							{
 								"kind": "code",
@@ -1778,7 +1778,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " convention — required for ops living under\n non-standard prefixes (e.g. "
+								"text": " convention — required for ops living under\r\n non-standard prefixes (e.g. "
 							},
 							{
 								"kind": "code",
@@ -1927,7 +1927,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "The canonical vocabulary of standard entity ops. Every op is always\npresent in "
+						"text": "The canonical vocabulary of standard entity ops. Every op is always\r\npresent in "
 					},
 					{
 						"kind": "code",
@@ -1935,7 +1935,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — ops whose route is not registered are emitted\nwith "
+						"text": " — ops whose route is not registered are emitted\r\nwith "
 					},
 					{
 						"kind": "code",
@@ -2059,7 +2059,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "UI column renderer type. NOTE: this is the UI type, not the DB type —\n e.g. "
+						"text": "UI column renderer type. NOTE: this is the UI type, not the DB type —\r\n e.g. "
 					},
 					{
 						"kind": "code",
@@ -2143,7 +2143,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Authored field-format vocabulary — the SEMANTIC input contract of a\ncolumn: which control archetype a form renderer must use and which\nvalidation chain "
+						"text": "Authored field-format vocabulary — the SEMANTIC input contract of a\r\ncolumn: which control archetype a form renderer must use and which\r\nvalidation chain "
 					},
 					{
 						"kind": "code",
@@ -2151,7 +2151,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " applies. Absent → the renderer\nfalls back to "
+						"text": " applies. Absent → the renderer\r\nfalls back to "
 					},
 					{
 						"kind": "code",
@@ -2159,7 +2159,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (text→text input, boolean→switch, badge→options).\n\nClosed union on purpose: an unknown "
+						"text": " (text→text input, boolean→switch, badge→options).\r\n\r\nClosed union on purpose: an unknown "
 					},
 					{
 						"kind": "code",
@@ -2175,7 +2175,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " file is a\ncompile error — the US→FE option boundary is enforced by the type.\nNew formats are additive literals (never breaking)."
+						"text": " file is a\r\ncompile error — the US→FE option boundary is enforced by the type.\r\nNew formats are additive literals (never breaking)."
 					}
 				]
 			},
@@ -2271,7 +2271,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Tooltip visual severity — drives icon and title color in priority\n tooltip renderers."
+						"text": "Tooltip visual severity — drives icon and title color in priority\r\n tooltip renderers."
 					}
 				]
 			},
@@ -2331,7 +2331,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " dictionary.\nTransversal to every page type: table cells, form tooltips, labels.\n\nDeclared as a type alias (not interface): object literal types get an\nimplicit index signature, keeping "
+						"text": " dictionary.\r\nTransversal to every page type: table cells, form tooltips, labels.\r\n\r\nDeclared as a type alias (not interface): object literal types get an\r\nimplicit index signature, keeping "
 					},
 					{
 						"kind": "code",
@@ -2339,7 +2339,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " assignable to\n"
+						"text": " assignable to\r\n"
 					},
 					{
 						"kind": "code",
@@ -2347,7 +2347,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — host/remotes pass columns through generic\ncell-snippet args typed as "
+						"text": " — host/remotes pass columns through generic\r\ncell-snippet args typed as "
 					},
 					{
 						"kind": "code",
@@ -2432,7 +2432,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " documents the built-in set,\n but the field is intentionally open ("
+								"text": " documents the built-in set,\r\n but the field is intentionally open ("
 							},
 							{
 								"kind": "code",
@@ -2440,7 +2440,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "): modules may emit\n custom cell types resolved by consumer-registered cell renderers\n (e.g. a "
+								"text": "): modules may emit\r\n custom cell types resolved by consumer-registered cell renderers\r\n (e.g. a "
 							},
 							{
 								"kind": "code",
@@ -2486,7 +2486,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Deterministic display position — explicit per column, array position\n MUST NOT matter. Rendering groups sticky → normal → audited, each group\n sorted by "
+								"text": "Deterministic display position — explicit per column, array position\r\n MUST NOT matter. Rendering groups sticky → normal → audited, each group\r\n sorted by "
 							},
 							{
 								"kind": "code",
@@ -2510,7 +2510,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (canonical first\n sticky column, hidden but selectable); "
+								"text": " (canonical first\r\n sticky column, hidden but selectable); "
 							},
 							{
 								"kind": "code",
@@ -2613,7 +2613,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Included in \"search in fields\" scope + backend default search\n (default true; set false for non-text-physical or sensitive fields)."
+								"text": "Included in \"search in fields\" scope + backend default search\r\n (default true; set false for non-text-physical or sensitive fields)."
 							}
 						]
 					},
@@ -2729,7 +2729,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "System-managed auditing column (created_at, updated_by, …) —\n rendered last."
+								"text": "System-managed auditing column (created_at, updated_by, …) —\r\n rendered last."
 							}
 						]
 					},
@@ -2774,7 +2774,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " →\n required. Absent on columns with no physical backing (virtual\n columns like "
+								"text": " →\r\n required. Absent on columns with no physical backing (virtual\r\n columns like "
 							},
 							{
 								"kind": "code",
@@ -2835,7 +2835,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n on the control and "
+								"text": "\r\n on the control and "
 							},
 							{
 								"kind": "code",
@@ -2904,7 +2904,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", …) —\n informational for the control pick when "
+								"text": ", …) —\r\n informational for the control pick when "
 							},
 							{
 								"kind": "code",
@@ -3126,7 +3126,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — JSON Schema driving the editor's lint/completion\n AND the structural validation in "
+								"text": " — JSON Schema driving the editor's lint/completion\r\n AND the structural validation in "
 							},
 							{
 								"kind": "code",
@@ -3179,7 +3179,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Lucide icon name rendered before the label in FORM field labels —\n inherits the label text color (it identifies the field's semantic,\n e.g. "
+								"text": "Lucide icon name rendered before the label in FORM field labels —\r\n inherits the label text color (it identifies the field's semantic,\r\n e.g. "
 							},
 							{
 								"kind": "code",
@@ -3560,7 +3560,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — FE IANA formatting toggle bound to a per-row\n timezone field (IANA id comes from the API row)."
+								"text": " — FE IANA formatting toggle bound to a per-row\r\n timezone field (IANA id comes from the API row)."
 							}
 						]
 					},
@@ -3628,7 +3628,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — per-row stacked mini-histogram fed by ONE batch\n POST per rows load (virtual column: no DB field expected). The list\n engine performs the fetch automatically — zero per-page wiring."
+								"text": " — per-row stacked mini-histogram fed by ONE batch\r\n POST per rows load (virtual column: no DB field expected). The list\r\n engine performs the fetch automatically — zero per-page wiring."
 							}
 						]
 					},
@@ -3659,7 +3659,7 @@
 										"summary": [
 											{
 												"kind": "text",
-												"text": "POST path relative to the service API base — e.g.\n "
+												"text": "POST path relative to the service API base — e.g.\r\n "
 											},
 											{
 												"kind": "code",
@@ -3675,7 +3675,7 @@
 											},
 											{
 												"kind": "text",
-												"text": "\n for "
+												"text": "\r\n for "
 											},
 											{
 												"kind": "code",
@@ -3718,7 +3718,7 @@
 										"summary": [
 											{
 												"kind": "text",
-												"text": "Request body field receiving the collected row keys\n (e.g. "
+												"text": "Request body field receiving the collected row keys\r\n (e.g. "
 											},
 											{
 												"kind": "code",
@@ -3880,7 +3880,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ") —\n default "
+												"text": ") —\r\n default "
 											},
 											{
 												"kind": "code",
@@ -3923,7 +3923,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " is a\n tailwind "
+												"text": " is a\r\n tailwind "
 											},
 											{
 												"kind": "code",
@@ -3939,7 +3939,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ") — the\n reference FE safelists the full fill palette in "
+												"text": ") — the\r\n reference FE safelists the full fill palette in "
 											},
 											{
 												"kind": "code",
@@ -3947,7 +3947,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ", any\n "
+												"text": ", any\r\n "
 											},
 											{
 												"kind": "code",
@@ -4130,7 +4130,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One WHERE condition of a filter preset — serialized verbatim as a\n"
+						"text": "One WHERE condition of a filter preset — serialized verbatim as a\r\n"
 					},
 					{
 						"kind": "code",
@@ -4146,7 +4146,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " query string (same vocabulary as\n"
+						"text": " query string (same vocabulary as\r\n"
 					},
 					{
 						"kind": "code",
@@ -4389,7 +4389,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": NEVER rendered (the\n group is icon-only by design; the label feeds "
+								"text": ": NEVER rendered (the\r\n group is icon-only by design; the label feeds "
 							},
 							{
 								"kind": "code",
@@ -4405,7 +4405,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n fallback); "
+								"text": "\r\n fallback); "
 							},
 							{
 								"kind": "code",
@@ -4450,7 +4450,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": REQUIRED, it is the only visible\n affordance (icon-only standard); "
+								"text": ": REQUIRED, it is the only visible\r\n affordance (icon-only standard); "
 							},
 							{
 								"kind": "code",
@@ -4503,7 +4503,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (the only place the\n option's meaning is spelled out); "
+								"text": " (the only place the\r\n option's meaning is spelled out); "
 							},
 							{
 								"kind": "code",
@@ -4548,7 +4548,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " call while selected\n(refresh, pagination, sort, user filters — all combine). Omit or "
+								"text": " call while selected\r\n(refresh, pagination, sort, user filters — all combine). Omit or "
 							},
 							{
 								"kind": "code",
@@ -4556,7 +4556,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\nfor the \"all\" escape option — still a real selection, applies nothing."
+								"text": "\r\nfor the \"all\" escape option — still a real selection, applies nothing."
 							}
 						]
 					},
@@ -4614,7 +4614,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A mutually-exclusive preset filter group rendered as its own control in\nthe table toolbar (tandem with the deletion-filter group). Exactly one\noption is always active — there is no \"clear\" affordance. Declared in\n"
+						"text": "A mutually-exclusive preset filter group rendered as its own control in\r\nthe table toolbar (tandem with the deletion-filter group). Exactly one\r\noption is always active — there is no \"clear\" affordance. Declared in\r\n"
 					},
 					{
 						"kind": "code",
@@ -4630,7 +4630,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " scope selector\n(recurring / once / all) on a jobs table."
+						"text": " scope selector\r\n(recurring / once / all) on a jobs table."
 					}
 				]
 			},
@@ -4645,7 +4645,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Preset id — unique within the entity; keys the toolbar group and the\n persisted selection ("
+								"text": "Preset id — unique within the entity; keys the toolbar group and the\r\n persisted selection ("
 							},
 							{
 								"kind": "code",
@@ -4688,7 +4688,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is the toolbar standard: segmented\n icon-only buttons ("
+								"text": " is the toolbar standard: segmented\r\n icon-only buttons ("
 							},
 							{
 								"kind": "code",
@@ -4696,7 +4696,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " per option is REQUIRED, meaning carried by\n "
+								"text": " per option is REQUIRED, meaning carried by\r\n "
 							},
 							{
 								"kind": "code",
@@ -4720,7 +4720,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " for long option lists\n where a labelled dropdown reads better."
+								"text": " for long option lists\r\n where a labelled dropdown reads better."
 							}
 						]
 					},
@@ -4821,7 +4821,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Option id selected before any user choice and as the fallback for an\n invalid persisted selection — REQUIRED, must exist in "
+								"text": "Option id selected before any user choice and as the fallback for an\r\n invalid persisted selection — REQUIRED, must exist in "
 							},
 							{
 								"kind": "code",
@@ -4893,7 +4893,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Action/op name — matches the bare op derived from the route\n (e.g. "
+								"text": "Action/op name — matches the bare op derived from the route\r\n (e.g. "
 							},
 							{
 								"kind": "code",
@@ -5042,7 +5042,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Permission required to see/use the action (filtered client-side\n against the user's permission set)."
+								"text": "Permission required to see/use the action (filtered client-side\r\n against the user's permission set)."
 							}
 						]
 					},
@@ -5275,7 +5275,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "UI config for non-standard row actions (e.g. change password).\n Standard ops (edit/delete/duplicate/preview) are derived from\n "
+								"text": "UI config for non-standard row actions (e.g. change password).\r\n Standard ops (edit/delete/duplicate/preview) are derived from\r\n "
 							},
 							{
 								"kind": "code",
@@ -5317,7 +5317,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Mutually-exclusive preset WHERE filters — each rendered as its own\n toolbar control; the active option's conditions AND into every list\n request (see "
+								"text": "Mutually-exclusive preset WHERE filters — each rendered as its own\r\n toolbar control; the active option's conditions AND into every list\r\n request (see "
 							},
 							{
 								"kind": "inline-tag",
@@ -5474,7 +5474,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " file MUST satisfy.\nThe schema is CLOSED for authored metas: undeclared properties are\ncompile errors, so new meta props require extending this type first."
+						"text": " file MUST satisfy.\r\nThe schema is CLOSED for authored metas: undeclared properties are\r\ncompile errors, so new meta props require extending this type first."
 					}
 				]
 			},
@@ -5553,7 +5553,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Namespace OWNING this entity's label keys — the module's own namespace\n("
+								"text": "Namespace OWNING this entity's label keys — the module's own namespace\r\n("
 							},
 							{
 								"kind": "code",
@@ -5577,7 +5577,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n(BE/core-owned entities keep "
+								"text": "\r\n(BE/core-owned entities keep "
 							},
 							{
 								"kind": "code",
@@ -5585,7 +5585,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\nThis is a READ-side reference declared by the owning module — the\nnamespace write boundary (see "
+								"text": ").\r\nThis is a READ-side reference declared by the owning module — the\r\nnamespace write boundary (see "
 							},
 							{
 								"kind": "code",
@@ -5593,7 +5593,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") guarantees the\nkeys actually live in that module's "
+								"text": ") guarantees the\r\nkeys actually live in that module's "
 							},
 							{
 								"kind": "code",
@@ -5630,23 +5630,23 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Optional i18n key overriding the canonical page title.\nWhen absent, list/create/edit titles are built from the generic\n"
+								"text": "Optional i18n key overriding the canonical page title.\r\nWhen absent, list/create/edit titles are built from the generic\r\n"
 							},
 							{
 								"kind": "code",
-								"text": "`system.entities.page_title.{list|create|edit}`"
+								"text": "`system.entities.page_title.{list\\|create\\|edit}`"
 							},
 							{
 								"kind": "text",
-								"text": " templates interpolated\nwith "
+								"text": " templates interpolated\r\nwith "
 							},
 							{
 								"kind": "code",
-								"text": "`system.entities.<translation_key>.{plural|singular}`"
+								"text": "`system.entities.<translation_key>.{plural\\|singular}`"
 							},
 							{
 								"kind": "text",
-								"text": ".\nSet only for custom pages needing a bespoke title — CRUD entity metas\nmust not declare it."
+								"text": ".\r\nSet only for custom pages needing a bespoke title — CRUD entity metas\r\nmust not declare it."
 							}
 						]
 					},
@@ -5708,7 +5708,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Canonical display field — the column key identifying the entity's\n human-readable label. Drives first-column/sticky table identity and\n default display resolution."
+								"text": "Canonical display field — the column key identifying the entity's\r\n human-readable label. Drives first-column/sticky table identity and\r\n default display resolution."
 							}
 						]
 					},
@@ -5745,7 +5745,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " syntax, dot-paths allowed).\nOPTIONAL here: "
+								"text": " syntax, dot-paths allowed).\r\nOPTIONAL here: "
 							},
 							{
 								"kind": "code",
@@ -5753,7 +5753,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " materializes it as\n"
+								"text": " materializes it as\r\n"
 							},
 							{
 								"kind": "code",
@@ -5761,7 +5761,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " when absent — it is always present in the\nserved response. Used automatically for edit-page titles; reusable for\ncomboboxes, lists, chips."
+								"text": " when absent — it is always present in the\r\nserved response. Used automatically for edit-page titles; reusable for\r\ncomboboxes, lists, chips."
 							}
 						]
 					},
@@ -5798,7 +5798,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " on route-backed\n ops; a missing route already produces "
+								"text": " on route-backed\r\n ops; a missing route already produces "
 							},
 							{
 								"kind": "code",
@@ -5869,7 +5869,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Table options — omit when the entity has no table page\n (e.g. a self-service form meta)."
+								"text": "Table options — omit when the entity has no table page\r\n (e.g. a self-service form meta)."
 							}
 						]
 					},
@@ -5933,7 +5933,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " response:\nstatic meta + runtime-injected "
+						"text": " response:\r\nstatic meta + runtime-injected "
 					},
 					{
 						"kind": "code",
@@ -6108,7 +6108,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\narray and carries "
+								"text": "\r\narray and carries "
 							},
 							{
 								"kind": "code",
@@ -6124,7 +6124,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is absent\n(meta without actions — contract violation) the op is not enabled.\n\nThis deliberately does NOT evaluate user permissions — that step lives in\nthe consumer (e.g. FE "
+								"text": " is absent\r\n(meta without actions — contract violation) the op is not enabled.\r\n\r\nThis deliberately does NOT evaluate user permissions — that step lives in\r\nthe consumer (e.g. FE "
 							},
 							{
 								"kind": "code",
@@ -6132,7 +6132,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " composes this with the session\npermission check)."
+								"text": " composes this with the session\r\npermission check)."
 							}
 						]
 					},
@@ -6372,7 +6372,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Resolve a preset's active option id — the caller-provided selection when\nit names a declared option, otherwise "
+								"text": "Resolve a preset's active option id — the caller-provided selection when\r\nit names a declared option, otherwise "
 							},
 							{
 								"kind": "code",
@@ -6380,7 +6380,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (itself falling\nback to the first option when misconfigured, keeping the always-one\ninvariant rather than failing closed)."
+								"text": " (itself falling\r\nback to the first option when misconfigured, keeping the always-one\r\ninvariant rather than failing closed)."
 							}
 						]
 					},
@@ -6459,7 +6459,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Flatten the WHERE conditions of every preset's ACTIVE option — the\nconditions AND-ed into every "
+								"text": "Flatten the WHERE conditions of every preset's ACTIVE option — the\r\nconditions AND-ed into every "
 							},
 							{
 								"kind": "code",
@@ -6475,7 +6475,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " maps\npreset.id → option id; invalid/absent ids resolve per\n"
+								"text": " maps\r\npreset.id → option id; invalid/absent ids resolve per\r\n"
 							},
 							{
 								"kind": "inline-tag",
@@ -6592,7 +6592,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Service API base of an entity list basePath — strips the trailing\n"
+								"text": "Service API base of an entity list basePath — strips the trailing\r\n"
 							},
 							{
 								"kind": "code",
@@ -6600,7 +6600,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " segment so service-relative endpoints declared in\nmeta (e.g. sparkline "
+								"text": " segment so service-relative endpoints declared in\r\nmeta (e.g. sparkline "
 							},
 							{
 								"kind": "code",
@@ -6608,7 +6608,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") resolve to\n"
+								"text": ") resolve to\r\n"
 							},
 							{
 								"kind": "code",
@@ -7483,7 +7483,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Remote component delivery format. Extensible — new literals are additive\nand non-breaking. "
+						"text": "Remote component delivery format. Extensible — new literals are additive\r\nand non-breaking. "
 					},
 					{
 						"kind": "code",
@@ -7491,7 +7491,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": a precompiled ESM chunk that exports\n"
+						"text": ": a precompiled ESM chunk that exports\r\n"
 					},
 					{
 						"kind": "code",
@@ -7526,7 +7526,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One declared frontend route owned by a module. Modules MUST declare every\nFE path they own that is not deducible from nav links or entity\nconventions — the AI route census (derived from the consolidated\n"
+						"text": "One declared frontend route owned by a module. Modules MUST declare every\r\nFE path they own that is not deducible from nav links or entity\r\nconventions — the AI route census (derived from the consolidated\r\n"
 					},
 					{
 						"kind": "code",
@@ -7534,7 +7534,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " discovery payload) depends on it.\n"
+						"text": " discovery payload) depends on it.\r\n"
 					},
 					{
 						"kind": "code",
@@ -7657,7 +7657,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "i18n key of the page description line rendered under the header title —\nroute-level, valid on EVERY "
+								"text": "i18n key of the page description line rendered under the header title —\r\nroute-level, valid on EVERY "
 							},
 							{
 								"kind": "code",
@@ -7673,7 +7673,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\nprivilege is removed)."
+								"text": "\r\nprivilege is removed)."
 							}
 						]
 					},
@@ -7702,7 +7702,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Lucide icon name — used by host chrome that renders the route as an\naction (e.g. the toolbar create CTA for "
+								"text": "Lucide icon name — used by host chrome that renders the route as an\r\naction (e.g. the toolbar create CTA for "
 							},
 							{
 								"kind": "code",
@@ -7747,7 +7747,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (default): the host shell\nrenders the mandatory PageHeader (breadcrumb, star, title, description,\npresence) above the page body — including above a remote mount.\n"
+								"text": " (default): the host shell\r\nrenders the mandatory PageHeader (breadcrumb, star, title, description,\r\npresence) above the page body — including above a remote mount.\r\n"
 							},
 							{
 								"kind": "code",
@@ -7755,7 +7755,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": the remote chunk owns its chrome and the host header is\nsuppressed for this route. Ignored by host-rendered archetypes — their\nchrome is always host-owned."
+								"text": ": the remote chunk owns its chrome and the host header is\r\nsuppressed for this route. Ignored by host-rendered archetypes — their\r\nchrome is always host-owned."
 							}
 						]
 					},
@@ -7793,7 +7793,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Remote component delivery — when set, the host mounts the chunk at this\nsame-origin URL (typically "
+								"text": "Remote component delivery — when set, the host mounts the chunk at this\r\nsame-origin URL (typically "
 							},
 							{
 								"kind": "code",
@@ -7801,7 +7801,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\ninstead of resolving a local component."
+								"text": ")\r\ninstead of resolving a local component."
 							}
 						]
 					},
@@ -7895,7 +7895,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n(SRI form) or bare lowercase hex. The host verifies the fetched bytes via\nWeb Crypto before importing; a mismatch renders an in-content integrity\nerror and nothing is mounted."
+								"text": "\r\n(SRI form) or bare lowercase hex. The host verifies the fetched bytes via\r\nWeb Crypto before importing; a mismatch renders an in-content integrity\r\nerror and nothing is mounted."
 							}
 						]
 					},
@@ -7932,7 +7932,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (default): the\ncreate/edit CTA navigates to the route; "
+								"text": " (default): the\r\ncreate/edit CTA navigates to the route; "
 							},
 							{
 								"kind": "code",
@@ -7940,7 +7940,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": it opens the SAME\narchetype content inside the host sheet surface (the route keeps\nworking when visited directly — the hint only steers CTA behavior).\nRead by host archetypes and list CTAs, never by remote pages."
+								"text": ": it opens the SAME\r\narchetype content inside the host sheet surface (the route keeps\r\nworking when visited directly — the hint only steers CTA behavior).\r\nRead by host archetypes and list CTAs, never by remote pages."
 							}
 						]
 					},
@@ -7978,7 +7978,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Archetype-agnostic page props — the metadata a route needs beyond the\nshared fields. "
+								"text": "Archetype-agnostic page props — the metadata a route needs beyond the\r\nshared fields. "
 							},
 							{
 								"kind": "code",
@@ -8044,7 +8044,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One field's placement + policy inside an entity form — PAGE-domain\nmetadata: it positions a field the ENTITY owns; it never redefines the\nfield's type or validation (those come from "
+						"text": "One field's placement + policy inside an entity form — PAGE-domain\r\nmetadata: it positions a field the ENTITY owns; it never redefines the\r\nfield's type or validation (those come from "
 					},
 					{
 						"kind": "code",
@@ -8052,7 +8052,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — class-derived\nconstraints + authored "
+						"text": " — class-derived\r\nconstraints + authored "
 					},
 					{
 						"kind": "code",
@@ -8060,7 +8060,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ").\n\n"
+						"text": ").\r\n\r\n"
 					},
 					{
 						"kind": "code",
@@ -8076,7 +8076,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the host archetype\nvalidates at render time and fails loudly on drift."
+						"text": " — the host archetype\r\nvalidates at render time and fails loudly on drift."
 					}
 				]
 			},
@@ -8284,7 +8284,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Section id grouping fields under a shared header (i18n key resolved\n by the host archetype)."
+								"text": "Section id grouping fields under a shared header (i18n key resolved\r\n by the host archetype)."
 							}
 						]
 					},
@@ -8379,7 +8379,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n ("
+								"text": "\r\n ("
 							},
 							{
 								"kind": "code",
@@ -8387,7 +8387,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " → required). May only LOOSEN to optional, never tighten\n past the physical contract."
+								"text": " → required). May only LOOSEN to optional, never tighten\r\n past the physical contract."
 							}
 						]
 					},
@@ -8445,7 +8445,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Explicit control override — key of the host widget registry; bypasses\n the "
+								"text": "Explicit control override — key of the host widget registry; bypasses\r\n the "
 							},
 							{
 								"kind": "code",
@@ -8482,7 +8482,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Dynamic option vocabulary for ComboSelect fields — closed union.\n"
+								"text": "Dynamic option vocabulary for ComboSelect fields — closed union.\r\n"
 							},
 							{
 								"kind": "code",
@@ -8498,7 +8498,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " from the\n"
+								"text": " from the\r\n"
 							},
 							{
 								"kind": "code",
@@ -8506,7 +8506,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " discovery payload (already client-side at render time).\n"
+								"text": " discovery payload (already client-side at render time).\r\n"
 							},
 							{
 								"kind": "code",
@@ -8522,7 +8522,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n— governed LISTEN subjects a rule/scheduler may invoke.\nCensus-sourced combos only offer declared values — see "
+								"text": "\r\n— governed LISTEN subjects a rule/scheduler may invoke.\r\nCensus-sourced combos only offer declared values — see "
 							},
 							{
 								"kind": "code",
@@ -8576,7 +8576,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — lets the user type values that are NOT in\nthe options list (a new value cannot come from a census, so census\nsources keep it off). Absent = free entry disabled."
+								"text": " — lets the user type values that are NOT in\r\nthe options list (a new value cannot come from a census, so census\r\nsources keep it off). Absent = free entry disabled."
 							}
 						]
 					},
@@ -8645,7 +8645,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is the\nORDERED placement list: only declared keys render (absent columns are\nsimply not editable on this surface). "
+						"text": " is the\r\nORDERED placement list: only declared keys render (absent columns are\r\nsimply not editable on this surface). "
 					},
 					{
 						"kind": "code",
@@ -8653,7 +8653,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " names closed-vocab\ncross-field rules implemented host-side (e.g. "
+						"text": " names closed-vocab\r\ncross-field rules implemented host-side (e.g. "
 					},
 					{
 						"kind": "code",
@@ -8661,7 +8661,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") —\nthe host rejects unknown validator keys."
+						"text": ") —\r\nthe host rejects unknown validator keys."
 					}
 				]
 			},
@@ -8875,7 +8875,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\noptions always win over these — they are a hint, not a policy.\n"
+						"text": "\r\noptions always win over these — they are a hint, not a policy.\r\n"
 					},
 					{
 						"kind": "code",
@@ -8999,7 +8999,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\n— the sheet analogue of a remote "
+						"text": "\r\n— the sheet analogue of a remote "
 					},
 					{
 						"kind": "inline-tag",
@@ -9009,7 +9009,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": the host\nowns the sheet ENGINE (open/close/chrome/state), the owning service owns\nthe CONTENT — an "
+						"text": ": the host\r\nowns the sheet ENGINE (open/close/chrome/state), the owning service owns\r\nthe CONTENT — an "
 					},
 					{
 						"kind": "code",
@@ -9025,7 +9025,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\nmounted at runtime into the host's global sheet surface.\n\n"
+						"text": ",\r\nmounted at runtime into the host's global sheet surface.\r\n\r\n"
 					},
 					{
 						"kind": "code",
@@ -9041,7 +9041,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " namespaced so a\ndeclared key can never collide across services (enforced at enrollment\nby the nav-declaration validator). Anyone holding the key can open it —\nhost "
+						"text": " namespaced so a\r\ndeclared key can never collide across services (enforced at enrollment\r\nby the nav-declaration validator). Anyone holding the key can open it —\r\nhost "
 					},
 					{
 						"kind": "code",
@@ -9057,7 +9057,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — visibility is gated by\nthe sheet's derived access key ("
+						"text": " — visibility is gated by\r\nthe sheet's derived access key ("
 					},
 					{
 						"kind": "code",
@@ -9065,7 +9065,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), never by import\nreachability."
+						"text": "), never by import\r\nreachability."
 					}
 				]
 			},
@@ -9319,7 +9319,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is the\ncollapsible-group mechanism (the shell renders children under the parent)."
+						"text": " is the\r\ncollapsible-group mechanism (the shell renders children under the parent)."
 					}
 				]
 			},
@@ -9414,7 +9414,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Marks the module's DEFAULT leaf — exactly one leaf nav item must carry\nit (validator-enforced). GOTO(module) resolves the default leaf's\nhref; when the user's grants filter that leaf out, the first\naccessible leaf wins. Leaf items only — never on a parent carrying\n"
+								"text": "Marks the module's DEFAULT leaf — exactly one leaf nav item must carry\r\nit (validator-enforced). GOTO(module) resolves the default leaf's\r\nhref; when the user's grants filter that leaf out, the first\r\naccessible leaf wins. Leaf items only — never on a parent carrying\r\n"
 							},
 							{
 								"kind": "code",
@@ -9498,7 +9498,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A module's self-described navigation declaration — the payload a service\npublishes in "
+						"text": "A module's self-described navigation declaration — the payload a service\r\npublishes in "
 					},
 					{
 						"kind": "code",
@@ -9514,7 +9514,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") so the FE can render\nthe module's sidebar nav and the census can resolve its routes WITHOUT\nthe BE hardcoding another module's pages. This is the wiring that lets\neach module present its own nav — a remote page is owned by the service\nthat ships it, never declared inside a host module's registry.\n\n"
+						"text": ") so the FE can render\r\nthe module's sidebar nav and the census can resolve its routes WITHOUT\r\nthe BE hardcoding another module's pages. This is the wiring that lets\r\neach module present its own nav — a remote page is owned by the service\r\nthat ships it, never declared inside a host module's registry.\r\n\r\n"
 					},
 					{
 						"kind": "code",
@@ -9522,7 +9522,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " drive active-module resolution (longest-prefix match —\na page under a shared prefix like "
+						"text": " drive active-module resolution (longest-prefix match —\r\na page under a shared prefix like "
 					},
 					{
 						"kind": "code",
@@ -9530,7 +9530,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " resolves to the owning\nmodule, not to the module owning the broader "
+						"text": " resolves to the owning\r\nmodule, not to the module owning the broader "
 					},
 					{
 						"kind": "code",
@@ -9620,7 +9620,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\nprefix under which every leaf key is derived ("
+								"text": "\r\nprefix under which every leaf key is derived ("
 							},
 							{
 								"kind": "code",
@@ -9628,7 +9628,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "):\n"
+								"text": "):\r\n"
 							},
 							{
 								"kind": "code",
@@ -9644,7 +9644,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ",\n"
+								"text": ",\r\n"
 							},
 							{
 								"kind": "code",
@@ -9660,7 +9660,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". A module that\ndeclares nav/routes/sheets is exposed surface, so the namespace is\nmandatory and must equal "
+								"text": ". A module that\r\ndeclares nav/routes/sheets is exposed surface, so the namespace is\r\nmandatory and must equal "
 							},
 							{
 								"kind": "code",
@@ -9668,7 +9668,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (validated\nat enrollment AND by write-time decl tests).\n\nModule visibility is DERIVED, never a gate key: the module exists for\na user iff at least one of its leaf keys is covered by their grants.\nCoverage is exact-or-wildcard only — "
+								"text": " (validated\r\nat enrollment AND by write-time decl tests).\r\n\r\nModule visibility is DERIVED, never a gate key: the module exists for\r\na user iff at least one of its leaf keys is covered by their grants.\r\nCoverage is exact-or-wildcard only — "
 							},
 							{
 								"kind": "code",
@@ -9676,7 +9676,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " bare is a\nnamespace, not a grant; "
+								"text": " bare is a\r\nnamespace, not a grant; "
 							},
 							{
 								"kind": "code",
@@ -9684,7 +9684,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " covers every leaf.\n\nThe access axis is a separate vocabulary inside the same permission\npipeline as entity RBAC ("
+								"text": " covers every leaf.\r\n\r\nThe access axis is a separate vocabulary inside the same permission\r\npipeline as entity RBAC ("
 							},
 							{
 								"kind": "code",
@@ -9692,7 +9692,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " grants, wildcard matching) —\n"
+								"text": " grants, wildcard matching) —\r\n"
 							},
 							{
 								"kind": "code",
@@ -9795,7 +9795,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Remote sheet panels this module owns — engine is host-side, content\nis service-delivered ("
+								"text": "Remote sheet panels this module owns — engine is host-side, content\r\nis service-delivered ("
 							},
 							{
 								"kind": "code",
@@ -9803,7 +9803,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " chunks). Travels the same\ndiscovery channel as "
+								"text": " chunks). Travels the same\r\ndiscovery channel as "
 							},
 							{
 								"kind": "code",
@@ -9896,7 +9896,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One published subject — the ConfigEntry display anatomy mirrored:\n"
+						"text": "One published subject — the ConfigEntry display anatomy mirrored:\r\n"
 					},
 					{
 						"kind": "code",
@@ -9912,7 +9912,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\n= human description (small secondary line), "
+						"text": "\r\n= human description (small secondary line), "
 					},
 					{
 						"kind": "code",
@@ -9920,7 +9920,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " = the raw key (mono\nline). Both keys point at translations in the EMITTING module's namespace\n("
+						"text": " = the raw key (mono\r\nline). Both keys point at translations in the EMITTING module's namespace\r\n("
 					},
 					{
 						"kind": "code",
@@ -10046,7 +10046,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Event payload contract (JSON Schema) — lets pickers show the real\npayload fields (e.g. a rule-form path picker) instead of free JSONPath."
+								"text": "Event payload contract (JSON Schema) — lets pickers show the real\r\npayload fields (e.g. a rule-form path picker) instead of free JSONPath."
 							}
 						]
 					},
@@ -10091,7 +10091,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Entity-context pointer — declares WHERE inside the payload the event\ncarries a domain-entity snapshot. Lets callable fields annotated\n"
+								"text": "Entity-context pointer — declares WHERE inside the payload the event\r\ncarries a domain-entity snapshot. Lets callable fields annotated\r\n"
 							},
 							{
 								"kind": "code",
@@ -10099,7 +10099,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " derive their source deterministically (no\nname-matching): "
+								"text": " derive their source deterministically (no\r\nname-matching): "
 							},
 							{
 								"kind": "code",
@@ -10123,7 +10123,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n→ "
+								"text": "\r\n→ "
 							},
 							{
 								"kind": "code",
@@ -10390,7 +10390,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " entry — a LISTEN subject the service is willing to\nserve as a work destination (schedulers, rules, external callers). Mirror\naxis of "
+						"text": " entry — a LISTEN subject the service is willing to\r\nserve as a work destination (schedulers, rules, external callers). Mirror\r\naxis of "
 					},
 					{
 						"kind": "code",
@@ -10398,7 +10398,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": emits = what a module publishes, callables = what it\nserves. Auto-collected from "
+						"text": ": emits = what a module publishes, callables = what it\r\nserves. Auto-collected from "
 					},
 					{
 						"kind": "code",
@@ -10414,7 +10414,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " route\ndeclarations carrying "
+						"text": " route\r\ndeclarations carrying "
 					},
 					{
 						"kind": "code",
@@ -10422,7 +10422,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the schema IS the listing opt-in\n(a callable without a contract is not mappable). The service declares its\nown domain subject only — nothing in this axis knows scheduling exists."
+						"text": " — the schema IS the listing opt-in\r\n(a callable without a contract is not mappable). The service declares its\r\nown domain subject only — nothing in this axis knows scheduling exists."
 					}
 				]
 			},
@@ -10739,7 +10739,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — host-bound step-up MFA bridge. The remote\ncalls it exactly like the host's "
+						"text": " — host-bound step-up MFA bridge. The remote\r\ncalls it exactly like the host's "
 					},
 					{
 						"kind": "code",
@@ -10747,7 +10747,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ":\n"
+						"text": ":\r\n"
 					},
 					{
 						"kind": "code",
@@ -10771,7 +10771,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " response carrying\n"
+						"text": " response carrying\r\n"
 					},
 					{
 						"kind": "code",
@@ -10779,7 +10779,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " the host shows ITS OWN step-up dialog (host root,\nhost runtime — nothing crosses the boundary), awaits verification, then\nretries "
+						"text": " the host shows ITS OWN step-up dialog (host root,\r\nhost runtime — nothing crosses the boundary), awaits verification, then\r\nretries "
 					},
 					{
 						"kind": "code",
@@ -10787,7 +10787,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " with the action-authorization token. The promise\nresolves with the final Response — success or failure."
+						"text": " with the action-authorization token. The promise\r\nresolves with the final Response — success or failure."
 					}
 				]
 			},
@@ -10993,7 +10993,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — opens a sheet panel by key: a host-registered\npanel ("
+						"text": " — opens a sheet panel by key: a host-registered\r\npanel ("
 					},
 					{
 						"kind": "code",
@@ -11017,7 +11017,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") or a remote-declared sheet\n("
+						"text": ") or a remote-declared sheet\r\n("
 					},
 					{
 						"kind": "code",
@@ -11033,7 +11033,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", mounted at runtime). The panel\nregistry, remote declarations and sheet state all live in the host — a\nremote page requests the panel, it never ships the engine. "
+						"text": ", mounted at runtime). The panel\r\nregistry, remote declarations and sheet state all live in the host — a\r\nremote page requests the panel, it never ships the engine. "
 					},
 					{
 						"kind": "code",
@@ -11041,7 +11041,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are\nplain values (callback fns are allowed — they cross the boundary);\n"
+						"text": " are\r\nplain values (callback fns are allowed — they cross the boundary);\r\n"
 					},
 					{
 						"kind": "code",
@@ -11073,7 +11073,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\n"
+						"text": ",\r\n"
 					},
 					{
 						"kind": "code",
@@ -11081,7 +11081,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "). Unknown keys are rejected with a host notification —\nthe remote cannot smuggle an undeclared panel."
+						"text": "). Unknown keys are rejected with a host notification —\r\nthe remote cannot smuggle an undeclared panel."
 					}
 				]
 			},
@@ -11202,7 +11202,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the host's authenticated full-path fetch\n("
+						"text": " — the host's authenticated full-path fetch\r\n("
 					},
 					{
 						"kind": "code",
@@ -11226,7 +11226,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\n(ws-bound to the owning service) cannot. Remote pages bind it through\n"
+						"text": "\r\n(ws-bound to the owning service) cannot. Remote pages bind it through\r\n"
 					},
 					{
 						"kind": "code",
@@ -11342,7 +11342,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the reserved well-known keys plus open caller-provided\nentries. "
+						"text": " — the reserved well-known keys plus open caller-provided\r\nentries. "
 					},
 					{
 						"kind": "code",
@@ -11350,7 +11350,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is assigned by the host loader after the chunk\nresolves; "
+						"text": " is assigned by the host loader after the chunk\r\nresolves; "
 					},
 					{
 						"kind": "code",
@@ -11374,7 +11374,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are built-ins the host\nalways provides (a caller may override them in tests)."
+						"text": " are built-ins the host\r\nalways provides (a caller may override them in tests)."
 					}
 				]
 			},
@@ -11534,7 +11534,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the minimal shape of the\nhost's "
+						"text": " — the minimal shape of the\r\nhost's "
 					},
 					{
 						"kind": "code",
@@ -11773,7 +11773,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Host-side context base handed to EVERY remote mount — pages\n("
+						"text": "Host-side context base handed to EVERY remote mount — pages\r\n("
 					},
 					{
 						"kind": "code",
@@ -11789,7 +11789,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") alike. Versioned via\n"
+						"text": ") alike. Versioned via\r\n"
 					},
 					{
 						"kind": "code",
@@ -11797,7 +11797,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — remote chunks can refuse incompatible hosts.\n\nHARD CONSTRAINT — plain values and functions ONLY: Svelte rune state\n("
+						"text": " — remote chunks can refuse incompatible hosts.\r\n\r\nHARD CONSTRAINT — plain values and functions ONLY: Svelte rune state\r\n("
 					},
 					{
 						"kind": "code",
@@ -11821,7 +11821,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") is bundle-local and cannot cross this\nboundary. UI building blocks come from "
+						"text": ") is bundle-local and cannot cross this\r\nboundary. UI building blocks come from "
 					},
 					{
 						"kind": "code",
@@ -11829,7 +11829,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " bundled inside\nthe remote chunk, not from ctx; "
+						"text": " bundled inside\r\nthe remote chunk, not from ctx; "
 					},
 					{
 						"kind": "code",
@@ -11837,7 +11837,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is reserved for the few\nhost-coupled cases (see "
+						"text": " is reserved for the few\r\nhost-coupled cases (see "
 					},
 					{
 						"kind": "code",
@@ -11887,7 +11887,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " base when\nderivable (paths are service-relative), else the host's raw API base."
+								"text": " base when\r\nderivable (paths are service-relative), else the host's raw API base."
 							}
 						]
 					},
@@ -12193,7 +12193,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Optional host-coupled components and helpers (opaque values at this\nboundary — components are host-compiled Svelte components, helpers are\nplain functions). Only for cases the remote page cannot self-render;\nNOT for sharing rune state.\n\n"
+								"text": "Optional host-coupled components and helpers (opaque values at this\r\nboundary — components are host-compiled Svelte components, helpers are\r\nplain functions). Only for cases the remote page cannot self-render;\r\nNOT for sharing rune state.\r\n\r\n"
 							},
 							{
 								"kind": "code",
@@ -12201,7 +12201,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " MAY also carry remote-agnostic plain functions the host\nowns (e.g. "
+								"text": " MAY also carry remote-agnostic plain functions the host\r\nowns (e.g. "
 							},
 							{
 								"kind": "code",
@@ -12217,7 +12217,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\n\nSNIPPETS DO NOT CROSS — in either direction. A Svelte snippet invoked\nunder the other bundle's render reads its own runtime's\n"
+								"text": ").\r\n\r\nSNIPPETS DO NOT CROSS — in either direction. A Svelte snippet invoked\r\nunder the other bundle's render reads its own runtime's\r\n"
 							},
 							{
 								"kind": "code",
@@ -12225,7 +12225,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (null while the other bundle is rendering) and dies on\n"
+								"text": " (null while the other bundle is rendering) and dies on\r\n"
 							},
 							{
 								"kind": "code",
@@ -12233,7 +12233,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". Verified by live\nE2E — what worked in the synchronous-mount spike fails in production\nrender order. The supported bridges are "
+								"text": ". Verified by live\r\nE2E — what worked in the synchronous-mount spike fails in production\r\nrender order. The supported bridges are "
 							},
 							{
 								"kind": "code",
@@ -12241,7 +12241,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (host root inside\nremote DOM) and the symmetric remote-mount slot (remote root inside\nhost DOM, see "
+								"text": " (host root inside\r\nremote DOM) and the symmetric remote-mount slot (remote root inside\r\nhost DOM, see "
 							},
 							{
 								"kind": "code",
@@ -12249,7 +12249,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " below).\n\nReserved key: "
+								"text": " below).\r\n\r\nReserved key: "
 							},
 							{
 								"kind": "code",
@@ -12257,7 +12257,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — the host loader assigns the imported module\nnamespace to "
+								"text": " — the host loader assigns the imported module\r\nnamespace to "
 							},
 							{
 								"kind": "code",
@@ -12265,7 +12265,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " after the chunk resolves, so\nhost-side code (e.g. shim snippets running under host render) can\nreach additional chunk exports such as a "
+								"text": " after the chunk resolves, so\r\nhost-side code (e.g. shim snippets running under host render) can\r\nreach additional chunk exports such as a "
 							},
 							{
 								"kind": "code",
@@ -12273,7 +12273,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\nfunction for remote content inside host trees.\n\nBuilt-in keys the host always provides: "
+								"text": "\r\nfunction for remote content inside host trees.\r\n\r\nBuilt-in keys the host always provides: "
 							},
 							{
 								"kind": "code",
@@ -12281,7 +12281,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (step-up MFA for\nguarded remote ops), "
+								"text": " (step-up MFA for\r\nguarded remote ops), "
 							},
 							{
 								"kind": "code",
@@ -12297,7 +12297,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\n(full-path BE fetch) — see "
+								"text": "\r\n(full-path BE fetch) — see "
 							},
 							{
 								"kind": "inline-tag",
@@ -12307,7 +12307,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " /\n"
+								"text": " /\r\n"
 							},
 							{
 								"kind": "inline-tag",
@@ -12368,7 +12368,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Mount a host-compiled component as a separate Svelte root inside remote\nDOM. Rendering a host component inline ("
+								"text": "Mount a host-compiled component as a separate Svelte root inside remote\r\nDOM. Rendering a host component inline ("
 							},
 							{
 								"kind": "code",
@@ -12376,7 +12376,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") inside remote\nmarkup CANNOT work — each bundle has its own Svelte runtime/component\ninternals; this host-bound "
+								"text": ") inside remote\r\nmarkup CANNOT work — each bundle has its own Svelte runtime/component\r\ninternals; this host-bound "
 							},
 							{
 								"kind": "code",
@@ -12384,7 +12384,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " bridge is the supported path.\n\nThe returned handle pushes prop updates reactively ("
+								"text": " bridge is the supported path.\r\n\r\nThe returned handle pushes prop updates reactively ("
 							},
 							{
 								"kind": "code",
@@ -12392,7 +12392,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") and\ndestroys the root ("
+								"text": ") and\r\ndestroys the root ("
 							},
 							{
 								"kind": "code",
@@ -12400,7 +12400,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Props are plain values — NOT remote\nsnippets (see the "
+								"text": "). Props are plain values — NOT remote\r\nsnippets (see the "
 							},
 							{
 								"kind": "code",
@@ -12408,7 +12408,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " doc: cross-bundle snippet invocation\ncrashes; remote content inside the mounted host tree goes through a\nremote "
+								"text": " doc: cross-bundle snippet invocation\r\ncrashes; remote content inside the mounted host tree goes through a\r\nremote "
 							},
 							{
 								"kind": "code",
@@ -12552,7 +12552,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the shared\n"
+						"text": " — the shared\r\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -12701,7 +12701,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the shared\n"
+						"text": " — the shared\r\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -12719,7 +12719,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " control surface: the declared\nkey, the caller's props (opaque at the boundary — the owning module\nknows their shape), the current chrome, and the commands to mutate the\nhost-owned frame. No "
+						"text": " control surface: the declared\r\nkey, the caller's props (opaque at the boundary — the owning module\r\nknows their shape), the current chrome, and the commands to mutate the\r\nhost-owned frame. No "
 					},
 					{
 						"kind": "code",
@@ -12735,7 +12735,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — a sheet is not a route; domain\ncontext arrives through "
+						"text": " — a sheet is not a route; domain\r\ncontext arrives through "
 					},
 					{
 						"kind": "code",
@@ -13144,7 +13144,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — imperative channel to a\nhost-mounted component root."
+						"text": " — imperative channel to a\r\nhost-mounted component root."
 					}
 				]
 			},
@@ -13336,7 +13336,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\nMay return the "
+						"text": ".\r\nMay return the "
 					},
 					{
 						"kind": "code",
@@ -13352,7 +13352,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), a custom dispose\nfunction, or a promise of either.\n\nNOTE: a raw "
+						"text": "), a custom dispose\r\nfunction, or a promise of either.\r\n\r\nNOTE: a raw "
 					},
 					{
 						"kind": "code",
@@ -13360,7 +13360,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " result is only safe when it was registered by the\nSAME svelte module instance that will call "
+						"text": " result is only safe when it was registered by the\r\nSAME svelte module instance that will call "
 					},
 					{
 						"kind": "code",
@@ -13368,7 +13368,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " on it. Remote\nchunks resolve svelte through the vendor import map while the host runs\nits own bundled copy — two "
+						"text": " on it. Remote\r\nchunks resolve svelte through the vendor import map while the host runs\r\nits own bundled copy — two "
 					},
 					{
 						"kind": "code",
@@ -13376,7 +13376,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " registries — so chunk\ncode MUST go through "
+						"text": " registries — so chunk\r\ncode MUST go through "
 					},
 					{
 						"kind": "code",
@@ -13384,7 +13384,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (or return an equivalent\ndispose closure over the mounting bundle's "
+						"text": " (or return an equivalent\r\ndispose closure over the mounting bundle's "
 					},
 					{
 						"kind": "code",
@@ -13392,7 +13392,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), never hand the\nhost a foreign mount record."
+						"text": "), never hand the\r\nhost a foreign mount record."
 					}
 				]
 			},
@@ -13478,7 +13478,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\nThe chunk is declared in "
+						"text": ".\r\nThe chunk is declared in "
 					},
 					{
 						"kind": "code",
@@ -13496,7 +13496,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ")\nand mounted inside the host's global sheet surface. Same dispose rules as\n"
+						"text": ")\r\nand mounted inside the host's global sheet surface. Same dispose rules as\r\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -13592,7 +13592,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 24,
-					"character": 12
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L24"
 				}
 			],
 			"type": {
@@ -13617,7 +13618,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 25,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L25"
 										}
 									],
 									"type": {
@@ -13635,7 +13637,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 25,
-											"character": 21
+											"character": 21,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L25"
 										}
 									],
 									"type": {
@@ -13674,7 +13677,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 26,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L26"
 										}
 									],
 									"type": {
@@ -13692,7 +13696,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 26,
-											"character": 20
+											"character": 20,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L26"
 										}
 									],
 									"type": {
@@ -13731,7 +13736,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 27,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L27"
 										}
 									],
 									"type": {
@@ -13749,7 +13755,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 27,
-											"character": 20
+											"character": 20,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L27"
 										}
 									],
 									"type": {
@@ -13792,7 +13799,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 30,
-					"character": 12
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L30"
 				}
 			],
 			"type": {
@@ -13817,7 +13825,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 31,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L31"
 										}
 									],
 									"type": {
@@ -13835,7 +13844,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 31,
-											"character": 21
+											"character": 21,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L31"
 										}
 									],
 									"type": {
@@ -13855,7 +13865,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 31,
-											"character": 37
+											"character": 37,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L31"
 										}
 									],
 									"type": {
@@ -13900,7 +13911,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 32,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L32"
 										}
 									],
 									"type": {
@@ -13918,7 +13930,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 32,
-											"character": 20
+											"character": 20,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L32"
 										}
 									],
 									"type": {
@@ -13938,7 +13951,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 32,
-											"character": 34
+											"character": 34,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L32"
 										}
 									],
 									"type": {
@@ -13983,7 +13997,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 33,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L33"
 										}
 									],
 									"type": {
@@ -14001,7 +14016,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 33,
-											"character": 20
+											"character": 20,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L33"
 										}
 									],
 									"type": {
@@ -14023,7 +14039,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 33,
-											"character": 42
+											"character": 42,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L33"
 										}
 									],
 									"type": {
@@ -14078,7 +14095,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " entries — leaf kinds or a\n declared injector (the marker lands verbatim and the dispatcher\n resolves it per-fire)."
+						"text": " entries — leaf kinds or a\r\n declared injector (the marker lands verbatim and the dispatcher\r\n resolves it per-fire)."
 					}
 				]
 			},
@@ -14086,7 +14103,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 38,
-					"character": 12
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L38"
 				}
 			],
 			"type": {
@@ -14117,7 +14135,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 40,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L40"
 										}
 									],
 									"type": {
@@ -14135,7 +14154,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 40,
-											"character": 22
+											"character": 22,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L40"
 										}
 									],
 									"type": {
@@ -14178,7 +14198,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 43,
-					"character": 12
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L43"
 				}
 			],
 			"type": {
@@ -14209,7 +14230,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 47,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L47"
 										}
 									],
 									"type": {
@@ -14227,7 +14249,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 47,
-											"character": 22
+											"character": 22,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L47"
 										}
 									],
 									"type": {
@@ -14249,7 +14272,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 47,
-											"character": 47
+											"character": 47,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L47"
 										}
 									],
 									"type": {
@@ -14294,7 +14318,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 50,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L50"
 										}
 									],
 									"type": {
@@ -14312,7 +14337,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 50,
-											"character": 20
+											"character": 20,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L50"
 										}
 									],
 									"type": {
@@ -14337,7 +14363,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 50,
-											"character": 50
+											"character": 50,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L50"
 										}
 									],
 									"type": {
@@ -14382,7 +14409,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 52,
-											"character": 6
+											"character": 6,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L52"
 										}
 									],
 									"type": {
@@ -14400,7 +14428,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 52,
-											"character": 19
+											"character": 19,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L52"
 										}
 									],
 									"type": {
@@ -14438,7 +14467,8 @@
 										{
 											"fileName": "primebrick-v3-core/src/payload-map.ts",
 											"line": 52,
-											"character": 65
+											"character": 65,
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L52"
 										}
 									],
 									"type": {
@@ -14486,7 +14516,7 @@
 						},
 						{
 							"kind": "text",
-							"text": "),\n emits an "
+							"text": "),\r\n emits an "
 						},
 						{
 							"kind": "code",
@@ -14500,7 +14530,7 @@
 					[
 						{
 							"kind": "text",
-							"text": "Array field built element-by-element — each item one element;\n items resolving to undefined are dropped."
+							"text": "Array field built element-by-element — each item one element;\r\n items resolving to undefined are dropped."
 						}
 					],
 					[
@@ -14530,7 +14560,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 54,
-					"character": 12
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L54"
 				}
 			],
 			"type": {
@@ -14567,7 +14598,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 56,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L56"
 				}
 			],
 			"type": {
@@ -14595,7 +14627,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Fire-time injector vocabulary — values generated by the DISPATCHER at\nrepublish time (never at arm: a scheduled payload would replay the same\nvalue every fire otherwise). Declaration-only via "
+						"text": "Fire-time injector vocabulary — values generated by the DISPATCHER at\r\nrepublish time (never at arm: a scheduled payload would replay the same\r\nvalue every fire otherwise). Declaration-only via "
 					},
 					{
 						"kind": "code",
@@ -14603,7 +14635,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " /\n"
+						"text": " /\r\n"
 					},
 					{
 						"kind": "code",
@@ -14611,7 +14643,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — not a user-picked source kind.\n  - "
+						"text": " — not a user-picked source kind.\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -14619,7 +14651,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "          — fresh v4 uuid per dispatch (correlation ids)\n  - "
+						"text": "          — fresh v4 uuid per dispatch (correlation ids)\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -14627,7 +14659,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "       — dispatch instant, ISO 8601\n  - "
+						"text": "       — dispatch instant, ISO 8601\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -14635,7 +14667,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "        — dispatch instant, epoch ms\n  - "
+						"text": "        — dispatch instant, epoch ms\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -14651,7 +14683,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 73,
-					"character": 12
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L73"
 				}
 			],
 			"type": {
@@ -14688,7 +14721,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 75,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L75"
 				}
 			],
 			"type": {
@@ -14726,7 +14760,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " at arm time — the dispatcher\n replaces single-key "
+						"text": " at arm time — the dispatcher\r\n replaces single-key "
 					},
 					{
 						"kind": "code",
@@ -14742,7 +14776,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 84,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L84"
 				}
 			],
 			"type": {
@@ -14778,7 +14813,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Actor uuid riding the due message's forwarded auth headers\n ("
+								"text": "Actor uuid riding the due message's forwarded auth headers\r\n ("
 							},
 							{
 								"kind": "code",
@@ -14794,7 +14829,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " resolves\n to undefined and the field is omitted (no invented identity)."
+								"text": " resolves\r\n to undefined and the field is omitted (no invented identity)."
 							}
 						]
 					},
@@ -14802,7 +14837,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 91,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L91"
 						}
 					],
 					"type": {
@@ -14823,7 +14859,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 87,
-					"character": 17
+					"character": 17,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L87"
 				}
 			]
 		},
@@ -14839,7 +14876,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Field whose value the dispatcher MAY generate — names a\n "
+						"text": "Field whose value the dispatcher MAY generate — names a\r\n "
 					},
 					{
 						"kind": "code",
@@ -14847,7 +14884,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ". Seeded automatically; an explicitly authored\n entry wins over the declaration."
+						"text": ". Seeded automatically; an explicitly authored\r\n entry wins over the declaration."
 					}
 				]
 			},
@@ -14855,7 +14892,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 103,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L103"
 				}
 			],
 			"type": {
@@ -14876,7 +14914,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Private setter — a platform-owned field that MUST NOT render\n as a form input (reserved traceability/correlation fields)."
+						"text": "Private setter — a platform-owned field that MUST NOT render\r\n as a form input (reserved traceability/correlation fields)."
 					}
 				]
 			},
@@ -14884,7 +14922,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 106,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L106"
 				}
 			],
 			"type": {
@@ -14905,7 +14944,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Semantic derivation slot — declares what context the field wants so\n the mapping is a lookup, never a guess."
+						"text": "Semantic derivation slot — declares what context the field wants so\r\n the mapping is a lookup, never a guess."
 					}
 				]
 			},
@@ -14913,7 +14952,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 109,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L109"
 				}
 			],
 			"type": {
@@ -14934,7 +14974,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Catalog-backed const value — the form renders a ComboSelect fed by\n the declared source instead of free text."
+						"text": "Catalog-backed const value — the form renders a ComboSelect fed by\r\n the declared source instead of free text."
 					}
 				]
 			},
@@ -14942,7 +14982,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 112,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L112"
 				}
 			],
 			"type": {
@@ -14971,7 +15012,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " fields — where the suggested entry keys come from:\n "
+						"text": " fields — where the suggested entry keys come from:\r\n "
 					},
 					{
 						"kind": "code",
@@ -14979,7 +15020,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " reads the selected option's\n source row property (e.g. a template's "
+						"text": " reads the selected option's\r\n source row property (e.g. a template's "
 					},
 					{
 						"kind": "code",
@@ -14995,7 +15036,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 116,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L116"
 				}
 			],
 			"type": {
@@ -15014,7 +15056,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Semantic slots — declared on BOTH sides (event emits + callable\n schema) so derivation is a lookup, never a guess:\n  - "
+						"text": "Semantic slots — declared on BOTH sides (event emits + callable\r\n schema) so derivation is a lookup, never a guess:\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -15022,7 +15064,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "  — uuid of the event's declared entity snapshot\n  - "
+						"text": "  — uuid of the event's declared entity snapshot\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -15030,7 +15072,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "    — numeric id of the declared entity snapshot\n  - "
+						"text": "    — numeric id of the declared entity snapshot\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -15038,7 +15080,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — table name declared on the emit\n  - "
+						"text": " — table name declared on the emit\r\n  - "
 					},
 					{
 						"kind": "code",
@@ -15054,7 +15096,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 125,
-					"character": 12
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L125"
 				}
 			],
 			"type": {
@@ -15091,7 +15134,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 127,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L127"
 				}
 			],
 			"type": {
@@ -15139,7 +15183,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " source\n contract (api_url+verb+fields OR built-in values_source)."
+						"text": " source\r\n contract (api_url+verb+fields OR built-in values_source)."
 					}
 				]
 			},
@@ -15156,7 +15200,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 137,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L137"
 						}
 					],
 					"type": {
@@ -15176,7 +15221,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 138,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L138"
 						}
 					],
 					"type": {
@@ -15196,7 +15242,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 139,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L139"
 						}
 					],
 					"type": {
@@ -15216,7 +15263,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 140,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L140"
 						}
 					],
 					"type": {
@@ -15236,7 +15284,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 141,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L141"
 						}
 					],
 					"type": {
@@ -15272,7 +15321,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 143,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L143"
 						}
 					],
 					"type": {
@@ -15308,7 +15358,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 145,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L145"
 						}
 					],
 					"type": {
@@ -15344,7 +15395,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 147,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L147"
 						}
 					],
 					"type": {
@@ -15372,7 +15424,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 136,
-					"character": 17
+					"character": 17,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L136"
 				}
 			]
 		},
@@ -15404,7 +15457,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 151,
-					"character": 13
+					"character": 13,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L151"
 				}
 			],
 			"type": {
@@ -15457,7 +15511,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 155,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L155"
 						}
 					],
 					"type": {
@@ -15475,7 +15530,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 156,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L156"
 						}
 					],
 					"type": {
@@ -15497,7 +15553,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 154,
-					"character": 17
+					"character": 17,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L154"
 				}
 			]
 		},
@@ -15535,7 +15592,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 160,
-					"character": 12
+					"character": 12,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L160"
 				}
 			],
 			"type": {
@@ -15596,7 +15654,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 165,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L165"
 						}
 					],
 					"type": {
@@ -15616,7 +15675,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 166,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L166"
 						}
 					],
 					"type": {
@@ -15644,7 +15704,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 168,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L168"
 						}
 					],
 					"type": {
@@ -15672,7 +15733,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") of the actor whose event triggered the\n arm — read off the message's auth headers ("
+								"text": ") of the actor whose event triggered the\r\n arm — read off the message's auth headers ("
 							},
 							{
 								"kind": "code",
@@ -15680,7 +15741,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Absent\n on the system lane / anonymous events."
+								"text": "). Absent\r\n on the system lane / anonymous events."
 							}
 						]
 					},
@@ -15688,7 +15749,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 172,
-							"character": 2
+							"character": 2,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L172"
 						}
 					],
 					"type": {
@@ -15712,7 +15774,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 163,
-					"character": 17
+					"character": 17,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L163"
 				}
 			]
 		},
@@ -15726,7 +15789,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 176,
-					"character": 16
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L176"
 				}
 			],
 			"signatures": [
@@ -15764,7 +15828,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 176,
-							"character": 16
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L176"
 						}
 					],
 					"parameters": [
@@ -15808,7 +15873,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 280,
-					"character": 16
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L280"
 				}
 			],
 			"signatures": [
@@ -15822,7 +15888,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Apply a payload map: for each declared target field, resolve its entry\nagainst the source event payload + fire context. "
+								"text": "Apply a payload map: for each declared target field, resolve its entry\r\nagainst the source event payload + fire context. "
 							},
 							{
 								"kind": "code",
@@ -15830,7 +15896,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "/absent map →\nthe event payload verbatim (the default passthrough)."
+								"text": "/absent map →\r\nthe event payload verbatim (the default passthrough)."
 							}
 						]
 					},
@@ -15838,7 +15904,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 280,
-							"character": 16
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L280"
 						}
 					],
 					"parameters": [
@@ -15910,7 +15977,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 318,
-					"character": 16
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L318"
 				}
 			],
 			"signatures": [
@@ -15924,7 +15992,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Fire-time pass run by the dispatcher on the armed payload: deep-walks\nand replaces every "
+								"text": "Fire-time pass run by the dispatcher on the armed payload: deep-walks\r\nand replaces every "
 							},
 							{
 								"kind": "code",
@@ -15932,7 +16000,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " marker with a freshly generated\nvalue. Unresolvable injectors ("
+								"text": " marker with a freshly generated\r\nvalue. Unresolvable injectors ("
 							},
 							{
 								"kind": "code",
@@ -15940,7 +16008,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " with no session) resolve\nto undefined — the field is omitted, never invented."
+								"text": " with no session) resolve\r\nto undefined — the field is omitted, never invented."
 							}
 						]
 					},
@@ -15948,7 +16016,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 318,
-							"character": 16
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L318"
 						}
 					],
 					"parameters": [
@@ -15994,7 +16063,8 @@
 				{
 					"fileName": "primebrick-v3-core/src/payload-map.ts",
 					"line": 379,
-					"character": 16
+					"character": 16,
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L379"
 				}
 			],
 			"signatures": [
@@ -16008,7 +16078,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Derive the DECLARED auto-entries for a callable's payload_schema —\n"
+								"text": "Derive the DECLARED auto-entries for a callable's payload_schema —\r\n"
 							},
 							{
 								"kind": "code",
@@ -16032,7 +16102,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " /\nthe semantic suggestion when (and only when) the map doesn't already\ndeclare an entry. Explicitly authored entries ALWAYS win.\n\nThis is a pure data derivation: callers merge it into the form's\ninitial/baseline data (or the stored map) so machine-written values\nnever masquerade as user edits."
+								"text": " /\r\nthe semantic suggestion when (and only when) the map doesn't already\r\ndeclare an entry. Explicitly authored entries ALWAYS win.\r\n\r\nThis is a pure data derivation: callers merge it into the form's\r\ninitial/baseline data (or the stored map) so machine-written values\r\nnever masquerade as user edits."
 							}
 						]
 					},
@@ -16040,7 +16110,8 @@
 						{
 							"fileName": "primebrick-v3-core/src/payload-map.ts",
 							"line": 379,
-							"character": 16
+							"character": 16,
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L379"
 						}
 					],
 					"parameters": [
@@ -16144,7 +16215,8 @@
 														{
 															"fileName": "primebrick-v3-core/src/payload-map.ts",
 															"line": 382,
-															"character": 18
+															"character": 18,
+															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L382"
 														}
 													],
 													"type": {
@@ -16162,7 +16234,8 @@
 														{
 															"fileName": "primebrick-v3-core/src/payload-map.ts",
 															"line": 382,
-															"character": 31
+															"character": 31,
+															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L382"
 														}
 													],
 													"type": {
@@ -16180,7 +16253,8 @@
 														{
 															"fileName": "primebrick-v3-core/src/payload-map.ts",
 															"line": 382,
-															"character": 47
+															"character": 47,
+															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/payload-map.ts#L382"
 														}
 													],
 													"type": {
@@ -16241,7 +16315,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Client → BE signal describing what the user is doing on an entity.\n\n- "
+						"text": "Client → BE signal describing what the user is doing on an entity.\r\n\r\n- "
 					},
 					{
 						"kind": "code",
@@ -16249,7 +16323,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": user opened the entity (loaded_version is what they fetched).\n- "
+						"text": ": user opened the entity (loaded_version is what they fetched).\r\n- "
 					},
 					{
 						"kind": "code",
@@ -16257,7 +16331,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": user is editing a field (field + value are the current draft).\n- "
+						"text": ": user is editing a field (field + value are the current draft).\r\n- "
 					},
 					{
 						"kind": "code",
@@ -16265,7 +16339,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": keep-alive (refreshes the Redis TTL; no state change).\n- "
+						"text": ": keep-alive (refreshes the Redis TTL; no state change).\r\n- "
 					},
 					{
 						"kind": "code",
@@ -16317,7 +16391,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Persistent status derived from the latest non-heartbeat signal.\n"
+						"text": "Persistent status derived from the latest non-heartbeat signal.\r\n"
 					},
 					{
 						"kind": "code",
@@ -16385,7 +16459,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\nSent by the FE on open, on field focus, on field blur, on heartbeat, and on close."
+						"text": ".\r\nSent by the FE on open, on field focus, on field blur, on heartbeat, and on close."
 					}
 				]
 			},
@@ -16567,7 +16641,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A single user's presence on an entity. Stored in Redis as JSON.\nOne entry per (entity_type, entity_uuid, user_uuid)."
+						"text": "A single user's presence on an entity. Stored in Redis as JSON.\r\nOne entry per (entity_type, entity_uuid, user_uuid)."
 					}
 				]
 			},
@@ -16784,7 +16858,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Epoch ms of this user's last save on the entity — stamped server-side by\nthe audit hook when it publishes "
+								"text": "Epoch ms of this user's last save on the entity — stamped server-side by\r\nthe audit hook when it publishes "
 							},
 							{
 								"kind": "code",
@@ -16800,7 +16874,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\nAbsent until the user's first save while present. The FE compares it to a\n5-minute window (and to the client's own mount time) to render the\n\"recently saved\" affordance."
+								"text": ".\r\nAbsent until the user's first save while present. The FE compares it to a\r\n5-minute window (and to the client's own mount time) to render the\r\n\"recently saved\" affordance."
 							}
 						]
 					},
@@ -16856,7 +16930,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Tab session that produced this entry (FE-generated uuid, sent as\n"
+								"text": "Tab session that produced this entry (FE-generated uuid, sent as\r\n"
 							},
 							{
 								"kind": "code",
@@ -16864,7 +16938,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Presence entries are keyed\n"
+								"text": "). Presence entries are keyed\r\n"
 							},
 							{
 								"kind": "code",
@@ -16872,7 +16946,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — two tabs of the same user are distinct entries,\nso a same-user second tab is visible to the first tab as a different\nsession (\"you — other tab\")."
+								"text": " — two tabs of the same user are distinct entries,\r\nso a same-user second tab is visible to the first tab as a different\r\nsession (\"you — other tab\")."
 							}
 						]
 					},
@@ -16927,7 +17001,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Marker published server-side when an auditable entity is saved.\nStored in Redis with a 5-minute TTL so late-joining clients can see the\nmost recent change without scanning the audit log."
+						"text": "Marker published server-side when an auditable entity is saved.\r\nStored in Redis with a 5-minute TTL so late-joining clients can see the\r\nmost recent change without scanning the audit log."
 					}
 				]
 			},
@@ -17087,7 +17161,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", which\nthe FE sends as "
+								"text": ", which\r\nthe FE sends as "
 							},
 							{
 								"kind": "code",
@@ -17095,7 +17169,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " on writes. A save is \"self\" (silently\nrealign, no stale/chip) only when "
+								"text": " on writes. A save is \"self\" (silently\r\nrealign, no stale/chip) only when "
 							},
 							{
 								"kind": "code",
@@ -17111,7 +17185,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\nboth match this client; a save from another tab of the same user is\nforeign for merge/conflict purposes."
+								"text": "\r\nboth match this client; a save from another tab of the same user is\r\nforeign for merge/conflict purposes."
 							}
 						]
 					},
@@ -17197,7 +17271,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " and\nsent as the initial SSE "
+						"text": " and\r\nsent as the initial SSE "
 					},
 					{
 						"kind": "code",
@@ -17386,7 +17460,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " subject.\nConsumed by the BE SSE bridge and forwarded to connected FE clients."
+						"text": " subject.\r\nConsumed by the BE SSE bridge and forwarded to connected FE clients."
 					}
 				]
 			},
@@ -17430,7 +17504,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Tab session that emitted the signal — used by SSE subscribers to exclude\nonly echoes of their own session (another tab of the same user is NOT\nexcluded). Absent on synthetic deltas (e.g. "
+								"text": "Tab session that emitted the signal — used by SSE subscribers to exclude\r\nonly echoes of their own session (another tab of the same user is NOT\r\nexcluded). Absent on synthetic deltas (e.g. "
 							},
 							{
 								"kind": "code",
@@ -22678,7 +22752,7 @@
 		}
 	],
 	"packageName": "@primebrick/core",
-	"packageVersion": "3.0.0",
+	"packageVersion": "3.1.0",
 	"symbolIdMap": {
 		"0": {
 			"packageName": "@primebrick/core",
