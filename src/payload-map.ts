@@ -51,11 +51,11 @@ export type PayloadMapEntry =
   /** Object field built key-by-key (e.g. template `variables`). */
   | { kind: "map"; entries: Record<string, PayloadMapItemEntry>; fallback?: PayloadMapFallbackClause[] };
 
-export type PayloadMapMeta = "actor_uuid" | "rule_id" | "fired_at" | "actor_locale";
+export type PayloadMapMeta = "actor_uuid" | "trigger_id" | "fired_at" | "actor_locale";
 
 export const PAYLOAD_MAP_META_KINDS: readonly PayloadMapMeta[] = [
   "actor_uuid",
-  "rule_id",
+  "trigger_id",
   "fired_at",
   "actor_locale",
 ];
@@ -163,7 +163,8 @@ export type PayloadMap = Record<string, PayloadMapEntry>;
 export interface PayloadMapContext {
   /** Who armed the rule (stored actor). */
   actor_uuid?: string;
-  rule_id?: string;
+  /** The trigger the dispatch materialized from (job_trigger.uuid). */
+  trigger_id?: string;
   /** Fire timestamp (epoch ms) — set by the engine at dispatch. */
   fired_at?: number;
   /** Locale (BCP-47, e.g. `it-IT`) of the actor whose event triggered the
