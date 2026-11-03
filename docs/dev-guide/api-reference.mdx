@@ -1645,7 +1645,7 @@ declaration — a bare string never satisfies `format:"email"`.
 | target | `Record<string, unknown>` |  |
 | source | `Record<string, unknown> \| undefined` |  |
 
-### `payloadMapConformance(map, callableSchema, sourceSchema): FieldIssue[]`
+### `payloadMapConformance(map, callableSchema, sourceSchema, mapKeySchemas): FieldIssue[]`
 
 Conformance of a `payload_map` document against the callable's emitted
 `payload_schema`. Reports:
@@ -1660,6 +1660,13 @@ Conformance of a `payload_map` document against the callable's emitted
 | map | `Record<string, unknown> \| PayloadMap \| null \| undefined` |  |
 | callableSchema | `Record<string, unknown>` |  |
 | sourceSchema | `Record<string, unknown>` |  |
+| mapKeySchemas | `Record<string, Record<string, Record<string, unknown>>>` | Resolved `x_map_keys` declarations per field — `{field: {key:
+ schema}}` — the catalog-row contract (e.g. a template's
+ `variables`). Optional: the wire gate can't resolve catalog rows
+ synchronously and skips this layer; the design-time checker passes
+ the resolved set so a `const` typed against a declared key schema
+ (`"hhhhh"` on `amount:"number"`) fails `invalid_type` instead of
+ passing on the record's empty `additionalProperties`. |
 
 ### `pgDivScale(a, b): number`
 

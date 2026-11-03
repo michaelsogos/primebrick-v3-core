@@ -262,6 +262,23 @@ const FORMAT_CHECKS: Record<string, (v: string) => boolean> = {
  *  translation catalog. */
 const VALIDATION_FORMAT_KEY = (format: string): string => `app.common.validation.${format}`;
 
+/** `expected_type` is a PER-TYPE key family (`expected_type.number`) —
+ *  a type name is a noun whose article and gender change per language
+ *  ("Atteso un numero", "Un nombre entier attendu", "Esperada una
+ *  lista"), so no `{types}` template can carry it through seven
+ *  languages: every known type owns a complete translated sentence.
+ *  A `null` union arm means "optional", not a displayable noun — it's
+ *  dropped before picking; only genuinely multi-type or unknown names
+ *  fall back to the generic `{types}` form (raw names = last resort). */
+const EXPECTED_TYPE_NAMES = new Set(["string", "number", "integer", "boolean", "array", "object"]);
+
+const expectedTypeMsg = (types: readonly unknown[]): string => {
+  const named = types.filter((t): t is string => typeof t === "string" && t !== "null");
+  return named.length === 1 && EXPECTED_TYPE_NAMES.has(named[0])
+    ? `app.common.validation.expected_type.${named[0]}`
+    : kmsg("app.common.validation.expected_type", { types: named.join(", ") });
+};
+
 function jsonTypeMatches(value: unknown, type: string): boolean {
   switch (type) {
     case "string": return typeof value === "string";
@@ -288,7 +305,7 @@ export function jsonSchemaCheck(
   if (rawType !== undefined) {
     const types = Array.isArray(rawType) ? rawType : [rawType];
     if (!types.some((t) => typeof t === "string" && jsonTypeMatches(value, t))) {
-      at("invalid_type", kmsg("app.common.validation.expected_type", { types: types.join(", ") }));
+      at("invalid_type", expectedTypeMsg(types));
       return out; // type mismatch — deeper checks are meaningless
     }
   }
@@ -402,7 +419,7 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
     out.push(issue(sub ?? p, code, message));
 
   if (col.type === "boolean" || col.pg_type === "boolean") {
-    if (typeof value !== "boolean") at("invalid_type", kmsg("app.common.validation.expected_type", { types: "boolean" }));
+    if (typeof value !== "boolean") at("invalid_type", expectedTypeMsg(["boolean"]));
     return out;
   }
 
@@ -410,7 +427,7 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
     // ext-json wire decodes integers as bigint — accept and compare.
     const num = typeof value === "bigint" ? Number(value) : value;
     if (typeof num !== "number" || Number.isNaN(num)) {
-      at("invalid_type", kmsg("app.common.validation.expected_type", { types: "number" }));
+      at("invalid_type", expectedTypeMsg(["number"]));
       return out;
     }
     if (typeof col.min === "number" && num < col.min) at("too_small", kmsg("app.common.validation.minimum", { min: col.min }));
@@ -429,7 +446,7 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
 
   // string-ish columns
   if (typeof value !== "string") {
-    at("invalid_type", kmsg("app.common.validation.expected_type", { types: "string" }));
+    at("invalid_type", expectedTypeMsg(["string"]));
     return out;
   }
   if (typeof col.max_length === "number" && value.length > col.max_length) {
@@ -776,6 +793,7 @@ function entryIssues(
   propSchema: Record<string, unknown>,
   path: string,
   sourceSchema?: Record<string, unknown>,
+  keySchemas?: Record<string, Record<string, unknown>>,
 ): FieldIssue[] {
   const out: FieldIssue[] = [];
   const hasFallback = Array.isArray(entry.fallback) && entry.fallback.length > 0;
@@ -836,7 +854,12 @@ function entryIssues(
         out.push(issue(path, "required", "app.common.validation.empty_map"));
       }
       for (const [k, sub] of Object.entries(entries)) {
+        // `x_map_keys` declared schemas win over the prop's own
+        // `properties`/`additionalProperties`: a record field
+        // (`z.record`) projects `{}` for every key — the template's
+        // declaration is the only place a key's real type lives.
         const subSchema =
+          keySchemas?.[k] ??
           props[k] ??
           (additional && typeof additional === "object" ? (additional as Record<string, unknown>) : {});
         out.push(...entryIssues(sub, subSchema, joinPath(path, k), sourceSchema));
@@ -874,6 +897,14 @@ export function payloadMapConformance(
   map: PayloadMap | Record<string, unknown> | undefined | null,
   callableSchema: Record<string, unknown>,
   sourceSchema?: Record<string, unknown>,
+  /** Resolved `x_map_keys` declarations per field — `{field: {key:
+   *  schema}}` — the catalog-row contract (e.g. a template's
+   *  `variables`). Optional: the wire gate can't resolve catalog rows
+   *  synchronously and skips this layer; the design-time checker passes
+   *  the resolved set so a `const` typed against a declared key schema
+   *  (`"hhhhh"` on `amount:"number"`) fails `invalid_type` instead of
+   *  passing on the record's empty `additionalProperties`. */
+  mapKeySchemas?: Record<string, Record<string, Record<string, unknown>>>,
 ): FieldIssue[] {
   if (!map || typeof map !== "object") map = {};
   const out: FieldIssue[] = [];
@@ -893,7 +924,9 @@ export function payloadMapConformance(
     const propSchema = properties[key];
     if (!propSchema) continue; // mapped key absent from schema — loose, not an issue
     if (entry && typeof entry === "object") {
-      out.push(...entryIssues(entry, propSchema, `payload_map.${key}`, sourceSchema));
+      out.push(
+        ...entryIssues(entry, propSchema, `payload_map.${key}`, sourceSchema, mapKeySchemas?.[key]),
+      );
     }
   }
   return out;
