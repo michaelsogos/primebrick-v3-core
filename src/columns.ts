@@ -63,11 +63,39 @@ export function orderedColumns(
   ];
 }
 
+// standards-exempt-file: column-flag-defaults — canonical implementation of the predicates lives here
+// ── canonical column-flag predicates ────────────────────────────────────
+// THE single way to read a table flag. The platform contract is opt-out:
+// an ABSENT flag means the capability is ON (`default true` in
+// entity-meta.ts) — only an explicit `false` disables it. Runtime,
+// docs-gen, and form-builder consumers MUST read flags through these
+// predicates instead of inlining `col.x !== false`.
+
+/** Column is visible by default — opt-out (`default_visible: false`)
+ *  hides it; `hideable: false` pins it visible regardless. */
+export function isColumnVisible(col: Pick<MetaColumn, "default_visible" | "hideable">): boolean {
+  return col.hideable === false || col.default_visible !== false;
+}
+
+/** Column supports ORDER BY — absent means sortable. */
+export function isColumnSortable(col: Pick<MetaColumn, "sortable">): boolean {
+  return col.sortable !== false;
+}
+
+/** Column participates in the filters sheet — absent means filterable. */
+export function isColumnFilterable(col: Pick<MetaColumn, "filterable">): boolean {
+  return col.filterable !== false;
+}
+
+/** Column joins the search scope — absent means searchable (the caller
+ *  may still require a text-physical type on top). */
+export function isColumnSearchable(col: Pick<MetaColumn, "searchable">): boolean {
+  return col.searchable !== false;
+}
+
 /** Keys visible by default — from column flags. */
 export function defaultVisibleColumnKeys(columns: MetaColumn[]): string[] {
-  return columns
-    .filter((c) => c.hideable === false || c.default_visible !== false)
-    .map((c) => c.key);
+  return columns.filter(isColumnVisible).map((c) => c.key);
 }
 
 /** Drop unknown keys and fall back to defaults when nothing left. */
@@ -84,7 +112,7 @@ export function sanitizeVisibleKeys(
 /** Text-physical searchable columns — the scope selector + default
  *  "all fields" search set. */
 export function searchableTextColumns(columns: MetaColumn[]): MetaColumn[] {
-  return columns.filter((c) => c.searchable !== false && c.type === "text");
+  return columns.filter((c) => isColumnSearchable(c) && c.type === "text");
 }
 
 /** Operators available for a given column UI type. */

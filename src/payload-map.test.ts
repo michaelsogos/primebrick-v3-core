@@ -10,7 +10,7 @@ import {
 
 const ctx = {
   actor_uuid: "user-111",
-  rule_id: "rule-222",
+  trigger_id: "rule-222",
   fired_at: 1730000000000,
   actor_locale: "it-IT",
 };

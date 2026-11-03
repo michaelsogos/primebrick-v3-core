@@ -127,7 +127,14 @@ export type MetaColumnFormat =
   | "money"
   | "date"
   | "datetime"
-  | "time";
+  | "time"
+  | "identifier"
+  | "snake_key"
+  | "dotted_key"
+  | "dotted_glob"
+  | "slug"
+  | "no_space"
+  | "lang";
 
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
@@ -181,6 +188,11 @@ export type MetaColumn = {
   /** System-managed auditing column (created_at, updated_by, …) —
    *  rendered last. */
   audited?: boolean;
+  /** No physical backing on the entity class — derived/computed at read
+   *  time (joins, counts, aggregates). Read-only: never required on write,
+   *  never belongs in `page_props.form`. `withColumnConstraints` exempts
+   *  it from the class lookup; derived props stay absent. */
+  virtual?: boolean;
 
   // ---- form constraint props ----
   // DERIVED — injected at decl time by the DAL `withColumnConstraints`
