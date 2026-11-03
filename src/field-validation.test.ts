@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { parseMapKeysDeclaration } from "./payload-map.js";
 import {
   checkEntityFields,
   checkFieldValue,
@@ -6,6 +7,7 @@ import {
   isDottedKey,
   isEmail,
   isIdentifier,
+  isLang,
   isNoSpace,
   isSlug,
   isSnakeKey,
@@ -13,7 +15,9 @@ import {
   isValidScheduleSpec,
   jobTriggerShapeIssues,
   jsonSchemaCheck,
+  pathCompatible,
   payloadMapConformance,
+  resolveSourceSchema,
   type FieldIssue,
 } from "./field-validation.js";
 import type { EntityMeta, MetaColumn } from "./entity-meta.js";
@@ -116,6 +120,18 @@ describe("format predicates", () => {
     expect(isNoSpace("my-agent/1.0")).toBe(true);
     expect(isNoSpace("a b")).toBe(false);
     expect(isNoSpace("a\tb")).toBe(false);
+  });
+  it("lang — BCP-47 tags", () => {
+    expect(isLang("it-IT")).toBe(true);
+    expect(isLang("en")).toBe(true);
+    expect(isLang("en-US")).toBe(true);
+    expect(isLang("zh-Hans")).toBe(true);
+    expect(isLang("es-419")).toBe(true);
+    expect(isLang("pt-PT")).toBe(true);
+    expect(isLang("not a lang")).toBe(false);
+    expect(isLang("")).toBe(false);
+    expect(isLang("it_IT")).toBe(false);
+    expect(isLang("-en")).toBe(false);
   });
 });
 
@@ -260,7 +276,7 @@ describe("payloadMapConformance", () => {
       requestId: { type: "string", format: "uuid", x_inject: "uuid" },
       templateCode: { type: "string", minLength: 1 },
       to: { type: "array", minItems: 1, items: { type: "string", format: "email" } },
-      languageIso: { type: "string" },
+      languageIso: { type: "string", format: "lang" },
     },
   };
   it("required unmapped fails; inject/semantic-covered passes", () => {
@@ -273,11 +289,11 @@ describe("payloadMapConformance", () => {
   it("mapped required passes; const checked against prop schema", () => {
     const map = {
       templateCode: { kind: "path", path: "payload.tpl" },
-      to: { kind: "const", value: "x@y.z" }, // const string into array prop — type mismatch
+      to: { kind: "const", value: 5 }, // const number into array<email> — wrapped [5], item type mismatch
       languageIso: { kind: "meta", meta: "actor_locale" },
     };
     const issues = payloadMapConformance(map as never, schema);
-    expect(has(issues, "payload_map.to", "invalid_type")).toBe(true);
+    expect(has(issues, "payload_map.to[0]", "invalid_type")).toBe(true);
     expect(has(issues, "payload_map.templateCode")).toBe(false);
   });
   it("list const items checked against items schema; fallback consts checked", () => {
@@ -296,8 +312,215 @@ describe("payloadMapConformance", () => {
     expect(has(issues, "payload_map.to[1]", "invalid_string")).toBe(true);
     expect(has(issues, "payload_map.templateCode.fallback[0]", "too_small")).toBe(true);
   });
+  it("kind picked, nothing filled — empty primary + no fallback is NOT a mapping", () => {
+    const map = {
+      templateCode: { kind: "const", value: "" },
+      to: { kind: "list", items: [] },
+      languageIso: { kind: "path", path: "" },
+    };
+    const issues = payloadMapConformance(map as never, schema);
+    expect(has(issues, "payload_map.templateCode", "required")).toBe(true);
+    expect(has(issues, "payload_map.to", "required")).toBe(true);
+    expect(has(issues, "payload_map.languageIso", "required")).toBe(true);
+  });
+  it("empty primary WITH a fallback = honest 'skip to clause' — no required issue", () => {
+    const map = {
+      templateCode: { kind: "const", value: "", fallback: [{ kind: "const", value: "welcome" }] },
+      to: { kind: "list", items: [], fallback: [{ kind: "meta", meta: "actor_email" }] },
+    };
+    const issues = payloadMapConformance(map as never, schema);
+    expect(has(issues, "payload_map.templateCode", "required")).toBe(false);
+    expect(has(issues, "payload_map.to", "required")).toBe(false);
+  });
+  it("0 / false are legitimate values, never 'empty'", () => {
+    // broadcast [0] fails the email ITEM check — but never as "required".
+    const issues = payloadMapConformance({ to: { kind: "const", value: 0 } } as never, schema);
+    expect(has(issues, "payload_map.to", "required")).toBe(false);
+    expect(has(issues, "payload_map.to[0]", "invalid_type")).toBe(true);
+  });
   it("null/absent map = verbatim passthrough (required still reported)", () => {
     const issues = payloadMapConformance(null, schema);
     expect(issues.some((i) => i.code === "required")).toBe(true);
+  });
+  it("sourceSchema — kind:'path' resolved and screened for compatibility", () => {
+    const source = {
+      type: "object",
+      properties: {
+        customer: {
+          type: "object",
+          properties: {
+            code: { type: "string" },
+            email: { type: "string", format: "email" },
+            preferred_locale: { type: "string", format: "lang" },
+            tags: { type: "array", items: { type: "string" } },
+          },
+        },
+        change: { type: "object", properties: { changed_fields: { type: "array" } } },
+      },
+    };
+    const map = {
+      templateCode: { kind: "path", path: "$.customer.code" },
+      to: { kind: "list", items: [{ kind: "path", path: "$.customer.email" }] },
+      languageIso: { kind: "path", path: "$.customer.preferred_locale" },
+    };
+    expect(payloadMapConformance(map as never, schema, source)).toEqual([]);
+    // bogus path — not declared in the source schema
+    const bad1 = { languageIso: { kind: "path", path: "$.bogus.field" } };
+    expect(has(payloadMapConformance(bad1 as never, schema, source), "payload_map.languageIso", "schema_mismatch")).toBe(true);
+    // incompatible path — array into a string target
+    const bad2 = { languageIso: { kind: "path", path: "$.change.changed_fields" } };
+    expect(has(payloadMapConformance(bad2 as never, schema, source), "payload_map.languageIso", "schema_mismatch")).toBe(true);
+    // domain rule — a specialized source can't flow into a bare target
+    const bad3 = { templateCode: { kind: "path", path: "$.customer.preferred_locale" } };
+    expect(has(payloadMapConformance(bad3 as never, schema, source), "payload_map.templateCode", "schema_mismatch")).toBe(true);
+  });
+  it("meta entries are conformance-checked against the declared kind domain", () => {
+    const ok = {
+      to: { kind: "meta", meta: "creator_email" }, // email scalar → broadcast [creator]
+      languageIso: { kind: "meta", meta: "actor_locale" },
+      templateCode: { kind: "const", value: "welcome" },
+    };
+    expect(payloadMapConformance(ok as never, schema)).toEqual([]);
+    const bad1 = { languageIso: { kind: "meta", meta: "fired_at" } }; // epoch int → lang field
+    expect(has(payloadMapConformance(bad1 as never, schema), "payload_map.languageIso", "schema_mismatch")).toBe(true);
+    const bad2 = { templateCode: { kind: "meta", meta: "actor_uuid" } }; // uuid domain → bare string
+    expect(has(payloadMapConformance(bad2 as never, schema), "payload_map.templateCode", "schema_mismatch")).toBe(true);
+    const bad3 = { templateCode: { kind: "meta", meta: "bogus_kind" } };
+    expect(has(payloadMapConformance(bad3 as never, schema), "payload_map.templateCode", "schema_mismatch")).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// pathCompatible — two-level screening (type → format/semantic/vocab)
+// ---------------------------------------------------------------------------
+
+describe("pathCompatible", () => {
+  const tgt = (over: Record<string, unknown>) => ({ type: "string", ...over });
+  it("level 1 — type", () => {
+    expect(pathCompatible(tgt({}), { type: "string" })).toBe(true);
+    expect(pathCompatible(tgt({}), { type: "array" })).toBe(false);
+    expect(pathCompatible(tgt({}), { type: "object" })).toBe(false);
+    expect(pathCompatible({ type: "number" }, { type: "integer" })).toBe(true);
+    expect(pathCompatible({ type: "integer" }, { type: "number" })).toBe(false);
+    expect(pathCompatible({ type: "boolean" }, { type: "string" })).toBe(false);
+    // nullable unions compare on the base type
+    expect(pathCompatible(tgt({}), { type: ["string", "null"] })).toBe(true);
+    // arrays — items compared when both declare them
+    expect(
+      pathCompatible(
+        { type: "array", items: { type: "string" } },
+        { type: "array", items: { type: "integer" } },
+      ),
+    ).toBe(false);
+  });
+  it("level 2 — format must be provable on the source side", () => {
+    expect(pathCompatible(tgt({ format: "lang" }), { type: "string", format: "lang" })).toBe(true);
+    expect(pathCompatible(tgt({ format: "lang" }), { type: "string" })).toBe(false);
+    expect(pathCompatible(tgt({ format: "email" }), { type: "string", format: "email" })).toBe(true);
+    expect(pathCompatible(tgt({ format: "email" }), { type: "string" })).toBe(false);
+    // domain rule — a format is a DISTINCT domain, not a subset of
+    // string: a specialized source never flows into a bare target
+    expect(pathCompatible(tgt({}), { type: "string", format: "email" })).toBe(false);
+    expect(pathCompatible(tgt({}), { type: "string", format: "date-time" })).toBe(false);
+    // bare sources still pair with bare targets
+    expect(pathCompatible(tgt({}), { type: "string" })).toBe(true);
+    expect(pathCompatible(tgt({}), { type: "string", enum: ["a", "b"] })).toBe(true);
+  });
+  it("array broadcast — array<T> accepts array<U> or scalar U compatible with T", () => {
+    const arrEmail = { type: "array", items: { type: "string", format: "email" } };
+    expect(pathCompatible(arrEmail, { type: "string", format: "email" })).toBe(true); // scalar broadcast
+    expect(pathCompatible(arrEmail, { type: "array", items: { type: "string", format: "email" } })).toBe(true);
+    expect(pathCompatible(arrEmail, { type: "string" })).toBe(false); // bare string isn't an email
+    expect(pathCompatible(arrEmail, { type: "array", items: { type: "string" } })).toBe(false);
+    expect(pathCompatible(arrEmail, { type: "string", format: "date-time" })).toBe(false);
+    // generic array<string> target: scalar strings AND string arrays
+    const arrStr = { type: "array", items: { type: "string" } };
+    expect(pathCompatible(arrStr, { type: "string" })).toBe(true);
+    expect(pathCompatible(arrStr, { type: "array", items: { type: "string" } })).toBe(true);
+    expect(pathCompatible(arrStr, { type: "string", format: "email" })).toBe(false); // email domain ≠ bare
+  });
+  it("level 2 — x_semantic: declared mismatch rejects, generic source defers to domain", () => {
+    const audit = tgt({ x_semantic: "actor.uuid" });
+    expect(pathCompatible(audit, { type: "string", format: "uuid", x_semantic: "actor.uuid" })).toBe(true);
+    // Both sides declare DIFFERENT slots → proven wrong.
+    expect(pathCompatible(audit, { type: "string", format: "uuid", x_semantic: "entity.uuid" })).toBe(false);
+    // Generic uuid source (no slot) → unproven but domain-compatible —
+    // the seeder's `$.{entity}.uuid` IS the entity uuid, proven by the
+    // emit declaration the leaf schema can't carry.
+    expect(pathCompatible(audit, { type: "string", format: "uuid" })).toBe(true);
+    // …but a wrong DOMAIN still rejects — a plain string can't be the actor.
+    expect(pathCompatible(audit, { type: "string" })).toBe(false);
+    // The real seeded pair: entityUuid target ← `$.customer.uuid` leaf.
+    expect(
+      pathCompatible(tgt({ x_semantic: "entity.uuid" }), { type: "string", format: "uuid" }),
+    ).toBe(true);
+    // actor.uuid source satisfies a plain uuid target
+    expect(
+      pathCompatible(tgt({ format: "uuid" }), { type: "string", x_semantic: "actor.uuid" }),
+    ).toBe(true);
+  });
+  it("level 2 — enum needs provable membership", () => {
+    const t = tgt({ enum: ["a", "b", "c"] });
+    expect(pathCompatible(t, { type: "string", enum: ["a", "b"] })).toBe(true);
+    expect(pathCompatible(t, { type: "string", enum: ["a", "z"] })).toBe(false);
+    expect(pathCompatible(t, { type: "string", const: "a" })).toBe(true);
+    expect(pathCompatible(t, { type: "string" })).toBe(false);
+  });
+  it("resolveSourceSchema walks properties and items", () => {
+    const root = {
+      type: "object",
+      properties: {
+        customer: {
+          type: "object",
+          properties: {
+            email: { type: "string" },
+            tags: { type: "array", items: { type: "string", format: "email" } },
+          },
+        },
+      },
+    };
+    expect(resolveSourceSchema(root, "$.customer.email")).toEqual({ type: "string" });
+    expect(resolveSourceSchema(root, "$.customer.tags[0]")).toEqual({ type: "string", format: "email" });
+    expect(resolveSourceSchema(root, "$.bogus")).toBeUndefined();
+    expect(resolveSourceSchema(root, "$")).toBeUndefined();
+  });
+});
+
+describe("parseMapKeysDeclaration", () => {
+  it("shorthand type names are required by default", () => {
+    const decls = parseMapKeysDeclaration({ otp_code: "string", tries: "integer" });
+    expect(decls).toEqual({
+      otp_code: { schema: { type: "string" }, required: true },
+      tries: { schema: { type: "integer" }, required: true },
+    });
+  });
+
+  it("longhand schemas keep their shape; explicit optional/nullable opt out", () => {
+    const decls = parseMapKeysDeclaration({
+      code: { type: "string", minLength: 6 },
+      nickname: { type: "string", optional: true },
+      note: { type: "string", required: false },
+      maybe: { type: ["string", "null"] },
+      flag: { type: "boolean", nullable: true },
+      hint: { type: "string", description: "shown as help" },
+    });
+    expect(decls.code).toEqual({ schema: { type: "string", minLength: 6 }, required: true });
+    expect(decls.nickname?.required).toBe(false);
+    expect(decls.note?.required).toBe(false);
+    expect(decls.maybe?.required).toBe(false);
+    expect(decls.flag?.required).toBe(false);
+    expect(decls.hint).toEqual({
+      schema: { type: "string" },
+      required: true,
+      description: "shown as help",
+    });
+  });
+
+  it("non-object input parses to no keys", () => {
+    expect(parseMapKeysDeclaration(undefined)).toEqual({});
+    expect(parseMapKeysDeclaration(null)).toEqual({});
+    expect(parseMapKeysDeclaration("otp")).toEqual({});
+    expect(parseMapKeysDeclaration(["a"])).toEqual({});
+    expect(parseMapKeysDeclaration({})).toEqual({});
   });
 });

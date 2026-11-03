@@ -133,7 +133,8 @@ export type MetaColumnFormat =
   | "dotted_key"
   | "dotted_glob"
   | "slug"
-  | "no_space";
+  | "no_space"
+  | "lang";
 
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
