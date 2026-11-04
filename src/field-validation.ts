@@ -547,11 +547,15 @@ export function checkEntityFields(
 /**
  * `event_subject`/`schedule_spec` are mutually mandatory (at least one);
  * `execution_context: "user"` requires an event source to forward auth
- * headers from. Pure — shared by the FE `job_trigger_shape` validator and
- * the service-side `assertTriggerShape`. On `partial` (update), fields not
- * present in `entity` are treated from the merged record the caller passes.
+ * headers from; a one-shot `@at <ts>` must lie in the future — a past
+ * timestamp stores in NATS and then self-purges unfired, so the trigger
+ * could never run (verified empirically: the server accepts the
+ * declaration, drops it dead). `now` is injected so the predicate stays
+ * pure — the form passes the client clock, the write guard the server
+ * clock. On `partial` (update), fields not present in `entity` are
+ * treated from the merged record the caller passes.
  */
-export function jobTriggerShapeIssues(entity: Record<string, unknown>): FieldIssue[] {
+export function jobTriggerShapeIssues(entity: Record<string, unknown>, now: Date = new Date()): FieldIssue[] {
   const hasSrc = typeof entity.event_subject === "string" && entity.event_subject.length > 0;
   const hasSch = typeof entity.schedule_spec === "string" && entity.schedule_spec.length > 0;
   const out: FieldIssue[] = [];
@@ -560,6 +564,16 @@ export function jobTriggerShapeIssues(entity: Record<string, unknown>): FieldIss
   }
   if (entity.execution_context === "user" && !hasSrc) {
     out.push(issue("execution_context", "schema_mismatch", "app.common.validation.user_context_requires_source"));
+  }
+  if (hasSch) {
+    const spec = (entity.schedule_spec as string).trim();
+    if (spec.startsWith("@at")) {
+      const at = new Date(spec.slice(3).trim());
+      // An unparseable timestamp is the grammar check's finding, not ours.
+      if (!Number.isNaN(at.getTime()) && at.getTime() <= now.getTime()) {
+        out.push(issue("schedule_spec", "schema_mismatch", "app.common.validation.schedule_spec_past"));
+      }
+    }
   }
   return out;
 }

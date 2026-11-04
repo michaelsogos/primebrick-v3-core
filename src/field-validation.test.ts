@@ -262,6 +262,22 @@ describe("jobTriggerShapeIssues", () => {
       has(jobTriggerShapeIssues({ schedule_spec: "@every 1h", execution_context: "user" }), "execution_context"),
     ).toBe(true);
   });
+
+  it("@at in the past is a dead one-shot — flagged on schedule_spec", () => {
+    const now = new Date("2026-06-01T12:00:00Z");
+    expect(
+      has(jobTriggerShapeIssues({ schedule_spec: "@at 2026-01-01T09:00:00Z" }, now), "schedule_spec"),
+    ).toBe(true);
+    // future @at is fine; malformed @at is the grammar check's concern
+    expect(
+      jobTriggerShapeIssues({ schedule_spec: "@at 2026-12-01T09:00:00Z" }, now),
+    ).toEqual([]);
+    expect(
+      has(jobTriggerShapeIssues({ schedule_spec: "@at not-a-date" }, now), "schedule_spec"),
+    ).toBe(false);
+    // recurring specs are never "past"
+    expect(jobTriggerShapeIssues({ schedule_spec: "0 9 * * *" }, now)).toEqual([]);
+  });
 });
 
 // ---------------------------------------------------------------------------
