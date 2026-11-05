@@ -31,6 +31,25 @@ One advanced-filter entry (filters sheet / `filters[i][...]` URL params).
 | operator | `FilterOperator` |  |
 | value | `unknown` |  |
 
+### `BulkCustomAction`
+
+UI configuration for a selection-aware bulk CTA (endpoint-backed op
+ with no row binding — e.g. `disarm_all`).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| action_name | `string` | Action/op name — must resolve to an `entity_op`-declared route. |
+| translation_key | `string` | i18n key for the CTA label. |
+| icon | `string` | Icon name (Lucide in the reference FE). |
+| text_color | `string` | Optional CSS color class for the label. |
+| required_permission | `string \| string[]` | Permission required to see/use the action. |
+| requires_selection | `boolean` | When true, the CTA is enabled only with rows selected and the body
+ receives `selected_uuids`; false = fires with an empty body
+ (selection-independent, e.g. `disarm_all`). Default true. |
+| require_step_up | `boolean` | Require a step-up MFA challenge before dispatch (destructive bulk). |
+| confirm_key | `string` | i18n key for a confirmation dialog message — when set, the action
+ asks before dispatching. |
+
 ### `CheckEntityFieldsOptions`
 
 | Field | Type | Description |
@@ -313,6 +332,14 @@ UI configuration for a non-standard row CTA (route-backed bare op).
 | disabled_when_deleted | `boolean` | Disable the CTA on soft-deleted rows. |
 | required_permission | `string \| string[]` | Permission required to see/use the action (filtered client-side
  against the user's permission set). |
+| row_key | `string` | Row→body binding for endpoint-dispatched actions: the op's request
+ body receives `{[row_key]: row[row_key]}` — same convention as
+ sparkline `row_key` (e.g. `schedule_subject`). When absent and the
+ endpoint path carries `:param` placeholders, params substitute from
+ the row fields of the same name (`:uuid` ← `meta.uid`). |
+| visible_on | `{ field: string; values: string[] }` | Show the CTA only when the row's `status` (or `visible_on.field`)
+ equals one of these values — e.g. show `resume` only on `paused`
+ rows. Absent = always visible. |
 
 ### `TableMeta`
 
@@ -327,6 +354,9 @@ Table options — present only on entities with a table page.
 | row_custom_actions | `RowCustomAction[]` | UI config for non-standard row actions (e.g. change password).
  Standard ops (edit/delete/duplicate/preview) are derived from
  `meta.actions` — never declared here. |
+| bulk_custom_actions | `BulkCustomAction[]` | UI config for non-standard bulk CTAs rendered in the selection
+ toolbar (e.g. `disarm_all`) — dispatch rides the same endpoint
+ contract as row custom actions via `meta.actions`. |
 | filter_presets | `readonly FilterPreset[]` | Mutually-exclusive preset WHERE filters — each rendered as its own
  toolbar control; the active option's conditions AND into every list
  request (see FilterPreset). |

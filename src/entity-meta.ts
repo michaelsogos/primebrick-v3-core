@@ -363,6 +363,40 @@ export interface RowCustomAction {
   /** Permission required to see/use the action (filtered client-side
    *  against the user's permission set). */
   required_permission?: string | string[];
+  /** Row→body binding for endpoint-dispatched actions: the op's request
+   *  body receives `{[row_key]: row[row_key]}` — same convention as
+   *  sparkline `row_key` (e.g. `schedule_subject`). When absent and the
+   *  endpoint path carries `:param` placeholders, params substitute from
+   *  the row fields of the same name (`:uuid` ← `meta.uid`). */
+  row_key?: string;
+  /** Show the CTA only when the row's `status` (or `visible_on.field`)
+   *  equals one of these values — e.g. show `resume` only on `paused`
+   *  rows. Absent = always visible. */
+  visible_on?: { field: string; values: string[] };
+}
+
+/** UI configuration for a selection-aware bulk CTA (endpoint-backed op
+ *  with no row binding — e.g. `disarm_all`). */
+export interface BulkCustomAction {
+  /** Action/op name — must resolve to an `entity_op`-declared route. */
+  action_name: string;
+  /** i18n key for the CTA label. */
+  translation_key: string;
+  /** Icon name (Lucide in the reference FE). */
+  icon: string;
+  /** Optional CSS color class for the label. */
+  text_color?: string;
+  /** Permission required to see/use the action. */
+  required_permission?: string | string[];
+  /** When true, the CTA is enabled only with rows selected and the body
+   *  receives `selected_uuids`; false = fires with an empty body
+   *  (selection-independent, e.g. `disarm_all`). Default true. */
+  requires_selection?: boolean;
+  /** Require a step-up MFA challenge before dispatch (destructive bulk). */
+  require_step_up?: boolean;
+  /** i18n key for a confirmation dialog message — when set, the action
+   *  asks before dispatching. */
+  confirm_key?: string;
 }
 
 /** Table options — present only on entities with a table page. */
@@ -376,6 +410,10 @@ export interface TableMeta {
    *  Standard ops (edit/delete/duplicate/preview) are derived from
    *  `meta.actions` — never declared here. */
   row_custom_actions?: RowCustomAction[];
+  /** UI config for non-standard bulk CTAs rendered in the selection
+   *  toolbar (e.g. `disarm_all`) — dispatch rides the same endpoint
+   *  contract as row custom actions via `meta.actions`. */
+  bulk_custom_actions?: BulkCustomAction[];
   /** Mutually-exclusive preset WHERE filters — each rendered as its own
    *  toolbar control; the active option's conditions AND into every list
    *  request (see {@link FilterPreset}). */
