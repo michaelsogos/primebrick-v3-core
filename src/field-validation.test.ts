@@ -13,6 +13,7 @@ import {
   isSnakeKey,
   isValidNatsSubject,
   isValidScheduleSpec,
+  nextScheduleFire,
   jobTriggerShapeIssues,
   jsonSchemaCheck,
   pathCompatible,
@@ -72,6 +73,26 @@ describe("format predicates", () => {
     expect(isValidScheduleSpec("* * * *")).toBe(false);
     expect(isValidScheduleSpec("* * * * * *")).toBe(false);
     expect(isValidScheduleSpec("")).toBe(false);
+  });
+  it("nextScheduleFire — @every anchored at since", () => {
+    const since = new Date("2026-01-01T00:00:00Z");
+    // 15s period, now = base + 37s → next boundary at base + 45s.
+    const next = nextScheduleFire("@every 15s", { since, now: new Date("2026-01-01T00:00:37Z") });
+    expect(next?.toISOString()).toBe("2026-01-01T00:00:45.000Z");
+    // No anchor → period starts at now.
+    expect(nextScheduleFire("@every 5m", { now: new Date("2026-01-01T00:00:37Z") })?.toISOString()).toBe(
+      "2026-01-01T00:05:37.000Z",
+    );
+  });
+  it("nextScheduleFire — @at future/past", () => {
+    const now = new Date("2026-01-01T00:00:00Z");
+    expect(nextScheduleFire("@at 2026-01-02T00:00:00Z", { now })?.toISOString()).toBe("2026-01-02T00:00:00.000Z");
+    expect(nextScheduleFire("@at 2025-01-01T00:00:00Z", { now })).toBeNull();
+  });
+  it("nextScheduleFire — cron and invalid specs are not evaluated", () => {
+    const now = new Date("2026-01-01T00:00:00Z");
+    expect(nextScheduleFire("*/5 * * * *", { now })).toBeNull();
+    expect(nextScheduleFire("not-a-spec", { now })).toBeNull();
   });
   it("identifier — edge alnum, internal . _ -", () => {
     expect(isIdentifier("micha-test-rule-1")).toBe(true);

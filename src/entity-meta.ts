@@ -98,7 +98,9 @@ export type MetaColumnType =
   | "date"
   | "datetime"
   | "number"
-  | "sparkline";
+  | "sparkline"
+  | "ref"
+  | "ref_count";
 
 /**
  * Authored field-format vocabulary — the SEMANTIC input contract of a
@@ -185,6 +187,11 @@ export type MetaColumn = {
   sticky?: boolean;
   /** If false, the column cannot be hidden via the column picker. */
   hideable?: boolean;
+  /** Author-asserted total suppression: the column is dropped from the
+   *  served meta entirely (never reaches the table, picker, filters or
+   *  forms) AND blocks auto-derivation from the entity class. This is the
+   *  ONLY opt-out — visibility concerns stay on `default_visible`. */
+  hidden?: boolean;
   /** System-managed auditing column (created_at, updated_by, …) —
    *  rendered last. */
   audited?: boolean;
@@ -241,6 +248,34 @@ export type MetaColumn = {
   show_list_tooltip?: boolean;
 
   // ---- type-specific payloads ----
+  /** `type: "ref"` — the cell value identifies a row on ANOTHER entity.
+   *  The renderer turns it into a badge linking to the target's
+   *  census-declared page (entity name is the only required spec: the FE
+   *  resolves routes from the module census, never hardcoded URLs). */
+  ref?: {
+    /** Target entity API name — the `entity` on its route declaration. */
+    entity: string;
+    /** `'detail'` — the value is the target's `uid`, links to its `[param]`
+     *  route. `'list'` — links to the target's list page pre-filtered.
+     *  Default `'detail'`. */
+    route?: "detail" | "list";
+    /** `route:"list"` — the TARGET column the cell value filters by
+     *  (`filters[0][field]` in the list URL). */
+    filter_field?: string;
+  };
+  /** `type:"ref_count"` — a 1:N children link, usually on a `virtual`
+   *  column. Renders the row's value (service-decorated count, or the
+   *  label when undecorated) as a badge linking to the child entity's
+   *  list page filtered to this row. */
+  reverse_ref?: {
+    /** Child entity API name — the `entity` on its route declaration. */
+    entity: string;
+    /** Child column key filtered to this row (`filters[0][field]`). */
+    filter_field: string;
+    /** `{field}` template for the filter value — e.g.
+     *  `"jobs.schedule.job.{uuid}"`. Default `"{<meta.uid>}"`. */
+    value_template?: string;
+  };
   /** `type: "badge"` — per-value label/color mapping. */
   badge?: {
     values: Record<
@@ -354,8 +389,8 @@ export interface RowCustomAction {
   action_name: string;
   /** i18n key for the CTA label. */
   translation_key: string;
-  /** Icon name (Lucide in the reference FE). */
-  icon: string;
+  /** Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. */
+  icon?: string;
   /** Optional CSS color class for the label. */
   text_color?: string;
   /** Disable the CTA on soft-deleted rows. */
@@ -371,8 +406,9 @@ export interface RowCustomAction {
   row_key?: string;
   /** Show the CTA only when the row's `status` (or `visible_on.field`)
    *  equals one of these values — e.g. show `resume` only on `paused`
-   *  rows. Absent = always visible. */
-  visible_on?: { field: string; values: string[] };
+   *  rows. Absent = always visible. Scalar comparison — boolean/number
+   *  fields are allowed (e.g. `enabled ∈ [false]` for an Enable CTA). */
+  visible_on?: { field: string; values: (string | number | boolean)[] };
 }
 
 /** UI configuration for a selection-aware bulk CTA (endpoint-backed op
@@ -382,8 +418,8 @@ export interface BulkCustomAction {
   action_name: string;
   /** i18n key for the CTA label. */
   translation_key: string;
-  /** Icon name (Lucide in the reference FE). */
-  icon: string;
+  /** Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. */
+  icon?: string;
   /** Optional CSS color class for the label. */
   text_color?: string;
   /** Permission required to see/use the action. */

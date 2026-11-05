@@ -179,6 +179,35 @@ export function isValidScheduleSpec(raw: unknown): boolean {
   return parts.every((f, i) => cronFieldValid(f, i));
 }
 
+const EVERY_UNIT_MS: Record<string, number> = { s: 1_000, m: 60_000, h: 3_600_000, d: 86_400_000 };
+
+/**
+ * Next fire for a `schedule_spec`, when derivable without a cron evaluator:
+ * - `@every <n><unit>` — next interval boundary after `now`, anchored at
+ *   `since` (the declaration's `armed_at`); without an anchor the period is
+ *   assumed to start at `now`, so the first fire is `now + interval`.
+ * - `@at <ts>` — the timestamp itself if still future, else null (fired).
+ * - cron — null: NATS owns cron evaluation; a second interpreter here would
+ *   drift on dom/dow edge semantics. Invalid specs return null too.
+ */
+export function nextScheduleFire(spec: string, opts: { now?: Date; since?: Date } = {}): Date | null {
+  const now = opts.now ?? new Date();
+  const s = spec.trim();
+  const every = EVERY_RE.exec(s);
+  if (every) {
+    const interval = Number(every[1]) * EVERY_UNIT_MS[every[2]!]!;
+    const base = (opts.since ?? now).getTime();
+    const elapsed = now.getTime() - base;
+    const k = Math.max(1, Math.floor(elapsed / interval) + 1);
+    return new Date(base + k * interval);
+  }
+  if (s.startsWith("@at")) {
+    const at = new Date(s.slice(3).trim());
+    return !Number.isNaN(at.getTime()) && at.getTime() > now.getTime() ? at : null;
+  }
+  return null;
+}
+
 /** UUID (any version) — matches zod/JSON-Schema `format:"uuid"`. */
 export const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
