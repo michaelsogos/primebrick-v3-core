@@ -548,9 +548,10 @@ export function checkEntityFields(
  * `event_subject`/`schedule_spec` are mutually mandatory (at least one);
  * `execution_context: "user"` requires an event source to forward auth
  * headers from; a one-shot `@at <ts>` must lie in the future — a past
- * timestamp stores in NATS and then self-purges unfired, so the trigger
- * could never run (verified empirically: the server accepts the
- * declaration, drops it dead). `now` is injected so the predicate stays
+ * timestamp FIRES IMMEDIATELY at declare time (verified empirically:
+ * the declaration PubAcks, the scheduler dispatches at once, then the
+ * declaration self-purges — an unintended execution, not a dead one).
+ * `now` is injected so the predicate stays
  * pure — the form passes the client clock, the write guard the server
  * clock. On `partial` (update), fields not present in `entity` are
  * treated from the merged record the caller passes.
