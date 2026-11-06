@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  ACTION_COLORS,
+  actionColorClass,
+  SEMANTIC_ICON_COLORS,
+  validateActionChrome,
   asSnakeCaseSingular,
   getOperatorsForColumnType,
   isEntityOpEnabled,
@@ -82,5 +86,52 @@ describe("getOperatorsForColumnType", () => {
     expect(getOperatorsForColumnType("badge")).toEqual(["=", "!="]);
     expect(getOperatorsForColumnType("datetime")).toContain("BETWEEN");
     expect(getOperatorsForColumnType("whatever")).toContain(">=");
+  });
+});
+
+describe("action chrome contract", () => {
+  it("ACTION_COLORS is the closed vocabulary incl. the neutral default", () => {
+    expect(ACTION_COLORS).toEqual([
+      "neutral",
+      "primary",
+      "info",
+      "success",
+      "warning",
+      "destructive",
+    ]);
+  });
+
+  it("actionColorClass maps semantics → text utilities, neutral → default", () => {
+    expect(actionColorClass("destructive")).toBe("text-destructive");
+    expect(actionColorClass("warning")).toBe("text-warning");
+    expect(actionColorClass("success")).toBe("text-success");
+    expect(actionColorClass("info")).toBe("text-info");
+    expect(actionColorClass("primary")).toBe("text-primary");
+    expect(actionColorClass("neutral")).toBe("");
+    expect(actionColorClass(undefined)).toBe("");
+  });
+
+  it("SEMANTIC_ICON_COLORS binds exec-* icons to their color", () => {
+    expect(SEMANTIC_ICON_COLORS["exec-stop"]).toBe("destructive");
+    expect(SEMANTIC_ICON_COLORS["exec-start"]).toBe("success");
+  });
+
+  it("validateActionChrome accepts legal pairs", () => {
+    expect(validateActionChrome("exec-stop", "destructive")).toBeNull();
+    expect(validateActionChrome("exec-start", "success")).toBeNull();
+    expect(validateActionChrome("exec-stop", undefined)).toBeNull();
+    expect(validateActionChrome("trash-2", "destructive")).toBeNull();
+    expect(validateActionChrome(undefined, "warning")).toBeNull();
+    expect(validateActionChrome(undefined, undefined)).toBeNull();
+  });
+
+  it("validateActionChrome rejects a divergent semantic pair — icon and label can never drift", () => {
+    expect(validateActionChrome("exec-stop", "success")).toContain('exec-stop" binds to color "destructive"');
+    expect(validateActionChrome("exec-start", "destructive")).toContain('exec-start" binds to color "success"');
+  });
+
+  it("validateActionChrome rejects a color outside the closed vocabulary", () => {
+    expect(validateActionChrome("trash-2", "text-red-600")).toContain("is not an ActionColor");
+    expect(validateActionChrome(undefined, "chartreuse")).toContain("is not an ActionColor");
   });
 });

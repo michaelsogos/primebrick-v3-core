@@ -58,12 +58,118 @@ export interface EntityAction {
    *  action, absent when no route exists (`enabled: false`). Consumers
    *  dispatch writes to the declared endpoint instead of recomputing the
    *  `/api/v1/entities/{entity}` convention — required for ops living under
-   *  non-standard prefixes (e.g. `/api/v1/auth/users`). */
+   *  non-standard prefixes (e.g. `/api/v1/auth/users`). An RPC route may
+   *  claim the slot via `entity_op.crud_action` — the declared override. */
   endpoint?: EntityActionEndpoint;
+  /** CTA chrome overrides — translation key / icon / semantic color
+   *  replacing the standard rendering (e.g. soft-delete-as-disable →
+   *  "Deactivate" + `exec-stop` + destructive). Cosmetics only: gating,
+   *  dialogs and dispatch are untouched. Sources: `entity_op.cta` on a
+   *  `crud_action` route, or `meta.actions_overrides[op]`. */
+  label_key?: string;
+  icon?: string;
+  color?: ActionColor;
+  /** Confirm-dialog message template override (`{entity}`/`{name}` for
+   *  single ops, `{count}`/`{entity}` for bulk). When set it replaces the
+   *  standard `app.common.{delete,restore}Entit{y,ies}Confirm` copy —
+   *  e.g. soft-delete-as-disable → "disattivare" + reversible note. */
+  confirm_key?: string;
+  /** In-flight confirm-button label override (default `app.common.
+   *  {deleting,restoring}`) — e.g. "Disattivazione…" while disabling. */
+  busy_key?: string;
 }
 
-/** Per-op enable overrides — may ONLY toggle `enabled` on route-backed ops. */
-export type ActionsOverrides = Record<string, { enabled?: boolean }>;
+/** Per-op overrides — `enabled` toggles route-backed ops; chrome fields
+ *  restyle the standard CTA without touching its logic. */
+export type ActionsOverrides = Record<
+  string,
+  {
+    enabled?: boolean;
+    label_key?: string;
+    icon?: string;
+    color?: ActionColor;
+    confirm_key?: string;
+    busy_key?: string;
+  }
+>;
+
+/** Closed action-color vocabulary — ONE semantic drives BOTH the icon and
+ *  the label of a menu CTA (impossible to drift them apart). `neutral` is
+ *  the default uncolored rendering; the destructive/warning/success/info/
+ *  primary names map to the theme's semantic text utilities. A meta may
+ *  never smuggle a Tailwind class here — the enum IS the contract. */
+export type ActionColor =
+  | "neutral"
+  | "primary"
+  | "info"
+  | "success"
+  | "warning"
+  | "destructive";
+
+/**
+ * The full `ActionColor` vocabulary — construction/lint validation rejects
+ * anything outside this closed set (raw strings on the wire can never reach
+ * the renderer).
+ */
+export const ACTION_COLORS: readonly ActionColor[] = [
+  "neutral",
+  "primary",
+  "info",
+  "success",
+  "warning",
+  "destructive",
+];
+
+/**
+ * Semantic action icons — names whose COLOR IS PART OF THE ICON's meaning.
+ * Each name binds to exactly one `ActionColor` (the label color); the icon
+ * component itself (in `@primebrick/ui`'s `SEMANTIC_ICONS` registry, which
+ * reads THIS table) renders the gradient surface self-colored. A meta that
+ * pairs a semantic icon with a different color is a contract violation —
+ * `validateActionChrome` rejects it at construction time, so icon and
+ * label can never drift apart even by accident.
+ *
+ * - `exec-start` → success   (start/enable is a positive op — deliberate
+ *   divergence from the standard restore-warning chrome)
+ * - `exec-stop`  → destructive (stop/disable is a destructive op)
+ */
+export const SEMANTIC_ICON_COLORS: Record<string, ActionColor> = {
+  "exec-start": "success",
+  "exec-stop": "destructive",
+};
+
+/**
+ * Maps an `ActionColor` to its Tailwind text utility. `neutral`/`undefined`
+ * resolves to the empty string — the item keeps the theme's default muted
+ * appearance (what standard CTAs like "Modifica" already show). This is the
+ * ONLY mapping of semantic color → class; renderers never hand-roll
+ * `text-${color}` strings.
+ */
+export function actionColorClass(color: ActionColor | undefined | null): string {
+  if (!color || color === "neutral") return "";
+  return `text-${color}`;
+}
+
+/**
+ * Validates the icon↔color contract of a single action chrome override.
+ * Returns a diagnostic string on violation, `null` when the pair is legal:
+ * - `color` must be a member of `ACTION_COLORS`;
+ * - a semantic icon (`SEMANTIC_ICON_COLORS` key) must carry its bound color —
+ *   `icon:"exec-stop", color:"success"` is an error, not a style choice.
+ */
+export function validateActionChrome(
+  icon: string | undefined,
+  color: string | undefined,
+): string | null {
+  if (color !== undefined && !ACTION_COLORS.includes(color as ActionColor)) {
+    return `color "${color}" is not an ActionColor — allowed: ${ACTION_COLORS.join("|")}`;
+  }
+  const bound = icon !== undefined ? SEMANTIC_ICON_COLORS[icon] : undefined;
+  if (bound !== undefined && color !== undefined && color !== bound) {
+    return `semantic icon "${icon}" binds to color "${bound}", got "${color}" — icon and label can never diverge`;
+  }
+  return null;
+}
 
 /**
  * The canonical vocabulary of standard entity ops. Every op is always
@@ -192,14 +298,30 @@ export type MetaColumn = {
    *  forms) AND blocks auto-derivation from the entity class. This is the
    *  ONLY opt-out — visibility concerns stay on `default_visible`. */
   hidden?: boolean;
+  /** Semantic color TOKEN (`TailwindColorToken`: `"amber"`, `"amber-500"`,
+   *  or a semantic tone) for icon/badge accent — resolved at render time
+   *  via `colorCssFromToken`/`badgeClassesFromToken` to INLINE styles.
+   *  NEVER a `text-*`/`bg-*` class string: served meta is invisible to the
+   *  FE content scan, so class-based colors silently dead-render.
+   *  Purely cosmetic — never carries semantics the type/format doesn't. */
+  color?: string;
+  /** Null-state label: when the cell value is null/undefined render this
+   *  translation key instead of `"-"`. `when` gates it on a sibling field
+   *  (e.g. `{ field: "enabled", equals: false }` → "Disabled" only when
+   *  the row is actually disabled, plain `"-"` otherwise). */
+  null_label?: { label_key: string; when?: { field: string; equals?: unknown; not?: unknown } };
   /** System-managed auditing column (created_at, updated_by, …) —
    *  rendered last. */
   audited?: boolean;
-  /** No physical backing on the entity class — derived/computed at read
-   *  time (joins, counts, aggregates). Read-only: never required on write,
-   *  never belongs in `page_props.form`. `withColumnConstraints` exempts
-   *  it from the class lookup; derived props stay absent. */
-  virtual?: boolean;
+  /** Column materialization kind. Absent = physical column.
+   *  `"calculated"` — SQL expression projected by the DAL (`@Calculated`
+   *    decorator on the entity class): a real result column, so
+   *    sortable/filterable/searchable stay ON by default (opt-out allowed).
+   *  `"virtual"` — post-query enrichment not backed by SQL (`decorate()`,
+   *    external sources like NATS): sortable/filterable/searchable are
+   *    FORCED OFF — declaring any of them `true` is a construction error.
+   *  Read-only: never required on write, never belongs in `page_props.form`. */
+  kind?: "calculated" | "virtual";
 
   // ---- form constraint props ----
   // DERIVED — injected at decl time by the DAL `withColumnConstraints`
@@ -391,8 +513,8 @@ export interface RowCustomAction {
   translation_key: string;
   /** Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. */
   icon?: string;
-  /** Optional CSS color class for the label. */
-  text_color?: string;
+  /** Semantic color for icon + label together — see `ActionColor`. */
+  color?: ActionColor;
   /** Disable the CTA on soft-deleted rows. */
   disabled_when_deleted?: boolean;
   /** Permission required to see/use the action (filtered client-side
@@ -420,8 +542,8 @@ export interface BulkCustomAction {
   translation_key: string;
   /** Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. */
   icon?: string;
-  /** Optional CSS color class for the label. */
-  text_color?: string;
+  /** Semantic color for icon + label together — see `ActionColor`. */
+  color?: ActionColor;
   /** Permission required to see/use the action. */
   required_permission?: string | string[];
   /** When true, the CTA is enabled only with rows selected and the body

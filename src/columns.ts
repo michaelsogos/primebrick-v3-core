@@ -77,20 +77,22 @@ export function isColumnVisible(col: Pick<MetaColumn, "default_visible" | "hidea
   return col.hideable === false || col.default_visible !== false;
 }
 
-/** Column supports ORDER BY — absent means sortable. */
-export function isColumnSortable(col: Pick<MetaColumn, "sortable">): boolean {
-  return col.sortable !== false;
+/** Column supports ORDER BY — absent means sortable, except `kind:"virtual"`
+ *  columns (post-query enrichment): never sortable, no opt-in exists. */
+export function isColumnSortable(col: Pick<MetaColumn, "sortable" | "kind">): boolean {
+  return col.kind === "virtual" ? false : col.sortable !== false;
 }
 
-/** Column participates in the filters sheet — absent means filterable. */
-export function isColumnFilterable(col: Pick<MetaColumn, "filterable">): boolean {
-  return col.filterable !== false;
+/** Column participates in the filters sheet — absent means filterable,
+ *  except `kind:"virtual"` columns: never filterable, no opt-in exists. */
+export function isColumnFilterable(col: Pick<MetaColumn, "filterable" | "kind">): boolean {
+  return col.kind === "virtual" ? false : col.filterable !== false;
 }
 
 /** Column joins the search scope — absent means searchable (the caller
  *  may still require a text-physical type on top). */
-export function isColumnSearchable(col: Pick<MetaColumn, "searchable">): boolean {
-  return col.searchable !== false;
+export function isColumnSearchable(col: Pick<MetaColumn, "searchable" | "kind">): boolean {
+  return col.kind === "virtual" ? false : col.searchable !== false;
 }
 
 /** Keys visible by default — from column flags. */

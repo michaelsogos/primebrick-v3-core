@@ -58,8 +58,9 @@ export function extJsonParse<T = unknown>(text: string): T {
  * BigInt values serialize as JSON numbers (42n → "42"); floats stay numbers.
  *
  * Use for request bodies carrying bigint values — the BE's ext-json body
- * parser revives them to native `bigint`.
+ * parser revives them to native `bigint`. `space` mirrors JSON.stringify's
+ * pretty-print indent for display/tooltip contexts.
  */
-export function extJsonStringify(data: unknown): string {
-  return jsonBigInstance.stringify(data);
+export function extJsonStringify(data: unknown, space?: number): string {
+  return jsonBigInstance.stringify(data, null, space);
 }
