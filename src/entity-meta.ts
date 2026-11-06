@@ -244,6 +244,14 @@ export type MetaColumnFormat =
   | "no_space"
   | "lang";
 
+/**
+ * Dynamic option vocabulary for combo-backed controls — declared on the
+ * COLUMN (`MetaColumn.options_source`), never on a form placement:
+ * the same contract feeds forms, list filters and docs generation.
+ * Closed union on purpose — an unknown source is a construction error.
+ */
+export type MetaColumnOptionsSource = "census.emits" | "census.callables";
+
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
 export type TooltipPriority =
@@ -337,6 +345,12 @@ export type MetaColumn = {
   /** Physical PG column type (`varchar`, `text`, `jsonb`, `boolean`, …) —
    *  informational for the control pick when `format` is absent. */
   pg_type?: string;
+  /** Server-managed value — the entity class says the database fills it
+   *  (`@Key()` with identity generation today). Never client-supplied on
+   *  create, never required by write validation; a `keyGenerated:"manual"`
+   *  key stays client-writable instead. Derived by
+   *  `withColumnConstraints` — authors MUST NOT set it. */
+  managed?: boolean;
 
   // AUTHORED — semantic contract the entity class cannot express.
   /** Field format — see {@link MetaColumnFormat}. */
@@ -351,6 +365,30 @@ export type MetaColumn = {
   /** `format:"json"` — JSON Schema driving the editor's lint/completion
    *  AND the structural validation in `buildEntityFormSchema`. */
   json_schema?: Record<string, unknown>;
+
+  /** Explicit control override — key of the host widget registry;
+   *  bypasses the `format`→control derivation on EVERY surface (forms
+   *  AND filters read the same declaration — it is the column's
+   *  semantic input contract, not a page-layout decision). */
+  widget?: string;
+  /**
+   * Dynamic option vocabulary for combo-backed controls — closed union.
+   * `"census.emits"`: the union of every module's `events.emits` from
+   * the `/modules` discovery payload (already client-side at render
+   * time). `"census.callables"`: the union of every module's
+   * `callables.callables` — governed LISTEN subjects a rule/scheduler
+   * may invoke. Census sources only offer declared values — see
+   * `allow_create`.
+   */
+  options_source?: MetaColumnOptionsSource;
+  /**
+   * ComboSelect free-entry flag — `true` lets the user type values NOT
+   * in the option list. A census source is a CLOSED vocabulary by
+   * definition: `options_source:"census.*"` + `allow_create:true` is a
+   * construction error (`withColumnConstraints` throws). Absent = free
+   * entry disabled.
+   */
+  allow_create?: boolean;
 
   /** Lucide icon name rendered before the label in FORM field labels —
    *  inherits the label text color (it identifies the field's semantic,

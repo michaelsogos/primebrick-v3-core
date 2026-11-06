@@ -535,12 +535,12 @@ export interface CheckEntityFieldsOptions {
 /**
  * Validate a wire entity object against `meta.columns`.
  * Required = `nullable === false` AND client-writable — `audited`
- * columns and `meta.uid` (server-generated identity) are system-managed
- * (filled server-side) and never arrive on the wire, so an absent one is
- * NOT a violation. A PRESENT empty value still fails `nullable === false`
- * — clients must not send managed fields at all. Mirrors the form, where
- * required only ever applies to declared placements
- * (`placement.required ?? nullable`).
+ * columns, `meta.uid` (server-generated identity) and `managed` columns
+ * (server-filled keys, e.g. an identity `@Key`) are system-managed and
+ * never arrive on the wire, so an absent one is NOT a violation. A
+ * PRESENT empty value still fails `nullable === false` — clients must
+ * not send managed fields at all. Mirrors the form, where required only
+ * ever applies to declared placements (`placement.required ?? nullable`).
  * Unknown entity keys are ignored — system columns (`uuid`, `version`)
  * need no column.
  */
@@ -553,7 +553,7 @@ export function checkEntityFields(
   for (const col of meta.columns) {
     const present = col.key in entity;
     if (!present) {
-      const managed = col.audited === true || col.key === meta.uid;
+      const managed = col.audited === true || col.key === meta.uid || col.managed === true;
       if (!opts.partial && col.nullable === false && !managed) {
         out.push(issue(col.key, "required", "app.common.validation.required"));
       }

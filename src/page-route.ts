@@ -119,24 +119,10 @@ export type FormFieldPlacement = {
   required?: boolean;
   /** Render the control read-only (e.g. audit-ish fields on edit). */
   readonly?: boolean;
-  /** Explicit control override — key of the host widget registry; bypasses
-   *  the `format`→control mapping for this field only. */
-  widget?: string;
-  /**
-   * Dynamic option vocabulary for ComboSelect fields — closed union.
-   * `"census.emits"`: the union of every module's `events.emits` from the
-   * `/modules` discovery payload (already client-side at render time).
-   * `"census.callables"`: the union of every module's `callables.callables`
-   * — governed LISTEN subjects a rule/scheduler may invoke.
-   * Census-sourced combos only offer declared values — see `allow_create`.
-   */
-  options_source?: "census.emits" | "census.callables";
-  /**
-   * ComboSelect `allowCreate` — lets the user type values that are NOT in
-   * the options list (a new value cannot come from a census, so census
-   * sources keep it off). Absent = free entry disabled.
-   */
-  allow_create?: boolean;
+  // `widget`/`options_source`/`allow_create` were REMOVED from the
+  // placement — they are the column's semantic input contract and live
+  // on `MetaColumn` (meta.columns), readable by every surface (forms,
+  // filters, docs). A placement carrying them is an enrollment error.
 };
 
 /**

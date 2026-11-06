@@ -268,6 +268,15 @@ describe("checkEntityFields", () => {
     expect(has(checkEntityFields(m, { name: "", uuid: "u" }), "name", "required")).toBe(true);
     expect(checkEntityFields(m, { name: "ok", uuid: "u", system_field: 1 })).toEqual([]);
   });
+  it("managed columns (identity @Key) are never required on create", () => {
+    const withKey = meta([
+      col({ key: "name", nullable: false }),
+      col({ key: "id", nullable: false, managed: true }),
+    ]);
+    // absent → exempt; present-empty still fails nullable (don't send it)
+    expect(checkEntityFields(withKey, { name: "x" })).toEqual([]);
+    expect(has(checkEntityFields(withKey, { name: "x", id: null }), "id", "required")).toBe(true);
+  });
 });
 
 // ---------------------------------------------------------------------------
