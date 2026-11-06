@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { MetaColumn } from "./entity-meta.js";
+import type { FilterOperator } from "./list.js";
 import {
+  FILTER_OPERATOR_ICON,
   defaultVisibleColumnKeys,
+  getOperatorsForColumnType,
   isColumnFilterable,
   isColumnSearchable,
   isColumnSortable,
@@ -63,5 +66,45 @@ describe("column-flag predicates", () => {
       col({ key: "c", type: "number" }),
     ]).map((c) => c.key);
     expect(keys).toEqual(["a"]);
+  });
+});
+
+describe("getOperatorsForColumnType", () => {
+  it("boolean columns get equality operators only", () => {
+    expect(getOperatorsForColumnType("boolean")).toEqual(["=", "!="]);
+  });
+
+  it("badge columns get equality operators only", () => {
+    expect(getOperatorsForColumnType("badge")).toEqual(["=", "!="]);
+  });
+
+  it("text columns get the ILIKE-capable set", () => {
+    expect(getOperatorsForColumnType("text")).toEqual([
+      "=",
+      "!=",
+      "contains",
+      "startsWith",
+      "endsWith",
+    ]);
+  });
+});
+
+describe("FILTER_OPERATOR_ICON", () => {
+  it("maps every FilterOperator to an icon name", () => {
+    const operators: FilterOperator[] = [
+      "=",
+      "!=",
+      ">",
+      "<",
+      ">=",
+      "<=",
+      "contains",
+      "startsWith",
+      "endsWith",
+      "BETWEEN",
+    ];
+    for (const op of operators) {
+      expect(FILTER_OPERATOR_ICON[op], `missing icon for ${op}`).toBeTruthy();
+    }
   });
 });

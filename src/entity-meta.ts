@@ -250,7 +250,7 @@ export type MetaColumnFormat =
  * the same contract feeds forms, list filters and docs generation.
  * Closed union on purpose — an unknown source is a construction error.
  */
-export type MetaColumnOptionsSource = "census.emits" | "census.callables";
+export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors";
 
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
@@ -387,6 +387,12 @@ export type MetaColumn = {
    * definition: `options_source:"census.*"` + `allow_create:true` is a
    * construction error (`withColumnConstraints` throws). Absent = free
    * entry disabled.
+   * `"audit.actors"`: the DISTINCT vocabulary of the table's own audit
+   * actor columns (`created_by`/`updated_by`/`deleted_by`) served by the
+   * entity's `/audit-actors` route — uuid actors label-resolved through
+   * `user_profile`, fictitious actors (`migration-*`, `initial-setup`)
+   * stay raw. Auto-injected by `withColumnConstraints` on auto-derived
+   * `*_by` columns — never authored by hand.
    */
   allow_create?: boolean;
 

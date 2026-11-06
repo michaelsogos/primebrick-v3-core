@@ -123,12 +123,37 @@ export function getOperatorsForColumnType(columnType: string): FilterOperator[] 
     case "text":
       return ["=", "!=", "contains", "startsWith", "endsWith"];
     case "badge":
+    case "boolean":
+      // Equality only — `>` on a boolean is nonsense.
       return ["=", "!="];
     case "date":
     case "datetime":
       return ["=", "!=", ">", "<", ">=", "<=", "BETWEEN"];
+    case "number":
+    case "ref_count":
+      // Numeric comparisons — `ref_count` is a children count, never text.
+      return ["=", "!=", ">", "<", ">=", "<="];
     default:
       // Assume numeric for unknown types
       return ["=", "!=", ">", "<", ">=", "<="];
   }
 }
+
+/**
+ * Canonical `FilterOperator → Lucide icon` map — the ONE operator-icon
+ * vocabulary every filter surface renders (advanced operator combobox,
+ * filter chips, summaries). Values are `@lucide/svelte` icon names,
+ * consumed via `DynamicIcon`.
+ */
+export const FILTER_OPERATOR_ICON: Record<FilterOperator, string> = {
+  "=": "equal",
+  "!=": "equal-not",
+  ">": "chevron-right",
+  ">=": "arrow-right-to-line",
+  "<": "chevron-left",
+  "<=": "arrow-left-to-line",
+  contains: "text-search",
+  startsWith: "list-start",
+  endsWith: "list-end",
+  BETWEEN: "list-indent-increase",
+};
