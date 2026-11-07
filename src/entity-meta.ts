@@ -252,6 +252,33 @@ export type MetaColumnFormat =
  */
 export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors";
 
+/**
+ * Option vocabulary a unit-of-measure selector may draw from.
+ * `"currencies"`: the ISO 4217 list resolved client-side (`getAllCurrencies`
+ * — same source the config-domain currency picker uses). `{entity}`: the
+ * UoM codes persist as rows of another entity (resolved via its `/list`).
+ * `{api_url}`: an explicit endpoint serving the options.
+ * Closed union on purpose — an unknown source is a construction error.
+ */
+export type MetaColumnUomSource = "currencies" | { entity: string } | { api_url: string; value_field: string; label_field?: string };
+
+/**
+ * Numeric unit-of-measure contract — the column's semantic quantity unit.
+ * `"percent"`: pure display transform (display = canonical × 100, emitted =
+ * display ÷ 100) — the canonical value stays a fraction; NO sibling field.
+ * `"currency"`: money semantics — `field` names the SIBLING column that
+ * persists the ISO code per row (mandatory); `source` defaults to
+ * `"currencies"` (the shared ISO list).
+ * `"custom"`: any other UoM (kg, ms, items, …) — `field` persists the code,
+ * `source` drives the selector options, `symbol` overrides the adornment.
+ * The `field` sibling requirement is verified by `withColumnConstraints`:
+ * a uom'd numeric without its code column is a construction error.
+ */
+export type MetaColumnUom =
+  | { kind: "percent" }
+  | { kind: "currency"; field: string; source?: "currencies" }
+  | { kind: "custom"; field: string; source: MetaColumnUomSource; symbol?: string };
+
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
 export type TooltipPriority =
@@ -362,6 +389,14 @@ export type MetaColumn = {
   /** Numeric bounds for `number`/`money` formats. */
   min?: number;
   max?: number;
+  /** Unsigned numeric — the control rejects the `-` char AND the wire/form
+   *  validators (`checkFieldValue`/`fieldSpecToZod`) reject negative values.
+   *  PG has no unsigned types: authored only, never derived. */
+  unsigned?: boolean;
+  /** Unit-of-measure semantic — see {@link MetaColumnUom}. Applies to
+   *  numeric columns only; `currency`/`custom` require the sibling `field`
+   *  that persists the UoM code per row. */
+  uom?: MetaColumnUom;
   /** `format:"json"` — JSON Schema driving the editor's lint/completion
    *  AND the structural validation in `buildEntityFormSchema`. */
   json_schema?: Record<string, unknown>;

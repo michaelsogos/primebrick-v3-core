@@ -22,6 +22,8 @@
 
 import type { EntityMeta, MetaColumn } from "./entity-meta.js";
 import { extJsonStringify } from "./ext-json.js";
+import { numericKindOf } from "./numeric-kind.js";
+import { dec, isDecimal, cmp, signum, type Decimal, type DecimalInput } from "@primebrick/decimal";
 import {
   baseJsonType,
   effectiveFormat,
@@ -429,10 +431,12 @@ const joinPath = (base: string, key: string) => (base ? `${base}.${key}` : key);
 // checkFieldValue — per-column rules (the wire value, already parsed).
 // ---------------------------------------------------------------------------
 
-const NUMERIC_PG = new Set(["integer", "bigint", "numeric", "smallint", "double precision", "real"]);
-
+/** Numeric gate — `numericKindOf` is the single kind resolver (DAL canonical
+ *  pg names AND standard spellings, `type:"number"`/`ref_count`, number/money
+ *  formats). A `type:"number"` column without pg info must still hit the
+ *  numeric branch (previously it fell through to the string check). */
 function isNumericColumn(col: MetaColumn): boolean {
-  return col.format === "number" || col.format === "money" || NUMERIC_PG.has(col.pg_type ?? "");
+  return numericKindOf(col) !== null;
 }
 
 function isJsonColumn(col: MetaColumn): boolean {
@@ -453,12 +457,35 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
   }
 
   if (isNumericColumn(col)) {
+    if (numericKindOf(col) === "decimal") {
+      // Exact path — pg `numeric`/`format:"money"` values arrive as Decimal
+      // instances or canonical/wire strings; compare via dec()/cmp() so
+      // bounds keep full precision (Number() would silently truncate).
+      let d: Decimal | null = null;
+      try {
+        if (isDecimal(value)) d = value;
+        else if (typeof value === "string" || typeof value === "number" || typeof value === "bigint") {
+          d = dec(value as DecimalInput);
+        }
+      } catch {
+        d = null;
+      }
+      if (!d) {
+        at("invalid_type", expectedTypeMsg(["number"]));
+        return out;
+      }
+      if (col.unsigned && signum(d) < 0) at("too_small", kmsg("app.common.validation.minimum", { min: 0 }));
+      if (typeof col.min === "number" && cmp(d, dec(col.min)) < 0) at("too_small", kmsg("app.common.validation.minimum", { min: col.min }));
+      if (typeof col.max === "number" && cmp(d, dec(col.max)) > 0) at("too_big", kmsg("app.common.validation.maximum", { max: col.max }));
+      return out;
+    }
     // ext-json wire decodes integers as bigint — accept and compare.
     const num = typeof value === "bigint" ? Number(value) : value;
     if (typeof num !== "number" || Number.isNaN(num)) {
       at("invalid_type", expectedTypeMsg(["number"]));
       return out;
     }
+    if (col.unsigned && num < 0) at("too_small", kmsg("app.common.validation.minimum", { min: 0 }));
     if (typeof col.min === "number" && num < col.min) at("too_small", kmsg("app.common.validation.minimum", { min: col.min }));
     if (typeof col.max === "number" && num > col.max) at("too_big", kmsg("app.common.validation.maximum", { max: col.max }));
     return out;
