@@ -37,3 +37,38 @@ export function keyNamespaceOf(key: string): string | null {
   const i = key.indexOf(".");
   return i > 0 ? key.slice(0, i) : null;
 }
+
+/**
+ * The ONE key grammar — `[a-z0-9_]+` dot-separated segments, ≥2 segments.
+ * Shared contract: BE guards, check-standards rules and the per-schema
+ * `translations_key_shape` CHECK constraint all enforce this exact shape
+ * (DAL engine and the zero-dep lint keep byte-identical local copies —
+ * change here, mirror there).
+ */
+export const TRANSLATION_KEY_GRAMMAR = /^[a-z0-9_]+(\.[a-z0-9_]+)+$/;
+
+/** Single-segment grammar — the unit the full-key grammar repeats. */
+export const TRANSLATION_KEY_SEGMENT = /^[a-z0-9_]+$/;
+
+/**
+ * `true` when every segment is `[a-z0-9_]+` and the key is namespaced
+ * (≥2 segments). Namespace *ownership* is a separate check —
+ * compare `keyNamespaceOf(key)` against `translationKeyNamespace(schema)`.
+ */
+export function isValidTranslationKey(key: string): boolean {
+  return TRANSLATION_KEY_GRAMMAR.test(key);
+}
+
+/**
+ * First grammar violation as a human-readable reason, `null` when legal.
+ * Consumers compose it into their own error shape (HTTP 400, engine
+ * throw, lint hint).
+ */
+export function translationKeyGrammarError(key: string): string | null {
+  if (isValidTranslationKey(key)) return null;
+  if (!key.includes(".")) return "key must be namespaced — '<ns>.<path>'";
+  if (key.startsWith(".") || key.endsWith(".") || key.includes(".."))
+    return "empty segment — no leading, trailing or double dots";
+  const bad = key.split(".").find((s) => !TRANSLATION_KEY_SEGMENT.test(s));
+  return `segment '${bad}' must be lowercase snake_case ([a-z0-9_]+)`;
+}

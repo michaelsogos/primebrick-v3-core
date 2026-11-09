@@ -157,3 +157,23 @@ export const FILTER_OPERATOR_ICON: Record<FilterOperator, string> = {
   endsWith: "list-end",
   BETWEEN: "list-indent-increase",
 };
+
+/**
+ * Canonical `FilterOperator → translation-key segment` map — the ONE
+ * vocabulary joining filter operators to `system.entities.list.operators.*`
+ * keys. Key segments are `[a-z0-9_]+` (translation-key grammar) — the bare
+ * operator symbols (`=`, `!=`, `<`, …) can never be segments, so labels are
+ * looked up through this map, never through the raw operator value.
+ */
+export const FILTER_OPERATOR_KEY: Record<FilterOperator, string> = {
+  "=": "eq",
+  "!=": "neq",
+  ">": "gt",
+  ">=": "gte",
+  "<": "lt",
+  "<=": "lte",
+  contains: "contains",
+  startsWith: "starts_with",
+  endsWith: "ends_with",
+  BETWEEN: "between",
+};

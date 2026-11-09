@@ -3,6 +3,7 @@ import type { MetaColumn } from "./entity-meta.js";
 import type { FilterOperator } from "./list.js";
 import {
   FILTER_OPERATOR_ICON,
+  FILTER_OPERATOR_KEY,
   defaultVisibleColumnKeys,
   getOperatorsForColumnType,
   isColumnFilterable,
@@ -105,6 +106,33 @@ describe("FILTER_OPERATOR_ICON", () => {
     ];
     for (const op of operators) {
       expect(FILTER_OPERATOR_ICON[op], `missing icon for ${op}`).toBeTruthy();
+    }
+  });
+});
+
+describe("FILTER_OPERATOR_KEY", () => {
+  const operators: FilterOperator[] = [
+    "=",
+    "!=",
+    ">",
+    "<",
+    ">=",
+    "<=",
+    "contains",
+    "startsWith",
+    "endsWith",
+    "BETWEEN",
+  ];
+
+  it("maps every FilterOperator to a key segment", () => {
+    for (const op of operators) {
+      expect(FILTER_OPERATOR_KEY[op], `missing key segment for ${op}`).toBeTruthy();
+    }
+  });
+
+  it("produces segments valid under the translation-key grammar", () => {
+    for (const op of operators) {
+      expect(FILTER_OPERATOR_KEY[op], `invalid segment for ${op}`).toMatch(/^[a-z0-9_]+$/);
     }
   });
 });

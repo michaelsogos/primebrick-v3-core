@@ -1006,6 +1006,16 @@ consumed via `DynamicIcon`.
 
 **Type:** `Record<FilterOperator, string>`
 
+### `FILTER_OPERATOR_KEY`
+
+Canonical `FilterOperator → translation-key segment` map — the ONE
+vocabulary joining filter operators to `system.entities.list.operators.*`
+keys. Key segments are `[a-z0-9_]+` (translation-key grammar) — the bare
+operator symbols (`=`, `!=`, `<`, …) can never be segments, so labels are
+looked up through this map, never through the raw operator value.
+
+**Type:** `Record<FilterOperator, string>`
+
 ### `fromPG`
 
 Alias of `dec()` — parse a PostgreSQL `numeric`/`decimal` text value.
@@ -1187,6 +1197,22 @@ with `enabled: false` (explicitly unavailable) instead of being omitted.
 ### `TEN`
 
 **Type:** `Decimal`
+
+### `TRANSLATION_KEY_GRAMMAR`
+
+The ONE key grammar — `[a-z0-9_]+` dot-separated segments, ≥2 segments.
+Shared contract: BE guards, check-standards rules and the per-schema
+`translations_key_shape` CHECK constraint all enforce this exact shape
+(DAL engine and the zero-dep lint keep byte-identical local copies —
+change here, mirror there).
+
+**Type:** `RegExp`
+
+### `TRANSLATION_KEY_SEGMENT`
+
+Single-segment grammar — the unit the full-key grammar repeats.
+
+**Type:** `RegExp`
 
 ### `UUID_REGEX`
 
@@ -1710,6 +1736,16 @@ Runtime validator for SnakeCaseSingular — rejects strings with
 |-----------|------|-------------|
 | raw | `unknown` |  |
 
+### `isValidTranslationKey(key): boolean`
+
+`true` when every segment is `[a-z0-9_]+` and the key is namespaced
+(≥2 segments). Namespace *ownership* is a separate check —
+compare `keyNamespaceOf(key)` against `translationKeyNamespace(schema)`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| key | `string` |  |
+
 ### `isValidUrl(v): boolean`
 
 | Parameter | Type | Description |
@@ -2104,6 +2140,16 @@ Wire form — `"…d"` suffixed string.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
+
+### `translationKeyGrammarError(key): string \| null`
+
+First grammar violation as a human-readable reason, `null` when legal.
+Consumers compose it into their own error shape (HTTP 400, engine
+throw, lint hint).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| key | `string` |  |
 
 ### `translationKeyNamespace(schema): string`
 
