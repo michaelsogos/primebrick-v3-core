@@ -66,6 +66,21 @@ Collaboration fragment injected by `assembleMeta` at serve time.
 | enabled | `boolean` |  |
 | expose_editing_value | `boolean` |  |
 
+### `DictFacet`
+
+The `dict` facet — runtime-injected on served meta when the entity
+class carries the `@Dict` marker (a dict base such as
+dal-pg `DictEntityBase`). Drives the `kind:"dict"` page archetype:
+a compact inline-editable list (rows add/edit in place).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| group_field | `string` | Column key grouping rows into fieldsets — absent renders a FLAT
+ sequence; grouping is opt-in per entity, never inferred. |
+| order_field | `string` | Column key owning row ordering (convention default: `sort` when the
+ entity declares it). Reorder CTAs mutate it and persist through the
+ page's atomic bulk save — no dedicated reorder endpoint. |
+
 ### `EntityAction`
 
 One entry of `meta.actions` — the derived capability contract.
@@ -465,7 +480,7 @@ Values mirror the `Permission` enum in `@primebrick/sdk`.
 The served `GET /api/v1/entities/{entity}/meta` response:
 static meta + runtime-injected `display_name`, `actions`, `collaboration`.
 
-**Type:** `EntityMeta & { display_name: string; actions: EntityAction[]; collaboration: CollaborationMeta }`
+**Type:** `EntityMeta & { display_name: string; actions: EntityAction[]; collaboration: CollaborationMeta; dict: DictFacet }`
 
 ### `FilterCondition`
 
@@ -540,6 +555,15 @@ Declared as a type alias (not interface): object literal types get an
 implicit index signature, keeping `MetaColumn` assignable to
 `Record<string, unknown>` — host/remotes pass columns through generic
 cell-snippet args typed as `Record<string, unknown>`.
+
+### `MetaColumnDependsCondition`
+
+A sibling-value condition — the SAME vocabulary `null_label.when` and
+`visible_on` already use for row-gated rendering, lifted to form scope.
+`prop` compares against the pivot ROW's prop (the picked ref option's
+raw row — e.g. its `code`); absent `prop` compares the pivot's stored
+value directly. `equals`/`not` take a single literal, `values` a set
+(IN semantics).
 
 ### `MetaColumnFormat`
 
@@ -648,6 +672,18 @@ module, not to the module owning the broader `/system` prefix).
 
 One sidebar navigation link contributed by a module. `children` is the
 collapsible-group mechanism (the shell renders children under the parent).
+
+### `ModuleNavSibling`
+
+A sidebar-sibling declaration — lifts a SECOND module node next to the
+owning module under the same launcher root (e.g. CRM's "Impostazioni"
+node sibling of the CRM module). The owning service declares it inside
+`endpoints.nav.siblings`; discovery emits it as an extra module entry
+(`id: "<code>-<id>"`, `part_of` inherited) whose `route_prefixes` MUST
+nest strictly under one of the owner's — longest-prefix ownership then
+resolves the sibling's pages to the sibling node, never the parent.
+The access namespace derives as `<moduleNs>.<id>` (e.g.
+`access.crm.settings`) — leaf keys keep the standard route-derived form.
 
 ### `ModuleNotifyInput`
 
@@ -762,7 +798,7 @@ conventions — the AI route census (derived from the consolidated
 
 Page archetype vocabulary — what the route renders, regardless of delivery.
 
-**Type:** `"list" \| "detail" \| "create" \| "page"`
+**Type:** `"list" \| "detail" \| "create" \| "page" \| "dict"`
 
 ### `PageRouteProps`
 
@@ -927,6 +963,19 @@ anything outside this closed set (raw strings on the wire can never reach
 the renderer).
 
 **Type:** `readonly ActionColor[]`
+
+### `DEFAULT_PAGE_ICON`
+
+Leaf-page icon defaults — the maximum fallback is `file-box`, applied
+whenever `kind` carries no specific default. A declaration's explicit
+`icon` ALWAYS wins: these fill `icon: null` at emission, they never
+override an authored value. Devs are never required to author one.
+
+**Type:** `"file-box"`
+
+### `DEFAULT_ROUTE_ICONS`
+
+**Type:** `Record<PageRouteKind, string>`
 
 ### `DOTTED_GLOB_RE`
 
@@ -1332,6 +1381,14 @@ Numeric comparison ignoring scale: `cmp(1.0, 1.00) === 0`. Returns -1 | 0 | 1.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | input | `DecimalInput` |  |
+
+### `defaultRouteIcon(kind): string`
+
+The resolved default icon for `kind` — `file-box` outside the map.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| kind | `string \| undefined` |  |
 
 ### `defaultSearchGate(trimmed): boolean`
 

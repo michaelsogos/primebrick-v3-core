@@ -279,6 +279,25 @@ export type MetaColumnUom =
   | { kind: "currency"; field: string; source?: "currencies" }
   | { kind: "custom"; field: string; source: MetaColumnUomSource; symbol?: string };
 
+/**
+ * A sibling-value condition — the SAME vocabulary `null_label.when` and
+ * `visible_on` already use for row-gated rendering, lifted to form scope.
+ * `prop` compares against the pivot ROW's prop (the picked ref option's
+ * raw row — e.g. its `code`); absent `prop` compares the pivot's stored
+ * value directly. `equals`/`not` take a single literal, `values` a set
+ * (IN semantics).
+ */
+export type MetaColumnDependsCondition = {
+  /** Pivot ROW prop to compare — requires the pivot to be `type:"ref"`. */
+  prop?: string;
+  /** Disabled when the compared value equals this literal. */
+  equals?: unknown;
+  /** Disabled when the compared value differs from this literal. */
+  not?: unknown;
+  /** Disabled when the compared value is in this set (IN semantics). */
+  values?: readonly unknown[];
+};
+
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
 export type TooltipPriority =
@@ -397,6 +416,41 @@ export type MetaColumn = {
    *  numeric columns only; `currency`/`custom` require the sibling `field`
    *  that persists the UoM code per row. */
   uom?: MetaColumnUom;
+  /**
+   * `depends_on` — ONE declared edge from this column to a SIBLING column
+   * (the pivot) on the same record. The pivot's value/row drives this
+   * column's behavior — declared once, never the same edge three times:
+   *
+   *   - `filter_field` — `type:"ref"` only: the TARGET column the options
+   *     `/list` filters on (`filters[0][field]=<filter_field>`, op `"="`,
+   *     value = the pivot's stored value). First consumer: account
+   *     `country → legal_form` (options scoped to the picked country).
+   *   - `disabled_when` — gate the whole control while the condition
+   *     matches (e.g. `company_dimension` disabled when the picked
+   *     `customer_type` row's `code` is `private`).
+   *   - `control_prop` — the pivot ROW's prop that resolves this column's
+   *     `format` at render time (e.g. `contact.value` → `email`/`phone`/
+   *     `text` control from the picked contact_type's `value_kind`).
+   *
+   * `filter_field`/`control_prop` both imply the control stays disabled
+   * while the pivot has no value AND this column's value resets when the
+   * pivot changes — a stale dependent value is a silent integrity leak.
+   * `disabled_when.prop`/`control_prop` read the pivot's picked ROW —
+   * legal only when the pivot column is `type:"ref"` (enforcement is
+   * construction-side, in `withColumnConstraints`). Form-surface only:
+   * filter columns never carry `depends_on`.
+   */
+  depends_on?: {
+    /** Sibling column key on the same record — the pivot. */
+    field: string;
+    /** `type:"ref"` — the TARGET entity column the options `/list`
+     *  filters on, fed by the pivot's stored value. */
+    filter_field?: string;
+    /** Disable gate — see {@link MetaColumnDependsCondition}. */
+    disabled_when?: MetaColumnDependsCondition;
+    /** The pivot ROW's prop resolving `format` at render time. */
+    control_prop?: string;
+  };
   /** `format:"json"` — JSON Schema driving the editor's lint/completion
    *  AND the structural validation in `buildEntityFormSchema`. */
   json_schema?: Record<string, unknown>;
@@ -458,11 +512,27 @@ export type MetaColumn = {
     entity: string;
     /** `'detail'` — the value is the target's `uid`, links to its `[param]`
      *  route. `'list'` — links to the target's list page pre-filtered.
+     *  `'none'` — the cell renders the label with NO link (for
+     *  `value_field` columns whose stored value can't feed a route).
      *  Default `'detail'`. */
-    route?: "detail" | "list";
+    route?: "detail" | "list" | "none";
     /** `route:"list"` — the TARGET column the cell value filters by
      *  (`filters[0][field]` in the list URL). */
     filter_field?: string;
+    /**
+     * TARGET row column the stored value comes from — default `meta.uid`
+     * (the uuid). `"id"` carries the bigint surrogate key: the contract
+     * for TRUE-FK pickers (`customer_accounts.local_address_id` picks an
+     * `local_addresses.id` the FK actually constrains). Options fetch,
+     * selected-label `IN` lookup and pivot-row resolution all filter on
+     * this column instead of `uid`. A non-uid value CANNOT drive
+     * `route:"detail"` links (detail params are uids) — declare
+     * `route:"list"` + `filter_field` for a truthful link, or
+     * `route:"none"` for a label-only cell. `withColumnConstraints`
+     * enforces both at construction. Same `value_field` vocabulary as
+     * {@link MetaColumnUomSource}'s api_url source.
+     */
+    value_field?: string;
   };
   /** `type:"ref_count"` — a 1:N children link, usually on a `virtual`
    *  column. Renders the row's value (service-decorated count, or the
@@ -716,6 +786,22 @@ export interface EntityMeta {
 }
 
 /**
+ * The `dict` facet — runtime-injected on served meta when the entity
+ * class carries the `@Dict` marker (a dict base such as
+ * dal-pg `DictEntityBase`). Drives the `kind:"dict"` page archetype:
+ * a compact inline-editable list (rows add/edit in place).
+ */
+export interface DictFacet {
+  /** Column key grouping rows into fieldsets — absent renders a FLAT
+   *  sequence; grouping is opt-in per entity, never inferred. */
+  group_field?: string;
+  /** Column key owning row ordering (convention default: `sort` when the
+   *  entity declares it). Reorder CTAs mutate it and persist through the
+   *  page's atomic bulk save — no dedicated reorder endpoint. */
+  order_field?: string;
+}
+
+/**
  * The served `GET /api/v1/entities/{entity}/meta` response:
  * static meta + runtime-injected `display_name`, `actions`, `collaboration`.
  */
@@ -723,6 +809,8 @@ export type EntityMetaResponse = EntityMeta & {
   display_name: string;
   actions: EntityAction[];
   collaboration: CollaborationMeta;
+  /** Present only on dict-faceted entities — see {@link DictFacet}. */
+  dict?: DictFacet;
 };
 
 /**
