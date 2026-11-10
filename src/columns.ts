@@ -117,6 +117,24 @@ export function searchableTextColumns(columns: MetaColumn[]): MetaColumn[] {
   return columns.filter((c) => isColumnSearchable(c) && c.type === "text");
 }
 
+/**
+ * Wire key sets derived from the RESOLVED `meta.columns` — sort_key enum,
+ * `search_in` scope, and `filters[i][field]` allowlists must mirror the
+ * served contract (system columns are injected by derivation; never
+ * compute these from the authored column list, which lacks them).
+ */
+export function listColumnKeys(columns: MetaColumn[]): {
+  sortable: string[];
+  searchable: string[];
+  filterable: string[];
+} {
+  return {
+    sortable: columns.filter(isColumnSortable).map((c) => c.key),
+    searchable: columns.filter(isColumnSearchable).map((c) => c.key),
+    filterable: columns.filter(isColumnFilterable).map((c) => c.key),
+  };
+}
+
 /** Operators available for a given column UI type. */
 export function getOperatorsForColumnType(columnType: string): FilterOperator[] {
   switch (columnType) {

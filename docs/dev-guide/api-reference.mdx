@@ -1786,6 +1786,17 @@ First dotted segment of a translation key — `job.entities.x` → `job`.
 |-----------|------|-------------|
 | key | `string` |  |
 
+### `listColumnKeys(columns): { sortable: string[]; searchable: string[]; filterable: string[] }`
+
+Wire key sets derived from the RESOLVED `meta.columns` — sort_key enum,
+`search_in` scope, and `filters[i][field]` allowlists must mirror the
+served contract (system columns are injected by derivation; never
+compute these from the authored column list, which lacks them).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| columns | `MetaColumn[]` |  |
+
 ### `lucideIconSpecifier(exportName): string`
 
 CamelCase lucide export name → emitted icon specifier.
