@@ -773,18 +773,10 @@ export function pathCompatible(
 // A new dishonesty case is added HERE — never re-invented per surface.
 // ---------------------------------------------------------------------------
 
-/** The name→format honesty matrix — exported so the check-standards lint
- *  (`schema-honest-format`) and the enrollment validator test the SAME
- *  hints. Add a case here, never re-invent it per surface. */
-export const HONEST_FORMAT_HINTS: { re: RegExp; formats: readonly string[]; why: string }[] = [
-  { re: /_at$|At$/, formats: ["date-time"], why: "timestamp" },
-  { re: /_by$|By$/, formats: ["uuid"], why: "actor/uuid" },
-  { re: /uuid/i, formats: ["uuid"], why: "uuid" },
-  { re: /(?:^|_)e?_?mails?(?:_|$)|emails?$/i, formats: ["email"], why: "email" },
-  { re: /(?:^|_)(?:phones?|tel|mobile)(?:_|$)|phones?$/i, formats: ["phone"], why: "phone" },
-  { re: /(?:^|_)(?:urls?|uris?)$|[Uu]rls?$|[Uu]ris?$/, formats: ["url", "uri"], why: "url" },
-  { re: /(?:^|_)locales?$|language_?isos?$|locales?$/i, formats: ["lang"], why: "locale/language" },
-];
+/** The name→format honesty matrix lives in ./honest-format-hints.ts —
+ *  re-exported so existing consumers keep the same import surface. */
+export { HONEST_FORMAT_HINTS } from "./honest-format-hints.js";
+import { HONEST_FORMAT_HINTS } from "./honest-format-hints.js";
 
 /** Iterate every property schema a JSON schema declares — nested objects
  *  and array items included. `required` reflects the PARENT level's
