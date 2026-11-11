@@ -533,6 +533,14 @@ export type MetaColumn = {
      * {@link MetaColumnUomSource}'s api_url source.
      */
     value_field?: string;
+    /**
+     * Cell anatomy — `"link"` (DEFAULT): the two-affordance anatomy
+     * (text → record sheet; trailing ExternalLink → target `/list`
+     * filtered, `target="_blank"`). `"badge"`: the legacy badge-pill
+     * single-link anatomy — explicit opt-in only, never the default.
+     * `route:"none"` degrades to a label under both.
+     */
+    presentation?: "link" | "badge";
   };
   /** `type:"ref_count"` — a 1:N children link, usually on a `virtual`
    *  column. Renders the row's value (service-decorated count, or the
