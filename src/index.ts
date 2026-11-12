@@ -3,6 +3,7 @@ export * from "./list.js";
 export * from "./list-filter-params.js";
 export * from "./columns.js";
 export * from "./decimal.js";
+export * from "./numeric-kind.js";
 export * from "./ext-json.js";
 export * from "./search-gate.js";
 export * from "./page-route.js";

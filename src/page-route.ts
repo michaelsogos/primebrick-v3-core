@@ -13,7 +13,32 @@
 import type { EntityMeta } from "./entity-meta.js";
 
 /** Page archetype vocabulary — what the route renders, regardless of delivery. */
-export type PageRouteKind = "list" | "detail" | "create" | "page";
+export type PageRouteKind = "list" | "detail" | "create" | "page" | "dict";
+
+/**
+ * Leaf-page icon defaults — the maximum fallback is `file-box`, applied
+ * whenever `kind` carries no specific default. A declaration's explicit
+ * `icon` ALWAYS wins: these fill `icon: null` at emission, they never
+ * override an authored value. Devs are never required to author one.
+ */
+export const DEFAULT_PAGE_ICON = "file-box";
+
+export const DEFAULT_ROUTE_ICONS: Record<PageRouteKind, string> = {
+  list: "table-2",
+  detail: "text-cursor-input",
+  create: "text-cursor-input",
+  page: DEFAULT_PAGE_ICON,
+  dict: "list",
+};
+
+/** The resolved default icon for `kind` — `file-box` outside the map. */
+export function defaultRouteIcon(
+  kind: PageRouteKind | string | undefined,
+): string {
+  return (
+    (kind && DEFAULT_ROUTE_ICONS[kind as PageRouteKind]) || DEFAULT_PAGE_ICON
+  );
+}
 
 /**
  * Remote component delivery format. Extensible — new literals are additive
@@ -119,24 +144,10 @@ export type FormFieldPlacement = {
   required?: boolean;
   /** Render the control read-only (e.g. audit-ish fields on edit). */
   readonly?: boolean;
-  /** Explicit control override — key of the host widget registry; bypasses
-   *  the `format`→control mapping for this field only. */
-  widget?: string;
-  /**
-   * Dynamic option vocabulary for ComboSelect fields — closed union.
-   * `"census.emits"`: the union of every module's `events.emits` from the
-   * `/modules` discovery payload (already client-side at render time).
-   * `"census.callables"`: the union of every module's `callables.callables`
-   * — governed LISTEN subjects a rule/scheduler may invoke.
-   * Census-sourced combos only offer declared values — see `allow_create`.
-   */
-  options_source?: "census.emits" | "census.callables";
-  /**
-   * ComboSelect `allowCreate` — lets the user type values that are NOT in
-   * the options list (a new value cannot come from a census, so census
-   * sources keep it off). Absent = free entry disabled.
-   */
-  allow_create?: boolean;
+  // `widget`/`options_source`/`allow_create` were REMOVED from the
+  // placement — they are the column's semantic input contract and live
+  // on `MetaColumn` (meta.columns), readable by every surface (forms,
+  // filters, docs). A placement carrying them is an enrollment error.
 };
 
 /**
@@ -222,6 +233,33 @@ export type ModuleNavLink = {
 };
 
 /**
+ * A sidebar-sibling declaration — lifts a SECOND module node next to the
+ * owning module under the same launcher root (e.g. CRM's "Impostazioni"
+ * node sibling of the CRM module). The owning service declares it inside
+ * `endpoints.nav.siblings`; discovery emits it as an extra module entry
+ * (`id: "<code>-<id>"`, `part_of` inherited) whose `route_prefixes` MUST
+ * nest strictly under one of the owner's — longest-prefix ownership then
+ * resolves the sibling's pages to the sibling node, never the parent.
+ * The access namespace derives as `<moduleNs>.<id>` (e.g.
+ * `access.crm.settings`) — leaf keys keep the standard route-derived form.
+ */
+export type ModuleNavSibling = {
+  /** Sibling slug — the emitted module id is `<code>-<id>` ("crm-settings"). */
+  id: string;
+  /** i18n key of the sibling node's sidebar label. */
+  label_key: string;
+  /** Lucide icon for the sibling node. */
+  icon?: string;
+  /** FE path prefixes this sibling owns — each MUST nest strictly under
+   *  one of the owning module's declared `route_prefixes`. */
+  route_prefixes: string[];
+  /** Sidebar nav links shown while this sibling module is active. */
+  nav: ModuleNavLink[];
+  /** Full route census of the sibling's pages. */
+  routes?: PageRouteDeclaration[];
+};
+
+/**
  * A module's self-described navigation declaration — the payload a service
  * publishes in `service.register` (`endpoints.nav`) so the FE can render
  * the module's sidebar nav and the census can resolve its routes WITHOUT
@@ -269,6 +307,12 @@ export type ModuleNavDeclaration = {
   sheets?: ModuleSheetDecl[];
   /** Shell-reserved module (e.g. settings) — never set by services. */
   is_reserved?: boolean;
+  /**
+   * Sibling module nodes lifted next to this module under the same
+   * launcher root — see {@link ModuleNavSibling}. The service declares
+   * them once; discovery emits each as its own module entry.
+   */
+  siblings?: ModuleNavSibling[];
 };
 
 /**

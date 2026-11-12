@@ -22,6 +22,8 @@
 
 import type { EntityMeta, MetaColumn } from "./entity-meta.js";
 import { extJsonStringify } from "./ext-json.js";
+import { numericKindOf } from "./numeric-kind.js";
+import { dec, isDecimal, cmp, signum, type Decimal, type DecimalInput } from "@primebrick/decimal";
 import {
   baseJsonType,
   effectiveFormat,
@@ -429,10 +431,12 @@ const joinPath = (base: string, key: string) => (base ? `${base}.${key}` : key);
 // checkFieldValue — per-column rules (the wire value, already parsed).
 // ---------------------------------------------------------------------------
 
-const NUMERIC_PG = new Set(["integer", "bigint", "numeric", "smallint", "double precision", "real"]);
-
+/** Numeric gate — `numericKindOf` is the single kind resolver (DAL canonical
+ *  pg names AND standard spellings, `type:"number"`/`ref_count`, number/money
+ *  formats). A `type:"number"` column without pg info must still hit the
+ *  numeric branch (previously it fell through to the string check). */
 function isNumericColumn(col: MetaColumn): boolean {
-  return col.format === "number" || col.format === "money" || NUMERIC_PG.has(col.pg_type ?? "");
+  return numericKindOf(col) !== null;
 }
 
 function isJsonColumn(col: MetaColumn): boolean {
@@ -453,12 +457,35 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
   }
 
   if (isNumericColumn(col)) {
+    if (numericKindOf(col) === "decimal") {
+      // Exact path — pg `numeric`/`format:"money"` values arrive as Decimal
+      // instances or canonical/wire strings; compare via dec()/cmp() so
+      // bounds keep full precision (Number() would silently truncate).
+      let d: Decimal | null = null;
+      try {
+        if (isDecimal(value)) d = value;
+        else if (typeof value === "string" || typeof value === "number" || typeof value === "bigint") {
+          d = dec(value as DecimalInput);
+        }
+      } catch {
+        d = null;
+      }
+      if (!d) {
+        at("invalid_type", expectedTypeMsg(["number"]));
+        return out;
+      }
+      if (col.unsigned && signum(d) < 0) at("too_small", kmsg("app.common.validation.minimum", { min: 0 }));
+      if (typeof col.min === "number" && cmp(d, dec(col.min)) < 0) at("too_small", kmsg("app.common.validation.minimum", { min: col.min }));
+      if (typeof col.max === "number" && cmp(d, dec(col.max)) > 0) at("too_big", kmsg("app.common.validation.maximum", { max: col.max }));
+      return out;
+    }
     // ext-json wire decodes integers as bigint — accept and compare.
     const num = typeof value === "bigint" ? Number(value) : value;
     if (typeof num !== "number" || Number.isNaN(num)) {
       at("invalid_type", expectedTypeMsg(["number"]));
       return out;
     }
+    if (col.unsigned && num < 0) at("too_small", kmsg("app.common.validation.minimum", { min: 0 }));
     if (typeof col.min === "number" && num < col.min) at("too_small", kmsg("app.common.validation.minimum", { min: col.min }));
     if (typeof col.max === "number" && num > col.max) at("too_big", kmsg("app.common.validation.maximum", { max: col.max }));
     return out;
@@ -535,12 +562,14 @@ export interface CheckEntityFieldsOptions {
 /**
  * Validate a wire entity object against `meta.columns`.
  * Required = `nullable === false` AND client-writable — `audited`
- * columns and `meta.uid` (server-generated identity) are system-managed
- * (filled server-side) and never arrive on the wire, so an absent one is
- * NOT a violation. A PRESENT empty value still fails `nullable === false`
- * — clients must not send managed fields at all. Mirrors the form, where
- * required only ever applies to declared placements
- * (`placement.required ?? nullable`).
+ * columns, `meta.uid` (server-generated identity), `managed` columns
+ * (server-filled keys, e.g. an identity `@Key`) and `kind:"calculated" /
+ * "virtual"` columns (server/decorator-computed read projections — never
+ * writable) are system-managed and never arrive on the wire, so an
+ * absent one is NOT a violation. A
+ * PRESENT empty value still fails `nullable === false` — clients must
+ * not send managed fields at all. Mirrors the form, where required only
+ * ever applies to declared placements (`placement.required ?? nullable`).
  * Unknown entity keys are ignored — system columns (`uuid`, `version`)
  * need no column.
  */
@@ -553,7 +582,12 @@ export function checkEntityFields(
   for (const col of meta.columns) {
     const present = col.key in entity;
     if (!present) {
-      const managed = col.audited === true || col.key === meta.uid;
+      const managed =
+        col.audited === true ||
+        col.key === meta.uid ||
+        col.managed === true ||
+        col.kind === "calculated" ||
+        col.kind === "virtual";
       if (!opts.partial && col.nullable === false && !managed) {
         out.push(issue(col.key, "required", "app.common.validation.required"));
       }
@@ -739,18 +773,10 @@ export function pathCompatible(
 // A new dishonesty case is added HERE — never re-invented per surface.
 // ---------------------------------------------------------------------------
 
-/** The name→format honesty matrix — exported so the check-standards lint
- *  (`schema-honest-format`) and the enrollment validator test the SAME
- *  hints. Add a case here, never re-invent it per surface. */
-export const HONEST_FORMAT_HINTS: { re: RegExp; formats: readonly string[]; why: string }[] = [
-  { re: /_at$|At$/, formats: ["date-time"], why: "timestamp" },
-  { re: /_by$|By$/, formats: ["uuid"], why: "actor/uuid" },
-  { re: /uuid/i, formats: ["uuid"], why: "uuid" },
-  { re: /(?:^|_)e?_?mails?(?:_|$)|emails?$/i, formats: ["email"], why: "email" },
-  { re: /(?:^|_)(?:phones?|tel|mobile)(?:_|$)|phones?$/i, formats: ["phone"], why: "phone" },
-  { re: /(?:^|_)(?:urls?|uris?)$|[Uu]rls?$|[Uu]ris?$/, formats: ["url", "uri"], why: "url" },
-  { re: /(?:^|_)locales?$|language_?isos?$|locales?$/i, formats: ["lang"], why: "locale/language" },
-];
+/** The name→format honesty matrix lives in ./honest-format-hints.ts —
+ *  re-exported so existing consumers keep the same import surface. */
+export { HONEST_FORMAT_HINTS } from "./honest-format-hints.js";
+import { HONEST_FORMAT_HINTS } from "./honest-format-hints.js";
 
 /** Iterate every property schema a JSON schema declares — nested objects
  *  and array items included. `required` reflects the PARENT level's
