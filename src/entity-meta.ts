@@ -288,8 +288,12 @@ export type MetaColumnUom =
  * value carries the initials; the sibling carries the color.
  * The sibling requirement is verified by `withColumnConstraints`: an
  * avatar column without its color column is a construction error.
+ * `initials_field` (optional) names the sibling column the initials
+ * DERIVE from (typically `display_name`): edit surfaces recompute the
+ * initials live from it and persist the derived value when that sibling
+ * crosses the wire. Same physical-column rule as `color_field`.
  */
-export type MetaColumnAvatar = { color_field: string };
+export type MetaColumnAvatar = { color_field: string; initials_field?: string };
 
 /**
  * A sibling-value condition — the SAME vocabulary `null_label.when` and
