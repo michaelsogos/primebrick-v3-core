@@ -250,7 +250,7 @@ export type MetaColumnFormat =
  * the same contract feeds forms, list filters and docs generation.
  * Closed union on purpose — an unknown source is a construction error.
  */
-export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors";
+export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors" | "system.roles";
 
 /**
  * Option vocabulary a unit-of-measure selector may draw from.
@@ -397,6 +397,14 @@ export type MetaColumn = {
    *  key stays client-writable instead. Derived by
    *  `withColumnConstraints` — authors MUST NOT set it. */
   managed?: boolean;
+  /** Authored: set once at creation OR derived by a dedicated process —
+   *  never editable afterwards. Editable on `kind:"create"` forms,
+   *  rendered disabled on update/detail surfaces, and excluded from
+   *  update payloads. Covers both subtypes with ONE behaviour (user
+   *  decision): created-and-immutable (idp_username) and derived
+   *  (idp_code, avatar_initials, onboarding_completed). Distinct from
+   *  `managed` (DB-filled key) and `audited` (lifecycle facts). */
+  immutable?: boolean;
 
   // AUTHORED — semantic contract the entity class cannot express.
   /** Field format — see {@link MetaColumnFormat}. */
