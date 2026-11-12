@@ -13,6 +13,7 @@ import {
   isSnakeKey,
   isValidNatsSubject,
   isValidScheduleSpec,
+  nextScheduleFire,
   jobTriggerShapeIssues,
   jsonSchemaCheck,
   pathCompatible,
@@ -21,6 +22,7 @@ import {
   type FieldIssue,
 } from "./field-validation.js";
 import type { EntityMeta, MetaColumn } from "./entity-meta.js";
+import { dec } from "./decimal.js";
 
 const codes = (issues: FieldIssue[]) => issues.map((i) => i.code);
 const has = (issues: FieldIssue[], path: string, code?: string) =>
@@ -72,6 +74,26 @@ describe("format predicates", () => {
     expect(isValidScheduleSpec("* * * *")).toBe(false);
     expect(isValidScheduleSpec("* * * * * *")).toBe(false);
     expect(isValidScheduleSpec("")).toBe(false);
+  });
+  it("nextScheduleFire — @every anchored at since", () => {
+    const since = new Date("2026-01-01T00:00:00Z");
+    // 15s period, now = base + 37s → next boundary at base + 45s.
+    const next = nextScheduleFire("@every 15s", { since, now: new Date("2026-01-01T00:00:37Z") });
+    expect(next?.toISOString()).toBe("2026-01-01T00:00:45.000Z");
+    // No anchor → period starts at now.
+    expect(nextScheduleFire("@every 5m", { now: new Date("2026-01-01T00:00:37Z") })?.toISOString()).toBe(
+      "2026-01-01T00:05:37.000Z",
+    );
+  });
+  it("nextScheduleFire — @at future/past", () => {
+    const now = new Date("2026-01-01T00:00:00Z");
+    expect(nextScheduleFire("@at 2026-01-02T00:00:00Z", { now })?.toISOString()).toBe("2026-01-02T00:00:00.000Z");
+    expect(nextScheduleFire("@at 2025-01-01T00:00:00Z", { now })).toBeNull();
+  });
+  it("nextScheduleFire — cron and invalid specs are not evaluated", () => {
+    const now = new Date("2026-01-01T00:00:00Z");
+    expect(nextScheduleFire("*/5 * * * *", { now })).toBeNull();
+    expect(nextScheduleFire("not-a-spec", { now })).toBeNull();
   });
   it("identifier — edge alnum, internal . _ -", () => {
     expect(isIdentifier("micha-test-rule-1")).toBe(true);
@@ -205,6 +227,32 @@ describe("checkFieldValue", () => {
     expect(has(checkFieldValue(c, -1), "f", "too_small")).toBe(true);
     expect(has(checkFieldValue(c, "5"), "f", "invalid_type")).toBe(true);
   });
+  it("numeric unsigned — negatives rejected even without an explicit min", () => {
+    const c = col({ format: "number", unsigned: true });
+    expect(checkFieldValue(c, 5)).toEqual([]);
+    expect(has(checkFieldValue(c, -1), "f", "too_small")).toBe(true);
+    expect(has(checkFieldValue(c, -0.5), "f", "too_small")).toBe(true);
+    // zero is admissible for unsigned
+    expect(checkFieldValue(c, 0)).toEqual([]);
+  });
+  it("numeric decimal kind — canonical strings, Decimal instances, exact bounds", () => {
+    const c = col({ format: "money", pg_type: "numeric", min: 0, max: 100 });
+    // canonical string values accepted (the control emits strings)
+    expect(checkFieldValue(c, "12.34" as unknown as number)).toEqual([]);
+    // Decimal instances accepted
+    expect(checkFieldValue(c, dec("12.34") as unknown as number)).toEqual([]);
+    // wire-suffixed strings tolerated
+    expect(checkFieldValue(c, "12.34d" as unknown as number)).toEqual([]);
+    // exact comparison — a value just above the bound fails
+    expect(has(checkFieldValue(c, "100.0000000000000001" as unknown as number), "f", "too_big")).toBe(true);
+    // and a high-precision in-bounds value passes
+    expect(checkFieldValue(c, "99.9999999999999999" as unknown as number)).toEqual([]);
+    // unsigned decimal
+    const u = col({ format: "money", unsigned: true });
+    expect(has(checkFieldValue(u, "-0.01" as unknown as number), "f", "too_small")).toBe(true);
+    // garbage stays invalid_type
+    expect(has(checkFieldValue(c, "abc" as unknown as number), "f", "invalid_type")).toBe(true);
+  });
   it("boolean", () => {
     const c = col({ type: "boolean" });
     expect(checkFieldValue(c, true)).toEqual([]);
@@ -247,6 +295,15 @@ describe("checkEntityFields", () => {
     expect(has(checkEntityFields(m, { name: "", uuid: "u" }), "name", "required")).toBe(true);
     expect(checkEntityFields(m, { name: "ok", uuid: "u", system_field: 1 })).toEqual([]);
   });
+  it("managed columns (identity @Key) are never required on create", () => {
+    const withKey = meta([
+      col({ key: "name", nullable: false }),
+      col({ key: "id", nullable: false, managed: true }),
+    ]);
+    // absent → exempt; present-empty still fails nullable (don't send it)
+    expect(checkEntityFields(withKey, { name: "x" })).toEqual([]);
+    expect(has(checkEntityFields(withKey, { name: "x", id: null }), "id", "required")).toBe(true);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -261,6 +318,22 @@ describe("jobTriggerShapeIssues", () => {
     expect(
       has(jobTriggerShapeIssues({ schedule_spec: "@every 1h", execution_context: "user" }), "execution_context"),
     ).toBe(true);
+  });
+
+  it("@at in the past is a dead one-shot — flagged on schedule_spec", () => {
+    const now = new Date("2026-06-01T12:00:00Z");
+    expect(
+      has(jobTriggerShapeIssues({ schedule_spec: "@at 2026-01-01T09:00:00Z" }, now), "schedule_spec"),
+    ).toBe(true);
+    // future @at is fine; malformed @at is the grammar check's concern
+    expect(
+      jobTriggerShapeIssues({ schedule_spec: "@at 2026-12-01T09:00:00Z" }, now),
+    ).toEqual([]);
+    expect(
+      has(jobTriggerShapeIssues({ schedule_spec: "@at not-a-date" }, now), "schedule_spec"),
+    ).toBe(false);
+    // recurring specs are never "past"
+    expect(jobTriggerShapeIssues({ schedule_spec: "0 9 * * *" }, now)).toEqual([]);
   });
 });
 

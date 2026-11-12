@@ -49,17 +49,22 @@ export function asSnakeCaseSingular(value: string): SnakeCaseSingular {
 
 /**
  * Columns in display order: sticky group → normal group → audited group,
- * each sorted by `order`.
+ * each sorted by `order`. A column without `order` falls back to its own
+ * array index (the contract's last resort) — a raw `order - order`
+ * comparator returns NaN on undefined and corrupts the whole sort.
  */
 export function orderedColumns(
   columns: readonly MetaColumn[] | null | undefined,
 ): MetaColumn[] {
   if (!columns?.length) return [];
-  const byOrder = (a: MetaColumn, b: MetaColumn) => a.order - b.order;
+  const tagged = columns.map((c, i) => ({ c, k: c.order ?? i }));
+  const byOrder = (a: { k: number }, b: { k: number }) => a.k - b.k;
+  const pick = (pred: (c: MetaColumn) => boolean) =>
+    tagged.filter(({ c }) => pred(c)).sort(byOrder).map(({ c }) => c);
   return [
-    ...columns.filter((c) => c.sticky).sort(byOrder),
-    ...columns.filter((c) => !c.sticky && !c.audited).sort(byOrder),
-    ...columns.filter((c) => c.audited).sort(byOrder),
+    ...pick((c) => c.sticky === true),
+    ...pick((c) => c.sticky !== true && c.audited !== true),
+    ...pick((c) => c.audited === true),
   ];
 }
 
@@ -77,20 +82,22 @@ export function isColumnVisible(col: Pick<MetaColumn, "default_visible" | "hidea
   return col.hideable === false || col.default_visible !== false;
 }
 
-/** Column supports ORDER BY — absent means sortable. */
-export function isColumnSortable(col: Pick<MetaColumn, "sortable">): boolean {
-  return col.sortable !== false;
+/** Column supports ORDER BY — absent means sortable, except `kind:"virtual"`
+ *  columns (post-query enrichment): never sortable, no opt-in exists. */
+export function isColumnSortable(col: Pick<MetaColumn, "sortable" | "kind">): boolean {
+  return col.kind === "virtual" ? false : col.sortable !== false;
 }
 
-/** Column participates in the filters sheet — absent means filterable. */
-export function isColumnFilterable(col: Pick<MetaColumn, "filterable">): boolean {
-  return col.filterable !== false;
+/** Column participates in the filters sheet — absent means filterable,
+ *  except `kind:"virtual"` columns: never filterable, no opt-in exists. */
+export function isColumnFilterable(col: Pick<MetaColumn, "filterable" | "kind">): boolean {
+  return col.kind === "virtual" ? false : col.filterable !== false;
 }
 
 /** Column joins the search scope — absent means searchable (the caller
  *  may still require a text-physical type on top). */
-export function isColumnSearchable(col: Pick<MetaColumn, "searchable">): boolean {
-  return col.searchable !== false;
+export function isColumnSearchable(col: Pick<MetaColumn, "searchable" | "kind">): boolean {
+  return col.kind === "virtual" ? false : col.searchable !== false;
 }
 
 /** Keys visible by default — from column flags. */
@@ -115,18 +122,81 @@ export function searchableTextColumns(columns: MetaColumn[]): MetaColumn[] {
   return columns.filter((c) => isColumnSearchable(c) && c.type === "text");
 }
 
+/**
+ * Wire key sets derived from the RESOLVED `meta.columns` — sort_key enum,
+ * `search_in` scope, and `filters[i][field]` allowlists must mirror the
+ * served contract (system columns are injected by derivation; never
+ * compute these from the authored column list, which lacks them).
+ */
+export function listColumnKeys(columns: MetaColumn[]): {
+  sortable: string[];
+  searchable: string[];
+  filterable: string[];
+} {
+  return {
+    sortable: columns.filter(isColumnSortable).map((c) => c.key),
+    searchable: columns.filter(isColumnSearchable).map((c) => c.key),
+    filterable: columns.filter(isColumnFilterable).map((c) => c.key),
+  };
+}
+
 /** Operators available for a given column UI type. */
 export function getOperatorsForColumnType(columnType: string): FilterOperator[] {
   switch (columnType) {
     case "text":
       return ["=", "!=", "contains", "startsWith", "endsWith"];
     case "badge":
+    case "boolean":
+      // Equality only — `>` on a boolean is nonsense.
       return ["=", "!="];
     case "date":
     case "datetime":
       return ["=", "!=", ">", "<", ">=", "<=", "BETWEEN"];
+    case "number":
+    case "ref_count":
+      // Numeric comparisons — `ref_count` is a children count, never text.
+      return ["=", "!=", ">", "<", ">=", "<="];
     default:
       // Assume numeric for unknown types
       return ["=", "!=", ">", "<", ">=", "<="];
   }
 }
+
+/**
+ * Canonical `FilterOperator → Lucide icon` map — the ONE operator-icon
+ * vocabulary every filter surface renders (advanced operator combobox,
+ * filter chips, summaries). Values are `@lucide/svelte` icon names,
+ * consumed via `DynamicIcon`.
+ */
+export const FILTER_OPERATOR_ICON: Record<FilterOperator, string> = {
+  "=": "equal",
+  "!=": "equal-not",
+  ">": "chevron-right",
+  ">=": "arrow-right-to-line",
+  "<": "chevron-left",
+  "<=": "arrow-left-to-line",
+  contains: "text-search",
+  startsWith: "list-start",
+  endsWith: "list-end",
+  BETWEEN: "list-indent-increase",
+};
+
+/**
+ * Canonical `FilterOperator → translation-key segment` map — the ONE
+ * vocabulary joining filter operators to `system.entities.list.operators.*`
+ * keys. Key segments are `[a-z0-9_]+` (translation-key grammar) — the bare
+ * operator symbols (`=`, `!=`, `<`, …) can never be segments, so labels are
+ * looked up through this map, never through the raw operator value.
+ */
+export const FILTER_OPERATOR_KEY: Record<FilterOperator, string> = {
+  "=": "eq",
+  "!=": "neq",
+  ">": "gt",
+  ">=": "gte",
+  "<": "lt",
+  "<=": "lte",
+  contains: "contains",
+  startsWith: "starts_with",
+  endsWith: "ends_with",
+  BETWEEN: "between",
+};

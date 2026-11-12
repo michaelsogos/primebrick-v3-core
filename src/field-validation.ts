@@ -22,6 +22,8 @@
 
 import type { EntityMeta, MetaColumn } from "./entity-meta.js";
 import { extJsonStringify } from "./ext-json.js";
+import { numericKindOf } from "./numeric-kind.js";
+import { dec, isDecimal, cmp, signum, type Decimal, type DecimalInput } from "@primebrick/decimal";
 import {
   baseJsonType,
   effectiveFormat,
@@ -179,6 +181,35 @@ export function isValidScheduleSpec(raw: unknown): boolean {
   return parts.every((f, i) => cronFieldValid(f, i));
 }
 
+const EVERY_UNIT_MS: Record<string, number> = { s: 1_000, m: 60_000, h: 3_600_000, d: 86_400_000 };
+
+/**
+ * Next fire for a `schedule_spec`, when derivable without a cron evaluator:
+ * - `@every <n><unit>` — next interval boundary after `now`, anchored at
+ *   `since` (the declaration's `armed_at`); without an anchor the period is
+ *   assumed to start at `now`, so the first fire is `now + interval`.
+ * - `@at <ts>` — the timestamp itself if still future, else null (fired).
+ * - cron — null: NATS owns cron evaluation; a second interpreter here would
+ *   drift on dom/dow edge semantics. Invalid specs return null too.
+ */
+export function nextScheduleFire(spec: string, opts: { now?: Date; since?: Date } = {}): Date | null {
+  const now = opts.now ?? new Date();
+  const s = spec.trim();
+  const every = EVERY_RE.exec(s);
+  if (every) {
+    const interval = Number(every[1]) * EVERY_UNIT_MS[every[2]!]!;
+    const base = (opts.since ?? now).getTime();
+    const elapsed = now.getTime() - base;
+    const k = Math.max(1, Math.floor(elapsed / interval) + 1);
+    return new Date(base + k * interval);
+  }
+  if (s.startsWith("@at")) {
+    const at = new Date(s.slice(3).trim());
+    return !Number.isNaN(at.getTime()) && at.getTime() > now.getTime() ? at : null;
+  }
+  return null;
+}
+
 /** UUID (any version) — matches zod/JSON-Schema `format:"uuid"`. */
 export const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
@@ -262,6 +293,23 @@ const FORMAT_CHECKS: Record<string, (v: string) => boolean> = {
  *  translation catalog. */
 const VALIDATION_FORMAT_KEY = (format: string): string => `app.common.validation.${format}`;
 
+/** `expected_type` is a PER-TYPE key family (`expected_type.number`) —
+ *  a type name is a noun whose article and gender change per language
+ *  ("Atteso un numero", "Un nombre entier attendu", "Esperada una
+ *  lista"), so no `{types}` template can carry it through seven
+ *  languages: every known type owns a complete translated sentence.
+ *  A `null` union arm means "optional", not a displayable noun — it's
+ *  dropped before picking; only genuinely multi-type or unknown names
+ *  fall back to the generic `{types}` form (raw names = last resort). */
+const EXPECTED_TYPE_NAMES = new Set(["string", "number", "integer", "boolean", "array", "object"]);
+
+const expectedTypeMsg = (types: readonly unknown[]): string => {
+  const named = types.filter((t): t is string => typeof t === "string" && t !== "null");
+  return named.length === 1 && EXPECTED_TYPE_NAMES.has(named[0])
+    ? `app.common.validation.expected_type.${named[0]}`
+    : kmsg("app.common.validation.expected_type", { types: named.join(", ") });
+};
+
 function jsonTypeMatches(value: unknown, type: string): boolean {
   switch (type) {
     case "string": return typeof value === "string";
@@ -288,7 +336,7 @@ export function jsonSchemaCheck(
   if (rawType !== undefined) {
     const types = Array.isArray(rawType) ? rawType : [rawType];
     if (!types.some((t) => typeof t === "string" && jsonTypeMatches(value, t))) {
-      at("invalid_type", kmsg("app.common.validation.expected_type", { types: types.join(", ") }));
+      at("invalid_type", expectedTypeMsg(types));
       return out; // type mismatch — deeper checks are meaningless
     }
   }
@@ -383,10 +431,12 @@ const joinPath = (base: string, key: string) => (base ? `${base}.${key}` : key);
 // checkFieldValue — per-column rules (the wire value, already parsed).
 // ---------------------------------------------------------------------------
 
-const NUMERIC_PG = new Set(["integer", "bigint", "numeric", "smallint", "double precision", "real"]);
-
+/** Numeric gate — `numericKindOf` is the single kind resolver (DAL canonical
+ *  pg names AND standard spellings, `type:"number"`/`ref_count`, number/money
+ *  formats). A `type:"number"` column without pg info must still hit the
+ *  numeric branch (previously it fell through to the string check). */
 function isNumericColumn(col: MetaColumn): boolean {
-  return col.format === "number" || col.format === "money" || NUMERIC_PG.has(col.pg_type ?? "");
+  return numericKindOf(col) !== null;
 }
 
 function isJsonColumn(col: MetaColumn): boolean {
@@ -402,17 +452,40 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
     out.push(issue(sub ?? p, code, message));
 
   if (col.type === "boolean" || col.pg_type === "boolean") {
-    if (typeof value !== "boolean") at("invalid_type", kmsg("app.common.validation.expected_type", { types: "boolean" }));
+    if (typeof value !== "boolean") at("invalid_type", expectedTypeMsg(["boolean"]));
     return out;
   }
 
   if (isNumericColumn(col)) {
+    if (numericKindOf(col) === "decimal") {
+      // Exact path — pg `numeric`/`format:"money"` values arrive as Decimal
+      // instances or canonical/wire strings; compare via dec()/cmp() so
+      // bounds keep full precision (Number() would silently truncate).
+      let d: Decimal | null = null;
+      try {
+        if (isDecimal(value)) d = value;
+        else if (typeof value === "string" || typeof value === "number" || typeof value === "bigint") {
+          d = dec(value as DecimalInput);
+        }
+      } catch {
+        d = null;
+      }
+      if (!d) {
+        at("invalid_type", expectedTypeMsg(["number"]));
+        return out;
+      }
+      if (col.unsigned && signum(d) < 0) at("too_small", kmsg("app.common.validation.minimum", { min: 0 }));
+      if (typeof col.min === "number" && cmp(d, dec(col.min)) < 0) at("too_small", kmsg("app.common.validation.minimum", { min: col.min }));
+      if (typeof col.max === "number" && cmp(d, dec(col.max)) > 0) at("too_big", kmsg("app.common.validation.maximum", { max: col.max }));
+      return out;
+    }
     // ext-json wire decodes integers as bigint — accept and compare.
     const num = typeof value === "bigint" ? Number(value) : value;
     if (typeof num !== "number" || Number.isNaN(num)) {
-      at("invalid_type", kmsg("app.common.validation.expected_type", { types: "number" }));
+      at("invalid_type", expectedTypeMsg(["number"]));
       return out;
     }
+    if (col.unsigned && num < 0) at("too_small", kmsg("app.common.validation.minimum", { min: 0 }));
     if (typeof col.min === "number" && num < col.min) at("too_small", kmsg("app.common.validation.minimum", { min: col.min }));
     if (typeof col.max === "number" && num > col.max) at("too_big", kmsg("app.common.validation.maximum", { max: col.max }));
     return out;
@@ -429,7 +502,7 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
 
   // string-ish columns
   if (typeof value !== "string") {
-    at("invalid_type", kmsg("app.common.validation.expected_type", { types: "string" }));
+    at("invalid_type", expectedTypeMsg(["string"]));
     return out;
   }
   if (typeof col.max_length === "number" && value.length > col.max_length) {
@@ -489,12 +562,14 @@ export interface CheckEntityFieldsOptions {
 /**
  * Validate a wire entity object against `meta.columns`.
  * Required = `nullable === false` AND client-writable — `audited`
- * columns and `meta.uid` (server-generated identity) are system-managed
- * (filled server-side) and never arrive on the wire, so an absent one is
- * NOT a violation. A PRESENT empty value still fails `nullable === false`
- * — clients must not send managed fields at all. Mirrors the form, where
- * required only ever applies to declared placements
- * (`placement.required ?? nullable`).
+ * columns, `meta.uid` (server-generated identity), `managed` columns
+ * (server-filled keys, e.g. an identity `@Key`) and `kind:"calculated" /
+ * "virtual"` columns (server/decorator-computed read projections — never
+ * writable) are system-managed and never arrive on the wire, so an
+ * absent one is NOT a violation. A
+ * PRESENT empty value still fails `nullable === false` — clients must
+ * not send managed fields at all. Mirrors the form, where required only
+ * ever applies to declared placements (`placement.required ?? nullable`).
  * Unknown entity keys are ignored — system columns (`uuid`, `version`)
  * need no column.
  */
@@ -507,7 +582,12 @@ export function checkEntityFields(
   for (const col of meta.columns) {
     const present = col.key in entity;
     if (!present) {
-      const managed = col.audited === true || col.key === meta.uid;
+      const managed =
+        col.audited === true ||
+        col.key === meta.uid ||
+        col.managed === true ||
+        col.kind === "calculated" ||
+        col.kind === "virtual";
       if (!opts.partial && col.nullable === false && !managed) {
         out.push(issue(col.key, "required", "app.common.validation.required"));
       }
@@ -530,11 +610,16 @@ export function checkEntityFields(
 /**
  * `event_subject`/`schedule_spec` are mutually mandatory (at least one);
  * `execution_context: "user"` requires an event source to forward auth
- * headers from. Pure — shared by the FE `job_trigger_shape` validator and
- * the service-side `assertTriggerShape`. On `partial` (update), fields not
- * present in `entity` are treated from the merged record the caller passes.
+ * headers from; a one-shot `@at <ts>` must lie in the future — a past
+ * timestamp FIRES IMMEDIATELY at declare time (verified empirically:
+ * the declaration PubAcks, the scheduler dispatches at once, then the
+ * declaration self-purges — an unintended execution, not a dead one).
+ * `now` is injected so the predicate stays
+ * pure — the form passes the client clock, the write guard the server
+ * clock. On `partial` (update), fields not present in `entity` are
+ * treated from the merged record the caller passes.
  */
-export function jobTriggerShapeIssues(entity: Record<string, unknown>): FieldIssue[] {
+export function jobTriggerShapeIssues(entity: Record<string, unknown>, now: Date = new Date()): FieldIssue[] {
   const hasSrc = typeof entity.event_subject === "string" && entity.event_subject.length > 0;
   const hasSch = typeof entity.schedule_spec === "string" && entity.schedule_spec.length > 0;
   const out: FieldIssue[] = [];
@@ -543,6 +628,16 @@ export function jobTriggerShapeIssues(entity: Record<string, unknown>): FieldIss
   }
   if (entity.execution_context === "user" && !hasSrc) {
     out.push(issue("execution_context", "schema_mismatch", "app.common.validation.user_context_requires_source"));
+  }
+  if (hasSch) {
+    const spec = (entity.schedule_spec as string).trim();
+    if (spec.startsWith("@at")) {
+      const at = new Date(spec.slice(3).trim());
+      // An unparseable timestamp is the grammar check's finding, not ours.
+      if (!Number.isNaN(at.getTime()) && at.getTime() <= now.getTime()) {
+        out.push(issue("schedule_spec", "schema_mismatch", "app.common.validation.schedule_spec_past"));
+      }
+    }
   }
   return out;
 }
@@ -678,18 +773,10 @@ export function pathCompatible(
 // A new dishonesty case is added HERE — never re-invented per surface.
 // ---------------------------------------------------------------------------
 
-/** The name→format honesty matrix — exported so the check-standards lint
- *  (`schema-honest-format`) and the enrollment validator test the SAME
- *  hints. Add a case here, never re-invent it per surface. */
-export const HONEST_FORMAT_HINTS: { re: RegExp; formats: readonly string[]; why: string }[] = [
-  { re: /_at$|At$/, formats: ["date-time"], why: "timestamp" },
-  { re: /_by$|By$/, formats: ["uuid"], why: "actor/uuid" },
-  { re: /uuid/i, formats: ["uuid"], why: "uuid" },
-  { re: /(?:^|_)e?_?mails?(?:_|$)|emails?$/i, formats: ["email"], why: "email" },
-  { re: /(?:^|_)(?:phones?|tel|mobile)(?:_|$)|phones?$/i, formats: ["phone"], why: "phone" },
-  { re: /(?:^|_)(?:urls?|uris?)$|[Uu]rls?$|[Uu]ris?$/, formats: ["url", "uri"], why: "url" },
-  { re: /(?:^|_)locales?$|language_?isos?$|locales?$/i, formats: ["lang"], why: "locale/language" },
-];
+/** The name→format honesty matrix lives in ./honest-format-hints.ts —
+ *  re-exported so existing consumers keep the same import surface. */
+export { HONEST_FORMAT_HINTS } from "./honest-format-hints.js";
+import { HONEST_FORMAT_HINTS } from "./honest-format-hints.js";
 
 /** Iterate every property schema a JSON schema declares — nested objects
  *  and array items included. `required` reflects the PARENT level's
@@ -776,6 +863,7 @@ function entryIssues(
   propSchema: Record<string, unknown>,
   path: string,
   sourceSchema?: Record<string, unknown>,
+  keySchemas?: Record<string, Record<string, unknown>>,
 ): FieldIssue[] {
   const out: FieldIssue[] = [];
   const hasFallback = Array.isArray(entry.fallback) && entry.fallback.length > 0;
@@ -836,7 +924,12 @@ function entryIssues(
         out.push(issue(path, "required", "app.common.validation.empty_map"));
       }
       for (const [k, sub] of Object.entries(entries)) {
+        // `x_map_keys` declared schemas win over the prop's own
+        // `properties`/`additionalProperties`: a record field
+        // (`z.record`) projects `{}` for every key — the template's
+        // declaration is the only place a key's real type lives.
         const subSchema =
+          keySchemas?.[k] ??
           props[k] ??
           (additional && typeof additional === "object" ? (additional as Record<string, unknown>) : {});
         out.push(...entryIssues(sub, subSchema, joinPath(path, k), sourceSchema));
@@ -874,6 +967,14 @@ export function payloadMapConformance(
   map: PayloadMap | Record<string, unknown> | undefined | null,
   callableSchema: Record<string, unknown>,
   sourceSchema?: Record<string, unknown>,
+  /** Resolved `x_map_keys` declarations per field — `{field: {key:
+   *  schema}}` — the catalog-row contract (e.g. a template's
+   *  `variables`). Optional: the wire gate can't resolve catalog rows
+   *  synchronously and skips this layer; the design-time checker passes
+   *  the resolved set so a `const` typed against a declared key schema
+   *  (`"hhhhh"` on `amount:"number"`) fails `invalid_type` instead of
+   *  passing on the record's empty `additionalProperties`. */
+  mapKeySchemas?: Record<string, Record<string, Record<string, unknown>>>,
 ): FieldIssue[] {
   if (!map || typeof map !== "object") map = {};
   const out: FieldIssue[] = [];
@@ -893,7 +994,9 @@ export function payloadMapConformance(
     const propSchema = properties[key];
     if (!propSchema) continue; // mapped key absent from schema — loose, not an issue
     if (entry && typeof entry === "object") {
-      out.push(...entryIssues(entry, propSchema, `payload_map.${key}`, sourceSchema));
+      out.push(
+        ...entryIssues(entry, propSchema, `payload_map.${key}`, sourceSchema, mapKeySchemas?.[key]),
+      );
     }
   }
   return out;

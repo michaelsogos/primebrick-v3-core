@@ -1,6 +1,6 @@
 {
   "name": "@primebrick/core",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Environment-neutral shared contracts for Primebrick v3 — entity meta schema, entity actions vocabulary, list query types, branded primitives. Consumable by frontend, backend, microservices, DAL and SDK.",
   "type": "module",
   "license": "MIT",
@@ -81,7 +81,7 @@
     "test": "pnpm check:standards && vitest run",
     "test:watch": "vitest",
     "extract-docs": "node scripts/extract-api-docs.mjs && node scripts/render-api-reference.mjs",
-    "check:standards": "node tools/check-standards.ts src --profile=lib"
+    "check:standards": "bun ../primebrick-v3-sdk/tools/check-standards.ts src --profile=lib"
   },
   "publishConfig": {
     "access": "public",

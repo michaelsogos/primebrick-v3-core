@@ -12,7 +12,9 @@
  *   filters[i][field]=status&filters[i][op]=IN&filters[i][value][]=A&filters[i][value][]=B
  *
  * `filterValues` (toolbar quick filters) are mapped from column type:
- * `text` → ILIKE, badge arrays → per-value OR chain ending with AND.
+ * `text` → ILIKE — except `options_source` columns (governed vocabularies
+ * are equality: ILIKE on `a.b` would match `a.b.v2`); ANY array value →
+ * `IN` (the same wire shape advanced filters emit — one form end-to-end).
  * `advancedFilters` (FiltersPanel conditions) map UI operators to SQL:
  * contains/startsWith/endsWith → ILIKE patterns, arrays → IN / NOT IN,
  * BETWEEN → value[start]/value[end].
@@ -55,19 +57,19 @@ export function appendListFilterParams(
   for (const [field, value] of Object.entries(filterValues)) {
     if (value === undefined || value === null || value === "") continue;
     const col = columns.find((c) => c.key === field);
-    const op = col?.type === "text" ? "ILIKE" : "=";
+    // Governed vocabularies (`options_source`) filter by equality —
+    // substring matching would leak across subject boundaries.
+    const op = col?.type === "text" && !col?.options_source ? "ILIKE" : "=";
 
-    if (col?.type === "badge" && Array.isArray(value)) {
-      for (let i = 0; i < value.length; i++) {
-        params.set(`filters[${filterIdx}][field]`, field);
-        params.set(`filters[${filterIdx}][op]`, op);
-        params.set(`filters[${filterIdx}][value]`, String(value[i]));
-        params.set(
-          `filters[${filterIdx}][connector]`,
-          i < value.length - 1 ? "OR" : "AND",
-        );
-        filterIdx++;
+    if (Array.isArray(value)) {
+      if (value.length === 0) continue;
+      params.set(`filters[${filterIdx}][field]`, field);
+      params.set(`filters[${filterIdx}][op]`, "IN");
+      for (const val of value) {
+        params.append(`filters[${filterIdx}][value][]`, String(val));
       }
+      params.set(`filters[${filterIdx}][connector]`, "AND");
+      filterIdx++;
     } else {
       params.set(`filters[${filterIdx}][field]`, field);
       params.set(`filters[${filterIdx}][op]`, op);

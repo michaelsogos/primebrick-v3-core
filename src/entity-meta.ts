@@ -58,12 +58,118 @@ export interface EntityAction {
    *  action, absent when no route exists (`enabled: false`). Consumers
    *  dispatch writes to the declared endpoint instead of recomputing the
    *  `/api/v1/entities/{entity}` convention — required for ops living under
-   *  non-standard prefixes (e.g. `/api/v1/auth/users`). */
+   *  non-standard prefixes (e.g. `/api/v1/auth/users`). An RPC route may
+   *  claim the slot via `entity_op.crud_action` — the declared override. */
   endpoint?: EntityActionEndpoint;
+  /** CTA chrome overrides — translation key / icon / semantic color
+   *  replacing the standard rendering (e.g. soft-delete-as-disable →
+   *  "Deactivate" + `exec-stop` + destructive). Cosmetics only: gating,
+   *  dialogs and dispatch are untouched. Sources: `entity_op.cta` on a
+   *  `crud_action` route, or `meta.actions_overrides[op]`. */
+  label_key?: string;
+  icon?: string;
+  color?: ActionColor;
+  /** Confirm-dialog message template override (`{entity}`/`{name}` for
+   *  single ops, `{count}`/`{entity}` for bulk). When set it replaces the
+   *  standard `app.common.{delete,restore}Entit{y,ies}Confirm` copy —
+   *  e.g. soft-delete-as-disable → "disattivare" + reversible note. */
+  confirm_key?: string;
+  /** In-flight confirm-button label override (default `app.common.
+   *  {deleting,restoring}`) — e.g. "Disattivazione…" while disabling. */
+  busy_key?: string;
 }
 
-/** Per-op enable overrides — may ONLY toggle `enabled` on route-backed ops. */
-export type ActionsOverrides = Record<string, { enabled?: boolean }>;
+/** Per-op overrides — `enabled` toggles route-backed ops; chrome fields
+ *  restyle the standard CTA without touching its logic. */
+export type ActionsOverrides = Record<
+  string,
+  {
+    enabled?: boolean;
+    label_key?: string;
+    icon?: string;
+    color?: ActionColor;
+    confirm_key?: string;
+    busy_key?: string;
+  }
+>;
+
+/** Closed action-color vocabulary — ONE semantic drives BOTH the icon and
+ *  the label of a menu CTA (impossible to drift them apart). `neutral` is
+ *  the default uncolored rendering; the destructive/warning/success/info/
+ *  primary names map to the theme's semantic text utilities. A meta may
+ *  never smuggle a Tailwind class here — the enum IS the contract. */
+export type ActionColor =
+  | "neutral"
+  | "primary"
+  | "info"
+  | "success"
+  | "warning"
+  | "destructive";
+
+/**
+ * The full `ActionColor` vocabulary — construction/lint validation rejects
+ * anything outside this closed set (raw strings on the wire can never reach
+ * the renderer).
+ */
+export const ACTION_COLORS: readonly ActionColor[] = [
+  "neutral",
+  "primary",
+  "info",
+  "success",
+  "warning",
+  "destructive",
+];
+
+/**
+ * Semantic action icons — names whose COLOR IS PART OF THE ICON's meaning.
+ * Each name binds to exactly one `ActionColor` (the label color); the icon
+ * component itself (in `@primebrick/ui`'s `SEMANTIC_ICONS` registry, which
+ * reads THIS table) renders the gradient surface self-colored. A meta that
+ * pairs a semantic icon with a different color is a contract violation —
+ * `validateActionChrome` rejects it at construction time, so icon and
+ * label can never drift apart even by accident.
+ *
+ * - `exec-start` → success   (start/enable is a positive op — deliberate
+ *   divergence from the standard restore-warning chrome)
+ * - `exec-stop`  → destructive (stop/disable is a destructive op)
+ */
+export const SEMANTIC_ICON_COLORS: Record<string, ActionColor> = {
+  "exec-start": "success",
+  "exec-stop": "destructive",
+};
+
+/**
+ * Maps an `ActionColor` to its Tailwind text utility. `neutral`/`undefined`
+ * resolves to the empty string — the item keeps the theme's default muted
+ * appearance (what standard CTAs like "Modifica" already show). This is the
+ * ONLY mapping of semantic color → class; renderers never hand-roll
+ * `text-${color}` strings.
+ */
+export function actionColorClass(color: ActionColor | undefined | null): string {
+  if (!color || color === "neutral") return "";
+  return `text-${color}`;
+}
+
+/**
+ * Validates the icon↔color contract of a single action chrome override.
+ * Returns a diagnostic string on violation, `null` when the pair is legal:
+ * - `color` must be a member of `ACTION_COLORS`;
+ * - a semantic icon (`SEMANTIC_ICON_COLORS` key) must carry its bound color —
+ *   `icon:"exec-stop", color:"success"` is an error, not a style choice.
+ */
+export function validateActionChrome(
+  icon: string | undefined,
+  color: string | undefined,
+): string | null {
+  if (color !== undefined && !ACTION_COLORS.includes(color as ActionColor)) {
+    return `color "${color}" is not an ActionColor — allowed: ${ACTION_COLORS.join("|")}`;
+  }
+  const bound = icon !== undefined ? SEMANTIC_ICON_COLORS[icon] : undefined;
+  if (bound !== undefined && color !== undefined && color !== bound) {
+    return `semantic icon "${icon}" binds to color "${bound}", got "${color}" — icon and label can never diverge`;
+  }
+  return null;
+}
 
 /**
  * The canonical vocabulary of standard entity ops. Every op is always
@@ -98,7 +204,10 @@ export type MetaColumnType =
   | "date"
   | "datetime"
   | "number"
-  | "sparkline";
+  | "sparkline"
+  | "ref"
+  | "ref_count"
+  | "avatar";
 
 /**
  * Authored field-format vocabulary — the SEMANTIC input contract of a
@@ -135,6 +244,75 @@ export type MetaColumnFormat =
   | "slug"
   | "no_space"
   | "lang";
+
+/**
+ * Dynamic option vocabulary for combo-backed controls — declared on the
+ * COLUMN (`MetaColumn.options_source`), never on a form placement:
+ * the same contract feeds forms, list filters and docs generation.
+ * Closed union on purpose — an unknown source is a construction error.
+ */
+export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors" | "system.roles";
+
+/**
+ * Option vocabulary a unit-of-measure selector may draw from.
+ * `"currencies"`: the ISO 4217 list resolved client-side (`getAllCurrencies`
+ * — same source the config-domain currency picker uses). `{entity}`: the
+ * UoM codes persist as rows of another entity (resolved via its `/list`).
+ * `{api_url}`: an explicit endpoint serving the options.
+ * Closed union on purpose — an unknown source is a construction error.
+ */
+export type MetaColumnUomSource = "currencies" | { entity: string } | { api_url: string; value_field: string; label_field?: string };
+
+/**
+ * Numeric unit-of-measure contract — the column's semantic quantity unit.
+ * `"percent"`: pure display transform (display = canonical × 100, emitted =
+ * display ÷ 100) — the canonical value stays a fraction; NO sibling field.
+ * `"currency"`: money semantics — `field` names the SIBLING column that
+ * persists the ISO code per row (mandatory); `source` defaults to
+ * `"currencies"` (the shared ISO list).
+ * `"custom"`: any other UoM (kg, ms, items, …) — `field` persists the code,
+ * `source` drives the selector options, `symbol` overrides the adornment.
+ * The `field` sibling requirement is verified by `withColumnConstraints`:
+ * a uom'd numeric without its code column is a construction error.
+ */
+export type MetaColumnUom =
+  | { kind: "percent" }
+  | { kind: "currency"; field: string; source?: "currencies" }
+  | { kind: "custom"; field: string; source: MetaColumnUomSource; symbol?: string };
+
+/**
+ * Avatar renderer contract — the column renders the user/org avatar
+ * (initials + color swatch), NOT a text control. `color_field` names the
+ * SIBLING column that persists the per-row avatar color — same pattern
+ * `uom.field` uses for the currency code column. The avatar column's own
+ * value carries the initials; the sibling carries the color.
+ * The sibling requirement is verified by `withColumnConstraints`: an
+ * avatar column without its color column is a construction error.
+ * `initials_field` (optional) names the sibling column the initials
+ * DERIVE from (typically `display_name`): edit surfaces recompute the
+ * initials live from it and persist the derived value when that sibling
+ * crosses the wire. Same physical-column rule as `color_field`.
+ */
+export type MetaColumnAvatar = { color_field: string; initials_field?: string };
+
+/**
+ * A sibling-value condition — the SAME vocabulary `null_label.when` and
+ * `visible_on` already use for row-gated rendering, lifted to form scope.
+ * `prop` compares against the pivot ROW's prop (the picked ref option's
+ * raw row — e.g. its `code`); absent `prop` compares the pivot's stored
+ * value directly. `equals`/`not` take a single literal, `values` a set
+ * (IN semantics).
+ */
+export type MetaColumnDependsCondition = {
+  /** Pivot ROW prop to compare — requires the pivot to be `type:"ref"`. */
+  prop?: string;
+  /** Disabled when the compared value equals this literal. */
+  equals?: unknown;
+  /** Disabled when the compared value differs from this literal. */
+  not?: unknown;
+  /** Disabled when the compared value is in this set (IN semantics). */
+  values?: readonly unknown[];
+};
 
 /** Tooltip visual severity — drives icon and title color in priority
  *  tooltip renderers. */
@@ -185,14 +363,35 @@ export type MetaColumn = {
   sticky?: boolean;
   /** If false, the column cannot be hidden via the column picker. */
   hideable?: boolean;
+  /** Author-asserted total suppression: the column is dropped from the
+   *  served meta entirely (never reaches the table, picker, filters or
+   *  forms) AND blocks auto-derivation from the entity class. This is the
+   *  ONLY opt-out — visibility concerns stay on `default_visible`. */
+  hidden?: boolean;
+  /** Semantic color TOKEN (`TailwindColorToken`: `"amber"`, `"amber-500"`,
+   *  or a semantic tone) for icon/badge accent — resolved at render time
+   *  via `colorCssFromToken`/`badgeClassesFromToken` to INLINE styles.
+   *  NEVER a `text-*`/`bg-*` class string: served meta is invisible to the
+   *  FE content scan, so class-based colors silently dead-render.
+   *  Purely cosmetic — never carries semantics the type/format doesn't. */
+  color?: string;
+  /** Null-state label: when the cell value is null/undefined render this
+   *  translation key instead of `"-"`. `when` gates it on a sibling field
+   *  (e.g. `{ field: "enabled", equals: false }` → "Disabled" only when
+   *  the row is actually disabled, plain `"-"` otherwise). */
+  null_label?: { label_key: string; when?: { field: string; equals?: unknown; not?: unknown } };
   /** System-managed auditing column (created_at, updated_by, …) —
    *  rendered last. */
   audited?: boolean;
-  /** No physical backing on the entity class — derived/computed at read
-   *  time (joins, counts, aggregates). Read-only: never required on write,
-   *  never belongs in `page_props.form`. `withColumnConstraints` exempts
-   *  it from the class lookup; derived props stay absent. */
-  virtual?: boolean;
+  /** Column materialization kind. Absent = physical column.
+   *  `"calculated"` — SQL expression projected by the DAL (`@Calculated`
+   *    decorator on the entity class): a real result column, so
+   *    sortable/filterable/searchable stay ON by default (opt-out allowed).
+   *  `"virtual"` — post-query enrichment not backed by SQL (`decorate()`,
+   *    external sources like NATS): sortable/filterable/searchable are
+   *    FORCED OFF — declaring any of them `true` is a construction error.
+   *  Read-only: never required on write, never belongs in `page_props.form`. */
+  kind?: "calculated" | "virtual";
 
   // ---- form constraint props ----
   // DERIVED — injected at decl time by the DAL `withColumnConstraints`
@@ -208,6 +407,20 @@ export type MetaColumn = {
   /** Physical PG column type (`varchar`, `text`, `jsonb`, `boolean`, …) —
    *  informational for the control pick when `format` is absent. */
   pg_type?: string;
+  /** Server-managed value — the entity class says the database fills it
+   *  (`@Key()` with identity generation today). Never client-supplied on
+   *  create, never required by write validation; a `keyGenerated:"manual"`
+   *  key stays client-writable instead. Derived by
+   *  `withColumnConstraints` — authors MUST NOT set it. */
+  managed?: boolean;
+  /** Authored: set once at creation OR derived by a dedicated process —
+   *  never editable afterwards. Editable on `kind:"create"` forms,
+   *  rendered disabled on update/detail surfaces, and excluded from
+   *  update payloads. Covers both subtypes with ONE behaviour (user
+   *  decision): created-and-immutable (idp_username) and derived
+   *  (idp_code, avatar_initials, onboarding_completed). Distinct from
+   *  `managed` (DB-filled key) and `audited` (lifecycle facts). */
+  immutable?: boolean;
 
   // AUTHORED — semantic contract the entity class cannot express.
   /** Field format — see {@link MetaColumnFormat}. */
@@ -219,9 +432,86 @@ export type MetaColumn = {
   /** Numeric bounds for `number`/`money` formats. */
   min?: number;
   max?: number;
+  /** Unsigned numeric — the control rejects the `-` char AND the wire/form
+   *  validators (`checkFieldValue`/`fieldSpecToZod`) reject negative values.
+   *  PG has no unsigned types: authored only, never derived. */
+  unsigned?: boolean;
+  /** Unit-of-measure semantic — see {@link MetaColumnUom}. Applies to
+   *  numeric columns only; `currency`/`custom` require the sibling `field`
+   *  that persists the UoM code per row. */
+  uom?: MetaColumnUom;
+  /** Avatar renderer — see {@link MetaColumnAvatar}. Applies to
+   *  `type:"avatar"` columns only; `color_field` names the sibling column
+   *  that persists the per-row avatar color. */
+  avatar?: MetaColumnAvatar;
+  /**
+   * `depends_on` — ONE declared edge from this column to a SIBLING column
+   * (the pivot) on the same record. The pivot's value/row drives this
+   * column's behavior — declared once, never the same edge three times:
+   *
+   *   - `filter_field` — `type:"ref"` only: the TARGET column the options
+   *     `/list` filters on (`filters[0][field]=<filter_field>`, op `"="`,
+   *     value = the pivot's stored value). First consumer: account
+   *     `country → legal_form` (options scoped to the picked country).
+   *   - `disabled_when` — gate the whole control while the condition
+   *     matches (e.g. `company_dimension` disabled when the picked
+   *     `customer_type` row's `code` is `private`).
+   *   - `control_prop` — the pivot ROW's prop that resolves this column's
+   *     `format` at render time (e.g. `contact.value` → `email`/`phone`/
+   *     `text` control from the picked contact_type's `value_kind`).
+   *
+   * `filter_field`/`control_prop` both imply the control stays disabled
+   * while the pivot has no value AND this column's value resets when the
+   * pivot changes — a stale dependent value is a silent integrity leak.
+   * `disabled_when.prop`/`control_prop` read the pivot's picked ROW —
+   * legal only when the pivot column is `type:"ref"` (enforcement is
+   * construction-side, in `withColumnConstraints`). Form-surface only:
+   * filter columns never carry `depends_on`.
+   */
+  depends_on?: {
+    /** Sibling column key on the same record — the pivot. */
+    field: string;
+    /** `type:"ref"` — the TARGET entity column the options `/list`
+     *  filters on, fed by the pivot's stored value. */
+    filter_field?: string;
+    /** Disable gate — see {@link MetaColumnDependsCondition}. */
+    disabled_when?: MetaColumnDependsCondition;
+    /** The pivot ROW's prop resolving `format` at render time. */
+    control_prop?: string;
+  };
   /** `format:"json"` — JSON Schema driving the editor's lint/completion
    *  AND the structural validation in `buildEntityFormSchema`. */
   json_schema?: Record<string, unknown>;
+
+  /** Explicit control override — key of the host widget registry;
+   *  bypasses the `format`→control derivation on EVERY surface (forms
+   *  AND filters read the same declaration — it is the column's
+   *  semantic input contract, not a page-layout decision). */
+  widget?: string;
+  /**
+   * Dynamic option vocabulary for combo-backed controls — closed union.
+   * `"census.emits"`: the union of every module's `events.emits` from
+   * the `/modules` discovery payload (already client-side at render
+   * time). `"census.callables"`: the union of every module's
+   * `callables.callables` — governed LISTEN subjects a rule/scheduler
+   * may invoke. Census sources only offer declared values — see
+   * `allow_create`.
+   */
+  options_source?: MetaColumnOptionsSource;
+  /**
+   * ComboSelect free-entry flag — `true` lets the user type values NOT
+   * in the option list. A census source is a CLOSED vocabulary by
+   * definition: `options_source:"census.*"` + `allow_create:true` is a
+   * construction error (`withColumnConstraints` throws). Absent = free
+   * entry disabled.
+   * `"audit.actors"`: the DISTINCT vocabulary of the table's own audit
+   * actor columns (`created_by`/`updated_by`/`deleted_by`) served by the
+   * entity's `/audit-actors` route — uuid actors label-resolved through
+   * `user_profile`, fictitious actors (`migration-*`, `initial-setup`)
+   * stay raw. Auto-injected by `withColumnConstraints` on auto-derived
+   * `*_by` columns — never authored by hand.
+   */
+  allow_create?: boolean;
 
   /** Lucide icon name rendered before the label in FORM field labels —
    *  inherits the label text color (it identifies the field's semantic,
@@ -241,6 +531,58 @@ export type MetaColumn = {
   show_list_tooltip?: boolean;
 
   // ---- type-specific payloads ----
+  /** `type: "ref"` — the cell value identifies a row on ANOTHER entity.
+   *  The renderer turns it into a badge linking to the target's
+   *  census-declared page (entity name is the only required spec: the FE
+   *  resolves routes from the module census, never hardcoded URLs). */
+  ref?: {
+    /** Target entity API name — the `entity` on its route declaration. */
+    entity: string;
+    /** `'detail'` — the value is the target's `uid`, links to its `[param]`
+     *  route. `'list'` — links to the target's list page pre-filtered.
+     *  `'none'` — the cell renders the label with NO link (for
+     *  `value_field` columns whose stored value can't feed a route).
+     *  Default `'detail'`. */
+    route?: "detail" | "list" | "none";
+    /** `route:"list"` — the TARGET column the cell value filters by
+     *  (`filters[0][field]` in the list URL). */
+    filter_field?: string;
+    /**
+     * TARGET row column the stored value comes from — default `meta.uid`
+     * (the uuid). `"id"` carries the bigint surrogate key: the contract
+     * for TRUE-FK pickers (`customer_accounts.local_address_id` picks an
+     * `local_addresses.id` the FK actually constrains). Options fetch,
+     * selected-label `IN` lookup and pivot-row resolution all filter on
+     * this column instead of `uid`. A non-uid value CANNOT drive
+     * `route:"detail"` links (detail params are uids) — declare
+     * `route:"list"` + `filter_field` for a truthful link, or
+     * `route:"none"` for a label-only cell. `withColumnConstraints`
+     * enforces both at construction. Same `value_field` vocabulary as
+     * {@link MetaColumnUomSource}'s api_url source.
+     */
+    value_field?: string;
+    /**
+     * Cell anatomy — `"link"` (DEFAULT): the two-affordance anatomy
+     * (text → record sheet; trailing ExternalLink → target `/list`
+     * filtered, `target="_blank"`). `"badge"`: the legacy badge-pill
+     * single-link anatomy — explicit opt-in only, never the default.
+     * `route:"none"` degrades to a label under both.
+     */
+    presentation?: "link" | "badge";
+  };
+  /** `type:"ref_count"` — a 1:N children link, usually on a `virtual`
+   *  column. Renders the row's value (service-decorated count, or the
+   *  label when undecorated) as a badge linking to the child entity's
+   *  list page filtered to this row. */
+  reverse_ref?: {
+    /** Child entity API name — the `entity` on its route declaration. */
+    entity: string;
+    /** Child column key filtered to this row (`filters[0][field]`). */
+    filter_field: string;
+    /** `{field}` template for the filter value — e.g.
+     *  `"jobs.schedule.job.{uuid}"`. Default `"{<meta.uid>}"`. */
+    value_template?: string;
+  };
   /** `type: "badge"` — per-value label/color mapping. */
   badge?: {
     values: Record<
@@ -354,15 +696,50 @@ export interface RowCustomAction {
   action_name: string;
   /** i18n key for the CTA label. */
   translation_key: string;
-  /** Icon name (Lucide in the reference FE). */
-  icon: string;
-  /** Optional CSS color class for the label. */
-  text_color?: string;
+  /** Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. */
+  icon?: string;
+  /** Semantic color for icon + label together — see `ActionColor`. */
+  color?: ActionColor;
   /** Disable the CTA on soft-deleted rows. */
   disabled_when_deleted?: boolean;
   /** Permission required to see/use the action (filtered client-side
    *  against the user's permission set). */
   required_permission?: string | string[];
+  /** Row→body binding for endpoint-dispatched actions: the op's request
+   *  body receives `{[row_key]: row[row_key]}` — same convention as
+   *  sparkline `row_key` (e.g. `schedule_subject`). When absent and the
+   *  endpoint path carries `:param` placeholders, params substitute from
+   *  the row fields of the same name (`:uuid` ← `meta.uid`). */
+  row_key?: string;
+  /** Show the CTA only when the row's `status` (or `visible_on.field`)
+   *  equals one of these values — e.g. show `resume` only on `paused`
+   *  rows. Absent = always visible. Scalar comparison — boolean/number
+   *  fields are allowed (e.g. `enabled ∈ [false]` for an Enable CTA). */
+  visible_on?: { field: string; values: (string | number | boolean)[] };
+}
+
+/** UI configuration for a selection-aware bulk CTA (endpoint-backed op
+ *  with no row binding — e.g. `disarm_all`). */
+export interface BulkCustomAction {
+  /** Action/op name — must resolve to an `entity_op`-declared route. */
+  action_name: string;
+  /** i18n key for the CTA label. */
+  translation_key: string;
+  /** Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. */
+  icon?: string;
+  /** Semantic color for icon + label together — see `ActionColor`. */
+  color?: ActionColor;
+  /** Permission required to see/use the action. */
+  required_permission?: string | string[];
+  /** When true, the CTA is enabled only with rows selected and the body
+   *  receives `selected_uuids`; false = fires with an empty body
+   *  (selection-independent, e.g. `disarm_all`). Default true. */
+  requires_selection?: boolean;
+  /** Require a step-up MFA challenge before dispatch (destructive bulk). */
+  require_step_up?: boolean;
+  /** i18n key for a confirmation dialog message — when set, the action
+   *  asks before dispatching. */
+  confirm_key?: string;
 }
 
 /** Table options — present only on entities with a table page. */
@@ -376,6 +753,10 @@ export interface TableMeta {
    *  Standard ops (edit/delete/duplicate/preview) are derived from
    *  `meta.actions` — never declared here. */
   row_custom_actions?: RowCustomAction[];
+  /** UI config for non-standard bulk CTAs rendered in the selection
+   *  toolbar (e.g. `disarm_all`) — dispatch rides the same endpoint
+   *  contract as row custom actions via `meta.actions`. */
+  bulk_custom_actions?: BulkCustomAction[];
   /** Mutually-exclusive preset WHERE filters — each rendered as its own
    *  toolbar control; the active option's conditions AND into every list
    *  request (see {@link FilterPreset}). */
@@ -441,6 +822,22 @@ export interface EntityMeta {
 }
 
 /**
+ * The `dict` facet — runtime-injected on served meta when the entity
+ * class carries the `@Dict` marker (a dict base such as
+ * dal-pg `DictEntityBase`). Drives the `kind:"dict"` page archetype:
+ * a compact inline-editable list (rows add/edit in place).
+ */
+export interface DictFacet {
+  /** Column key grouping rows into fieldsets — absent renders a FLAT
+   *  sequence; grouping is opt-in per entity, never inferred. */
+  group_field?: string;
+  /** Column key owning row ordering (convention default: `sort` when the
+   *  entity declares it). Reorder CTAs mutate it and persist through the
+   *  page's atomic bulk save — no dedicated reorder endpoint. */
+  order_field?: string;
+}
+
+/**
  * The served `GET /api/v1/entities/{entity}/meta` response:
  * static meta + runtime-injected `display_name`, `actions`, `collaboration`.
  */
@@ -448,6 +845,8 @@ export type EntityMetaResponse = EntityMeta & {
   display_name: string;
   actions: EntityAction[];
   collaboration: CollaborationMeta;
+  /** Present only on dict-faceted entities — see {@link DictFacet}. */
+  dict?: DictFacet;
 };
 
 /**

@@ -31,6 +31,25 @@ One advanced-filter entry (filters sheet / `filters[i][...]` URL params).
 | operator | `FilterOperator` |  |
 | value | `unknown` |  |
 
+### `BulkCustomAction`
+
+UI configuration for a selection-aware bulk CTA (endpoint-backed op
+ with no row binding — e.g. `disarm_all`).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| action_name | `string` | Action/op name — must resolve to an `entity_op`-declared route. |
+| translation_key | `string` | i18n key for the CTA label. |
+| icon | `string` | Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. |
+| color | `ActionColor` | Semantic color for icon + label together — see `ActionColor`. |
+| required_permission | `string \| string[]` | Permission required to see/use the action. |
+| requires_selection | `boolean` | When true, the CTA is enabled only with rows selected and the body
+ receives `selected_uuids`; false = fires with an empty body
+ (selection-independent, e.g. `disarm_all`). Default true. |
+| require_step_up | `boolean` | Require a step-up MFA challenge before dispatch (destructive bulk). |
+| confirm_key | `string` | i18n key for a confirmation dialog message — when set, the action
+ asks before dispatching. |
+
 ### `CheckEntityFieldsOptions`
 
 | Field | Type | Description |
@@ -46,6 +65,21 @@ Collaboration fragment injected by `assembleMeta` at serve time.
 |-------|------|-------------|
 | enabled | `boolean` |  |
 | expose_editing_value | `boolean` |  |
+
+### `DictFacet`
+
+The `dict` facet — runtime-injected on served meta when the entity
+class carries the `@Dict` marker (a dict base such as
+dal-pg `DictEntityBase`). Drives the `kind:"dict"` page archetype:
+a compact inline-editable list (rows add/edit in place).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| group_field | `string` | Column key grouping rows into fieldsets — absent renders a FLAT
+ sequence; grouping is opt-in per entity, never inferred. |
+| order_field | `string` | Column key owning row ordering (convention default: `sort` when the
+ entity declares it). Reorder CTAs mutate it and persist through the
+ page's atomic bulk save — no dedicated reorder endpoint. |
 
 ### `EntityAction`
 
@@ -64,7 +98,21 @@ unavailable for everyone (route missing or product-disabled).
  action, absent when no route exists (`enabled: false`). Consumers
  dispatch writes to the declared endpoint instead of recomputing the
  `/api/v1/entities/{entity}` convention — required for ops living under
- non-standard prefixes (e.g. `/api/v1/auth/users`). |
+ non-standard prefixes (e.g. `/api/v1/auth/users`). An RPC route may
+ claim the slot via `entity_op.crud_action` — the declared override. |
+| label_key | `string` | CTA chrome overrides — translation key / icon / semantic color
+ replacing the standard rendering (e.g. soft-delete-as-disable →
+ "Deactivate" + `exec-stop` + destructive). Cosmetics only: gating,
+ dialogs and dispatch are untouched. Sources: `entity_op.cta` on a
+ `crud_action` route, or `meta.actions_overrides[op]`. |
+| icon | `string` |  |
+| color | `ActionColor` |  |
+| confirm_key | `string` | Confirm-dialog message template override (`{entity}`/`{name}` for
+ single ops, `{count}`/`{entity}` for bulk). When set it replaces the
+ standard `app.common.{delete,restore}Entit{y,ies}Confirm` copy —
+ e.g. soft-delete-as-disable → "disattivare" + reversible note. |
+| busy_key | `string` | In-flight confirm-button label override (default `app.common.
+ {deleting,restoring}`) — e.g. "Disattivazione…" while disabling. |
 
 ### `EntityActionEndpoint`
 
@@ -308,11 +356,20 @@ UI configuration for a non-standard row CTA (route-backed bare op).
 | action_name | `string` | Action/op name — matches the bare op derived from the route
  (e.g. `change_password`). |
 | translation_key | `string` | i18n key for the CTA label. |
-| icon | `string` | Icon name (Lucide in the reference FE). |
-| text_color | `string` | Optional CSS color class for the label. |
+| icon | `string` | Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. |
+| color | `ActionColor` | Semantic color for icon + label together — see `ActionColor`. |
 | disabled_when_deleted | `boolean` | Disable the CTA on soft-deleted rows. |
 | required_permission | `string \| string[]` | Permission required to see/use the action (filtered client-side
  against the user's permission set). |
+| row_key | `string` | Row→body binding for endpoint-dispatched actions: the op's request
+ body receives `{[row_key]: row[row_key]}` — same convention as
+ sparkline `row_key` (e.g. `schedule_subject`). When absent and the
+ endpoint path carries `:param` placeholders, params substitute from
+ the row fields of the same name (`:uuid` ← `meta.uid`). |
+| visible_on | `{ field: string; values: string \| number \| boolean[] }` | Show the CTA only when the row's `status` (or `visible_on.field`)
+ equals one of these values — e.g. show `resume` only on `paused`
+ rows. Absent = always visible. Scalar comparison — boolean/number
+ fields are allowed (e.g. `enabled ∈ [false]` for an Enable CTA). |
 
 ### `TableMeta`
 
@@ -327,17 +384,31 @@ Table options — present only on entities with a table page.
 | row_custom_actions | `RowCustomAction[]` | UI config for non-standard row actions (e.g. change password).
  Standard ops (edit/delete/duplicate/preview) are derived from
  `meta.actions` — never declared here. |
+| bulk_custom_actions | `BulkCustomAction[]` | UI config for non-standard bulk CTAs rendered in the selection
+ toolbar (e.g. `disarm_all`) — dispatch rides the same endpoint
+ contract as row custom actions via `meta.actions`. |
 | filter_presets | `readonly FilterPreset[]` | Mutually-exclusive preset WHERE filters — each rendered as its own
  toolbar control; the active option's conditions AND into every list
  request (see FilterPreset). |
 
 ## Types & Enums
 
+### `ActionColor`
+
+Closed action-color vocabulary — ONE semantic drives BOTH the icon and
+ the label of a menu CTA (impossible to drift them apart). `neutral` is
+ the default uncolored rendering; the destructive/warning/success/info/
+ primary names map to the theme's semantic text utilities. A meta may
+ never smuggle a Tailwind class here — the enum IS the contract.
+
+**Type:** `"neutral" \| "primary" \| "info" \| "success" \| "warning" \| "destructive"`
+
 ### `ActionsOverrides`
 
-Per-op enable overrides — may ONLY toggle `enabled` on route-backed ops.
+Per-op overrides — `enabled` toggles route-backed ops; chrome fields
+ restyle the standard CTA without touching its logic.
 
-**Type:** `Record<string, { enabled: boolean }>`
+**Type:** `Record<string, { enabled: boolean; label_key: string; icon: string; color: ActionColor; confirm_key: string; busy_key: string }>`
 
 ### `CallableDecl`
 
@@ -409,7 +480,7 @@ Values mirror the `Permission` enum in `@primebrick/sdk`.
 The served `GET /api/v1/entities/{entity}/meta` response:
 static meta + runtime-injected `display_name`, `actions`, `collaboration`.
 
-**Type:** `EntityMeta & { display_name: string; actions: EntityAction[]; collaboration: CollaborationMeta }`
+**Type:** `EntityMeta & { display_name: string; actions: EntityAction[]; collaboration: CollaborationMeta; dict: DictFacet }`
 
 ### `FilterCondition`
 
@@ -485,6 +556,29 @@ implicit index signature, keeping `MetaColumn` assignable to
 `Record<string, unknown>` — host/remotes pass columns through generic
 cell-snippet args typed as `Record<string, unknown>`.
 
+### `MetaColumnAvatar`
+
+Avatar renderer contract — the column renders the user/org avatar
+(initials + color swatch), NOT a text control. `color_field` names the
+SIBLING column that persists the per-row avatar color — same pattern
+`uom.field` uses for the currency code column. The avatar column's own
+value carries the initials; the sibling carries the color.
+The sibling requirement is verified by `withColumnConstraints`: an
+avatar column without its color column is a construction error.
+`initials_field` (optional) names the sibling column the initials
+DERIVE from (typically `display_name`): edit surfaces recompute the
+initials live from it and persist the derived value when that sibling
+crosses the wire. Same physical-column rule as `color_field`.
+
+### `MetaColumnDependsCondition`
+
+A sibling-value condition — the SAME vocabulary `null_label.when` and
+`visible_on` already use for row-gated rendering, lifted to form scope.
+`prop` compares against the pivot ROW's prop (the picked ref option's
+raw row — e.g. its `code`); absent `prop` compares the pivot's stored
+value directly. `equals`/`not` take a single literal, `values` a set
+(IN semantics).
+
 ### `MetaColumnFormat`
 
 Authored field-format vocabulary — the SEMANTIC input contract of a
@@ -498,12 +592,47 @@ New formats are additive literals (never breaking).
 
 **Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "slug" \| "no_space" \| "lang"`
 
+### `MetaColumnOptionsSource`
+
+Dynamic option vocabulary for combo-backed controls — declared on the
+COLUMN (`MetaColumn.options_source`), never on a form placement:
+the same contract feeds forms, list filters and docs generation.
+Closed union on purpose — an unknown source is a construction error.
+
+**Type:** `"census.emits" \| "census.callables" \| "audit.actors" \| "system.roles"`
+
 ### `MetaColumnType`
 
 UI column renderer type. NOTE: this is the UI type, not the DB type —
  e.g. `roles` is `"text"` here but `jsonb` on disk (never ILIKE-searchable).
 
-**Type:** `"text" \| "badge" \| "boolean" \| "color" \| "date" \| "datetime" \| "number" \| "sparkline"`
+**Type:** `"text" \| "badge" \| "boolean" \| "color" \| "date" \| "datetime" \| "number" \| "sparkline" \| "ref" \| "ref_count" \| "avatar"`
+
+### `MetaColumnUom`
+
+Numeric unit-of-measure contract — the column's semantic quantity unit.
+`"percent"`: pure display transform (display = canonical × 100, emitted =
+display ÷ 100) — the canonical value stays a fraction; NO sibling field.
+`"currency"`: money semantics — `field` names the SIBLING column that
+persists the ISO code per row (mandatory); `source` defaults to
+`"currencies"` (the shared ISO list).
+`"custom"`: any other UoM (kg, ms, items, …) — `field` persists the code,
+`source` drives the selector options, `symbol` overrides the adornment.
+The `field` sibling requirement is verified by `withColumnConstraints`:
+a uom'd numeric without its code column is a construction error.
+
+**Type:** `{ kind: "percent" } \| { kind: "currency"; field: string; source: "currencies" } \| { kind: "custom"; field: string; source: MetaColumnUomSource; symbol: string }`
+
+### `MetaColumnUomSource`
+
+Option vocabulary a unit-of-measure selector may draw from.
+`"currencies"`: the ISO 4217 list resolved client-side (`getAllCurrencies`
+— same source the config-domain currency picker uses). `{entity}`: the
+UoM codes persist as rows of another entity (resolved via its `/list`).
+`{api_url}`: an explicit endpoint serving the options.
+Closed union on purpose — an unknown source is a construction error.
+
+**Type:** `"currencies" \| { entity: string } \| { api_url: string; value_field: string; label_field: string }`
 
 ### `MfaStepUpFn`
 
@@ -557,6 +686,18 @@ module, not to the module owning the broader `/system` prefix).
 
 One sidebar navigation link contributed by a module. `children` is the
 collapsible-group mechanism (the shell renders children under the parent).
+
+### `ModuleNavSibling`
+
+A sidebar-sibling declaration — lifts a SECOND module node next to the
+owning module under the same launcher root (e.g. CRM's "Impostazioni"
+node sibling of the CRM module). The owning service declares it inside
+`endpoints.nav.siblings`; discovery emits it as an extra module entry
+(`id: "<code>-<id>"`, `part_of` inherited) whose `route_prefixes` MUST
+nest strictly under one of the owner's — longest-prefix ownership then
+resolves the sibling's pages to the sibling node, never the parent.
+The access namespace derives as `<moduleNs>.<id>` (e.g.
+`access.crm.settings`) — leaf keys keep the standard route-derived form.
 
 ### `ModuleNotifyInput`
 
@@ -633,6 +774,10 @@ MountPageFn.
 
 **Type:** `(el: HTMLElement, ctx: ModuleSheetHost) => unknown`
 
+### `NumericKind`
+
+**Type:** `"bigint" \| "number" \| "decimal"`
+
 ### `OpenSheetFn`
 
 `ctx.components.openSheet` — opens a sheet panel by key: a host-registered
@@ -667,7 +812,7 @@ conventions — the AI route census (derived from the consolidated
 
 Page archetype vocabulary — what the route renders, regardless of delivery.
 
-**Type:** `"list" \| "detail" \| "create" \| "page"`
+**Type:** `"list" \| "detail" \| "create" \| "page" \| "dict"`
 
 ### `PageRouteProps`
 
@@ -825,6 +970,27 @@ Table view names supported by entity list pages.
 
 ## Constants
 
+### `ACTION_COLORS`
+
+The full `ActionColor` vocabulary — construction/lint validation rejects
+anything outside this closed set (raw strings on the wire can never reach
+the renderer).
+
+**Type:** `readonly ActionColor[]`
+
+### `DEFAULT_PAGE_ICON`
+
+Leaf-page icon defaults — the maximum fallback is `file-box`, applied
+whenever `kind` carries no specific default. A declaration's explicit
+`icon` ALWAYS wins: these fill `icon: null` at emission, they never
+override an authored value. Devs are never required to author one.
+
+**Type:** `"file-box"`
+
+### `DEFAULT_ROUTE_ICONS`
+
+**Type:** `Record<PageRouteKind, string>`
+
 ### `DOTTED_GLOB_RE`
 
 `dotted_glob` — dotted_key where a whole segment may be the `*`
@@ -845,6 +1011,25 @@ Email — same RFC-5322-simplified regex the config validator and the FE
 
 **Type:** `RegExp`
 
+### `FILTER_OPERATOR_ICON`
+
+Canonical `FilterOperator → Lucide icon` map — the ONE operator-icon
+vocabulary every filter surface renders (advanced operator combobox,
+filter chips, summaries). Values are `@lucide/svelte` icon names,
+consumed via `DynamicIcon`.
+
+**Type:** `Record<FilterOperator, string>`
+
+### `FILTER_OPERATOR_KEY`
+
+Canonical `FilterOperator → translation-key segment` map — the ONE
+vocabulary joining filter operators to `system.entities.list.operators.*`
+keys. Key segments are `[a-z0-9_]+` (translation-key grammar) — the bare
+operator symbols (`=`, `!=`, `<`, …) can never be segments, so labels are
+looked up through this map, never through the raw operator value.
+
+**Type:** `Record<FilterOperator, string>`
+
 ### `fromPG`
 
 Alias of `dec()` — parse a PostgreSQL `numeric`/`decimal` text value.
@@ -863,9 +1048,13 @@ Alias of `dec()` — tolerates the `"…d"` wire suffix.
 
 ### `HONEST_FORMAT_HINTS`
 
-The name→format honesty matrix — exported so the check-standards lint
- (`schema-honest-format`) and the enrollment validator test the SAME
- hints. Add a case here, never re-invent it per surface.
+The name→format honesty matrix — the single source of truth consumed by:
+  - `schemaHonestyIssue` in ./field-validation.ts (runtime contract),
+  - the sdk enrollment validators (registry gate),
+  - the check-standards lint (`schema-honest-format`), which imports this
+    file BY RELATIVE PATH so the tool stays zero-dep and CI can run it
+    against bare checkouts with no install.
+A new dishonesty case is added HERE — never re-invented per surface.
 
 **Type:** `{ re: RegExp; formats: readonly string[]; why: string }[]`
 
@@ -985,6 +1174,22 @@ Semantic derivation slot — declares what context the field wants so
 
 **Type:** `"x_semantic"`
 
+### `SEMANTIC_ICON_COLORS`
+
+Semantic action icons — names whose COLOR IS PART OF THE ICON's meaning.
+Each name binds to exactly one `ActionColor` (the label color); the icon
+component itself (in `@primebrick/ui`'s `SEMANTIC_ICONS` registry, which
+reads THIS table) renders the gradient surface self-colored. A meta that
+pairs a semantic icon with a different color is a contract violation —
+`validateActionChrome` rejects it at construction time, so icon and
+label can never drift apart even by accident.
+
+- `exec-start` → success   (start/enable is a positive op — deliberate
+  divergence from the standard restore-warning chrome)
+- `exec-stop`  → destructive (stop/disable is a destructive op)
+
+**Type:** `Record<string, ActionColor>`
+
 ### `SLUG_RE`
 
 `slug` — letter-leading, internal `-` allowed (`test-role`,
@@ -1010,6 +1215,22 @@ with `enabled: false` (explicitly unavailable) instead of being omitted.
 ### `TEN`
 
 **Type:** `Decimal`
+
+### `TRANSLATION_KEY_GRAMMAR`
+
+The ONE key grammar — `[a-z0-9_]+` dot-separated segments, ≥2 segments.
+Shared contract: BE guards, check-standards rules and the per-schema
+`translations_key_shape` CHECK constraint all enforce this exact shape
+(DAL engine and the zero-dep lint keep byte-identical local copies —
+change here, mirror there).
+
+**Type:** `RegExp`
+
+### `TRANSLATION_KEY_SEGMENT`
+
+Single-segment grammar — the unit the full-key grammar repeats.
+
+**Type:** `RegExp`
 
 ### `UUID_REGEX`
 
@@ -1065,6 +1286,18 @@ both. Shared internals still dedupe through the bundler's shared chunks.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
+
+### `actionColorClass(color): string`
+
+Maps an `ActionColor` to its Tailwind text utility. `neutral`/`undefined`
+resolves to the empty string — the item keeps the theme's default muted
+appearance (what standard CTAs like "Modifica" already show). This is the
+ONLY mapping of semantic color → class; renderers never hand-roll
+`text-${color}` strings.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| color | `ActionColor \| null \| undefined` |  |
 
 ### `add(a, b): Decimal`
 
@@ -1150,12 +1383,14 @@ Smallest integer `>= d`.
 
 Validate a wire entity object against `meta.columns`.
 Required = `nullable === false` AND client-writable — `audited`
-columns and `meta.uid` (server-generated identity) are system-managed
-(filled server-side) and never arrive on the wire, so an absent one is
-NOT a violation. A PRESENT empty value still fails `nullable === false`
-— clients must not send managed fields at all. Mirrors the form, where
-required only ever applies to declared placements
-(`placement.required ?? nullable`).
+columns, `meta.uid` (server-generated identity), `managed` columns
+(server-filled keys, e.g. an identity `@Key`) and `kind:"calculated" /
+"virtual"` columns (server/decorator-computed read projections — never
+writable) are system-managed and never arrive on the wire, so an
+absent one is NOT a violation. A
+PRESENT empty value still fails `nullable === false` — clients must
+not send managed fields at all. Mirrors the form, where required only
+ever applies to declared placements (`placement.required ?? nullable`).
 Unknown entity keys are ignored — system columns (`uuid`, `version`)
 need no column.
 
@@ -1192,6 +1427,14 @@ Numeric comparison ignoring scale: `cmp(1.0, 1.00) === 0`. Returns -1 | 0 | 1.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | input | `DecimalInput` |  |
+
+### `defaultRouteIcon(kind): string`
+
+The resolved default icon for `kind` — `file-box` outside the map.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| kind | `string \| undefined` |  |
 
 ### `defaultSearchGate(trimmed): boolean`
 
@@ -1277,17 +1520,19 @@ Strings, booleans, null are unaffected.
 |-----------|------|-------------|
 | text | `string` |  |
 
-### `extJsonStringify(data): string`
+### `extJsonStringify(data, space): string`
 
 Serialize a value to an Ext-JSON string.
 BigInt values serialize as JSON numbers (42n → "42"); floats stay numbers.
 
 Use for request bodies carrying bigint values — the BE's ext-json body
-parser revives them to native `bigint`.
+parser revives them to native `bigint`. `space` mirrors JSON.stringify's
+pretty-print indent for display/tooltip contexts.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | data | `unknown` |  |
+| space | `number` |  |
 
 ### `floor(d): Decimal`
 
@@ -1336,11 +1581,12 @@ Operators available for a given column UI type.
 
 ### `isColumnFilterable(col): boolean`
 
-Column participates in the filters sheet — absent means filterable.
+Column participates in the filters sheet — absent means filterable,
+ except `kind:"virtual"` columns: never filterable, no opt-in exists.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| col | `Pick<MetaColumn, "filterable">` |  |
+| col | `Pick<MetaColumn, "filterable" \| "kind">` |  |
 
 ### `isColumnSearchable(col): boolean`
 
@@ -1349,15 +1595,16 @@ Column joins the search scope — absent means searchable (the caller
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| col | `Pick<MetaColumn, "searchable">` |  |
+| col | `Pick<MetaColumn, "searchable" \| "kind">` |  |
 
 ### `isColumnSortable(col): boolean`
 
-Column supports ORDER BY — absent means sortable.
+Column supports ORDER BY — absent means sortable, except `kind:"virtual"`
+ columns (post-query enrichment): never sortable, no opt-in exists.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| col | `Pick<MetaColumn, "sortable">` |  |
+| col | `Pick<MetaColumn, "sortable" \| "kind">` |  |
 
 ### `isColumnVisible(col): boolean`
 
@@ -1509,23 +1756,39 @@ Runtime validator for SnakeCaseSingular — rejects strings with
 |-----------|------|-------------|
 | raw | `unknown` |  |
 
+### `isValidTranslationKey(key): boolean`
+
+`true` when every segment is `[a-z0-9_]+` and the key is namespaced
+(≥2 segments). Namespace *ownership* is a separate check —
+compare `keyNamespaceOf(key)` against `translationKeyNamespace(schema)`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| key | `string` |  |
+
 ### `isValidUrl(v): boolean`
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | v | `string` |  |
 
-### `jobTriggerShapeIssues(entity): FieldIssue[]`
+### `jobTriggerShapeIssues(entity, now): FieldIssue[]`
 
 `event_subject`/`schedule_spec` are mutually mandatory (at least one);
 `execution_context: "user"` requires an event source to forward auth
-headers from. Pure — shared by the FE `job_trigger_shape` validator and
-the service-side `assertTriggerShape`. On `partial` (update), fields not
-present in `entity` are treated from the merged record the caller passes.
+headers from; a one-shot `@at <ts>` must lie in the future — a past
+timestamp FIRES IMMEDIATELY at declare time (verified empirically:
+the declaration PubAcks, the scheduler dispatches at once, then the
+declaration self-purges — an unintended execution, not a dead one).
+`now` is injected so the predicate stays
+pure — the form passes the client clock, the write guard the server
+clock. On `partial` (update), fields not present in `entity` are
+treated from the merged record the caller passes.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | entity | `Record<string, unknown>` |  |
+| now | `Date` |  |
 
 ### `jsonSchemaCheck(value, schema, path): FieldIssue[]`
 
@@ -1542,6 +1805,17 @@ First dotted segment of a translation key — `job.entities.x` → `job`.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | key | `string` |  |
+
+### `listColumnKeys(columns): { sortable: string[]; searchable: string[]; filterable: string[] }`
+
+Wire key sets derived from the RESOLVED `meta.columns` — sort_key enum,
+`search_in` scope, and `filters[i][field]` allowlists must mirror the
+served contract (system columns are injected by derivation; never
+compute these from the authored column list, which lacks them).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| columns | `MetaColumn[]` |  |
 
 ### `lucideIconSpecifier(exportName): string`
 
@@ -1591,6 +1865,21 @@ identically — validation of existence is the remote build's job.
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
 
+### `nextScheduleFire(spec, opts): Date \| null`
+
+Next fire for a `schedule_spec`, when derivable without a cron evaluator:
+- `@every <n><unit>` — next interval boundary after `now`, anchored at
+  `since` (the declaration's `armed_at`); without an anchor the period is
+  assumed to start at `now`, so the first fire is `now + interval`.
+- `@at <ts>` — the timestamp itself if still future, else null (fired).
+- cron — null: NATS owns cron evaluation; a second interpreter here would
+  drift on dom/dow edge semantics. Invalid specs return null too.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| spec | `string` |  |
+| opts | `{ now: Date; since: Date }` |  |
+
 ### `normalize(d): Decimal`
 
 Strip trailing fractional zeros — `1.230` → `1.23`, `12.000` → `12`.
@@ -1599,10 +1888,18 @@ Strip trailing fractional zeros — `1.230` → `1.23`, `12.000` → `12`.
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
 
+### `numericKindOf(col): NumericKind \| null`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `MetaColumn` |  |
+
 ### `orderedColumns(columns): MetaColumn[]`
 
 Columns in display order: sticky group → normal group → audited group,
-each sorted by `order`.
+each sorted by `order`. A column without `order` falls back to its own
+array index (the contract's last resort) — a raw `order - order`
+comparator returns NaN on undefined and corrupts the whole sort.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -1645,7 +1942,7 @@ declaration — a bare string never satisfies `format:"email"`.
 | target | `Record<string, unknown>` |  |
 | source | `Record<string, unknown> \| undefined` |  |
 
-### `payloadMapConformance(map, callableSchema, sourceSchema): FieldIssue[]`
+### `payloadMapConformance(map, callableSchema, sourceSchema, mapKeySchemas): FieldIssue[]`
 
 Conformance of a `payload_map` document against the callable's emitted
 `payload_schema`. Reports:
@@ -1660,6 +1957,13 @@ Conformance of a `payload_map` document against the callable's emitted
 | map | `Record<string, unknown> \| PayloadMap \| null \| undefined` |  |
 | callableSchema | `Record<string, unknown>` |  |
 | sourceSchema | `Record<string, unknown>` |  |
+| mapKeySchemas | `Record<string, Record<string, Record<string, unknown>>>` | Resolved `x_map_keys` declarations per field — `{field: {key:
+ schema}}` — the catalog-row contract (e.g. a template's
+ `variables`). Optional: the wire gate can't resolve catalog rows
+ synchronously and skips this layer; the design-time checker passes
+ the resolved set so a `const` typed against a declared key schema
+ (`"hhhhh"` on `amount:"number"`) fails `invalid_type` instead of
+ passing on the record's empty `additionalProperties`. |
 
 ### `pgDivScale(a, b): number`
 
@@ -1870,6 +2174,16 @@ Wire form — `"…d"` suffixed string.
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
 
+### `translationKeyGrammarError(key): string \| null`
+
+First grammar violation as a human-readable reason, `null` when legal.
+Consumers compose it into their own error shape (HTTP 400, engine
+throw, lint hint).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| key | `string` |  |
+
 ### `translationKeyNamespace(schema): string`
 
 Owning PG schema → the only translation-key namespace writable there.
@@ -1885,6 +2199,19 @@ Integer part, toward zero.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
+
+### `validateActionChrome(icon, color): string \| null`
+
+Validates the icon↔color contract of a single action chrome override.
+Returns a diagnostic string on violation, `null` when the pair is legal:
+- `color` must be a member of `ACTION_COLORS`;
+- a semantic icon (`SEMANTIC_ICON_COLORS` key) must carry its bound color —
+  `icon:"exec-stop", color:"success"` is an error, not a style choice.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| icon | `string \| undefined` |  |
+| color | `string \| undefined` |  |
 
 ### `walkSchemaProps(schema, prefix): Generator<{ field: string; path: string; prop: Record<string, unknown>; required: boolean }>`
 

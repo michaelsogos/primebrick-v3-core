@@ -1,0 +1,32 @@
+name: Check Standards
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+
+jobs:
+  check-standards:
+    runs-on: ubuntu-latest
+    steps:
+      # Self checkout lands at primebrick-v3-core — it is BOTH the scan
+      # target AND the honesty-matrix source the tool resolves as the
+      # sdk sibling. No second core checkout.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: primebrick-v3-core
+
+      - name: Checkout sdk (canonical tool)
+        uses: actions/checkout@v4
+        with:
+          repository: michaelsogos/primebrick-v3-sdk
+          ref: develop
+          path: primebrick-v3-sdk
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: check-standards
+        working-directory: primebrick-v3-core
+        run: bun ../primebrick-v3-sdk/tools/check-standards.ts src --profile=lib
