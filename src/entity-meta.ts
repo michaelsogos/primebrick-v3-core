@@ -206,7 +206,8 @@ export type MetaColumnType =
   | "number"
   | "sparkline"
   | "ref"
-  | "ref_count";
+  | "ref_count"
+  | "avatar";
 
 /**
  * Authored field-format vocabulary — the SEMANTIC input contract of a
@@ -278,6 +279,17 @@ export type MetaColumnUom =
   | { kind: "percent" }
   | { kind: "currency"; field: string; source?: "currencies" }
   | { kind: "custom"; field: string; source: MetaColumnUomSource; symbol?: string };
+
+/**
+ * Avatar renderer contract — the column renders the user/org avatar
+ * (initials + color swatch), NOT a text control. `color_field` names the
+ * SIBLING column that persists the per-row avatar color — same pattern
+ * `uom.field` uses for the currency code column. The avatar column's own
+ * value carries the initials; the sibling carries the color.
+ * The sibling requirement is verified by `withColumnConstraints`: an
+ * avatar column without its color column is a construction error.
+ */
+export type MetaColumnAvatar = { color_field: string };
 
 /**
  * A sibling-value condition — the SAME vocabulary `null_label.when` and
@@ -424,6 +436,10 @@ export type MetaColumn = {
    *  numeric columns only; `currency`/`custom` require the sibling `field`
    *  that persists the UoM code per row. */
   uom?: MetaColumnUom;
+  /** Avatar renderer — see {@link MetaColumnAvatar}. Applies to
+   *  `type:"avatar"` columns only; `color_field` names the sibling column
+   *  that persists the per-row avatar color. */
+  avatar?: MetaColumnAvatar;
   /**
    * `depends_on` — ONE declared edge from this column to a SIBLING column
    * (the pivot) on the same record. The pivot's value/row drives this
