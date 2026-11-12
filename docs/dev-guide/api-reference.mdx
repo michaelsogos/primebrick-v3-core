@@ -1740,6 +1740,14 @@ Runtime validator for SnakeCaseSingular — rejects strings with
 |-----------|------|-------------|
 | v | `string` |  |
 
+### `isUUID(v): v is string`
+
+Type guard — validates RFC 4122 layout (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, hex).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `unknown` |  |
+
 ### `isValidNatsSubject(subject): boolean`
 
 | Parameter | Type | Description |
