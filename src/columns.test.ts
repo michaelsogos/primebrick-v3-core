@@ -10,6 +10,7 @@ import {
   isColumnSearchable,
   isColumnSortable,
   isColumnVisible,
+  orderedColumns,
   searchableTextColumns,
 } from "./columns.js";
 
@@ -67,6 +68,62 @@ describe("column-flag predicates", () => {
       col({ key: "c", type: "number" }),
     ]).map((c) => c.key);
     expect(keys).toEqual(["a"]);
+  });
+});
+
+describe("orderedColumns", () => {
+  const keys = (list: MetaColumn[]) => list.map((c) => c.key);
+
+  it("sorts each group by order, never array position", () => {
+    const cols = [
+      col({ key: "c", order: 9 }),
+      col({ key: "a", order: 1 }),
+      col({ key: "b", order: 5 }),
+    ];
+    expect(keys(orderedColumns(cols))).toEqual(["a", "b", "c"]);
+  });
+
+  it("groups sticky → normal → audited, each sorted by order", () => {
+    const cols = [
+      col({ key: "aud2", order: 8, audited: true }),
+      col({ key: "norm2", order: 7 }),
+      col({ key: "sticky", order: 6, sticky: true }),
+      col({ key: "aud1", order: 1, audited: true }),
+      col({ key: "norm1", order: 2 }),
+    ];
+    expect(keys(orderedColumns(cols))).toEqual([
+      "sticky",
+      "norm1",
+      "norm2",
+      "aud1",
+      "aud2",
+    ]);
+  });
+
+  it("falls back to array index when order is absent", () => {
+    const cols = [
+      col({ key: "z", order: undefined as unknown as number }),
+      col({ key: "q", order: undefined as unknown as number }),
+      col({ key: "m", order: undefined as unknown as number }),
+    ];
+    expect(keys(orderedColumns(cols))).toEqual(["z", "q", "m"]);
+  });
+
+  it("undefined order does not poison the sort of ordered siblings", () => {
+    const cols = [
+      col({ key: "b", order: 5 }),
+      col({ key: "x", order: undefined as unknown as number }),
+      col({ key: "a", order: 1 }),
+    ];
+    // Ordered siblings sort by order (a<b); unordered keep their index slot.
+    const keys_ = keys(orderedColumns(cols));
+    expect(keys_.indexOf("a")).toBeLessThan(keys_.indexOf("b"));
+  });
+
+  it("returns [] for empty or missing input", () => {
+    expect(orderedColumns([])).toEqual([]);
+    expect(orderedColumns(null)).toEqual([]);
+    expect(orderedColumns(undefined)).toEqual([]);
   });
 });
 

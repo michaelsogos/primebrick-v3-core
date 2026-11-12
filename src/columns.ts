@@ -49,17 +49,22 @@ export function asSnakeCaseSingular(value: string): SnakeCaseSingular {
 
 /**
  * Columns in display order: sticky group → normal group → audited group,
- * each sorted by `order`.
+ * each sorted by `order`. A column without `order` falls back to its own
+ * array index (the contract's last resort) — a raw `order - order`
+ * comparator returns NaN on undefined and corrupts the whole sort.
  */
 export function orderedColumns(
   columns: readonly MetaColumn[] | null | undefined,
 ): MetaColumn[] {
   if (!columns?.length) return [];
-  const byOrder = (a: MetaColumn, b: MetaColumn) => a.order - b.order;
+  const tagged = columns.map((c, i) => ({ c, k: c.order ?? i }));
+  const byOrder = (a: { k: number }, b: { k: number }) => a.k - b.k;
+  const pick = (pred: (c: MetaColumn) => boolean) =>
+    tagged.filter(({ c }) => pred(c)).sort(byOrder).map(({ c }) => c);
   return [
-    ...columns.filter((c) => c.sticky).sort(byOrder),
-    ...columns.filter((c) => !c.sticky && !c.audited).sort(byOrder),
-    ...columns.filter((c) => c.audited).sort(byOrder),
+    ...pick((c) => c.sticky === true),
+    ...pick((c) => c.sticky !== true && c.audited !== true),
+    ...pick((c) => c.audited === true),
   ];
 }
 

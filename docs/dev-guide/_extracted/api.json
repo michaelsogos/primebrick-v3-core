@@ -286,9 +286,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 54,
+					"line": 56,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L54"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L56"
 				}
 			],
 			"signatures": [
@@ -310,16 +310,32 @@
 							},
 							{
 								"kind": "text",
-								"text": "."
+								"text": ". A column without "
+							},
+							{
+								"kind": "code",
+								"text": "`order`"
+							},
+							{
+								"kind": "text",
+								"text": " falls back to its own\r\narray index (the contract's last resort) — a raw "
+							},
+							{
+								"kind": "code",
+								"text": "`order - order`"
+							},
+							{
+								"kind": "text",
+								"text": "\r\ncomparator returns NaN on undefined and corrupts the whole sort."
 							}
 						]
 					},
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 54,
+							"line": 56,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L54"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L56"
 						}
 					],
 					"parameters": [
@@ -378,9 +394,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 76,
+					"line": 81,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L76"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L81"
 				}
 			],
 			"signatures": [
@@ -417,9 +433,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 76,
+							"line": 81,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L76"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L81"
 						}
 					],
 					"parameters": [
@@ -478,9 +494,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 82,
+					"line": 87,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L82"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L87"
 				}
 			],
 			"signatures": [
@@ -509,9 +525,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 82,
+							"line": 87,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L82"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L87"
 						}
 					],
 					"parameters": [
@@ -570,9 +586,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 88,
+					"line": 93,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L88"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L93"
 				}
 			],
 			"signatures": [
@@ -601,9 +617,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 88,
+							"line": 93,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L88"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L93"
 						}
 					],
 					"parameters": [
@@ -662,9 +678,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 94,
+					"line": 99,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L94"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L99"
 				}
 			],
 			"signatures": [
@@ -685,9 +701,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 94,
+							"line": 99,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L94"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L99"
 						}
 					],
 					"parameters": [
@@ -746,9 +762,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 99,
+					"line": 104,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L99"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L104"
 				}
 			],
 			"signatures": [
@@ -769,9 +785,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 99,
+							"line": 104,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L99"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L104"
 						}
 					],
 					"parameters": [
@@ -811,9 +827,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 104,
+					"line": 109,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L104"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L109"
 				}
 			],
 			"signatures": [
@@ -834,9 +850,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 104,
+							"line": 109,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L104"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L109"
 						}
 					],
 					"parameters": [
@@ -890,9 +906,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 116,
+					"line": 121,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L116"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L121"
 				}
 			],
 			"signatures": [
@@ -913,9 +929,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 116,
+							"line": 121,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L116"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L121"
 						}
 					],
 					"parameters": [
@@ -957,9 +973,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 126,
+					"line": 131,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L126"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L131"
 				}
 			],
 			"signatures": [
@@ -1004,9 +1020,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 126,
+							"line": 131,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L126"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L131"
 						}
 					],
 					"parameters": [
@@ -1045,9 +1061,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/columns.ts",
-											"line": 127,
+											"line": 132,
 											"character": 2,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L127"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L132"
 										}
 									],
 									"type": {
@@ -1067,9 +1083,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/columns.ts",
-											"line": 128,
+											"line": 133,
 											"character": 2,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L128"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L133"
 										}
 									],
 									"type": {
@@ -1089,9 +1105,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/columns.ts",
-											"line": 129,
+											"line": 134,
 											"character": 2,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L129"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L134"
 										}
 									],
 									"type": {
@@ -1127,9 +1143,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 139,
+					"line": 144,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L139"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L144"
 				}
 			],
 			"signatures": [
@@ -1150,9 +1166,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/columns.ts",
-							"line": 139,
+							"line": 144,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L139"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L144"
 						}
 					],
 					"parameters": [
@@ -1223,9 +1239,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 166,
+					"line": 171,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L166"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L171"
 				}
 			],
 			"type": {
@@ -1319,9 +1335,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/columns.ts",
-					"line": 186,
+					"line": 191,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L186"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/columns.ts#L191"
 				}
 			],
 			"type": {

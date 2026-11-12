@@ -1893,7 +1893,9 @@ Strip trailing fractional zeros — `1.230` → `1.23`, `12.000` → `12`.
 ### `orderedColumns(columns): MetaColumn[]`
 
 Columns in display order: sticky group → normal group → audited group,
-each sorted by `order`.
+each sorted by `order`. A column without `order` falls back to its own
+array index (the contract's last resort) — a raw `order - order`
+comparator returns NaN on undefined and corrupts the whole sort.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
