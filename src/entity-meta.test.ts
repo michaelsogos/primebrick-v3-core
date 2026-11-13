@@ -98,6 +98,7 @@ describe("action chrome contract", () => {
       "success",
       "warning",
       "destructive",
+      "violet",
     ]);
   });
 
@@ -107,6 +108,7 @@ describe("action chrome contract", () => {
     expect(actionColorClass("success")).toBe("text-success");
     expect(actionColorClass("info")).toBe("text-info");
     expect(actionColorClass("primary")).toBe("text-primary");
+    expect(actionColorClass("violet")).toBe("text-violet");
     expect(actionColorClass("neutral")).toBe("");
     expect(actionColorClass(undefined)).toBe("");
   });

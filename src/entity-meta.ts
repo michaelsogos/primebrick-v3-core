@@ -96,15 +96,18 @@ export type ActionsOverrides = Record<
 /** Closed action-color vocabulary — ONE semantic drives BOTH the icon and
  *  the label of a menu CTA (impossible to drift them apart). `neutral` is
  *  the default uncolored rendering; the destructive/warning/success/info/
- *  primary names map to the theme's semantic text utilities. A meta may
- *  never smuggle a Tailwind class here — the enum IS the contract. */
+ *  primary names map to the theme's semantic text utilities. `violet` is
+ *  the clone/duplicate semantic — `duplicate.bulk` carries it by default
+ *  and the same hue marks `CLONE` entries in the version-history trail.
+ *  A meta may never smuggle a Tailwind class here — the enum IS the contract. */
 export type ActionColor =
   | "neutral"
   | "primary"
   | "info"
   | "success"
   | "warning"
-  | "destructive";
+  | "destructive"
+  | "violet";
 
 /**
  * The full `ActionColor` vocabulary — construction/lint validation rejects
@@ -118,6 +121,7 @@ export const ACTION_COLORS: readonly ActionColor[] = [
   "success",
   "warning",
   "destructive",
+  "violet",
 ];
 
 /**
