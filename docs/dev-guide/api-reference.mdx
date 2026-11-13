@@ -2001,6 +2001,19 @@ Re-express `d` at `newScale`. Growing is exact; shrinking applies `mode`
 | newScale | `number` |  |
 | mode | `RoundingMode` |  |
 
+### `resolveDisplayTemplate(meta): string \| null`
+
+The materialized display template — `meta.display_name` when authored,
+`"${" + display_field + "}"` otherwise (the served default). ONE rule
+used by both the served-meta assembler (EntityMetaResponse.display_name)
+and the DAL's display-join projection (`<key>_name` columns evaluate the
+SAME template on the joined row), so titles, combos and ref cells can
+never diverge.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| meta | `Pick<EntityMeta, "display_field" \| "display_name">` |  |
+
 ### `resolvePath(payload, path): unknown`
 
 Minimal JSONPath resolver: `$` = root, `$.a.b.c` = nested lookup.

@@ -822,6 +822,20 @@ export interface EntityMeta {
 }
 
 /**
+ * The materialized display template — `meta.display_name` when authored,
+ * `"${" + display_field + "}"` otherwise (the served default). ONE rule
+ * used by both the served-meta assembler (EntityMetaResponse.display_name)
+ * and the DAL's display-join projection (`<key>_name` columns evaluate the
+ * SAME template on the joined row), so titles, combos and ref cells can
+ * never diverge.
+ */
+export function resolveDisplayTemplate(
+  meta: Pick<EntityMeta, "display_field" | "display_name">,
+): string | null {
+  return meta.display_name ?? (meta.display_field ? `\${${meta.display_field}}` : null);
+}
+
+/**
  * The `dict` facet — runtime-injected on served meta when the entity
  * class carries the `@Dict` marker (a dict base such as
  * dal-pg `DictEntityBase`). Drives the `kind:"dict"` page archetype:
