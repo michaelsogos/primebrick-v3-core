@@ -541,8 +541,29 @@ export type MetaColumn = {
    *  census-declared page (entity name is the only required spec: the FE
    *  resolves routes from the module census, never hardcoded URLs). */
   ref?: {
-    /** Target entity API name — the `entity` on its route declaration. */
-    entity: string;
+    /** Target entity API name — the `entity` on its route declaration.
+     *  Required UNLESS `entity_field` is declared (XOR): a lazy ref
+     *  resolves the target per row instead. */
+    entity?: string;
+    /** LAZY REF — row column carrying the target entity name
+     *  (e.g. `armed_ref_entity` → "job_trigger" | "service_registry").
+     *  With this set the ref resolves to 2+ entities, chosen per row —
+     *  one column, many drill targets. Mutually exclusive with
+     *  `entity` (withColumnConstraints enforces the XOR). The lazy-ref
+     *  contract: the CELL value is the display label (usually a
+     *  @Calculated column — no `_name` join can decorate N entities),
+     *  `key_field` points at the row column carrying the drill key,
+     *  and the renderer picks the record sheet by the resolved entity
+     *  name (entity-served → `entity.record`; registered non-entity
+     *  targets → their panel map entry). */
+    entity_field?: string;
+    /** Row column holding the per-row DRILL KEY passed to the record
+     *  sheet (uuid for entity-record targets, a business key for
+     *  non-entity panels — the panel owns the key contract). Default:
+     *  the cell value itself (the normal uuid-ref case). Useful both
+     *  on lazy refs (entity_field) and on static refs whose visible
+     *  cell is a label rather than the target key. */
+    key_field?: string;
     /** `'detail'` — the value is the target's `uid`, links to its `[param]`
      *  route. `'list'` — links to the target's list page pre-filtered.
      *  `'none'` — the cell renders the label with NO link (for
