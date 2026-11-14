@@ -105,7 +105,11 @@ export function defaultVisibleColumnKeys(columns: MetaColumn[]): string[] {
   return columns.filter(isColumnVisible).map((c) => c.key);
 }
 
-/** Drop unknown keys and fall back to defaults when nothing left. */
+/** Drop unknown keys and fall back to defaults when nothing left.
+ *  `hideable === false` columns are re-injected unconditionally — a stored
+ *  set predating the pin (or written when the column could still be hidden)
+ *  can never violate the declaration. `hideable !== false` columns — e.g.
+ *  `uuid`, sticky-but-selectable — stay user-controlled. */
 export function sanitizeVisibleKeys(
   visibleKeys: string[],
   columns: MetaColumn[],
@@ -113,7 +117,11 @@ export function sanitizeVisibleKeys(
   if (!columns.length) return [];
   const allowed = new Set(columns.map((c) => c.key));
   const next = visibleKeys.filter((k) => allowed.has(k));
-  return next.length ? next : defaultVisibleColumnKeys(columns);
+  if (!next.length) return defaultVisibleColumnKeys(columns);
+  for (const c of columns) {
+    if (c.hideable === false && !next.includes(c.key)) next.push(c.key);
+  }
+  return next;
 }
 
 /** Text-physical searchable columns — the scope selector + default

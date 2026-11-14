@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { MetaColumn } from "./entity-meta.js";
 import type { FilterOperator } from "./list.js";
 import {
+  sanitizeVisibleKeys,
   FILTER_OPERATOR_ICON,
   FILTER_OPERATOR_KEY,
   defaultVisibleColumnKeys,
@@ -59,6 +60,24 @@ describe("column-flag predicates", () => {
       col({ key: "c", hideable: false, default_visible: false }),
     ]);
     expect(keys).toEqual(["a", "c"]);
+  });
+
+  it("sanitizeVisibleKeys re-injects hideable === false keys a stored set dropped", () => {
+    // The stored list predates the pin — the declaration must win, and the
+    // picker's disabled toggle can never re-enable it otherwise (deadlock).
+    const cols = [
+      col({ key: "pinned", hideable: false, sticky: true }),
+      col({ key: "uuid", sticky: true, default_visible: false }),
+      col({ key: "name" }),
+    ];
+    expect(sanitizeVisibleKeys(["name"], cols)).toEqual(["name", "pinned"]);
+    // uuid is sticky-but-hideable — hidden-by-default stays user-controlled.
+    expect(sanitizeVisibleKeys(["name"], cols)).not.toContain("uuid");
+  });
+
+  it("sanitizeVisibleKeys: all-invalid stored keys still fall back to defaults", () => {
+    const cols = [col({ key: "pinned", hideable: false }), col({ key: "name" })];
+    expect(sanitizeVisibleKeys(["ghost"], cols)).toEqual(["pinned", "name"]);
   });
 
   it("searchableTextColumns keeps searchable text-physical columns only", () => {

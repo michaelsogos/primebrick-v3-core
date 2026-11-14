@@ -592,7 +592,7 @@ Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
 compile error — the US→FE option boundary is enforced by the type.
 New formats are additive literals (never breaking).
 
-**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "slug" \| "no_space" \| "lang"`
+**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "slug" \| "no_space" \| "lang"`
 
 ### `MetaColumnOptionsSource`
 
@@ -2126,6 +2126,10 @@ Round to `scale` fractional digits (default `HALF_UP`).
 ### `sanitizeVisibleKeys(visibleKeys, columns): string[]`
 
 Drop unknown keys and fall back to defaults when nothing left.
+ `hideable === false` columns are re-injected unconditionally — a stored
+ set predating the pin (or written when the column could still be hidden)
+ can never violate the declaration. `hideable !== false` columns — e.g.
+ `uuid`, sticky-but-selectable — stay user-controlled.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|

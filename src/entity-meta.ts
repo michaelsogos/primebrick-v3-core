@@ -231,6 +231,7 @@ export type MetaColumnFormat =
   | "phone"
   | "secret"
   | "nats_subject"
+  | "service_code"
   | "schedule_spec"
   | "json"
   | "display_name"
