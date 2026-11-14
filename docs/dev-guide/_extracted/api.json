@@ -12232,6 +12232,10 @@
 						"types": [
 							{
 								"type": "literal",
+								"value": "immutable"
+							},
+							{
+								"type": "literal",
 								"value": "required"
 							},
 							{
@@ -12274,9 +12278,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 49,
+							"line": 50,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L49"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L50"
 						}
 					],
 					"type": {
@@ -12331,9 +12335,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 75,
+					"line": 76,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L75"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L76"
 				}
 			],
 			"type": {
@@ -12357,9 +12361,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 76,
+					"line": 77,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L76"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L77"
 				}
 			],
 			"signatures": [
@@ -12372,9 +12376,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 76,
+							"line": 77,
 							"character": 23,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L76"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L77"
 						}
 					],
 					"parameters": [
@@ -12406,9 +12410,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 78,
+					"line": 79,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L78"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L79"
 				}
 			],
 			"signatures": [
@@ -12421,9 +12425,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 78,
+							"line": 79,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L78"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L79"
 						}
 					],
 					"parameters": [
@@ -12455,9 +12459,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 92,
+					"line": 93,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L92"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L93"
 				}
 			],
 			"signatures": [
@@ -12470,9 +12474,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 92,
+							"line": 93,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L92"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L93"
 						}
 					],
 					"parameters": [
@@ -12504,9 +12508,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 105,
+					"line": 106,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L105"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L106"
 				}
 			],
 			"signatures": [
@@ -12547,9 +12551,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 105,
+							"line": 106,
 							"character": 26,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L105"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L106"
 						}
 					],
 					"parameters": [
@@ -12581,9 +12585,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 108,
+					"line": 109,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L108"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L109"
 				}
 			],
 			"signatures": [
@@ -12608,9 +12612,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 108,
+							"line": 109,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L108"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L109"
 						}
 					],
 					"parameters": [
@@ -12642,9 +12646,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 115,
+					"line": 116,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L115"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L116"
 				}
 			],
 			"signatures": [
@@ -12677,9 +12681,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 115,
+							"line": 116,
 							"character": 27,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L115"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L116"
 						}
 					],
 					"parameters": [
@@ -12711,9 +12715,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 119,
+					"line": 120,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L119"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L120"
 				}
 			],
 			"signatures": [
@@ -12734,9 +12738,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 119,
+							"line": 120,
 							"character": 26,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L119"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L120"
 						}
 					],
 					"parameters": [
@@ -12768,9 +12772,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 124,
+					"line": 125,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L124"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L125"
 				}
 			],
 			"signatures": [
@@ -12803,9 +12807,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 124,
+							"line": 125,
 							"character": 23,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L124"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L125"
 						}
 					],
 					"parameters": [
@@ -12837,9 +12841,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 169,
+					"line": 170,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L169"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L170"
 				}
 			],
 			"signatures": [
@@ -12904,9 +12908,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 169,
+							"line": 170,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L169"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L170"
 						}
 					],
 					"parameters": [
@@ -12938,9 +12942,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 195,
+					"line": 196,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L195"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L196"
 				}
 			],
 			"signatures": [
@@ -13025,9 +13029,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 195,
+							"line": 196,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L195"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L196"
 						}
 					],
 					"parameters": [
@@ -13068,9 +13072,9 @@
 											"sources": [
 												{
 													"fileName": "primebrick-v3-core/src/field-validation.ts",
-													"line": 195,
+													"line": 196,
 													"character": 55,
-													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L195"
+													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L196"
 												}
 											],
 											"type": {
@@ -13095,9 +13099,9 @@
 											"sources": [
 												{
 													"fileName": "primebrick-v3-core/src/field-validation.ts",
-													"line": 195,
+													"line": 196,
 													"character": 67,
-													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L195"
+													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L196"
 												}
 											],
 											"type": {
@@ -13175,9 +13179,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 214,
+					"line": 215,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L214"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L215"
 				}
 			],
 			"type": {
@@ -13263,9 +13267,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 226,
+					"line": 227,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L226"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L227"
 				}
 			],
 			"type": {
@@ -13289,9 +13293,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 227,
+					"line": 228,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L227"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L228"
 				}
 			],
 			"signatures": [
@@ -13304,9 +13308,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 227,
+							"line": 228,
 							"character": 28,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L227"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L228"
 						}
 					],
 					"parameters": [
@@ -13368,9 +13372,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 231,
+					"line": 232,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L231"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L232"
 				}
 			],
 			"type": {
@@ -13394,9 +13398,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 232,
+					"line": 233,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L232"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L233"
 				}
 			],
 			"signatures": [
@@ -13409,9 +13413,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 232,
+							"line": 233,
 							"character": 26,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L232"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L233"
 						}
 					],
 					"parameters": [
@@ -13465,9 +13469,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 235,
+					"line": 236,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L235"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L236"
 				}
 			],
 			"type": {
@@ -13491,9 +13495,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 236,
+					"line": 237,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L236"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L237"
 				}
 			],
 			"signatures": [
@@ -13506,9 +13510,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 236,
+							"line": 237,
 							"character": 27,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L236"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L237"
 						}
 					],
 					"parameters": [
@@ -13578,9 +13582,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 240,
+					"line": 241,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L240"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L241"
 				}
 			],
 			"type": {
@@ -13604,9 +13608,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 241,
+					"line": 242,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L241"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L242"
 				}
 			],
 			"signatures": [
@@ -13619,9 +13623,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 241,
+							"line": 242,
 							"character": 28,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L241"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L242"
 						}
 					],
 					"parameters": [
@@ -13691,9 +13695,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 245,
+					"line": 246,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L245"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L246"
 				}
 			],
 			"type": {
@@ -13717,9 +13721,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 246,
+					"line": 247,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L246"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L247"
 				}
 			],
 			"signatures": [
@@ -13732,9 +13736,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 246,
+							"line": 247,
 							"character": 22,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L246"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L247"
 						}
 					],
 					"parameters": [
@@ -13780,9 +13784,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 249,
+					"line": 250,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L249"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L250"
 				}
 			],
 			"type": {
@@ -13806,9 +13810,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 250,
+					"line": 251,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L250"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L251"
 				}
 			],
 			"signatures": [
@@ -13821,9 +13825,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 250,
+							"line": 251,
 							"character": 25,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L250"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L251"
 						}
 					],
 					"parameters": [
@@ -13901,9 +13905,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 255,
+					"line": 256,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L255"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L256"
 				}
 			],
 			"type": {
@@ -13927,9 +13931,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 256,
+					"line": 257,
 					"character": 13,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L256"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L257"
 				}
 			],
 			"signatures": [
@@ -13942,9 +13946,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 256,
+							"line": 257,
 							"character": 22,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L256"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L257"
 						}
 					],
 					"parameters": [
@@ -13976,9 +13980,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 326,
+					"line": 327,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L326"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L327"
 				}
 			],
 			"signatures": [
@@ -13991,9 +13995,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 326,
+							"line": 327,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L326"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L327"
 						}
 					],
 					"parameters": [
@@ -14069,9 +14073,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 448,
+					"line": 449,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L448"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L449"
 				}
 			],
 			"signatures": [
@@ -14108,9 +14112,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 448,
+							"line": 449,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L448"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L449"
 						}
 					],
 					"parameters": [
@@ -14194,9 +14198,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 559,
+							"line": 560,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L559"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L560"
 						}
 					],
 					"type": {
@@ -14216,9 +14220,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 556,
+					"line": 557,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L556"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L557"
 				}
 			]
 		},
@@ -14231,9 +14235,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 576,
+					"line": 577,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L576"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L577"
 				}
 			],
 			"signatures": [
@@ -14342,9 +14346,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 576,
+							"line": 577,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L576"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L577"
 						}
 					],
 					"parameters": [
@@ -14424,9 +14428,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 622,
+					"line": 632,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L622"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L632"
 				}
 			],
 			"signatures": [
@@ -14499,9 +14503,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 622,
+							"line": 632,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L622"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L632"
 						}
 					],
 					"parameters": [
@@ -14572,9 +14576,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 670,
+					"line": 680,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L670"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L680"
 				}
 			],
 			"signatures": [
@@ -14619,9 +14623,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 670,
+							"line": 680,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L670"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L680"
 						}
 					],
 					"parameters": [
@@ -14705,9 +14709,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 693,
+					"line": 703,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L693"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L703"
 				}
 			],
 			"signatures": [
@@ -14760,9 +14764,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 693,
+							"line": 703,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L693"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L703"
 						}
 					],
 					"parameters": [
@@ -14846,9 +14850,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 784,
+					"line": 794,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L784"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L794"
 				}
 			],
 			"signatures": [
@@ -14885,9 +14889,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 784,
+							"line": 794,
 							"character": 17,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L784"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L794"
 						}
 					],
 					"parameters": [
@@ -14957,9 +14961,9 @@
 											"sources": [
 												{
 													"fileName": "primebrick-v3-core/src/field-validation.ts",
-													"line": 787,
+													"line": 797,
 													"character": 15,
-													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L787"
+													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L797"
 												}
 											],
 											"type": {
@@ -14976,9 +14980,9 @@
 											"sources": [
 												{
 													"fileName": "primebrick-v3-core/src/field-validation.ts",
-													"line": 787,
+													"line": 797,
 													"character": 30,
-													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L787"
+													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L797"
 												}
 											],
 											"type": {
@@ -14995,9 +14999,9 @@
 											"sources": [
 												{
 													"fileName": "primebrick-v3-core/src/field-validation.ts",
-													"line": 787,
+													"line": 797,
 													"character": 44,
-													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L787"
+													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L797"
 												}
 											],
 											"type": {
@@ -15030,9 +15034,9 @@
 											"sources": [
 												{
 													"fileName": "primebrick-v3-core/src/field-validation.ts",
-													"line": 787,
+													"line": 797,
 													"character": 75,
-													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L787"
+													"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L797"
 												}
 											],
 											"type": {
@@ -15070,9 +15074,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 812,
+					"line": 822,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L812"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L822"
 				}
 			],
 			"signatures": [
@@ -15129,9 +15133,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 812,
+							"line": 822,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L812"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L822"
 						}
 					],
 					"parameters": [
@@ -15199,9 +15203,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/field-validation.ts",
-					"line": 966,
+					"line": 976,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L966"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L976"
 				}
 			],
 			"signatures": [
@@ -15286,9 +15290,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/field-validation.ts",
-							"line": 966,
+							"line": 976,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L966"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/field-validation.ts#L976"
 						}
 					],
 					"parameters": [

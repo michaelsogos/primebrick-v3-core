@@ -45,7 +45,8 @@ export interface FieldIssue {
     | "invalid_string"
     | "invalid_json"
     | "schema_mismatch"
-    | "not_in_vocab";
+    | "not_in_vocab"
+    | "immutable";
   message: string;
 }
 
@@ -591,6 +592,15 @@ export function checkEntityFields(
       if (!opts.partial && col.nullable === false && !managed) {
         out.push(issue(col.key, "required", "app.common.validation.required"));
       }
+      continue;
+    }
+    // `immutable` is create-set / frozen afterwards — its presence in an
+    // update payload is a contract violation in itself (the merged-value
+    // question never arises: the field is simply not writable on update).
+    // Relation edge ends are the first producers (@Relation injects it);
+    // create (`!partial`) is exempt — create IS the write that sets it.
+    if (opts.partial === true && col.immutable === true) {
+      out.push(issue(col.key, "immutable", "app.common.validation.immutable"));
       continue;
     }
     const value = entity[col.key];

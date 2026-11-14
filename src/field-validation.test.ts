@@ -304,6 +304,19 @@ describe("checkEntityFields", () => {
     expect(checkEntityFields(withKey, { name: "x" })).toEqual([]);
     expect(has(checkEntityFields(withKey, { name: "x", id: null }), "id", "required")).toBe(true);
   });
+  it("immutable columns are writable on create, rejected on update", () => {
+    const rel = meta([
+      col({ key: "parent_uuid", nullable: false, immutable: true }),
+      col({ key: "type_uuid", nullable: true }),
+    ]);
+    // create: required as usual
+    expect(has(checkEntityFields(rel, {}), "parent_uuid", "required")).toBe(true);
+    expect(checkEntityFields(rel, { parent_uuid: "p" })).toEqual([]);
+    // update: presence is the violation — even a same-value resubmit
+    expect(has(checkEntityFields(rel, { parent_uuid: "p" }, { partial: true }), "parent_uuid", "immutable")).toBe(true);
+    expect(checkEntityFields(rel, { type_uuid: "t" }, { partial: true })).toEqual([]);
+    expect(checkEntityFields(rel, {}, { partial: true })).toEqual([]);
+  });
 });
 
 // ---------------------------------------------------------------------------
