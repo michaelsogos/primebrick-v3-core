@@ -324,13 +324,15 @@ describe("checkEntityFields", () => {
 // ---------------------------------------------------------------------------
 
 describe("jobTriggerShapeIssues", () => {
-  it("mutual-mandatory + user-needs-source", () => {
-    expect(jobTriggerShapeIssues({ event_subject: "jobs.events.x", execution_context: "user" })).toEqual([]);
-    expect(jobTriggerShapeIssues({ schedule_spec: "@every 1h", execution_context: "me" })).toEqual([]);
-    expect(codes(jobTriggerShapeIssues({ execution_context: "system" }))).toContain("schema_mismatch");
+  it("mutual-mandatory + originator-needs-source + run_as closed vocab", () => {
+    expect(jobTriggerShapeIssues({ event_subject: "jobs.events.x", run_as: "originator" })).toEqual([]);
+    expect(jobTriggerShapeIssues({ schedule_spec: "@every 1h", run_as: "author" })).toEqual([]);
+    expect(codes(jobTriggerShapeIssues({ run_as: "system" }))).toContain("schema_mismatch");
     expect(
-      has(jobTriggerShapeIssues({ schedule_spec: "@every 1h", execution_context: "user" }), "execution_context"),
+      has(jobTriggerShapeIssues({ schedule_spec: "@every 1h", run_as: "originator" }), "run_as"),
     ).toBe(true);
+    // Closed vocab — any value outside originator|author|system is flagged.
+    expect(has(jobTriggerShapeIssues({ event_subject: "x.y", run_as: "bogus" }), "run_as", "not_in_vocab")).toBe(true);
   });
 
   it("@at in the past is a dead one-shot — flagged on schedule_spec", () => {

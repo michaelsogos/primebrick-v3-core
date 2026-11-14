@@ -619,7 +619,8 @@ export function checkEntityFields(
 
 /**
  * `event_subject`/`schedule_spec` are mutually mandatory (at least one);
- * `execution_context: "user"` requires an event source to forward auth
+ * `run_as` is closed-vocab (`originator`|`author`|`system`) and
+ * `run_as: "originator"` requires an event source to forward auth
  * headers from; a one-shot `@at <ts>` must lie in the future — a past
  * timestamp FIRES IMMEDIATELY at declare time (verified empirically:
  * the declaration PubAcks, the scheduler dispatches at once, then the
@@ -629,6 +630,8 @@ export function checkEntityFields(
  * clock. On `partial` (update), fields not present in `entity` are
  * treated from the merged record the caller passes.
  */
+export const JOB_TRIGGER_RUN_AS_VOCAB = ["originator", "author", "system"] as const;
+
 export function jobTriggerShapeIssues(entity: Record<string, unknown>, now: Date = new Date()): FieldIssue[] {
   const hasSrc = typeof entity.event_subject === "string" && entity.event_subject.length > 0;
   const hasSch = typeof entity.schedule_spec === "string" && entity.schedule_spec.length > 0;
@@ -636,8 +639,11 @@ export function jobTriggerShapeIssues(entity: Record<string, unknown>, now: Date
   if (!hasSrc && !hasSch) {
     out.push(issue("event_subject", "schema_mismatch", "app.common.validation.trigger_source_or_schedule"));
   }
-  if (entity.execution_context === "user" && !hasSrc) {
-    out.push(issue("execution_context", "schema_mismatch", "app.common.validation.user_context_requires_source"));
+  if (entity.run_as !== undefined && !(JOB_TRIGGER_RUN_AS_VOCAB as readonly string[]).includes(entity.run_as as string)) {
+    out.push(issue("run_as", "not_in_vocab", "app.common.validation.not_in_vocab"));
+  }
+  if (entity.run_as === "originator" && !hasSrc) {
+    out.push(issue("run_as", "schema_mismatch", "app.common.validation.originator_requires_source"));
   }
   if (hasSch) {
     const spec = (entity.schedule_spec as string).trim();
