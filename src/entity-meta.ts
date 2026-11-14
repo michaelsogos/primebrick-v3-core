@@ -806,8 +806,13 @@ export interface EntityMeta {
   uid: string;
   /** Canonical display field — the column key identifying the entity's
    *  human-readable label. Drives first-column/sticky table identity and
-   *  default display resolution. */
-  display_field: string;
+   *  default display resolution. OPTIONAL on the wire type only:
+   *  `withColumnConstraints` still REQUIRES it on every main-entity meta
+   *  (construction gate — a missing key throws), while relation entities
+   *  (`@Relation` marker — directed parent→child edges) MUST NOT declare
+   *  one: a directed edge has no single-column identity, its display is
+   *  viewpoint-dependent (`relation` facet). */
+  display_field?: string;
   /**
    * Display expression template (`${field}` syntax, dot-paths allowed).
    * OPTIONAL here: `assembleMeta` materializes it as
@@ -854,6 +859,37 @@ export interface DictFacet {
    *  entity declares it). Reorder CTAs mutate it and persist through the
    *  page's atomic bulk save — no dedicated reorder endpoint. */
   order_field?: string;
+  /** Directional label pair — declared when the dict rows are link-type
+   *  vocabularies consumed by `@Relation` edges. `forward_label_field`
+   *  names the column read parent-side ("the child IS a ‹label›"),
+   *  `inverse_label_field` names the column read child-side ("the parent
+   *  IS a ‹label›"); a NULL inverse label means the type is
+   *  self-inverse — same vocabulary read from both ends (e.g. partner).
+   *  Fields are PHYSICAL column keys on this dict entity. */
+  directional?: {
+    forward_label_field: string;
+    inverse_label_field: string;
+  };
+}
+
+/**
+ * The `relation` facet — runtime-injected on served meta when the entity
+ * class carries the `@Relation` marker (dal-pg). Declares a DIRECTED
+ * parent→child edge table (e.g. `customer_link`): rows are typed arcs,
+ * never standalone page entities — no `display_field`, no pinned
+ * column, viewpoint-dependent display. `parent_field`/`child_field` are
+ * the physical `@Ref` column keys forming the arc (immutable after
+ * create — repointing is delete+create); `type_field` optionally points
+ * at the directional vocabulary entity (a `directional` dict);
+ * `hierarchical` opts the table into deep-cycle detection on insert
+ * (the 2-cycle is always rejected by the derived unordered-pair unique
+ * index — construction-derived, never authored).
+ */
+export interface RelationFacet {
+  parent_field: string;
+  child_field: string;
+  type_field?: string;
+  hierarchical?: boolean;
 }
 
 /**
@@ -861,11 +897,16 @@ export interface DictFacet {
  * static meta + runtime-injected `display_name`, `actions`, `collaboration`.
  */
 export type EntityMetaResponse = EntityMeta & {
-  display_name: string;
+  /** Materialized display template — `null` on relation entities (a
+   *  directed edge has no single display template; consumers read the
+   *  `relation` facet for the directional display contract). */
+  display_name: string | null;
   actions: EntityAction[];
   collaboration: CollaborationMeta;
   /** Present only on dict-faceted entities — see {@link DictFacet}. */
   dict?: DictFacet;
+  /** Present only on relation-faceted entities — see {@link RelationFacet}. */
+  relation?: RelationFacet;
 };
 
 /**
