@@ -514,6 +514,18 @@ describe("pathCompatible", () => {
     expect(pathCompatible(tgt({}), { type: "string" })).toBe(true);
     expect(pathCompatible(tgt({}), { type: "string", enum: ["a", "b"] })).toBe(true);
   });
+  it("level 0 — an empty target schema is the open domain (z.unknown record values)", () => {
+    // `z.record`'s `z.unknown()` values project `{}` for every key — no
+    // type/format/vocabulary claim → every source shape is trivially
+    // deliverable. Distinct from `type:"string"` without format (a real
+    // bare-text domain that keeps rejecting specialized sources — above).
+    // Verified live: `meta:actor_email` → `emailsender.send.variables.*`
+    // was rejected at trigger write before this level existed.
+    expect(pathCompatible({}, { type: "string", format: "email" })).toBe(true);
+    expect(pathCompatible({}, { type: "integer" })).toBe(true);
+    expect(pathCompatible({}, { type: "string", format: "uuid", x_semantic: "actor.uuid" })).toBe(true);
+    expect(pathCompatible({}, { type: "string", format: "date-time" })).toBe(true);
+  });
   it("array broadcast — array<T> accepts array<U> or scalar U compatible with T", () => {
     const arrEmail = { type: "array", items: { type: "string", format: "email" } };
     expect(pathCompatible(arrEmail, { type: "string", format: "email" })).toBe(true); // scalar broadcast
