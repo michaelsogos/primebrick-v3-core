@@ -14,6 +14,8 @@ import {
   isValidNatsSubject,
   isValidScheduleSpec,
   nextScheduleFire,
+  scheduleEveryMs,
+  scheduleSpecError,
   jobTriggerShapeIssues,
   jsonSchemaCheck,
   pathCompatible,
@@ -60,9 +62,12 @@ describe("format predicates", () => {
     expect(isValidNatsSubject("a.b.c!")).toBe(false);
   });
   it("schedule_spec grammar", () => {
-    expect(isValidScheduleSpec("@every 30s")).toBe(true);
+    expect(isValidScheduleSpec("@every 60s")).toBe(true); // floor boundary
     expect(isValidScheduleSpec("@every 5m")).toBe(true);
     expect(isValidScheduleSpec("@every 1d")).toBe(true);
+    expect(isValidScheduleSpec("@every 30s")).toBe(false); // below the minute floor
+    expect(isValidScheduleSpec("@every 1s")).toBe(false);
+    expect(isValidScheduleSpec("@every 59s")).toBe(false);
     expect(isValidScheduleSpec("@every 90x")).toBe(false);
     expect(isValidScheduleSpec("@at 2026-12-01T09:00:00Z")).toBe(true);
     expect(isValidScheduleSpec("@at not-a-date")).toBe(false);
@@ -74,6 +79,16 @@ describe("format predicates", () => {
     expect(isValidScheduleSpec("* * * *")).toBe(false);
     expect(isValidScheduleSpec("* * * * * *")).toBe(false);
     expect(isValidScheduleSpec("")).toBe(false);
+  });
+  it("scheduleSpecError — discriminated reason; scheduleEveryMs parses @every", () => {
+    expect(scheduleSpecError("@every 59s")).toBe("below_min_interval");
+    expect(scheduleSpecError("@every 1m")).toBeNull();
+    expect(scheduleSpecError("@at 2027-01-01T00:00:00Z")).toBeNull();
+    expect(scheduleSpecError("nonsense")).toBe("invalid");
+    expect(scheduleSpecError(42)).toBe("invalid");
+    expect(scheduleEveryMs("@every 90s")).toBe(90_000);
+    expect(scheduleEveryMs("@every 2h")).toBe(7_200_000);
+    expect(scheduleEveryMs("0 9 * * *")).toBeUndefined();
   });
   it("nextScheduleFire — @every anchored at since", () => {
     const since = new Date("2026-01-01T00:00:00Z");
@@ -220,6 +235,18 @@ describe("checkFieldValue", () => {
     expect(has(checkFieldValue(c, "nope"), "f", "invalid_string")).toBe(true);
     expect(has(checkFieldValue(c, 5), "f", "invalid_type")).toBe(true);
   });
+  it("schedule_spec — minute floor is its own issue key", () => {
+    const c = col({ format: "schedule_spec" });
+    expect(checkFieldValue(c, "@every 1m")).toEqual([]);
+    expect(checkFieldValue(c, "0 9 * * *")).toEqual([]);
+    const below = checkFieldValue(c, "@every 5s");
+    expect(has(below, "f", "schema_mismatch")).toBe(true);
+    expect(below[0]!.message).toBe("app.common.validation.schedule_spec_min_interval");
+    // A malformed spec keeps the generic format key.
+    const bad = checkFieldValue(c, "not a spec");
+    expect(has(bad, "f", "invalid_string")).toBe(true);
+    expect(bad[0]!.message).toBe("app.common.validation.schedule_spec");
+  });
   it("numeric incl. bigint wire values", () => {
     const c = col({ format: "number", min: 0, max: 10 });
     expect(checkFieldValue(c, 5)).toEqual([]);
@@ -304,6 +331,19 @@ describe("checkEntityFields", () => {
     expect(checkEntityFields(withKey, { name: "x" })).toEqual([]);
     expect(has(checkEntityFields(withKey, { name: "x", id: null }), "id", "required")).toBe(true);
   });
+  it("immutable columns are writable on create, rejected on update", () => {
+    const rel = meta([
+      col({ key: "parent_uuid", nullable: false, immutable: true }),
+      col({ key: "type_uuid", nullable: true }),
+    ]);
+    // create: required as usual
+    expect(has(checkEntityFields(rel, {}), "parent_uuid", "required")).toBe(true);
+    expect(checkEntityFields(rel, { parent_uuid: "p" })).toEqual([]);
+    // update: presence is the violation — even a same-value resubmit
+    expect(has(checkEntityFields(rel, { parent_uuid: "p" }, { partial: true }), "parent_uuid", "immutable")).toBe(true);
+    expect(checkEntityFields(rel, { type_uuid: "t" }, { partial: true })).toEqual([]);
+    expect(checkEntityFields(rel, {}, { partial: true })).toEqual([]);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -311,13 +351,15 @@ describe("checkEntityFields", () => {
 // ---------------------------------------------------------------------------
 
 describe("jobTriggerShapeIssues", () => {
-  it("mutual-mandatory + user-needs-source", () => {
-    expect(jobTriggerShapeIssues({ event_subject: "jobs.events.x", execution_context: "user" })).toEqual([]);
-    expect(jobTriggerShapeIssues({ schedule_spec: "@every 1h", execution_context: "me" })).toEqual([]);
-    expect(codes(jobTriggerShapeIssues({ execution_context: "system" }))).toContain("schema_mismatch");
+  it("mutual-mandatory + originator-needs-source + run_as closed vocab", () => {
+    expect(jobTriggerShapeIssues({ event_subject: "jobs.events.x", run_as: "originator" })).toEqual([]);
+    expect(jobTriggerShapeIssues({ schedule_spec: "@every 1h", run_as: "author" })).toEqual([]);
+    expect(codes(jobTriggerShapeIssues({ run_as: "system" }))).toContain("schema_mismatch");
     expect(
-      has(jobTriggerShapeIssues({ schedule_spec: "@every 1h", execution_context: "user" }), "execution_context"),
+      has(jobTriggerShapeIssues({ schedule_spec: "@every 1h", run_as: "originator" }), "run_as"),
     ).toBe(true);
+    // Closed vocab — any value outside originator|author|system is flagged.
+    expect(has(jobTriggerShapeIssues({ event_subject: "x.y", run_as: "bogus" }), "run_as", "not_in_vocab")).toBe(true);
   });
 
   it("@at in the past is a dead one-shot — flagged on schedule_spec", () => {
@@ -498,6 +540,18 @@ describe("pathCompatible", () => {
     // bare sources still pair with bare targets
     expect(pathCompatible(tgt({}), { type: "string" })).toBe(true);
     expect(pathCompatible(tgt({}), { type: "string", enum: ["a", "b"] })).toBe(true);
+  });
+  it("level 0 — an empty target schema is the open domain (z.unknown record values)", () => {
+    // `z.record`'s `z.unknown()` values project `{}` for every key — no
+    // type/format/vocabulary claim → every source shape is trivially
+    // deliverable. Distinct from `type:"string"` without format (a real
+    // bare-text domain that keeps rejecting specialized sources — above).
+    // Verified live: `meta:actor_email` → `emailsender.send.variables.*`
+    // was rejected at trigger write before this level existed.
+    expect(pathCompatible({}, { type: "string", format: "email" })).toBe(true);
+    expect(pathCompatible({}, { type: "integer" })).toBe(true);
+    expect(pathCompatible({}, { type: "string", format: "uuid", x_semantic: "actor.uuid" })).toBe(true);
+    expect(pathCompatible({}, { type: "string", format: "date-time" })).toBe(true);
   });
   it("array broadcast — array<T> accepts array<U> or scalar U compatible with T", () => {
     const arrEmail = { type: "array", items: { type: "string", format: "email" } };

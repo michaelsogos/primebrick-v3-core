@@ -80,6 +80,13 @@ a compact inline-editable list (rows add/edit in place).
 | order_field | `string` | Column key owning row ordering (convention default: `sort` when the
  entity declares it). Reorder CTAs mutate it and persist through the
  page's atomic bulk save — no dedicated reorder endpoint. |
+| directional | `{ forward_label_field: string; inverse_label_field: string }` | Directional label pair — declared when the dict rows are link-type
+ vocabularies consumed by `@Relation` edges. `forward_label_field`
+ names the column read parent-side ("the child IS a ‹label›"),
+ `inverse_label_field` names the column read child-side ("the parent
+ IS a ‹label›"); a NULL inverse label means the type is
+ self-inverse — same vocabulary read from both ends (e.g. partner).
+ Fields are PHYSICAL column keys on this dict entity. |
 
 ### `EntityAction`
 
@@ -170,7 +177,12 @@ must not declare it. |
 | uid | `string` | Field key holding the entity primary key (usually `uuid`). |
 | display_field | `string` | Canonical display field — the column key identifying the entity's
  human-readable label. Drives first-column/sticky table identity and
- default display resolution. |
+ default display resolution. OPTIONAL on the wire type only:
+ `withColumnConstraints` still REQUIRES it on every main-entity meta
+ (construction gate — a missing key throws), while relation entities
+ (`@Relation` marker — directed parent→child edges) MUST NOT declare
+ one: a directed edge has no single-column identity, its display is
+ viewpoint-dependent (`relation` facet). |
 | display_name | `string` | Display expression template (`${field}` syntax, dot-paths allowed).
 OPTIONAL here: `assembleMeta` materializes it as
 `"${" + display_field + "}"` when absent — it is always present in the
@@ -190,7 +202,7 @@ A single validation finding. `path` is the entity field key (or a
 | Field | Type | Description |
 |-------|------|-------------|
 | path | `string` |  |
-| code | `"required" \| "invalid_type" \| "too_small" \| "too_big" \| "invalid_string" \| "invalid_json" \| "schema_mismatch" \| "not_in_vocab"` |  |
+| code | `"immutable" \| "required" \| "invalid_type" \| "too_small" \| "too_big" \| "invalid_string" \| "invalid_json" \| "schema_mismatch" \| "not_in_vocab"` |  |
 | message | `string` |  |
 
 ### `ListFilterParamsOptions`
@@ -347,6 +359,27 @@ sent as the initial SSE `snapshot` event on connect.
 | changed | `EntityChangedMarker \| null` | Most recent server-side change marker, or null if none in the TTL window. |
 | current_version | `number` | Current `version` of the entity (read from DB on snapshot build). |
 
+### `RelationFacet`
+
+The `relation` facet — runtime-injected on served meta when the entity
+class carries the `@Relation` marker (dal-pg). Declares a DIRECTED
+parent→child edge table (e.g. `customer_link`): rows are typed arcs,
+never standalone page entities — no `display_field`, no pinned
+column, viewpoint-dependent display. `parent_field`/`child_field` are
+the physical `@Ref` column keys forming the arc (immutable after
+create — repointing is delete+create); `type_field` optionally points
+at the directional vocabulary entity (a `directional` dict);
+`hierarchical` opts the table into deep-cycle detection on insert
+(the 2-cycle is always rejected by the derived unordered-pair unique
+index — construction-derived, never authored).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| parent_field | `string` |  |
+| child_field | `string` |  |
+| type_field | `string` |  |
+| hierarchical | `boolean` |  |
+
 ### `RowCustomAction`
 
 UI configuration for a non-standard row CTA (route-backed bare op).
@@ -398,10 +431,12 @@ Table options — present only on entities with a table page.
 Closed action-color vocabulary — ONE semantic drives BOTH the icon and
  the label of a menu CTA (impossible to drift them apart). `neutral` is
  the default uncolored rendering; the destructive/warning/success/info/
- primary names map to the theme's semantic text utilities. A meta may
- never smuggle a Tailwind class here — the enum IS the contract.
+ primary names map to the theme's semantic text utilities. `violet` is
+ the clone/duplicate semantic — `duplicate.bulk` carries it by default
+ and the same hue marks `CLONE` entries in the version-history trail.
+ A meta may never smuggle a Tailwind class here — the enum IS the contract.
 
-**Type:** `"neutral" \| "primary" \| "info" \| "success" \| "warning" \| "destructive"`
+**Type:** `"neutral" \| "primary" \| "info" \| "success" \| "warning" \| "destructive" \| "violet"`
 
 ### `ActionsOverrides`
 
@@ -480,7 +515,7 @@ Values mirror the `Permission` enum in `@primebrick/sdk`.
 The served `GET /api/v1/entities/{entity}/meta` response:
 static meta + runtime-injected `display_name`, `actions`, `collaboration`.
 
-**Type:** `EntityMeta & { display_name: string; actions: EntityAction[]; collaboration: CollaborationMeta; dict: DictFacet }`
+**Type:** `EntityMeta & { display_name: string \| null; actions: EntityAction[]; collaboration: CollaborationMeta; dict: DictFacet; relation: RelationFacet }`
 
 ### `FilterCondition`
 
@@ -590,7 +625,7 @@ Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
 compile error — the US→FE option boundary is enforced by the type.
 New formats are additive literals (never breaking).
 
-**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "slug" \| "no_space" \| "lang"`
+**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "slug" \| "no_space" \| "lang"`
 
 ### `MetaColumnOptionsSource`
 
@@ -915,6 +950,13 @@ declaring the vendor specifiers/versions it was compiled against.
 
 **Type:** `"UP" \| "DOWN" \| "CEILING" \| "FLOOR" \| "HALF_UP" \| "HALF_DOWN" \| "HALF_EVEN"`
 
+### `ScheduleSpecError`
+
+`schedule_spec` rejection reasons — `"below_min_interval"` gets its own
+ issue key so the form can say WHY, not just THAT it failed.
+
+**Type:** `"invalid" \| "below_min_interval"`
+
 ### `SnakeCaseSingular`
 
 Branded type that enforces snake_case singular (no uppercase letters).
@@ -936,6 +978,10 @@ Sort direction for server-side list queries and header UI.
 ### `StandardOp`
 
 **Type:** `typeof STANDARD_OPS[number]`
+
+### `SupportedLanguage`
+
+**Type:** `typeof SUPPORTED_LANGUAGES[number]`
 
 ### `TooltipPriority`
 
@@ -1065,6 +1111,22 @@ A new dishonesty case is added HERE — never re-invented per surface.
 
 **Type:** `RegExp`
 
+### `JOB_TRIGGER_RUN_AS_VOCAB`
+
+`event_subject`/`schedule_spec` are mutually mandatory (at least one);
+`run_as` is closed-vocab (`originator`|`author`|`system`) and
+`run_as: "originator"` requires an event source to forward auth
+headers from; a one-shot `@at <ts>` must lie in the future — a past
+timestamp FIRES IMMEDIATELY at declare time (verified empirically:
+the declaration PubAcks, the scheduler dispatches at once, then the
+declaration self-purges — an unintended execution, not a dead one).
+`now` is injected so the predicate stays
+pure — the form passes the client clock, the write guard the server
+clock. On `partial` (update), fields not present in `entity` are
+treated from the merged record the caller passes.
+
+**Type:** `readonly ["originator", "author", "system"]`
+
 ### `LANG_RE`
 
 `lang` — BCP-47 language tag (`it-IT`, `en`, `zh-Hans`, `es-419`) —
@@ -1072,6 +1134,16 @@ A new dishonesty case is added HERE — never re-invented per surface.
  matches every tag the platform emits.
 
 **Type:** `RegExp`
+
+### `MIN_SCHEDULE_INTERVAL_MS`
+
+The floor every recurring spec must respect: one minute. The 5-field
+cron grammar is already minute-floored by design (`* * * * *` is its
+tightest expression), so `@every` — the only grammar able to go
+sub-minute — must not undercut it: a job firing every few seconds is a
+design error and would hammer the host. `@at` is a one-shot and exempt.
+
+**Type:** `60000`
 
 ### `NO_SPACE_RE`
 
@@ -1211,6 +1283,25 @@ present in `meta.actions` — ops whose route is not registered are emitted
 with `enabled: false` (explicitly unavailable) instead of being omitted.
 
 **Type:** `readonly ["list", "meta", "get", "create.single", "update.single", "delete.single", "purge.single", "restore.single", "read.audit", "export", "delete.bulk", "restore.bulk", "duplicate.bulk"]`
+
+### `SUPPORTED_LANGUAGES`
+
+Supported languages — THE canonical vocabulary for the whole platform.
+
+BCP-47 full tags (language + region) — en-GB and en-US are distinct
+first-class locales because they carry different date/number/address
+formatting, not just different dictionaries.
+
+Consumers:
+- `@primebrick/sdk`/`@primebrick/ui` re-export (BE routers, FE pickers)
+- `check-standards` lint (relative-path import, sibling checkout)
+- DB `CHECK (language IN (...))` constraints on `*.translations` —
+  the SQL literals must mirror this list; the lint enforces it.
+
+Adding a language = add the tag here + seed translations + bump the
+CHECK constraints — a deliberate release-scoped change, never data.
+
+**Type:** `readonly ["en-GB", "en-US", "it-IT", "fr-FR", "es-ES", "de-DE", "pt-PT"]`
 
 ### `TEN`
 
@@ -1740,6 +1831,22 @@ Runtime validator for SnakeCaseSingular — rejects strings with
 |-----------|------|-------------|
 | v | `string` |  |
 
+### `isSupportedLanguage(tag): tag is "en-GB" \| "en-US" \| "it-IT" \| "fr-FR" \| "es-ES" \| "de-DE" \| "pt-PT"`
+
+Type guard — is `tag` one of the platform-supported language tags?
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| tag | `string` |  |
+
+### `isUUID(v): v is string`
+
+Type guard — validates RFC 4122 layout (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, hex).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| v | `unknown` |  |
+
 ### `isValidNatsSubject(subject): boolean`
 
 | Parameter | Type | Description |
@@ -1747,10 +1854,6 @@ Runtime validator for SnakeCaseSingular — rejects strings with
 | subject | `unknown` |  |
 
 ### `isValidScheduleSpec(raw): boolean`
-
-`schedule_spec` grammar: `@every <n>[smhd]`, `@at <RFC3339>` or a
- 5-field cron — the NATS `Nats-Schedule` header contract. Pure; the UI
- interpreter (`parseScheduleSpec`/`nextScheduleRuns`) keeps croner.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -1773,17 +1876,6 @@ compare `keyNamespaceOf(key)` against `translationKeyNamespace(schema)`.
 | v | `string` |  |
 
 ### `jobTriggerShapeIssues(entity, now): FieldIssue[]`
-
-`event_subject`/`schedule_spec` are mutually mandatory (at least one);
-`execution_context: "user"` requires an event source to forward auth
-headers from; a one-shot `@at <ts>` must lie in the future — a past
-timestamp FIRES IMMEDIATELY at declare time (verified empirically:
-the declaration PubAcks, the scheduler dispatches at once, then the
-declaration self-purges — an unintended execution, not a dead one).
-`now` is injected so the predicate stays
-pure — the form passes the client clock, the write guard the server
-clock. On `partial` (update), fields not present in `entity` are
-treated from the merged record the caller passes.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -1993,6 +2085,19 @@ Re-express `d` at `newScale`. Growing is exact; shrinking applies `mode`
 | newScale | `number` |  |
 | mode | `RoundingMode` |  |
 
+### `resolveDisplayTemplate(meta): string \| null`
+
+The materialized display template — `meta.display_name` when authored,
+`"${" + display_field + "}"` otherwise (the served default). ONE rule
+used by both the served-meta assembler (EntityMetaResponse.display_name)
+and the DAL's display-join projection (`<key>_name` columns evaluate the
+SAME template on the joined row), so titles, combos and ref cells can
+never diverge.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| meta | `Pick<EntityMeta, "display_field" \| "display_name">` |  |
+
 ### `resolvePath(payload, path): unknown`
 
 Minimal JSONPath resolver: `$` = root, `$.a.b.c` = nested lookup.
@@ -2072,11 +2177,34 @@ Round to `scale` fractional digits (default `HALF_UP`).
 ### `sanitizeVisibleKeys(visibleKeys, columns): string[]`
 
 Drop unknown keys and fall back to defaults when nothing left.
+ `hideable === false` columns are re-injected unconditionally — a stored
+ set predating the pin (or written when the column could still be hidden)
+ can never violate the declaration. `hideable !== false` columns — e.g.
+ `uuid`, sticky-but-selectable — stay user-controlled.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | visibleKeys | `string[]` |  |
 | columns | `MetaColumn[]` |  |
+
+### `scheduleEveryMs(spec): number \| undefined`
+
+`@every` interval in ms, or undefined when `spec` is not an `@every` spec.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| spec | `string` |  |
+
+### `scheduleSpecError(raw): ScheduleSpecError \| null`
+
+`schedule_spec` grammar: `@every <n>[smhd]` (≥ MIN_SCHEDULE_INTERVAL_MS),
+`@at <RFC3339>` or a 5-field cron — the NATS `Nats-Schedule` header
+contract. Pure; the UI interpreter (`parseScheduleSpec`/`nextScheduleRuns`)
+keeps croner.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| raw | `unknown` |  |
 
 ### `schemaHonestyIssue(field, prop): string \| null`
 

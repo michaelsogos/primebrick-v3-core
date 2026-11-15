@@ -96,15 +96,18 @@ export type ActionsOverrides = Record<
 /** Closed action-color vocabulary — ONE semantic drives BOTH the icon and
  *  the label of a menu CTA (impossible to drift them apart). `neutral` is
  *  the default uncolored rendering; the destructive/warning/success/info/
- *  primary names map to the theme's semantic text utilities. A meta may
- *  never smuggle a Tailwind class here — the enum IS the contract. */
+ *  primary names map to the theme's semantic text utilities. `violet` is
+ *  the clone/duplicate semantic — `duplicate.bulk` carries it by default
+ *  and the same hue marks `CLONE` entries in the version-history trail.
+ *  A meta may never smuggle a Tailwind class here — the enum IS the contract. */
 export type ActionColor =
   | "neutral"
   | "primary"
   | "info"
   | "success"
   | "warning"
-  | "destructive";
+  | "destructive"
+  | "violet";
 
 /**
  * The full `ActionColor` vocabulary — construction/lint validation rejects
@@ -118,6 +121,7 @@ export const ACTION_COLORS: readonly ActionColor[] = [
   "success",
   "warning",
   "destructive",
+  "violet",
 ];
 
 /**
@@ -227,6 +231,7 @@ export type MetaColumnFormat =
   | "phone"
   | "secret"
   | "nats_subject"
+  | "service_code"
   | "schedule_spec"
   | "json"
   | "display_name"
@@ -312,6 +317,12 @@ export type MetaColumnDependsCondition = {
   not?: unknown;
   /** Disabled when the compared value is in this set (IN semantics). */
   values?: readonly unknown[];
+  /** Disabled on the pivot's presence — `set:true` = "the pivot carries
+   *  a value" (e.g. a `system_key` set gates the code-owned fields of a
+   *  system-owned row), `set:false` = "the pivot is still empty". The
+   *  only facet that reads a NON-form sibling: a physical column absent
+   *  from `page_props.form` still gates, via the served row. */
+  set?: boolean;
 };
 
 /** Tooltip visual severity — drives icon and title color in priority
@@ -536,8 +547,29 @@ export type MetaColumn = {
    *  census-declared page (entity name is the only required spec: the FE
    *  resolves routes from the module census, never hardcoded URLs). */
   ref?: {
-    /** Target entity API name — the `entity` on its route declaration. */
-    entity: string;
+    /** Target entity API name — the `entity` on its route declaration.
+     *  Required UNLESS `entity_field` is declared (XOR): a lazy ref
+     *  resolves the target per row instead. */
+    entity?: string;
+    /** LAZY REF — row column carrying the target entity name
+     *  (e.g. `armed_ref_entity` → "job_trigger" | "service_registry").
+     *  With this set the ref resolves to 2+ entities, chosen per row —
+     *  one column, many drill targets. Mutually exclusive with
+     *  `entity` (withColumnConstraints enforces the XOR). The lazy-ref
+     *  contract: the CELL value is the display label (usually a
+     *  @Calculated column — no `_name` join can decorate N entities),
+     *  `key_field` points at the row column carrying the drill key,
+     *  and the renderer picks the record sheet by the resolved entity
+     *  name (entity-served → `entity.record`; registered non-entity
+     *  targets → their panel map entry). */
+    entity_field?: string;
+    /** Row column holding the per-row DRILL KEY passed to the record
+     *  sheet (uuid for entity-record targets, a business key for
+     *  non-entity panels — the panel owns the key contract). Default:
+     *  the cell value itself (the normal uuid-ref case). Useful both
+     *  on lazy refs (entity_field) and on static refs whose visible
+     *  cell is a label rather than the target key. */
+    key_field?: string;
     /** `'detail'` — the value is the target's `uid`, links to its `[param]`
      *  route. `'list'` — links to the target's list page pre-filtered.
      *  `'none'` — the cell renders the label with NO link (for
@@ -801,8 +833,13 @@ export interface EntityMeta {
   uid: string;
   /** Canonical display field — the column key identifying the entity's
    *  human-readable label. Drives first-column/sticky table identity and
-   *  default display resolution. */
-  display_field: string;
+   *  default display resolution. OPTIONAL on the wire type only:
+   *  `withColumnConstraints` still REQUIRES it on every main-entity meta
+   *  (construction gate — a missing key throws), while relation entities
+   *  (`@Relation` marker — directed parent→child edges) MUST NOT declare
+   *  one: a directed edge has no single-column identity, its display is
+   *  viewpoint-dependent (`relation` facet). */
+  display_field?: string;
   /**
    * Display expression template (`${field}` syntax, dot-paths allowed).
    * OPTIONAL here: `assembleMeta` materializes it as
@@ -822,6 +859,20 @@ export interface EntityMeta {
 }
 
 /**
+ * The materialized display template — `meta.display_name` when authored,
+ * `"${" + display_field + "}"` otherwise (the served default). ONE rule
+ * used by both the served-meta assembler (EntityMetaResponse.display_name)
+ * and the DAL's display-join projection (`<key>_name` columns evaluate the
+ * SAME template on the joined row), so titles, combos and ref cells can
+ * never diverge.
+ */
+export function resolveDisplayTemplate(
+  meta: Pick<EntityMeta, "display_field" | "display_name">,
+): string | null {
+  return meta.display_name ?? (meta.display_field ? `\${${meta.display_field}}` : null);
+}
+
+/**
  * The `dict` facet — runtime-injected on served meta when the entity
  * class carries the `@Dict` marker (a dict base such as
  * dal-pg `DictEntityBase`). Drives the `kind:"dict"` page archetype:
@@ -835,6 +886,37 @@ export interface DictFacet {
    *  entity declares it). Reorder CTAs mutate it and persist through the
    *  page's atomic bulk save — no dedicated reorder endpoint. */
   order_field?: string;
+  /** Directional label pair — declared when the dict rows are link-type
+   *  vocabularies consumed by `@Relation` edges. `forward_label_field`
+   *  names the column read parent-side ("the child IS a ‹label›"),
+   *  `inverse_label_field` names the column read child-side ("the parent
+   *  IS a ‹label›"); a NULL inverse label means the type is
+   *  self-inverse — same vocabulary read from both ends (e.g. partner).
+   *  Fields are PHYSICAL column keys on this dict entity. */
+  directional?: {
+    forward_label_field: string;
+    inverse_label_field: string;
+  };
+}
+
+/**
+ * The `relation` facet — runtime-injected on served meta when the entity
+ * class carries the `@Relation` marker (dal-pg). Declares a DIRECTED
+ * parent→child edge table (e.g. `customer_link`): rows are typed arcs,
+ * never standalone page entities — no `display_field`, no pinned
+ * column, viewpoint-dependent display. `parent_field`/`child_field` are
+ * the physical `@Ref` column keys forming the arc (immutable after
+ * create — repointing is delete+create); `type_field` optionally points
+ * at the directional vocabulary entity (a `directional` dict);
+ * `hierarchical` opts the table into deep-cycle detection on insert
+ * (the 2-cycle is always rejected by the derived unordered-pair unique
+ * index — construction-derived, never authored).
+ */
+export interface RelationFacet {
+  parent_field: string;
+  child_field: string;
+  type_field?: string;
+  hierarchical?: boolean;
 }
 
 /**
@@ -842,11 +924,16 @@ export interface DictFacet {
  * static meta + runtime-injected `display_name`, `actions`, `collaboration`.
  */
 export type EntityMetaResponse = EntityMeta & {
-  display_name: string;
+  /** Materialized display template — `null` on relation entities (a
+   *  directed edge has no single display template; consumers read the
+   *  `relation` facet for the directional display contract). */
+  display_name: string | null;
   actions: EntityAction[];
   collaboration: CollaborationMeta;
   /** Present only on dict-faceted entities — see {@link DictFacet}. */
   dict?: DictFacet;
+  /** Present only on relation-faceted entities — see {@link RelationFacet}. */
+  relation?: RelationFacet;
 };
 
 /**
