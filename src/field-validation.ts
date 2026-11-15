@@ -127,6 +127,22 @@ export const isPhone = (v: string): boolean => /^\+?[0-9][0-9 ()-]{4,}$/.test(v)
 // ---- schedule_spec grammar (pure — no croner dependency) ------------------
 
 const EVERY_RE = /^@every\s+(\d+)([smhd])$/;
+const EVERY_UNIT_MS: Record<string, number> = { s: 1_000, m: 60_000, h: 3_600_000, d: 86_400_000 };
+
+/**
+ * The floor every recurring spec must respect: one minute. The 5-field
+ * cron grammar is already minute-floored by design (`* * * * *` is its
+ * tightest expression), so `@every` — the only grammar able to go
+ * sub-minute — must not undercut it: a job firing every few seconds is a
+ * design error and would hammer the host. `@at` is a one-shot and exempt.
+ */
+export const MIN_SCHEDULE_INTERVAL_MS = 60_000;
+
+/** `@every` interval in ms, or undefined when `spec` is not an `@every` spec. */
+export function scheduleEveryMs(spec: string): number | undefined {
+  const m = EVERY_RE.exec(spec.trim());
+  return m ? Number(m[1]) * EVERY_UNIT_MS[m[2]!]! : undefined;
+}
 const CRON_NAMES: Record<string, Record<string, number>> = {
   month: { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 },
   dow: { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 },
@@ -164,25 +180,38 @@ function cronFieldValid(field: string, fieldIdx: number): boolean {
   return true;
 }
 
-/** `schedule_spec` grammar: `@every <n>[smhd]`, `@at <RFC3339>` or a
- *  5-field cron — the NATS `Nats-Schedule` header contract. Pure; the UI
- *  interpreter (`parseScheduleSpec`/`nextScheduleRuns`) keeps croner. */
-export function isValidScheduleSpec(raw: unknown): boolean {
-  if (typeof raw !== "string") return false;
+/** `schedule_spec` rejection reasons — `"below_min_interval"` gets its own
+ *  issue key so the form can say WHY, not just THAT it failed. */
+export type ScheduleSpecError = "invalid" | "below_min_interval";
+
+/**
+ * `schedule_spec` grammar: `@every <n>[smhd]` (≥ {@link MIN_SCHEDULE_INTERVAL_MS}),
+ * `@at <RFC3339>` or a 5-field cron — the NATS `Nats-Schedule` header
+ * contract. Pure; the UI interpreter (`parseScheduleSpec`/`nextScheduleRuns`)
+ * keeps croner.
+ */
+export function scheduleSpecError(raw: unknown): ScheduleSpecError | null {
+  if (typeof raw !== "string") return "invalid";
   const spec = raw.trim();
-  if (spec === "") return false;
-  if (spec.startsWith("@every")) return EVERY_RE.test(spec);
+  if (spec === "") return "invalid";
+  if (spec.startsWith("@every")) {
+    const ms = scheduleEveryMs(spec);
+    if (ms === undefined) return "invalid";
+    return ms < MIN_SCHEDULE_INTERVAL_MS ? "below_min_interval" : null;
+  }
   if (spec.startsWith("@at")) {
     const rest = spec.slice(3).trim();
-    return rest !== "" && !Number.isNaN(new Date(rest).getTime());
+    return rest !== "" && !Number.isNaN(new Date(rest).getTime()) ? null : "invalid";
   }
-  if (spec.startsWith("@")) return false;
+  if (spec.startsWith("@")) return "invalid";
   const parts = spec.split(/\s+/);
-  if (parts.length !== 5) return false;
-  return parts.every((f, i) => cronFieldValid(f, i));
+  if (parts.length !== 5) return "invalid";
+  return parts.every((f, i) => cronFieldValid(f, i)) ? null : "invalid";
 }
 
-const EVERY_UNIT_MS: Record<string, number> = { s: 1_000, m: 60_000, h: 3_600_000, d: 86_400_000 };
+export function isValidScheduleSpec(raw: unknown): boolean {
+  return scheduleSpecError(raw) === null;
+}
 
 /**
  * Next fire for a `schedule_spec`, when derivable without a cron evaluator:
@@ -523,7 +552,17 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
     case "email": if (!isEmail(value)) fmtFail(); break;
     case "url": if (!isValidUrl(value)) fmtFail(); break;
     case "nats_subject": if (!isValidNatsSubject(value)) fmtFail(); break;
-    case "schedule_spec": if (!isValidScheduleSpec(value)) fmtFail(); break;
+    case "schedule_spec": {
+      const specErr = scheduleSpecError(value);
+      // The floor gets its own key — "runs too often" is not "invalid
+      // format" and the user must know the minimum exists.
+      if (specErr === "below_min_interval") {
+        at("schema_mismatch", "app.common.validation.schedule_spec_min_interval");
+      } else if (specErr) {
+        fmtFail();
+      }
+      break;
+    }
     case "color_hex": if (!isColorHex(value)) fmtFail(); break;
     case "phone": if (!isPhone(value)) fmtFail(); break;
     case "date": if (!isIsoDate(value)) fmtFail(); break;

@@ -14,6 +14,8 @@ import {
   isValidNatsSubject,
   isValidScheduleSpec,
   nextScheduleFire,
+  scheduleEveryMs,
+  scheduleSpecError,
   jobTriggerShapeIssues,
   jsonSchemaCheck,
   pathCompatible,
@@ -60,9 +62,12 @@ describe("format predicates", () => {
     expect(isValidNatsSubject("a.b.c!")).toBe(false);
   });
   it("schedule_spec grammar", () => {
-    expect(isValidScheduleSpec("@every 30s")).toBe(true);
+    expect(isValidScheduleSpec("@every 60s")).toBe(true); // floor boundary
     expect(isValidScheduleSpec("@every 5m")).toBe(true);
     expect(isValidScheduleSpec("@every 1d")).toBe(true);
+    expect(isValidScheduleSpec("@every 30s")).toBe(false); // below the minute floor
+    expect(isValidScheduleSpec("@every 1s")).toBe(false);
+    expect(isValidScheduleSpec("@every 59s")).toBe(false);
     expect(isValidScheduleSpec("@every 90x")).toBe(false);
     expect(isValidScheduleSpec("@at 2026-12-01T09:00:00Z")).toBe(true);
     expect(isValidScheduleSpec("@at not-a-date")).toBe(false);
@@ -74,6 +79,16 @@ describe("format predicates", () => {
     expect(isValidScheduleSpec("* * * *")).toBe(false);
     expect(isValidScheduleSpec("* * * * * *")).toBe(false);
     expect(isValidScheduleSpec("")).toBe(false);
+  });
+  it("scheduleSpecError — discriminated reason; scheduleEveryMs parses @every", () => {
+    expect(scheduleSpecError("@every 59s")).toBe("below_min_interval");
+    expect(scheduleSpecError("@every 1m")).toBeNull();
+    expect(scheduleSpecError("@at 2027-01-01T00:00:00Z")).toBeNull();
+    expect(scheduleSpecError("nonsense")).toBe("invalid");
+    expect(scheduleSpecError(42)).toBe("invalid");
+    expect(scheduleEveryMs("@every 90s")).toBe(90_000);
+    expect(scheduleEveryMs("@every 2h")).toBe(7_200_000);
+    expect(scheduleEveryMs("0 9 * * *")).toBeUndefined();
   });
   it("nextScheduleFire — @every anchored at since", () => {
     const since = new Date("2026-01-01T00:00:00Z");
@@ -219,6 +234,18 @@ describe("checkFieldValue", () => {
     expect(has(checkFieldValue(c, "a"), "f", "too_small")).toBe(true);
     expect(has(checkFieldValue(c, "nope"), "f", "invalid_string")).toBe(true);
     expect(has(checkFieldValue(c, 5), "f", "invalid_type")).toBe(true);
+  });
+  it("schedule_spec — minute floor is its own issue key", () => {
+    const c = col({ format: "schedule_spec" });
+    expect(checkFieldValue(c, "@every 1m")).toEqual([]);
+    expect(checkFieldValue(c, "0 9 * * *")).toEqual([]);
+    const below = checkFieldValue(c, "@every 5s");
+    expect(has(below, "f", "schema_mismatch")).toBe(true);
+    expect(below[0]!.message).toBe("app.common.validation.schedule_spec_min_interval");
+    // A malformed spec keeps the generic format key.
+    const bad = checkFieldValue(c, "not a spec");
+    expect(has(bad, "f", "invalid_string")).toBe(true);
+    expect(bad[0]!.message).toBe("app.common.validation.schedule_spec");
   });
   it("numeric incl. bigint wire values", () => {
     const c = col({ format: "number", min: 0, max: 10 });

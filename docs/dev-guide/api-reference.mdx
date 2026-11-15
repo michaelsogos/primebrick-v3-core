@@ -950,6 +950,13 @@ declaring the vendor specifiers/versions it was compiled against.
 
 **Type:** `"UP" \| "DOWN" \| "CEILING" \| "FLOOR" \| "HALF_UP" \| "HALF_DOWN" \| "HALF_EVEN"`
 
+### `ScheduleSpecError`
+
+`schedule_spec` rejection reasons — `"below_min_interval"` gets its own
+ issue key so the form can say WHY, not just THAT it failed.
+
+**Type:** `"invalid" \| "below_min_interval"`
+
 ### `SnakeCaseSingular`
 
 Branded type that enforces snake_case singular (no uppercase letters).
@@ -1104,6 +1111,22 @@ A new dishonesty case is added HERE — never re-invented per surface.
 
 **Type:** `RegExp`
 
+### `JOB_TRIGGER_RUN_AS_VOCAB`
+
+`event_subject`/`schedule_spec` are mutually mandatory (at least one);
+`run_as` is closed-vocab (`originator`|`author`|`system`) and
+`run_as: "originator"` requires an event source to forward auth
+headers from; a one-shot `@at <ts>` must lie in the future — a past
+timestamp FIRES IMMEDIATELY at declare time (verified empirically:
+the declaration PubAcks, the scheduler dispatches at once, then the
+declaration self-purges — an unintended execution, not a dead one).
+`now` is injected so the predicate stays
+pure — the form passes the client clock, the write guard the server
+clock. On `partial` (update), fields not present in `entity` are
+treated from the merged record the caller passes.
+
+**Type:** `readonly ["originator", "author", "system"]`
+
 ### `LANG_RE`
 
 `lang` — BCP-47 language tag (`it-IT`, `en`, `zh-Hans`, `es-419`) —
@@ -1111,6 +1134,16 @@ A new dishonesty case is added HERE — never re-invented per surface.
  matches every tag the platform emits.
 
 **Type:** `RegExp`
+
+### `MIN_SCHEDULE_INTERVAL_MS`
+
+The floor every recurring spec must respect: one minute. The 5-field
+cron grammar is already minute-floored by design (`* * * * *` is its
+tightest expression), so `@every` — the only grammar able to go
+sub-minute — must not undercut it: a job firing every few seconds is a
+design error and would hammer the host. `@at` is a one-shot and exempt.
+
+**Type:** `60000`
 
 ### `NO_SPACE_RE`
 
@@ -1822,10 +1855,6 @@ Type guard — validates RFC 4122 layout (`xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 
 ### `isValidScheduleSpec(raw): boolean`
 
-`schedule_spec` grammar: `@every <n>[smhd]`, `@at <RFC3339>` or a
- 5-field cron — the NATS `Nats-Schedule` header contract. Pure; the UI
- interpreter (`parseScheduleSpec`/`nextScheduleRuns`) keeps croner.
-
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | raw | `unknown` |  |
@@ -1847,17 +1876,6 @@ compare `keyNamespaceOf(key)` against `translationKeyNamespace(schema)`.
 | v | `string` |  |
 
 ### `jobTriggerShapeIssues(entity, now): FieldIssue[]`
-
-`event_subject`/`schedule_spec` are mutually mandatory (at least one);
-`execution_context: "user"` requires an event source to forward auth
-headers from; a one-shot `@at <ts>` must lie in the future — a past
-timestamp FIRES IMMEDIATELY at declare time (verified empirically:
-the declaration PubAcks, the scheduler dispatches at once, then the
-declaration self-purges — an unintended execution, not a dead one).
-`now` is injected so the predicate stays
-pure — the form passes the client clock, the write guard the server
-clock. On `partial` (update), fields not present in `entity` are
-treated from the merged record the caller passes.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -2168,6 +2186,25 @@ Drop unknown keys and fall back to defaults when nothing left.
 |-----------|------|-------------|
 | visibleKeys | `string[]` |  |
 | columns | `MetaColumn[]` |  |
+
+### `scheduleEveryMs(spec): number \| undefined`
+
+`@every` interval in ms, or undefined when `spec` is not an `@every` spec.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| spec | `string` |  |
+
+### `scheduleSpecError(raw): ScheduleSpecError \| null`
+
+`schedule_spec` grammar: `@every <n>[smhd]` (≥ MIN_SCHEDULE_INTERVAL_MS),
+`@at <RFC3339>` or a 5-field cron — the NATS `Nats-Schedule` header
+contract. Pure; the UI interpreter (`parseScheduleSpec`/`nextScheduleRuns`)
+keeps croner.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| raw | `unknown` |  |
 
 ### `schemaHonestyIssue(field, prop): string \| null`
 
