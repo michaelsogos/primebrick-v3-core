@@ -712,6 +712,22 @@ export function pathCompatible(
 ): boolean {
   if (!source || typeof source !== "object") return false;
 
+  // Level 0 — open domain. A target declaring NO constraint (`{}` — e.g.
+  // `z.record`'s `z.unknown()` values, where `x_map_keys` is unresolved at
+  // the wire gate) makes no type/format/vocabulary claim: every source
+  // shape is trivially deliverable. Distinct from `type:"string"` without
+  // `format` — that IS a domain claim (plain text) and keeps the
+  // fail-closed format rule below. Without this, every specialized meta
+  // (`actor_email`, `*.uuid` semantics) was provably undeliverable into
+  // any record key — verified live against `emailsender.send.variables`.
+  const targetDeclares =
+    target.type !== undefined ||
+    target.format !== undefined ||
+    Array.isArray(target.enum) ||
+    "const" in target ||
+    typeof target["x_semantic"] === "string";
+  if (!targetDeclares) return true;
+
   // Level 1 — type. An `array<T>` target ALSO accepts a scalar source
   // compatible with T: the resolver wraps it (`v` → `[v]`, see
   // `applyPayloadMap`'s target-schema coercion) — one source feeding a
