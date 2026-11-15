@@ -317,6 +317,12 @@ export type MetaColumnDependsCondition = {
   not?: unknown;
   /** Disabled when the compared value is in this set (IN semantics). */
   values?: readonly unknown[];
+  /** Disabled on the pivot's presence — `set:true` = "the pivot carries
+   *  a value" (e.g. a `system_key` set gates the code-owned fields of a
+   *  system-owned row), `set:false` = "the pivot is still empty". The
+   *  only facet that reads a NON-form sibling: a physical column absent
+   *  from `page_props.form` still gates, via the served row. */
+  set?: boolean;
 };
 
 /** Tooltip visual severity — drives icon and title color in priority
