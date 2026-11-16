@@ -28751,29 +28751,46 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "The "
+								"text": "The audit row key of the change — bigint for legacy surrogate-id\r\n audit tables, uuid string for post-eradication "
 							},
 							{
 								"kind": "code",
-								"text": "`audit_log_id`"
+								"text": "`*_audit`"
 							},
 							{
 								"kind": "text",
-								"text": " of the change (for the GET audit/:auditLogId diff endpoint)."
+								"text": " rows\r\n (PK "
+							},
+							{
+								"kind": "code",
+								"text": "`(uuid, changed_at)`"
+							},
+							{
+								"kind": "text",
+								"text": ")."
 							}
 						]
 					},
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 93,
+							"line": 95,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L93"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L95"
 						}
 					],
 					"type": {
-						"type": "intrinsic",
-						"name": "number"
+						"type": "union",
+						"types": [
+							{
+								"type": "intrinsic",
+								"name": "string"
+							},
+							{
+								"type": "intrinsic",
+								"name": "number"
+							}
+						]
 					}
 				},
 				{
@@ -28793,9 +28810,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 95,
+							"line": 97,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L95"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L97"
 						}
 					],
 					"type": {
@@ -28854,9 +28871,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 103,
+							"line": 105,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L103"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L105"
 						}
 					],
 					"type": {
@@ -28881,9 +28898,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 105,
+							"line": 107,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L105"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L107"
 						}
 					],
 					"type": {
@@ -28963,9 +28980,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 114,
+							"line": 116,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L114"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L116"
 						}
 					],
 					"type": {
@@ -28995,9 +29012,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 116,
+							"line": 118,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L116"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L118"
 						}
 					],
 					"type": {
@@ -29027,9 +29044,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 118,
+							"line": 120,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L118"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L120"
 						}
 					],
 					"type": {
@@ -29073,9 +29090,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 120,
+							"line": 122,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L120"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L122"
 						}
 					],
 					"type": {
@@ -29098,9 +29115,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/presence.ts",
-					"line": 112,
+					"line": 114,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L112"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L114"
 				}
 			]
 		},
@@ -29144,9 +29161,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 129,
+							"line": 131,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L129"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L131"
 						}
 					],
 					"type": {
@@ -29181,9 +29198,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 135,
+							"line": 137,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L135"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L137"
 						}
 					],
 					"type": {
@@ -29208,9 +29225,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 137,
+							"line": 139,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L137"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L139"
 						}
 					],
 					"type": {
@@ -29237,9 +29254,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 139,
+							"line": 141,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L139"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L141"
 						}
 					],
 					"type": {
@@ -29275,9 +29292,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/presence.ts",
-							"line": 141,
+							"line": 143,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L141"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L143"
 						}
 					],
 					"type": {
@@ -29301,9 +29318,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/presence.ts",
-					"line": 127,
+					"line": 129,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L127"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/presence.ts#L129"
 				}
 			]
 		},

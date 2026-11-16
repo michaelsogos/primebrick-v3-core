@@ -89,8 +89,10 @@ export interface EntityChangedMarker {
   entity_uuid: string;
   /** The new `version` after the save. */
   version: number;
-  /** The `audit_log_id` of the change (for the GET audit/:auditLogId diff endpoint). */
-  audit_log_id: number;
+  /** The audit row key of the change — bigint for legacy surrogate-id
+   *  audit tables, uuid string for post-eradication `*_audit` rows
+   *  (PK `(uuid, changed_at)`). */
+  audit_log_id: number | string;
   /** user_uuid of the writer. */
   changed_by: string;
   /**
