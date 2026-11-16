@@ -29,6 +29,7 @@ import {
   effectiveFormat,
   isEmptyValue,
   PAYLOAD_MAP_META_SCHEMAS,
+  type MapKeyDecl,
   type PayloadMap,
   type PayloadMapMeta,
 } from "./payload-map.js";
@@ -929,14 +930,64 @@ function fallbackIssues(
   return out;
 }
 
+/** `mapKeySchemas` inner value — a bare prop schema (type-check only,
+ *  back-compat) or the full `MapKeyDecl` `{schema, required?, nullable?}`
+ *  the owning catalog row declares. `required` keys must then be PRESENT
+ *  in `kind:"map"` entries and `kind:"const"` object literals — an
+ *  unmapped required key is the gap a declared vocabulary exists to close. */
+type MapKeySchemaOrDecl = Record<string, unknown> | MapKeyDecl;
+
+interface ResolvedKeyDecl {
+  schema: Record<string, unknown>;
+  required: boolean;
+}
+
+function keyDeclOf(v: unknown): ResolvedKeyDecl | undefined {
+  if (typeof v !== "object" || v === null || Array.isArray(v)) return undefined;
+  const o = v as Record<string, unknown>;
+  if (typeof o.schema === "object" && o.schema !== null && !Array.isArray(o.schema)) {
+    return { schema: o.schema as Record<string, unknown>, required: o.required === true };
+  }
+  return { schema: o, required: false };
+}
+
+function resolveKeyDecls(
+  keySchemas: Record<string, MapKeySchemaOrDecl> | undefined,
+): Record<string, ResolvedKeyDecl> | undefined {
+  if (!keySchemas) return undefined;
+  const out: Record<string, ResolvedKeyDecl> = {};
+  for (const [k, v] of Object.entries(keySchemas)) {
+    const d = keyDeclOf(v);
+    if (d) out[k] = d;
+  }
+  return out;
+}
+
+/** Declared-required keys absent from `entries`/`value` — one
+ *  `unmapped_required` per missing key. */
+function requiredKeyIssues(
+  decls: Record<string, ResolvedKeyDecl> | undefined,
+  present: (k: string) => boolean,
+  path: string,
+): FieldIssue[] {
+  const out: FieldIssue[] = [];
+  for (const [k, d] of Object.entries(decls ?? {})) {
+    if (d.required && !present(k)) {
+      out.push(issue(joinPath(path, k), "required", kmsg("app.common.validation.unmapped_required", { field: k })));
+    }
+  }
+  return out;
+}
+
 function entryIssues(
   entry: MapEntry,
   propSchema: Record<string, unknown>,
   path: string,
   sourceSchema?: Record<string, unknown>,
-  keySchemas?: Record<string, Record<string, unknown>>,
+  keySchemas?: Record<string, MapKeySchemaOrDecl>,
 ): FieldIssue[] {
   const out: FieldIssue[] = [];
+  const keyDecls = resolveKeyDecls(keySchemas);
   const hasFallback = Array.isArray(entry.fallback) && entry.fallback.length > 0;
   switch (entry.kind) {
     case "const": {
@@ -958,6 +1009,13 @@ function entryIssues(
         // `[i]` sub-paths append directly (`to[0]`), keyed sub-paths join.
         const p = i.path ? (i.path.startsWith("[") ? path + i.path : joinPath(path, i.path)) : path;
         out.push(issue(p, i.code, i.message));
+      }
+      // A const OBJECT literal is the whole record — declared-required
+      // keys must be inside it (a `{kind:"map"}` entry checks the same
+      // keys on its entries below).
+      if (typeof v === "object" && v !== null && !Array.isArray(v)) {
+        const obj = v as Record<string, unknown>;
+        out.push(...requiredKeyIssues(keyDecls, (k) => k in obj, path));
       }
       break;
     }
@@ -1000,11 +1058,12 @@ function entryIssues(
         // (`z.record`) projects `{}` for every key — the template's
         // declaration is the only place a key's real type lives.
         const subSchema =
-          keySchemas?.[k] ??
+          keyDecls?.[k]?.schema ??
           props[k] ??
           (additional && typeof additional === "object" ? (additional as Record<string, unknown>) : {});
         out.push(...entryIssues(sub, subSchema, joinPath(path, k), sourceSchema));
       }
+      out.push(...requiredKeyIssues(keyDecls, (k) => k in entries, path));
       break;
     }
     case "meta":
@@ -1039,13 +1098,13 @@ export function payloadMapConformance(
   callableSchema: Record<string, unknown>,
   sourceSchema?: Record<string, unknown>,
   /** Resolved `x_map_keys` declarations per field — `{field: {key:
-   *  schema}}` — the catalog-row contract (e.g. a template's
-   *  `variables`). Optional: the wire gate can't resolve catalog rows
-   *  synchronously and skips this layer; the design-time checker passes
-   *  the resolved set so a `const` typed against a declared key schema
-   *  (`"hhhhh"` on `amount:"number"`) fails `invalid_type` instead of
-   *  passing on the record's empty `additionalProperties`. */
-  mapKeySchemas?: Record<string, Record<string, Record<string, unknown>>>,
+   *  schema | MapKeyDecl}}` — the catalog-row contract (e.g. a
+   *  template's `variables`). Optional: callers that can't resolve
+   *  catalog rows skip this layer. A bare schema only type-checks the
+   *  mapped value; a `MapKeyDecl` carrying `required` also demands the
+   *  key be PRESENT in the `kind:"map"` entries / `const` object — the
+   *  same gate the editor applies on save. */
+  mapKeySchemas?: Record<string, Record<string, MapKeySchemaOrDecl>>,
 ): FieldIssue[] {
   if (!map || typeof map !== "object") map = {};
   const out: FieldIssue[] = [];
@@ -1067,6 +1126,50 @@ export function payloadMapConformance(
     if (entry && typeof entry === "object") {
       out.push(
         ...entryIssues(entry, propSchema, `payload_map.${key}`, sourceSchema, mapKeySchemas?.[key]),
+      );
+    }
+  }
+  return out;
+}
+
+/**
+ * Passthrough coverage — an EMPTY `payload_map` forwards the event payload
+ * verbatim (`applyPayloadMap` returns it unchanged; a schedule-only fire
+ * dispatches `{}`). Each callable `required` prop is deliverable iff it is
+ * `x_inject`/`x_semantic`-satisfied at fire time, or the source event's
+ * declared schema guarantees it (required AND `pathCompatible`).
+ *
+ * `sourceSchema === undefined` → schema-less emit: supply is not
+ *                                DEMONSTRABLE — same rejection as a
+ *                                proven-uncovered emit. An explicit map
+ *                                (unchecked path entries) stays the
+ *                                escape hatch for dynamic sources.
+ * `sourceSchema === null`      → no source event (schedule-only): the
+ *                                passthrough payload is `{}` — every
+ *                                uncovered required is undeliverable.
+ */
+export function payloadPassthroughConformance(
+  callableSchema: Record<string, unknown>,
+  sourceSchema: Record<string, unknown> | null | undefined,
+): FieldIssue[] {
+  const out: FieldIssue[] = [];
+  const required = Array.isArray(callableSchema.required)
+    ? callableSchema.required.filter((k): k is string => typeof k === "string")
+    : [];
+  if (required.length === 0) return out;
+  const properties = (callableSchema.properties ?? {}) as Record<string, Record<string, unknown>>;
+  const srcProps = (sourceSchema?.properties ?? {}) as Record<string, Record<string, unknown>>;
+  const srcRequired = new Set(
+    Array.isArray(sourceSchema?.required) ? sourceSchema.required.filter((k): k is string => typeof k === "string") : [],
+  );
+  for (const key of required) {
+    const prop = properties[key] ?? {};
+    if (XSATISFIED(prop)) continue;
+    const covered =
+      sourceSchema != null && srcRequired.has(key) && pathCompatible(prop, srcProps[key]);
+    if (!covered) {
+      out.push(
+        issue(`payload_map.${key}`, "required", kmsg("app.common.validation.unmapped_required", { field: key })),
       );
     }
   }
