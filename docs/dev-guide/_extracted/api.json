@@ -32551,7 +32551,7 @@
 					},
 					"sources": [
 						{
-							"fileName": "primebrick-workspace/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/lib/lib.es2022.error.d.ts",
+							"fileName": "node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/lib/lib.es2022.error.d.ts",
 							"line": 24,
 							"character": 4
 						}
@@ -32577,7 +32577,7 @@
 					},
 					"sources": [
 						{
-							"fileName": "primebrick-workspace/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/lib/lib.es5.d.ts",
+							"fileName": "node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/lib/lib.es5.d.ts",
 							"line": 1074,
 							"character": 4
 						}
@@ -32603,7 +32603,7 @@
 					},
 					"sources": [
 						{
-							"fileName": "primebrick-workspace/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/lib/lib.es5.d.ts",
+							"fileName": "node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/lib/lib.es5.d.ts",
 							"line": 1075,
 							"character": 4
 						}
@@ -32630,7 +32630,7 @@
 					},
 					"sources": [
 						{
-							"fileName": "primebrick-workspace/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/lib/lib.es5.d.ts",
+							"fileName": "node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/lib/lib.es5.d.ts",
 							"line": 1076,
 							"character": 4
 						}
@@ -34836,7 +34836,7 @@
 		}
 	],
 	"packageName": "@primebrick/core",
-	"packageVersion": "3.4.5",
+	"packageVersion": "3.4.6",
 	"symbolIdMap": {
 		"0": {
 			"packageName": "@primebrick/core",
