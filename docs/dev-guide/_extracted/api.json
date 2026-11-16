@@ -16,7 +16,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Branded type that enforces snake_case singular (no uppercase letters).\r\nUsed for "
+						"text": "Branded type that enforces snake_case singular (no uppercase letters).\nUsed for "
 					},
 					{
 						"kind": "code",
@@ -24,7 +24,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " in entity meta — the i18n key prefix.\r\n\r\nThe brand is applied via "
+						"text": " in entity meta — the i18n key prefix.\n\nThe brand is applied via "
 					},
 					{
 						"kind": "code",
@@ -32,7 +32,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", which performs a\r\nruntime check rejecting strings containing A-Z. This catches camelCase\r\n("
+						"text": ", which performs a\nruntime check rejecting strings containing A-Z. This catches camelCase\n("
 					},
 					{
 						"kind": "code",
@@ -48,7 +48,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), and UPPER_CASE\r\n("
+						"text": "), and UPPER_CASE\n("
 					},
 					{
 						"kind": "code",
@@ -65,7 +65,7 @@
 						"content": [
 							{
 								"kind": "code",
-								"text": "```ts\nconst tk = asSnakeCaseSingular(\"user_profile\");  // ✅\r\nconst tk = asSnakeCaseSingular(\"userProfile\");   // ❌ throws at runtime\n```"
+								"text": "```ts\nconst tk = asSnakeCaseSingular(\"user_profile\");  // ✅\nconst tk = asSnakeCaseSingular(\"userProfile\");   // ❌ throws at runtime\n```"
 							}
 						]
 					}
@@ -169,7 +169,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — rejects strings with\r\n uppercase letters. Use in meta-loading code to catch BE meta that\r\n violates the convention."
+								"text": " — rejects strings with\n uppercase letters. Use in meta-loading code to catch BE meta that\n violates the convention."
 							}
 						]
 					},
@@ -243,7 +243,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\r\n Throws if the value contains uppercase letters\r\n (camelCase/PascalCase/UPPER_CASE)."
+								"text": ".\n Throws if the value contains uppercase letters\n (camelCase/PascalCase/UPPER_CASE)."
 							}
 						]
 					},
@@ -302,7 +302,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Columns in display order: sticky group → normal group → audited group,\r\neach sorted by "
+								"text": "Columns in display order: sticky group → normal group → audited group,\neach sorted by "
 							},
 							{
 								"kind": "code",
@@ -318,7 +318,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " falls back to its own\r\narray index (the contract's last resort) — a raw "
+								"text": " falls back to its own\narray index (the contract's last resort) — a raw "
 							},
 							{
 								"kind": "code",
@@ -326,7 +326,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\ncomparator returns NaN on undefined and corrupts the whole sort."
+								"text": "\ncomparator returns NaN on undefined and corrupts the whole sort."
 							}
 						]
 					},
@@ -418,7 +418,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\r\n hides it; "
+								"text": ")\n hides it; "
 							},
 							{
 								"kind": "code",
@@ -518,7 +518,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n columns (post-query enrichment): never sortable, no opt-in exists."
+								"text": "\n columns (post-query enrichment): never sortable, no opt-in exists."
 							}
 						]
 					},
@@ -602,7 +602,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Column participates in the filters sheet — absent means filterable,\r\n except "
+								"text": "Column participates in the filters sheet — absent means filterable,\n except "
 							},
 							{
 								"kind": "code",
@@ -694,7 +694,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Column joins the search scope — absent means searchable (the caller\r\n may still require a text-physical type on top)."
+								"text": "Column joins the search scope — absent means searchable (the caller\n may still require a text-physical type on top)."
 							}
 						]
 					},
@@ -843,7 +843,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Drop unknown keys and fall back to defaults when nothing left.\r\n "
+								"text": "Drop unknown keys and fall back to defaults when nothing left.\n "
 							},
 							{
 								"kind": "code",
@@ -851,7 +851,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " columns are re-injected unconditionally — a stored\r\n set predating the pin (or written when the column could still be hidden)\r\n can never violate the declaration. "
+								"text": " columns are re-injected unconditionally — a stored\n set predating the pin (or written when the column could still be hidden)\n can never violate the declaration. "
 							},
 							{
 								"kind": "code",
@@ -859,7 +859,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " columns — e.g.\r\n "
+								"text": " columns — e.g.\n "
 							},
 							{
 								"kind": "code",
@@ -946,7 +946,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Text-physical searchable columns — the scope selector + default\r\n \"all fields\" search set."
+								"text": "Text-physical searchable columns — the scope selector + default\n \"all fields\" search set."
 							}
 						]
 					},
@@ -1021,7 +1021,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — sort_key enum,\r\n"
+								"text": " — sort_key enum,\n"
 							},
 							{
 								"kind": "code",
@@ -1037,7 +1037,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " allowlists must mirror the\r\nserved contract (system columns are injected by derivation; never\r\ncompute these from the authored column list, which lacks them)."
+								"text": " allowlists must mirror the\nserved contract (system columns are injected by derivation; never\ncompute these from the authored column list, which lacks them)."
 							}
 						]
 					},
@@ -1240,7 +1240,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " map — the ONE operator-icon\r\nvocabulary every filter surface renders (advanced operator combobox,\r\nfilter chips, summaries). Values are "
+						"text": " map — the ONE operator-icon\nvocabulary every filter surface renders (advanced operator combobox,\nfilter chips, summaries). Values are "
 					},
 					{
 						"kind": "code",
@@ -1248,7 +1248,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " icon names,\r\nconsumed via "
+						"text": " icon names,\nconsumed via "
 					},
 					{
 						"kind": "code",
@@ -1312,7 +1312,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " map — the ONE\r\nvocabulary joining filter operators to "
+						"text": " map — the ONE\nvocabulary joining filter operators to "
 					},
 					{
 						"kind": "code",
@@ -1320,7 +1320,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\nkeys. Key segments are "
+						"text": "\nkeys. Key segments are "
 					},
 					{
 						"kind": "code",
@@ -1328,7 +1328,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (translation-key grammar) — the bare\r\noperator symbols ("
+						"text": " (translation-key grammar) — the bare\noperator symbols ("
 					},
 					{
 						"kind": "code",
@@ -1352,7 +1352,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", …) can never be segments, so labels are\r\nlooked up through this map, never through the raw operator value."
+						"text": ", …) can never be segments, so labels are\nlooked up through this map, never through the raw operator value."
 					}
 				]
 			},
@@ -1398,7 +1398,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Config value type vocabulary — drives widget selection and validation.\r\nMirrors the SDK "
+						"text": "Config value type vocabulary — drives widget selection and validation.\nMirrors the SDK "
 					},
 					{
 						"kind": "code",
@@ -1414,7 +1414,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " column.\r\n\r\n- "
+						"text": " column.\n\n- "
 					},
 					{
 						"kind": "code",
@@ -1438,7 +1438,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ")\r\n- "
+						"text": ")\n- "
 					},
 					{
 						"kind": "code",
@@ -1454,7 +1454,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n- "
+						"text": "\n- "
 					},
 					{
 						"kind": "code",
@@ -1562,7 +1562,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Standard Config Table entry.\r\n\r\nThe BE coerces "
+						"text": "Standard Config Table entry.\n\nThe BE coerces "
 					},
 					{
 						"kind": "code",
@@ -1570,7 +1570,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " to its native JS type before serialization:\r\n  - "
+						"text": " to its native JS type before serialization:\n  - "
 					},
 					{
 						"kind": "code",
@@ -1586,7 +1586,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (preserved by ext-json response parsing)\r\n  - "
+						"text": " (preserved by ext-json response parsing)\n  - "
 					},
 					{
 						"kind": "code",
@@ -1602,7 +1602,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n  - "
+						"text": "\n  - "
 					},
 					{
 						"kind": "code",
@@ -1626,7 +1626,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ")\r\n  - "
+						"text": ")\n  - "
 					},
 					{
 						"kind": "code",
@@ -1642,7 +1642,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (masked by BE)\r\n  - other    → "
+						"text": " (masked by BE)\n  - other    → "
 					},
 					{
 						"kind": "code",
@@ -1650,7 +1650,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n\r\nWrite path: callers send the native type (bigint/number/string); the BE\r\nserializes it to the DB string form via "
+						"text": "\n\nWrite path: callers send the native type (bigint/number/string); the BE\nserializes it to the DB string form via "
 					},
 					{
 						"kind": "code",
@@ -2104,7 +2104,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Sentinel gates a route may declare instead of concrete permissions.\r\nValues mirror the "
+						"text": "Sentinel gates a route may declare instead of concrete permissions.\nValues mirror the "
 					},
 					{
 						"kind": "code",
@@ -2250,7 +2250,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " placeholders verbatim\r\n (e.g. "
+								"text": " placeholders verbatim\n (e.g. "
 							},
 							{
 								"kind": "code",
@@ -2258,7 +2258,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Consumers substitute\r\n placeholders from the row ("
+								"text": "). Consumers substitute\n placeholders from the row ("
 							},
 							{
 								"kind": "code",
@@ -2328,7 +2328,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the derived capability contract.\r\nEVERY standard op is present; "
+						"text": " — the derived capability contract.\nEVERY standard op is present; "
 					},
 					{
 						"kind": "code",
@@ -2336,7 +2336,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " means the op is\r\nunavailable for everyone (route missing or product-disabled)."
+						"text": " means the op is\nunavailable for everyone (route missing or product-disabled)."
 					}
 				]
 			},
@@ -2375,7 +2375,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", ...) or the\r\n last path segment for non-standard routes ("
+								"text": ", ...) or the\n last path segment for non-standard routes ("
 							},
 							{
 								"kind": "code",
@@ -2508,7 +2508,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n action, absent when no route exists ("
+								"text": "\n action, absent when no route exists ("
 							},
 							{
 								"kind": "code",
@@ -2516,7 +2516,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Consumers\r\n dispatch writes to the declared endpoint instead of recomputing the\r\n "
+								"text": "). Consumers\n dispatch writes to the declared endpoint instead of recomputing the\n "
 							},
 							{
 								"kind": "code",
@@ -2524,7 +2524,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " convention — required for ops living under\r\n non-standard prefixes (e.g. "
+								"text": " convention — required for ops living under\n non-standard prefixes (e.g. "
 							},
 							{
 								"kind": "code",
@@ -2532,7 +2532,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). An RPC route may\r\n claim the slot via "
+								"text": "). An RPC route may\n claim the slot via "
 							},
 							{
 								"kind": "code",
@@ -2571,7 +2571,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "CTA chrome overrides — translation key / icon / semantic color\r\n replacing the standard rendering (e.g. soft-delete-as-disable →\r\n \"Deactivate\" + "
+								"text": "CTA chrome overrides — translation key / icon / semantic color\n replacing the standard rendering (e.g. soft-delete-as-disable →\n \"Deactivate\" + "
 							},
 							{
 								"kind": "code",
@@ -2579,7 +2579,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " + destructive). Cosmetics only: gating,\r\n dialogs and dispatch are untouched. Sources: "
+								"text": " + destructive). Cosmetics only: gating,\n dialogs and dispatch are untouched. Sources: "
 							},
 							{
 								"kind": "code",
@@ -2587,7 +2587,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " on a\r\n "
+								"text": " on a\n "
 							},
 							{
 								"kind": "code",
@@ -2692,7 +2692,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " for\r\n single ops, "
+								"text": " for\n single ops, "
 							},
 							{
 								"kind": "code",
@@ -2708,7 +2708,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " for bulk). When set it replaces the\r\n standard "
+								"text": " for bulk). When set it replaces the\n standard "
 							},
 							{
 								"kind": "code",
@@ -2716,7 +2716,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " copy —\r\n e.g. soft-delete-as-disable → \"disattivare\" + reversible note."
+								"text": " copy —\n e.g. soft-delete-as-disable → \"disattivare\" + reversible note."
 							}
 						]
 					},
@@ -2749,7 +2749,7 @@
 							},
 							{
 								"kind": "code",
-								"text": "`app.common.\r\n {deleting,restoring}`"
+								"text": "`app.common.\n {deleting,restoring}`"
 							},
 							{
 								"kind": "text",
@@ -2815,7 +2815,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " toggles route-backed ops; chrome fields\r\n restyle the standard CTA without touching its logic."
+						"text": " toggles route-backed ops; chrome fields\n restyle the standard CTA without touching its logic."
 					}
 				]
 			},
@@ -3007,7 +3007,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Closed action-color vocabulary — ONE semantic drives BOTH the icon and\r\n the label of a menu CTA (impossible to drift them apart). "
+						"text": "Closed action-color vocabulary — ONE semantic drives BOTH the icon and\n the label of a menu CTA (impossible to drift them apart). "
 					},
 					{
 						"kind": "code",
@@ -3015,7 +3015,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is\r\n the default uncolored rendering; the destructive/warning/success/info/\r\n primary names map to the theme's semantic text utilities. "
+						"text": " is\n the default uncolored rendering; the destructive/warning/success/info/\n primary names map to the theme's semantic text utilities. "
 					},
 					{
 						"kind": "code",
@@ -3023,7 +3023,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is\r\n the clone/duplicate semantic — "
+						"text": " is\n the clone/duplicate semantic — "
 					},
 					{
 						"kind": "code",
@@ -3031,7 +3031,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " carries it by default\r\n and the same hue marks "
+						"text": " carries it by default\n and the same hue marks "
 					},
 					{
 						"kind": "code",
@@ -3039,7 +3039,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " entries in the version-history trail.\r\n A meta may never smuggle a Tailwind class here — the enum IS the contract."
+						"text": " entries in the version-history trail.\n A meta may never smuggle a Tailwind class here — the enum IS the contract."
 					}
 				]
 			},
@@ -3105,7 +3105,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " vocabulary — construction/lint validation rejects\r\nanything outside this closed set (raw strings on the wire can never reach\r\nthe renderer)."
+						"text": " vocabulary — construction/lint validation rejects\nanything outside this closed set (raw strings on the wire can never reach\nthe renderer)."
 					}
 				]
 			},
@@ -3144,7 +3144,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Semantic action icons — names whose COLOR IS PART OF THE ICON's meaning.\r\nEach name binds to exactly one "
+						"text": "Semantic action icons — names whose COLOR IS PART OF THE ICON's meaning.\nEach name binds to exactly one "
 					},
 					{
 						"kind": "code",
@@ -3152,7 +3152,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (the label color); the icon\r\ncomponent itself (in "
+						"text": " (the label color); the icon\ncomponent itself (in "
 					},
 					{
 						"kind": "code",
@@ -3168,7 +3168,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " registry, which\r\nreads THIS table) renders the gradient surface self-colored. A meta that\r\npairs a semantic icon with a different color is a contract violation —\r\n"
+						"text": " registry, which\nreads THIS table) renders the gradient surface self-colored. A meta that\npairs a semantic icon with a different color is a contract violation —\n"
 					},
 					{
 						"kind": "code",
@@ -3176,7 +3176,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " rejects it at construction time, so icon and\r\nlabel can never drift apart even by accident.\r\n\r\n- "
+						"text": " rejects it at construction time, so icon and\nlabel can never drift apart even by accident.\n\n- "
 					},
 					{
 						"kind": "code",
@@ -3184,7 +3184,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " → success   (start/enable is a positive op — deliberate\r\n  divergence from the standard restore-warning chrome)\r\n- "
+						"text": " → success   (start/enable is a positive op — deliberate\n  divergence from the standard restore-warning chrome)\n- "
 					},
 					{
 						"kind": "code",
@@ -3277,7 +3277,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nresolves to the empty string — the item keeps the theme's default muted\r\nappearance (what standard CTAs like \"Modifica\" already show). This is the\r\nONLY mapping of semantic color → class; renderers never hand-roll\r\n"
+								"text": "\nresolves to the empty string — the item keeps the theme's default muted\nappearance (what standard CTAs like \"Modifica\" already show). This is the\nONLY mapping of semantic color → class; renderers never hand-roll\n"
 							},
 							{
 								"kind": "code",
@@ -3357,7 +3357,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Validates the icon↔color contract of a single action chrome override.\r\nReturns a diagnostic string on violation, "
+								"text": "Validates the icon↔color contract of a single action chrome override.\nReturns a diagnostic string on violation, "
 							},
 							{
 								"kind": "code",
@@ -3365,7 +3365,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " when the pair is legal:\r\n- "
+								"text": " when the pair is legal:\n- "
 							},
 							{
 								"kind": "code",
@@ -3381,7 +3381,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ";\r\n- a semantic icon ("
+								"text": ";\n- a semantic icon ("
 							},
 							{
 								"kind": "code",
@@ -3389,7 +3389,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " key) must carry its bound color —\r\n  "
+								"text": " key) must carry its bound color —\n  "
 							},
 							{
 								"kind": "code",
@@ -3479,7 +3479,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "The canonical vocabulary of standard entity ops. Every op is always\r\npresent in "
+						"text": "The canonical vocabulary of standard entity ops. Every op is always\npresent in "
 					},
 					{
 						"kind": "code",
@@ -3487,7 +3487,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — ops whose route is not registered are emitted\r\nwith "
+						"text": " — ops whose route is not registered are emitted\nwith "
 					},
 					{
 						"kind": "code",
@@ -3611,7 +3611,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "UI column renderer type. NOTE: this is the UI type, not the DB type —\r\n e.g. "
+						"text": "UI column renderer type. NOTE: this is the UI type, not the DB type —\n e.g. "
 					},
 					{
 						"kind": "code",
@@ -3707,7 +3707,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Authored field-format vocabulary — the SEMANTIC input contract of a\r\ncolumn: which control archetype a form renderer must use and which\r\nvalidation chain "
+						"text": "Authored field-format vocabulary — the SEMANTIC input contract of a\ncolumn: which control archetype a form renderer must use and which\nvalidation chain "
 					},
 					{
 						"kind": "code",
@@ -3715,7 +3715,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " applies. Absent → the renderer\r\nfalls back to "
+						"text": " applies. Absent → the renderer\nfalls back to "
 					},
 					{
 						"kind": "code",
@@ -3723,7 +3723,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (text→text input, boolean→switch, badge→options).\r\n\r\nClosed union on purpose: an unknown "
+						"text": " (text→text input, boolean→switch, badge→options).\n\nClosed union on purpose: an unknown "
 					},
 					{
 						"kind": "code",
@@ -3739,7 +3739,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " file is a\r\ncompile error — the US→FE option boundary is enforced by the type.\r\nNew formats are additive literals (never breaking)."
+						"text": " file is a\ncompile error — the US→FE option boundary is enforced by the type.\nNew formats are additive literals (never breaking)."
 					}
 				]
 			},
@@ -3867,7 +3867,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Dynamic option vocabulary for combo-backed controls — declared on the\r\nCOLUMN ("
+						"text": "Dynamic option vocabulary for combo-backed controls — declared on the\nCOLUMN ("
 					},
 					{
 						"kind": "code",
@@ -3875,7 +3875,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), never on a form placement:\r\nthe same contract feeds forms, list filters and docs generation.\r\nClosed union on purpose — an unknown source is a construction error."
+						"text": "), never on a form placement:\nthe same contract feeds forms, list filters and docs generation.\nClosed union on purpose — an unknown source is a construction error."
 					}
 				]
 			},
@@ -3919,7 +3919,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Option vocabulary a unit-of-measure selector may draw from.\r\n"
+						"text": "Option vocabulary a unit-of-measure selector may draw from.\n"
 					},
 					{
 						"kind": "code",
@@ -3935,7 +3935,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n— same source the config-domain currency picker uses). "
+						"text": "\n— same source the config-domain currency picker uses). "
 					},
 					{
 						"kind": "code",
@@ -3943,7 +3943,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": the\r\nUoM codes persist as rows of another entity (resolved via its "
+						"text": ": the\nUoM codes persist as rows of another entity (resolved via its "
 					},
 					{
 						"kind": "code",
@@ -3951,7 +3951,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ").\r\n"
+						"text": ").\n"
 					},
 					{
 						"kind": "code",
@@ -3959,7 +3959,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": an explicit endpoint serving the options.\r\nClosed union on purpose — an unknown source is a construction error."
+						"text": ": an explicit endpoint serving the options.\nClosed union on purpose — an unknown source is a construction error."
 					}
 				]
 			},
@@ -4111,7 +4111,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Numeric unit-of-measure contract — the column's semantic quantity unit.\r\n"
+						"text": "Numeric unit-of-measure contract — the column's semantic quantity unit.\n"
 					},
 					{
 						"kind": "code",
@@ -4119,7 +4119,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": pure display transform (display = canonical × 100, emitted =\r\ndisplay ÷ 100) — the canonical value stays a fraction; NO sibling field.\r\n"
+						"text": ": pure display transform (display = canonical × 100, emitted =\ndisplay ÷ 100) — the canonical value stays a fraction; NO sibling field.\n"
 					},
 					{
 						"kind": "code",
@@ -4135,7 +4135,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " names the SIBLING column that\r\npersists the ISO code per row (mandatory); "
+						"text": " names the SIBLING column that\npersists the ISO code per row (mandatory); "
 					},
 					{
 						"kind": "code",
@@ -4143,7 +4143,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " defaults to\r\n"
+						"text": " defaults to\n"
 					},
 					{
 						"kind": "code",
@@ -4151,7 +4151,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (the shared ISO list).\r\n"
+						"text": " (the shared ISO list).\n"
 					},
 					{
 						"kind": "code",
@@ -4167,7 +4167,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " persists the code,\r\n"
+						"text": " persists the code,\n"
 					},
 					{
 						"kind": "code",
@@ -4183,7 +4183,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " overrides the adornment.\r\nThe "
+						"text": " overrides the adornment.\nThe "
 					},
 					{
 						"kind": "code",
@@ -4199,7 +4199,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ":\r\na uom'd numeric without its code column is a construction error."
+						"text": ":\na uom'd numeric without its code column is a construction error."
 					}
 				]
 			},
@@ -4450,7 +4450,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Avatar renderer contract — the column renders the user/org avatar\r\n(initials + color swatch), NOT a text control. "
+						"text": "Avatar renderer contract — the column renders the user/org avatar\n(initials + color swatch), NOT a text control. "
 					},
 					{
 						"kind": "code",
@@ -4458,7 +4458,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " names the\r\nSIBLING column that persists the per-row avatar color — same pattern\r\n"
+						"text": " names the\nSIBLING column that persists the per-row avatar color — same pattern\n"
 					},
 					{
 						"kind": "code",
@@ -4466,7 +4466,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " uses for the currency code column. The avatar column's own\r\nvalue carries the initials; the sibling carries the color.\r\nThe sibling requirement is verified by "
+						"text": " uses for the currency code column. The avatar column's own\nvalue carries the initials; the sibling carries the color.\nThe sibling requirement is verified by "
 					},
 					{
 						"kind": "code",
@@ -4474,7 +4474,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": an\r\navatar column without its color column is a construction error.\r\n"
+						"text": ": an\navatar column without its color column is a construction error.\n"
 					},
 					{
 						"kind": "code",
@@ -4482,7 +4482,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (optional) names the sibling column the initials\r\nDERIVE from (typically "
+						"text": " (optional) names the sibling column the initials\nDERIVE from (typically "
 					},
 					{
 						"kind": "code",
@@ -4490,7 +4490,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "): edit surfaces recompute the\r\ninitials live from it and persist the derived value when that sibling\r\ncrosses the wire. Same physical-column rule as "
+						"text": "): edit surfaces recompute the\ninitials live from it and persist the derived value when that sibling\ncrosses the wire. Same physical-column rule as "
 					},
 					{
 						"kind": "code",
@@ -4580,7 +4580,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " and\r\n"
+						"text": " and\n"
 					},
 					{
 						"kind": "code",
@@ -4588,7 +4588,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " already use for row-gated rendering, lifted to form scope.\r\n"
+						"text": " already use for row-gated rendering, lifted to form scope.\n"
 					},
 					{
 						"kind": "code",
@@ -4596,7 +4596,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " compares against the pivot ROW's prop (the picked ref option's\r\nraw row — e.g. its "
+						"text": " compares against the pivot ROW's prop (the picked ref option's\nraw row — e.g. its "
 					},
 					{
 						"kind": "code",
@@ -4612,7 +4612,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " compares the pivot's stored\r\nvalue directly. "
+						"text": " compares the pivot's stored\nvalue directly. "
 					},
 					{
 						"kind": "code",
@@ -4636,7 +4636,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " a set\r\n(IN semantics)."
+						"text": " a set\n(IN semantics)."
 					}
 				]
 			},
@@ -4792,7 +4792,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " = \"the pivot carries\r\n a value\" (e.g. a "
+								"text": " = \"the pivot carries\n a value\" (e.g. a "
 							},
 							{
 								"kind": "code",
@@ -4800,7 +4800,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " set gates the code-owned fields of a\r\n system-owned row), "
+								"text": " set gates the code-owned fields of a\n system-owned row), "
 							},
 							{
 								"kind": "code",
@@ -4808,7 +4808,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " = \"the pivot is still empty\". The\r\n only facet that reads a NON-form sibling: a physical column absent\r\n from "
+								"text": " = \"the pivot is still empty\". The\n only facet that reads a NON-form sibling: a physical column absent\n from "
 							},
 							{
 								"kind": "code",
@@ -4865,7 +4865,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Tooltip visual severity — drives icon and title color in priority\r\n tooltip renderers."
+						"text": "Tooltip visual severity — drives icon and title color in priority\n tooltip renderers."
 					}
 				]
 			},
@@ -4925,7 +4925,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " dictionary.\r\nTransversal to every page type: table cells, form tooltips, labels.\r\n\r\nDeclared as a type alias (not interface): object literal types get an\r\nimplicit index signature, keeping "
+						"text": " dictionary.\nTransversal to every page type: table cells, form tooltips, labels.\n\nDeclared as a type alias (not interface): object literal types get an\nimplicit index signature, keeping "
 					},
 					{
 						"kind": "code",
@@ -4933,7 +4933,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " assignable to\r\n"
+						"text": " assignable to\n"
 					},
 					{
 						"kind": "code",
@@ -4941,7 +4941,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — host/remotes pass columns through generic\r\ncell-snippet args typed as "
+						"text": " — host/remotes pass columns through generic\ncell-snippet args typed as "
 					},
 					{
 						"kind": "code",
@@ -5026,7 +5026,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " documents the built-in set,\r\n but the field is intentionally open ("
+								"text": " documents the built-in set,\n but the field is intentionally open ("
 							},
 							{
 								"kind": "code",
@@ -5034,7 +5034,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "): modules may emit\r\n custom cell types resolved by consumer-registered cell renderers\r\n (e.g. a "
+								"text": "): modules may emit\n custom cell types resolved by consumer-registered cell renderers\n (e.g. a "
 							},
 							{
 								"kind": "code",
@@ -5080,7 +5080,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Deterministic display position — explicit per column, array position\r\n MUST NOT matter. Rendering groups sticky → normal → audited, each group\r\n sorted by "
+								"text": "Deterministic display position — explicit per column, array position\n MUST NOT matter. Rendering groups sticky → normal → audited, each group\n sorted by "
 							},
 							{
 								"kind": "code",
@@ -5104,7 +5104,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (canonical first\r\n sticky column, hidden but selectable); "
+								"text": " (canonical first\n sticky column, hidden but selectable); "
 							},
 							{
 								"kind": "code",
@@ -5207,7 +5207,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Included in \"search in fields\" scope + backend default search\r\n (default true; set false for non-text-physical or sensitive fields)."
+								"text": "Included in \"search in fields\" scope + backend default search\n (default true; set false for non-text-physical or sensitive fields)."
 							}
 						]
 					},
@@ -5323,7 +5323,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Author-asserted total suppression: the column is dropped from the\r\n served meta entirely (never reaches the table, picker, filters or\r\n forms) AND blocks auto-derivation from the entity class. This is the\r\n ONLY opt-out — visibility concerns stay on "
+								"text": "Author-asserted total suppression: the column is dropped from the\n served meta entirely (never reaches the table, picker, filters or\n forms) AND blocks auto-derivation from the entity class. This is the\n ONLY opt-out — visibility concerns stay on "
 							},
 							{
 								"kind": "code",
@@ -5384,7 +5384,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ",\r\n or a semantic tone) for icon/badge accent — resolved at render time\r\n via "
+								"text": ",\n or a semantic tone) for icon/badge accent — resolved at render time\n via "
 							},
 							{
 								"kind": "code",
@@ -5400,7 +5400,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " to INLINE styles.\r\n NEVER a "
+								"text": " to INLINE styles.\n NEVER a "
 							},
 							{
 								"kind": "code",
@@ -5416,7 +5416,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " class string: served meta is invisible to the\r\n FE content scan, so class-based colors silently dead-render.\r\n Purely cosmetic — never carries semantics the type/format doesn't."
+								"text": " class string: served meta is invisible to the\n FE content scan, so class-based colors silently dead-render.\n Purely cosmetic — never carries semantics the type/format doesn't."
 							}
 						]
 					},
@@ -5445,7 +5445,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Null-state label: when the cell value is null/undefined render this\r\n translation key instead of "
+								"text": "Null-state label: when the cell value is null/undefined render this\n translation key instead of "
 							},
 							{
 								"kind": "code",
@@ -5461,7 +5461,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " gates it on a sibling field\r\n (e.g. "
+								"text": " gates it on a sibling field\n (e.g. "
 							},
 							{
 								"kind": "code",
@@ -5469,7 +5469,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " → \"Disabled\" only when\r\n the row is actually disabled, plain "
+								"text": " → \"Disabled\" only when\n the row is actually disabled, plain "
 							},
 							{
 								"kind": "code",
@@ -5642,7 +5642,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "System-managed auditing column (created_at, updated_by, …) —\r\n rendered last."
+								"text": "System-managed auditing column (created_at, updated_by, …) —\n rendered last."
 							}
 						]
 					},
@@ -5671,7 +5671,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Column materialization kind. Absent = physical column.\r\n "
+								"text": "Column materialization kind. Absent = physical column.\n "
 							},
 							{
 								"kind": "code",
@@ -5687,7 +5687,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n   decorator on the entity class): a real result column, so\r\n   sortable/filterable/searchable stay ON by default (opt-out allowed).\r\n "
+								"text": "\n   decorator on the entity class): a real result column, so\n   sortable/filterable/searchable stay ON by default (opt-out allowed).\n "
 							},
 							{
 								"kind": "code",
@@ -5703,7 +5703,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ",\r\n   external sources like NATS): sortable/filterable/searchable are\r\n   FORCED OFF — declaring any of them "
+								"text": ",\n   external sources like NATS): sortable/filterable/searchable are\n   FORCED OFF — declaring any of them "
 							},
 							{
 								"kind": "code",
@@ -5711,7 +5711,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is a construction error.\r\n Read-only: never required on write, never belongs in "
+								"text": " is a construction error.\n Read-only: never required on write, never belongs in "
 							},
 							{
 								"kind": "code",
@@ -5773,7 +5773,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " →\r\n required. Absent on columns with no physical backing (virtual\r\n columns like "
+								"text": " →\n required. Absent on columns with no physical backing (virtual\n columns like "
 							},
 							{
 								"kind": "code",
@@ -5834,7 +5834,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n on the control and "
+								"text": "\n on the control and "
 							},
 							{
 								"kind": "code",
@@ -5903,7 +5903,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", …) —\r\n informational for the control pick when "
+								"text": ", …) —\n informational for the control pick when "
 							},
 							{
 								"kind": "code",
@@ -5940,7 +5940,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Server-managed value — the entity class says the database fills it\r\n ("
+								"text": "Server-managed value — the entity class says the database fills it\n ("
 							},
 							{
 								"kind": "code",
@@ -5948,7 +5948,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " with identity generation today). Never client-supplied on\r\n create, never required by write validation; a "
+								"text": " with identity generation today). Never client-supplied on\n create, never required by write validation; a "
 							},
 							{
 								"kind": "code",
@@ -5956,7 +5956,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n key stays client-writable instead. Derived by\r\n "
+								"text": "\n key stays client-writable instead. Derived by\n "
 							},
 							{
 								"kind": "code",
@@ -5993,7 +5993,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Authored: set once at creation OR derived by a dedicated process —\r\n never editable afterwards. Editable on "
+								"text": "Authored: set once at creation OR derived by a dedicated process —\n never editable afterwards. Editable on "
 							},
 							{
 								"kind": "code",
@@ -6001,7 +6001,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " forms,\r\n rendered disabled on update/detail surfaces, and excluded from\r\n update payloads. Covers both subtypes with ONE behaviour (user\r\n decision): created-and-immutable (idp_username) and derived\r\n (idp_code, avatar_initials, onboarding_completed). Distinct from\r\n "
+								"text": " forms,\n rendered disabled on update/detail surfaces, and excluded from\n update payloads. Covers both subtypes with ONE behaviour (user\n decision): created-and-immutable (idp_username) and derived\n (idp_code, avatar_initials, onboarding_completed). Distinct from\n "
 							},
 							{
 								"kind": "code",
@@ -6235,7 +6235,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " char AND the wire/form\r\n validators ("
+								"text": " char AND the wire/form\n validators ("
 							},
 							{
 								"kind": "code",
@@ -6251,7 +6251,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") reject negative values.\r\n PG has no unsigned types: authored only, never derived."
+								"text": ") reject negative values.\n PG has no unsigned types: authored only, never derived."
 							}
 						]
 					},
@@ -6290,7 +6290,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". Applies to\r\n numeric columns only; "
+								"text": ". Applies to\n numeric columns only; "
 							},
 							{
 								"kind": "code",
@@ -6314,7 +6314,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n that persists the UoM code per row."
+								"text": "\n that persists the UoM code per row."
 							}
 						]
 					},
@@ -6355,7 +6355,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". Applies to\r\n "
+								"text": ". Applies to\n "
 							},
 							{
 								"kind": "code",
@@ -6371,7 +6371,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " names the sibling column\r\n that persists the per-row avatar color."
+								"text": " names the sibling column\n that persists the per-row avatar color."
 							}
 						]
 					},
@@ -6406,7 +6406,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — ONE declared edge from this column to a SIBLING column\r\n(the pivot) on the same record. The pivot's value/row drives this\r\ncolumn's behavior — declared once, never the same edge three times:\r\n\r\n  - "
+								"text": " — ONE declared edge from this column to a SIBLING column\n(the pivot) on the same record. The pivot's value/row drives this\ncolumn's behavior — declared once, never the same edge three times:\n\n  - "
 							},
 							{
 								"kind": "code",
@@ -6422,7 +6422,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " only: the TARGET column the options\r\n    "
+								"text": " only: the TARGET column the options\n    "
 							},
 							{
 								"kind": "code",
@@ -6446,7 +6446,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ",\r\n    value = the pivot's stored value). First consumer: account\r\n    "
+								"text": ",\n    value = the pivot's stored value). First consumer: account\n    "
 							},
 							{
 								"kind": "code",
@@ -6454,7 +6454,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (options scoped to the picked country).\r\n  - "
+								"text": " (options scoped to the picked country).\n  - "
 							},
 							{
 								"kind": "code",
@@ -6462,7 +6462,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — gate the whole control while the condition\r\n    matches (e.g. "
+								"text": " — gate the whole control while the condition\n    matches (e.g. "
 							},
 							{
 								"kind": "code",
@@ -6470,7 +6470,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " disabled when the picked\r\n    "
+								"text": " disabled when the picked\n    "
 							},
 							{
 								"kind": "code",
@@ -6494,7 +6494,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\r\n  - "
+								"text": ").\n  - "
 							},
 							{
 								"kind": "code",
@@ -6502,7 +6502,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — the pivot ROW's prop that resolves this column's\r\n    "
+								"text": " — the pivot ROW's prop that resolves this column's\n    "
 							},
 							{
 								"kind": "code",
@@ -6534,7 +6534,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "/\r\n    "
+								"text": "/\n    "
 							},
 							{
 								"kind": "code",
@@ -6550,7 +6550,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\r\n\r\n"
+								"text": ").\n\n"
 							},
 							{
 								"kind": "code",
@@ -6566,7 +6566,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " both imply the control stays disabled\r\nwhile the pivot has no value AND this column's value resets when the\r\npivot changes — a stale dependent value is a silent integrity leak.\r\n"
+								"text": " both imply the control stays disabled\nwhile the pivot has no value AND this column's value resets when the\npivot changes — a stale dependent value is a silent integrity leak.\n"
 							},
 							{
 								"kind": "code",
@@ -6582,7 +6582,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " read the pivot's picked ROW —\r\nlegal only when the pivot column is "
+								"text": " read the pivot's picked ROW —\nlegal only when the pivot column is "
 							},
 							{
 								"kind": "code",
@@ -6590,7 +6590,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (enforcement is\r\nconstruction-side, in "
+								"text": " (enforcement is\nconstruction-side, in "
 							},
 							{
 								"kind": "code",
@@ -6598,7 +6598,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Form-surface only:\r\nfilter columns never carry "
+								"text": "). Form-surface only:\nfilter columns never carry "
 							},
 							{
 								"kind": "code",
@@ -6678,7 +6678,7 @@
 											},
 											{
 												"kind": "text",
-												"text": "\r\n filters on, fed by the pivot's stored value."
+												"text": "\n filters on, fed by the pivot's stored value."
 											}
 										]
 									},
@@ -6804,7 +6804,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — JSON Schema driving the editor's lint/completion\r\n AND the structural validation in "
+								"text": " — JSON Schema driving the editor's lint/completion\n AND the structural validation in "
 							},
 							{
 								"kind": "code",
@@ -6857,7 +6857,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Explicit control override — key of the host widget registry;\r\n bypasses the "
+								"text": "Explicit control override — key of the host widget registry;\n bypasses the "
 							},
 							{
 								"kind": "code",
@@ -6865,7 +6865,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "→control derivation on EVERY surface (forms\r\n AND filters read the same declaration — it is the column's\r\n semantic input contract, not a page-layout decision)."
+								"text": "→control derivation on EVERY surface (forms\n AND filters read the same declaration — it is the column's\n semantic input contract, not a page-layout decision)."
 							}
 						]
 					},
@@ -6894,7 +6894,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Dynamic option vocabulary for combo-backed controls — closed union.\r\n"
+								"text": "Dynamic option vocabulary for combo-backed controls — closed union.\n"
 							},
 							{
 								"kind": "code",
@@ -6910,7 +6910,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " from\r\nthe "
+								"text": " from\nthe "
 							},
 							{
 								"kind": "code",
@@ -6918,7 +6918,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " discovery payload (already client-side at render\r\ntime). "
+								"text": " discovery payload (already client-side at render\ntime). "
 							},
 							{
 								"kind": "code",
@@ -6926,7 +6926,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": the union of every module's\r\n"
+								"text": ": the union of every module's\n"
 							},
 							{
 								"kind": "code",
@@ -6934,7 +6934,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — governed LISTEN subjects a rule/scheduler\r\nmay invoke. Census sources only offer declared values — see\r\n"
+								"text": " — governed LISTEN subjects a rule/scheduler\nmay invoke. Census sources only offer declared values — see\n"
 							},
 							{
 								"kind": "code",
@@ -6981,7 +6981,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " lets the user type values NOT\r\nin the option list. A census source is a CLOSED vocabulary by\r\ndefinition: "
+								"text": " lets the user type values NOT\nin the option list. A census source is a CLOSED vocabulary by\ndefinition: "
 							},
 							{
 								"kind": "code",
@@ -6997,7 +6997,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is a\r\nconstruction error ("
+								"text": " is a\nconstruction error ("
 							},
 							{
 								"kind": "code",
@@ -7005,7 +7005,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " throws). Absent = free\r\nentry disabled.\r\n"
+								"text": " throws). Absent = free\nentry disabled.\n"
 							},
 							{
 								"kind": "code",
@@ -7013,7 +7013,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": the DISTINCT vocabulary of the table's own audit\r\nactor columns ("
+								"text": ": the DISTINCT vocabulary of the table's own audit\nactor columns ("
 							},
 							{
 								"kind": "code",
@@ -7037,7 +7037,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") served by the\r\nentity's "
+								"text": ") served by the\nentity's "
 							},
 							{
 								"kind": "code",
@@ -7045,7 +7045,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " route — uuid actors label-resolved through\r\n"
+								"text": " route — uuid actors label-resolved through\n"
 							},
 							{
 								"kind": "code",
@@ -7069,7 +7069,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\r\nstay raw. Auto-injected by "
+								"text": ")\nstay raw. Auto-injected by "
 							},
 							{
 								"kind": "code",
@@ -7077,7 +7077,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " on auto-derived\r\n"
+								"text": " on auto-derived\n"
 							},
 							{
 								"kind": "code",
@@ -7114,7 +7114,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Lucide icon name rendered before the label in FORM field labels —\r\n inherits the label text color (it identifies the field's semantic,\r\n e.g. "
+								"text": "Lucide icon name rendered before the label in FORM field labels —\n inherits the label text color (it identifies the field's semantic,\n e.g. "
 							},
 							{
 								"kind": "code",
@@ -7302,7 +7302,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — the cell value identifies a row on ANOTHER entity.\r\n The renderer turns it into a badge linking to the target's\r\n census-declared page (entity name is the only required spec: the FE\r\n resolves routes from the module census, never hardcoded URLs)."
+								"text": " — the cell value identifies a row on ANOTHER entity.\n The renderer turns it into a badge linking to the target's\n census-declared page (entity name is the only required spec: the FE\n resolves routes from the module census, never hardcoded URLs)."
 							}
 						]
 					},
@@ -7343,7 +7343,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " on its route declaration.\r\n Required UNLESS "
+												"text": " on its route declaration.\n Required UNLESS "
 											},
 											{
 												"kind": "code",
@@ -7351,7 +7351,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " is declared (XOR): a lazy ref\r\n resolves the target per row instead."
+												"text": " is declared (XOR): a lazy ref\n resolves the target per row instead."
 											}
 										]
 									},
@@ -7380,7 +7380,7 @@
 										"summary": [
 											{
 												"kind": "text",
-												"text": "LAZY REF — row column carrying the target entity name\r\n (e.g. "
+												"text": "LAZY REF — row column carrying the target entity name\n (e.g. "
 											},
 											{
 												"kind": "code",
@@ -7388,7 +7388,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " → \"job_trigger\" | \"service_registry\").\r\n With this set the ref resolves to 2+ entities, chosen per row —\r\n one column, many drill targets. Mutually exclusive with\r\n "
+												"text": " → \"job_trigger\" | \"service_registry\").\n With this set the ref resolves to 2+ entities, chosen per row —\n one column, many drill targets. Mutually exclusive with\n "
 											},
 											{
 												"kind": "code",
@@ -7396,7 +7396,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " (withColumnConstraints enforces the XOR). The lazy-ref\r\n contract: the CELL value is the display label (usually a"
+												"text": " (withColumnConstraints enforces the XOR). The lazy-ref\n contract: the CELL value is the display label (usually a"
 											}
 										],
 										"blockTags": [
@@ -7413,7 +7413,7 @@
 													},
 													{
 														"kind": "text",
-														"text": " join can decorate N entities),\r\n "
+														"text": " join can decorate N entities),\n "
 													},
 													{
 														"kind": "code",
@@ -7421,7 +7421,7 @@
 													},
 													{
 														"kind": "text",
-														"text": " points at the row column carrying the drill key,\r\n and the renderer picks the record sheet by the resolved entity\r\n name (entity-served → "
+														"text": " points at the row column carrying the drill key,\n and the renderer picks the record sheet by the resolved entity\n name (entity-served → "
 													},
 													{
 														"kind": "code",
@@ -7429,7 +7429,7 @@
 													},
 													{
 														"kind": "text",
-														"text": "; registered non-entity\r\n targets → their panel map entry)."
+														"text": "; registered non-entity\n targets → their panel map entry)."
 													}
 												]
 											}
@@ -7460,7 +7460,7 @@
 										"summary": [
 											{
 												"kind": "text",
-												"text": "Row column holding the per-row DRILL KEY passed to the record\r\n sheet (uuid for entity-record targets, a business key for\r\n non-entity panels — the panel owns the key contract). Default:\r\n the cell value itself (the normal uuid-ref case). Useful both\r\n on lazy refs (entity_field) and on static refs whose visible\r\n cell is a label rather than the target key."
+												"text": "Row column holding the per-row DRILL KEY passed to the record\n sheet (uuid for entity-record targets, a business key for\n non-entity panels — the panel owns the key contract). Default:\n the cell value itself (the normal uuid-ref case). Useful both\n on lazy refs (entity_field) and on static refs whose visible\n cell is a label rather than the target key."
 											}
 										]
 									},
@@ -7509,7 +7509,7 @@
 											},
 											{
 												"kind": "text",
-												"text": "\r\n route. "
+												"text": "\n route. "
 											},
 											{
 												"kind": "code",
@@ -7517,7 +7517,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " — links to the target's list page pre-filtered.\r\n "
+												"text": " — links to the target's list page pre-filtered.\n "
 											},
 											{
 												"kind": "code",
@@ -7525,7 +7525,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " — the cell renders the label with NO link (for\r\n "
+												"text": " — the cell renders the label with NO link (for\n "
 											},
 											{
 												"kind": "code",
@@ -7533,7 +7533,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " columns whose stored value can't feed a route).\r\n Default "
+												"text": " columns whose stored value can't feed a route).\n Default "
 											},
 											{
 												"kind": "code",
@@ -7587,7 +7587,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " — the TARGET column the cell value filters by\r\n ("
+												"text": " — the TARGET column the cell value filters by\n ("
 											},
 											{
 												"kind": "code",
@@ -7632,7 +7632,7 @@
 											},
 											{
 												"kind": "text",
-												"text": "\r\n(the uuid). "
+												"text": "\n(the uuid). "
 											},
 											{
 												"kind": "code",
@@ -7640,7 +7640,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " carries the bigint surrogate key: the contract\r\nfor TRUE-FK pickers ("
+												"text": " carries the bigint surrogate key: the contract\nfor TRUE-FK pickers ("
 											},
 											{
 												"kind": "code",
@@ -7648,7 +7648,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " picks an\r\n"
+												"text": " picks an\n"
 											},
 											{
 												"kind": "code",
@@ -7656,7 +7656,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " the FK actually constrains). Options fetch,\r\nselected-label "
+												"text": " the FK actually constrains). Options fetch,\nselected-label "
 											},
 											{
 												"kind": "code",
@@ -7664,7 +7664,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " lookup and pivot-row resolution all filter on\r\nthis column instead of "
+												"text": " lookup and pivot-row resolution all filter on\nthis column instead of "
 											},
 											{
 												"kind": "code",
@@ -7672,7 +7672,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ". A non-uid value CANNOT drive\r\n"
+												"text": ". A non-uid value CANNOT drive\n"
 											},
 											{
 												"kind": "code",
@@ -7680,7 +7680,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " links (detail params are uids) — declare\r\n"
+												"text": " links (detail params are uids) — declare\n"
 											},
 											{
 												"kind": "code",
@@ -7696,7 +7696,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " for a truthful link, or\r\n"
+												"text": " for a truthful link, or\n"
 											},
 											{
 												"kind": "code",
@@ -7712,7 +7712,7 @@
 											},
 											{
 												"kind": "text",
-												"text": "\r\nenforces both at construction. Same "
+												"text": "\nenforces both at construction. Same "
 											},
 											{
 												"kind": "code",
@@ -7720,7 +7720,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " vocabulary as\r\n"
+												"text": " vocabulary as\n"
 											},
 											{
 												"kind": "inline-tag",
@@ -7767,7 +7767,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " (DEFAULT): the two-affordance anatomy\r\n(text → record sheet; trailing ExternalLink → target "
+												"text": " (DEFAULT): the two-affordance anatomy\n(text → record sheet; trailing ExternalLink → target "
 											},
 											{
 												"kind": "code",
@@ -7775,7 +7775,7 @@
 											},
 											{
 												"kind": "text",
-												"text": "\r\nfiltered, "
+												"text": "\nfiltered, "
 											},
 											{
 												"kind": "code",
@@ -7791,7 +7791,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ": the legacy badge-pill\r\nsingle-link anatomy — explicit opt-in only, never the default.\r\n"
+												"text": ": the legacy badge-pill\nsingle-link anatomy — explicit opt-in only, never the default.\n"
 											},
 											{
 												"kind": "code",
@@ -7867,7 +7867,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n column. Renders the row's value (service-decorated count, or the\r\n label when undecorated) as a badge linking to the child entity's\r\n list page filtered to this row."
+								"text": "\n column. Renders the row's value (service-decorated count, or the\n label when undecorated) as a badge linking to the child entity's\n list page filtered to this row."
 							}
 						]
 					},
@@ -7974,7 +7974,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " template for the filter value — e.g.\r\n "
+												"text": " template for the filter value — e.g.\n "
 											},
 											{
 												"kind": "code",
@@ -8230,7 +8230,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — FE IANA formatting toggle bound to a per-row\r\n timezone field (IANA id comes from the API row)."
+								"text": " — FE IANA formatting toggle bound to a per-row\n timezone field (IANA id comes from the API row)."
 							}
 						]
 					},
@@ -8298,7 +8298,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — per-row stacked mini-histogram fed by ONE batch\r\n POST per rows load (virtual column: no DB field expected). The list\r\n engine performs the fetch automatically — zero per-page wiring."
+								"text": " — per-row stacked mini-histogram fed by ONE batch\n POST per rows load (virtual column: no DB field expected). The list\n engine performs the fetch automatically — zero per-page wiring."
 							}
 						]
 					},
@@ -8329,7 +8329,7 @@
 										"summary": [
 											{
 												"kind": "text",
-												"text": "POST path relative to the service API base — e.g.\r\n "
+												"text": "POST path relative to the service API base — e.g.\n "
 											},
 											{
 												"kind": "code",
@@ -8345,7 +8345,7 @@
 											},
 											{
 												"kind": "text",
-												"text": "\r\n for "
+												"text": "\n for "
 											},
 											{
 												"kind": "code",
@@ -8388,7 +8388,7 @@
 										"summary": [
 											{
 												"kind": "text",
-												"text": "Request body field receiving the collected row keys\r\n (e.g. "
+												"text": "Request body field receiving the collected row keys\n (e.g. "
 											},
 											{
 												"kind": "code",
@@ -8550,7 +8550,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ") —\r\n default "
+												"text": ") —\n default "
 											},
 											{
 												"kind": "code",
@@ -8593,7 +8593,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " is a\r\n tailwind "
+												"text": " is a\n tailwind "
 											},
 											{
 												"kind": "code",
@@ -8609,7 +8609,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ") — the\r\n reference FE safelists the full fill palette in "
+												"text": ") — the\n reference FE safelists the full fill palette in "
 											},
 											{
 												"kind": "code",
@@ -8617,7 +8617,7 @@
 											},
 											{
 												"kind": "text",
-												"text": ", any\r\n "
+												"text": ", any\n "
 											},
 											{
 												"kind": "code",
@@ -8815,7 +8815,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One WHERE condition of a filter preset — serialized verbatim as a\r\n"
+						"text": "One WHERE condition of a filter preset — serialized verbatim as a\n"
 					},
 					{
 						"kind": "code",
@@ -8831,7 +8831,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " query string (same vocabulary as\r\n"
+						"text": " query string (same vocabulary as\n"
 					},
 					{
 						"kind": "code",
@@ -9074,7 +9074,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": NEVER rendered (the\r\n group is icon-only by design; the label feeds "
+								"text": ": NEVER rendered (the\n group is icon-only by design; the label feeds "
 							},
 							{
 								"kind": "code",
@@ -9090,7 +9090,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n fallback); "
+								"text": "\n fallback); "
 							},
 							{
 								"kind": "code",
@@ -9135,7 +9135,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": REQUIRED, it is the only visible\r\n affordance (icon-only standard); "
+								"text": ": REQUIRED, it is the only visible\n affordance (icon-only standard); "
 							},
 							{
 								"kind": "code",
@@ -9188,7 +9188,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (the only place the\r\n option's meaning is spelled out); "
+								"text": " (the only place the\n option's meaning is spelled out); "
 							},
 							{
 								"kind": "code",
@@ -9233,7 +9233,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " call while selected\r\n(refresh, pagination, sort, user filters — all combine). Omit or "
+								"text": " call while selected\n(refresh, pagination, sort, user filters — all combine). Omit or "
 							},
 							{
 								"kind": "code",
@@ -9241,7 +9241,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nfor the \"all\" escape option — still a real selection, applies nothing."
+								"text": "\nfor the \"all\" escape option — still a real selection, applies nothing."
 							}
 						]
 					},
@@ -9299,7 +9299,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A mutually-exclusive preset filter group rendered as its own control in\r\nthe table toolbar (tandem with the deletion-filter group). Exactly one\r\noption is always active — there is no \"clear\" affordance. Declared in\r\n"
+						"text": "A mutually-exclusive preset filter group rendered as its own control in\nthe table toolbar (tandem with the deletion-filter group). Exactly one\noption is always active — there is no \"clear\" affordance. Declared in\n"
 					},
 					{
 						"kind": "code",
@@ -9315,7 +9315,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " scope selector\r\n(recurring / once / all) on a jobs table."
+						"text": " scope selector\n(recurring / once / all) on a jobs table."
 					}
 				]
 			},
@@ -9330,7 +9330,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Preset id — unique within the entity; keys the toolbar group and the\r\n persisted selection ("
+								"text": "Preset id — unique within the entity; keys the toolbar group and the\n persisted selection ("
 							},
 							{
 								"kind": "code",
@@ -9373,7 +9373,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is the toolbar standard: segmented\r\n icon-only buttons ("
+								"text": " is the toolbar standard: segmented\n icon-only buttons ("
 							},
 							{
 								"kind": "code",
@@ -9381,7 +9381,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " per option is REQUIRED, meaning carried by\r\n "
+								"text": " per option is REQUIRED, meaning carried by\n "
 							},
 							{
 								"kind": "code",
@@ -9405,7 +9405,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " for long option lists\r\n where a labelled dropdown reads better."
+								"text": " for long option lists\n where a labelled dropdown reads better."
 							}
 						]
 					},
@@ -9506,7 +9506,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Option id selected before any user choice and as the fallback for an\r\n invalid persisted selection — REQUIRED, must exist in "
+								"text": "Option id selected before any user choice and as the fallback for an\n invalid persisted selection — REQUIRED, must exist in "
 							},
 							{
 								"kind": "code",
@@ -9578,7 +9578,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Action/op name — matches the bare op derived from the route\r\n (e.g. "
+								"text": "Action/op name — matches the bare op derived from the route\n (e.g. "
 							},
 							{
 								"kind": "code",
@@ -9739,7 +9739,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Permission required to see/use the action (filtered client-side\r\n against the user's permission set)."
+								"text": "Permission required to see/use the action (filtered client-side\n against the user's permission set)."
 							}
 						]
 					},
@@ -9780,7 +9780,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Row→body binding for endpoint-dispatched actions: the op's request\r\n body receives "
+								"text": "Row→body binding for endpoint-dispatched actions: the op's request\n body receives "
 							},
 							{
 								"kind": "code",
@@ -9788,7 +9788,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — same convention as\r\n sparkline "
+								"text": " — same convention as\n sparkline "
 							},
 							{
 								"kind": "code",
@@ -9804,7 +9804,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). When absent and the\r\n endpoint path carries "
+								"text": "). When absent and the\n endpoint path carries "
 							},
 							{
 								"kind": "code",
@@ -9812,7 +9812,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " placeholders, params substitute from\r\n the row fields of the same name ("
+								"text": " placeholders, params substitute from\n the row fields of the same name ("
 							},
 							{
 								"kind": "code",
@@ -9873,7 +9873,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\r\n equals one of these values — e.g. show "
+								"text": ")\n equals one of these values — e.g. show "
 							},
 							{
 								"kind": "code",
@@ -9889,7 +9889,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n rows. Absent = always visible. Scalar comparison — boolean/number\r\n fields are allowed (e.g. "
+								"text": "\n rows. Absent = always visible. Scalar comparison — boolean/number\n fields are allowed (e.g. "
 							},
 							{
 								"kind": "code",
@@ -10020,7 +10020,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "UI configuration for a selection-aware bulk CTA (endpoint-backed op\r\n with no row binding — e.g. "
+						"text": "UI configuration for a selection-aware bulk CTA (endpoint-backed op\n with no row binding — e.g. "
 					},
 					{
 						"kind": "code",
@@ -10216,7 +10216,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "When true, the CTA is enabled only with rows selected and the body\r\n receives "
+								"text": "When true, the CTA is enabled only with rows selected and the body\n receives "
 							},
 							{
 								"kind": "code",
@@ -10224,7 +10224,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "; false = fires with an empty body\r\n (selection-independent, e.g. "
+								"text": "; false = fires with an empty body\n (selection-independent, e.g. "
 							},
 							{
 								"kind": "code",
@@ -10290,7 +10290,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "i18n key for a confirmation dialog message — when set, the action\r\n asks before dispatching."
+								"text": "i18n key for a confirmation dialog message — when set, the action\n asks before dispatching."
 							}
 						]
 					},
@@ -10513,7 +10513,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "UI config for non-standard row actions (e.g. change password).\r\n Standard ops (edit/delete/duplicate/preview) are derived from\r\n "
+								"text": "UI config for non-standard row actions (e.g. change password).\n Standard ops (edit/delete/duplicate/preview) are derived from\n "
 							},
 							{
 								"kind": "code",
@@ -10555,7 +10555,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "UI config for non-standard bulk CTAs rendered in the selection\r\n toolbar (e.g. "
+								"text": "UI config for non-standard bulk CTAs rendered in the selection\n toolbar (e.g. "
 							},
 							{
 								"kind": "code",
@@ -10563,7 +10563,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") — dispatch rides the same endpoint\r\n contract as row custom actions via "
+								"text": ") — dispatch rides the same endpoint\n contract as row custom actions via "
 							},
 							{
 								"kind": "code",
@@ -10605,7 +10605,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Mutually-exclusive preset WHERE filters — each rendered as its own\r\n toolbar control; the active option's conditions AND into every list\r\n request (see "
+								"text": "Mutually-exclusive preset WHERE filters — each rendered as its own\n toolbar control; the active option's conditions AND into every list\n request (see "
 							},
 							{
 								"kind": "inline-tag",
@@ -10763,7 +10763,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " file MUST satisfy.\r\nThe schema is CLOSED for authored metas: undeclared properties are\r\ncompile errors, so new meta props require extending this type first."
+						"text": " file MUST satisfy.\nThe schema is CLOSED for authored metas: undeclared properties are\ncompile errors, so new meta props require extending this type first."
 					}
 				]
 			},
@@ -10842,7 +10842,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Namespace OWNING this entity's label keys — the module's own namespace\r\n("
+								"text": "Namespace OWNING this entity's label keys — the module's own namespace\n("
 							},
 							{
 								"kind": "code",
@@ -10866,7 +10866,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n(BE/core-owned entities keep "
+								"text": "\n(BE/core-owned entities keep "
 							},
 							{
 								"kind": "code",
@@ -10874,7 +10874,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\r\nThis is a READ-side reference declared by the owning module — the\r\nnamespace write boundary (see "
+								"text": ").\nThis is a READ-side reference declared by the owning module — the\nnamespace write boundary (see "
 							},
 							{
 								"kind": "code",
@@ -10882,7 +10882,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") guarantees the\r\nkeys actually live in that module's "
+								"text": ") guarantees the\nkeys actually live in that module's "
 							},
 							{
 								"kind": "code",
@@ -10919,7 +10919,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Optional i18n key overriding the canonical page title.\r\nWhen absent, list/create/edit titles are built from the generic\r\n"
+								"text": "Optional i18n key overriding the canonical page title.\nWhen absent, list/create/edit titles are built from the generic\n"
 							},
 							{
 								"kind": "code",
@@ -10927,7 +10927,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " templates interpolated\r\nwith "
+								"text": " templates interpolated\nwith "
 							},
 							{
 								"kind": "code",
@@ -10935,7 +10935,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\r\nSet only for custom pages needing a bespoke title — CRUD entity metas\r\nmust not declare it."
+								"text": ".\nSet only for custom pages needing a bespoke title — CRUD entity metas\nmust not declare it."
 							}
 						]
 					},
@@ -10999,7 +10999,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Canonical display field — the column key identifying the entity's\r\n human-readable label. Drives first-column/sticky table identity and\r\n default display resolution. OPTIONAL on the wire type only:\r\n "
+								"text": "Canonical display field — the column key identifying the entity's\n human-readable label. Drives first-column/sticky table identity and\n default display resolution. OPTIONAL on the wire type only:\n "
 							},
 							{
 								"kind": "code",
@@ -11007,7 +11007,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " still REQUIRES it on every main-entity meta\r\n (construction gate — a missing key throws), while relation entities\r\n ("
+								"text": " still REQUIRES it on every main-entity meta\n (construction gate — a missing key throws), while relation entities\n ("
 							},
 							{
 								"kind": "code",
@@ -11015,7 +11015,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " marker — directed parent→child edges) MUST NOT declare\r\n one: a directed edge has no single-column identity, its display is\r\n viewpoint-dependent ("
+								"text": " marker — directed parent→child edges) MUST NOT declare\n one: a directed edge has no single-column identity, its display is\n viewpoint-dependent ("
 							},
 							{
 								"kind": "code",
@@ -11060,7 +11060,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " syntax, dot-paths allowed).\r\nOPTIONAL here: "
+								"text": " syntax, dot-paths allowed).\nOPTIONAL here: "
 							},
 							{
 								"kind": "code",
@@ -11068,7 +11068,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " materializes it as\r\n"
+								"text": " materializes it as\n"
 							},
 							{
 								"kind": "code",
@@ -11076,7 +11076,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " when absent — it is always present in the\r\nserved response. Used automatically for edit-page titles; reusable for\r\ncomboboxes, lists, chips."
+								"text": " when absent — it is always present in the\nserved response. Used automatically for edit-page titles; reusable for\ncomboboxes, lists, chips."
 							}
 						]
 					},
@@ -11113,7 +11113,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " on route-backed\r\n ops; a missing route already produces "
+								"text": " on route-backed\n ops; a missing route already produces "
 							},
 							{
 								"kind": "code",
@@ -11184,7 +11184,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Table options — omit when the entity has no table page\r\n (e.g. a self-service form meta)."
+								"text": "Table options — omit when the entity has no table page\n (e.g. a self-service form meta)."
 							}
 						]
 					},
@@ -11263,7 +11263,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " when authored,\r\n"
+								"text": " when authored,\n"
 							},
 							{
 								"kind": "code",
@@ -11271,7 +11271,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " otherwise (the served default). ONE rule\r\nused by both the served-meta assembler (EntityMetaResponse.display_name)\r\nand the DAL's display-join projection ("
+								"text": " otherwise (the served default). ONE rule\nused by both the served-meta assembler (EntityMetaResponse.display_name)\nand the DAL's display-join projection ("
 							},
 							{
 								"kind": "code",
@@ -11279,7 +11279,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " columns evaluate the\r\nSAME template on the joined row), so titles, combos and ref cells can\r\nnever diverge."
+								"text": " columns evaluate the\nSAME template on the joined row), so titles, combos and ref cells can\nnever diverge."
 							}
 						]
 					},
@@ -11365,7 +11365,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " facet — runtime-injected on served meta when the entity\r\nclass carries the "
+						"text": " facet — runtime-injected on served meta when the entity\nclass carries the "
 					},
 					{
 						"kind": "code",
@@ -11373,7 +11373,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " marker (a dict base such as\r\ndal-pg "
+						"text": " marker (a dict base such as\ndal-pg "
 					},
 					{
 						"kind": "code",
@@ -11389,7 +11389,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " page archetype:\r\na compact inline-editable list (rows add/edit in place)."
+						"text": " page archetype:\na compact inline-editable list (rows add/edit in place)."
 					}
 				]
 			},
@@ -11406,7 +11406,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Column key grouping rows into fieldsets — absent renders a FLAT\r\n sequence; grouping is opt-in per entity, never inferred."
+								"text": "Column key grouping rows into fieldsets — absent renders a FLAT\n sequence; grouping is opt-in per entity, never inferred."
 							}
 						]
 					},
@@ -11443,7 +11443,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " when the\r\n entity declares it). Reorder CTAs mutate it and persist through the\r\n page's atomic bulk save — no dedicated reorder endpoint."
+								"text": " when the\n entity declares it). Reorder CTAs mutate it and persist through the\n page's atomic bulk save — no dedicated reorder endpoint."
 							}
 						]
 					},
@@ -11472,7 +11472,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Directional label pair — declared when the dict rows are link-type\r\n vocabularies consumed by "
+								"text": "Directional label pair — declared when the dict rows are link-type\n vocabularies consumed by "
 							},
 							{
 								"kind": "code",
@@ -11488,7 +11488,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n names the column read parent-side (\"the child IS a ‹label›\"),\r\n "
+								"text": "\n names the column read parent-side (\"the child IS a ‹label›\"),\n "
 							},
 							{
 								"kind": "code",
@@ -11496,7 +11496,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " names the column read child-side (\"the parent\r\n IS a ‹label›\"); a NULL inverse label means the type is\r\n self-inverse — same vocabulary read from both ends (e.g. partner).\r\n Fields are PHYSICAL column keys on this dict entity."
+								"text": " names the column read child-side (\"the parent\n IS a ‹label›\"); a NULL inverse label means the type is\n self-inverse — same vocabulary read from both ends (e.g. partner).\n Fields are PHYSICAL column keys on this dict entity."
 							}
 						]
 					},
@@ -11606,7 +11606,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " facet — runtime-injected on served meta when the entity\r\nclass carries the "
+						"text": " facet — runtime-injected on served meta when the entity\nclass carries the "
 					},
 					{
 						"kind": "code",
@@ -11614,7 +11614,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " marker (dal-pg). Declares a DIRECTED\r\nparent→child edge table (e.g. "
+						"text": " marker (dal-pg). Declares a DIRECTED\nparent→child edge table (e.g. "
 					},
 					{
 						"kind": "code",
@@ -11622,7 +11622,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "): rows are typed arcs,\r\nnever standalone page entities — no "
+						"text": "): rows are typed arcs,\nnever standalone page entities — no "
 					},
 					{
 						"kind": "code",
@@ -11630,7 +11630,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", no pinned\r\ncolumn, viewpoint-dependent display. "
+						"text": ", no pinned\ncolumn, viewpoint-dependent display. "
 					},
 					{
 						"kind": "code",
@@ -11646,7 +11646,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are\r\nthe physical "
+						"text": " are\nthe physical "
 					},
 					{
 						"kind": "code",
@@ -11654,7 +11654,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " column keys forming the arc (immutable after\r\ncreate — repointing is delete+create); "
+						"text": " column keys forming the arc (immutable after\ncreate — repointing is delete+create); "
 					},
 					{
 						"kind": "code",
@@ -11662,7 +11662,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " optionally points\r\nat the directional vocabulary entity (a "
+						"text": " optionally points\nat the directional vocabulary entity (a "
 					},
 					{
 						"kind": "code",
@@ -11670,7 +11670,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " dict);\r\n"
+						"text": " dict);\n"
 					},
 					{
 						"kind": "code",
@@ -11678,7 +11678,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " opts the table into deep-cycle detection on insert\r\n(the 2-cycle is always rejected by the derived unordered-pair unique\r\nindex — construction-derived, never authored)."
+						"text": " opts the table into deep-cycle detection on insert\n(the 2-cycle is always rejected by the derived unordered-pair unique\nindex — construction-derived, never authored)."
 					}
 				]
 			},
@@ -11802,7 +11802,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " response:\r\nstatic meta + runtime-injected "
+						"text": " response:\nstatic meta + runtime-injected "
 					},
 					{
 						"kind": "code",
@@ -11874,7 +11874,7 @@
 											},
 											{
 												"kind": "text",
-												"text": " on relation entities (a\r\n directed edge has no single display template; consumers read the\r\n "
+												"text": " on relation entities (a\n directed edge has no single display template; consumers read the\n "
 											},
 											{
 												"kind": "code",
@@ -12094,7 +12094,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\narray and carries "
+								"text": "\narray and carries "
 							},
 							{
 								"kind": "code",
@@ -12110,7 +12110,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is absent\r\n(meta without actions — contract violation) the op is not enabled.\r\n\r\nThis deliberately does NOT evaluate user permissions — that step lives in\r\nthe consumer (e.g. FE "
+								"text": " is absent\n(meta without actions — contract violation) the op is not enabled.\n\nThis deliberately does NOT evaluate user permissions — that step lives in\nthe consumer (e.g. FE "
 							},
 							{
 								"kind": "code",
@@ -12118,7 +12118,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " composes this with the session\r\npermission check)."
+								"text": " composes this with the session\npermission check)."
 							}
 						]
 					},
@@ -12204,7 +12204,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Parse an Ext-JSON string.\r\n\r\nALL integers are returned as native "
+								"text": "Parse an Ext-JSON string.\n\nALL integers are returned as native "
 							},
 							{
 								"kind": "code",
@@ -12212,7 +12212,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (via reviver).\r\nFloats (values with decimal point or scientific notation) are "
+								"text": " (via reviver).\nFloats (values with decimal point or scientific notation) are "
 							},
 							{
 								"kind": "code",
@@ -12220,7 +12220,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\r\nStrings, booleans, null are unaffected."
+								"text": ".\nStrings, booleans, null are unaffected."
 							}
 						]
 					},
@@ -12293,7 +12293,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Serialize a value to an Ext-JSON string.\r\nBigInt values serialize as JSON numbers (42n → \"42\"); floats stay numbers.\r\n\r\nUse for request bodies carrying bigint values — the BE's ext-json body\r\nparser revives them to native "
+								"text": "Serialize a value to an Ext-JSON string.\nBigInt values serialize as JSON numbers (42n → \"42\"); floats stay numbers.\n\nUse for request bodies carrying bigint values — the BE's ext-json body\nparser revives them to native "
 							},
 							{
 								"kind": "code",
@@ -12309,7 +12309,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " mirrors JSON.stringify's\r\npretty-print indent for display/tooltip contexts."
+								"text": " mirrors JSON.stringify's\npretty-print indent for display/tooltip contexts."
 							}
 						]
 					},
@@ -12372,7 +12372,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is the entity field key (or a\r\n dotted sub-path inside a JSON-Schema check)."
+						"text": " is the entity field key (or a\n dotted sub-path inside a JSON-Schema check)."
 					}
 				]
 			},
@@ -12503,7 +12503,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Email — same RFC-5322-simplified regex the config validator and the FE\r\n refine use (documented shared in "
+						"text": "Email — same RFC-5322-simplified regex the config validator and the FE\n refine use (documented shared in "
 					},
 					{
 						"kind": "code",
@@ -12983,7 +12983,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " optional E.164-ish phone — intentionally permissive (the FE\r\n libphonenumber check is richer; server-side stays non-rejecting on\r\n format-only signals it cannot verify)."
+								"text": " optional E.164-ish phone — intentionally permissive (the FE\n libphonenumber check is richer; server-side stays non-rejecting on\n format-only signals it cannot verify)."
 							}
 						]
 					},
@@ -13027,7 +13027,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "The floor every recurring spec must respect: one minute. The 5-field\r\ncron grammar is already minute-floored by design ("
+						"text": "The floor every recurring spec must respect: one minute. The 5-field\ncron grammar is already minute-floored by design ("
 					},
 					{
 						"kind": "code",
@@ -13035,7 +13035,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is its\r\ntightest expression), so "
+						"text": " is its\ntightest expression), so "
 					},
 					{
 						"kind": "code",
@@ -13043,7 +13043,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the only grammar able to go\r\nsub-minute — must not undercut it: a job firing every few seconds is a\r\ndesign error and would hammer the host. "
+						"text": " — the only grammar able to go\nsub-minute — must not undercut it: a job firing every few seconds is a\ndesign error and would hammer the host. "
 					},
 					{
 						"kind": "code",
@@ -13177,7 +13177,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " gets its own\r\n issue key so the form can say WHY, not just THAT it failed."
+						"text": " gets its own\n issue key so the form can say WHY, not just THAT it failed."
 					}
 				]
 			},
@@ -13250,7 +13250,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "),\r\n"
+								"text": "),\n"
 							},
 							{
 								"kind": "code",
@@ -13266,7 +13266,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " header\r\ncontract. Pure; the UI interpreter ("
+								"text": " header\ncontract. Pure; the UI interpreter ("
 							},
 							{
 								"kind": "code",
@@ -13282,7 +13282,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\r\nkeeps croner."
+								"text": ")\nkeeps croner."
 							}
 						]
 					},
@@ -13407,7 +13407,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", when derivable without a cron evaluator:\r\n- "
+								"text": ", when derivable without a cron evaluator:\n- "
 							},
 							{
 								"kind": "code",
@@ -13423,7 +13423,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", anchored at\r\n  "
+								"text": ", anchored at\n  "
 							},
 							{
 								"kind": "code",
@@ -13439,7 +13439,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "); without an anchor the period is\r\n  assumed to start at "
+								"text": "); without an anchor the period is\n  assumed to start at "
 							},
 							{
 								"kind": "code",
@@ -13455,7 +13455,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\r\n- "
+								"text": ".\n- "
 							},
 							{
 								"kind": "code",
@@ -13463,7 +13463,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — the timestamp itself if still future, else null (fired).\r\n- cron — null: NATS owns cron evaluation; a second interpreter here would\r\n  drift on dom/dow edge semantics. Invalid specs return null too."
+								"text": " — the timestamp itself if still future, else null (fired).\n- cron — null: NATS owns cron evaluation; a second interpreter here would\n  drift on dom/dow edge semantics. Invalid specs return null too."
 							}
 						]
 					},
@@ -13661,7 +13661,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " at both ends,\r\n internal "
+						"text": " at both ends,\n internal "
 					},
 					{
 						"kind": "code",
@@ -13798,7 +13798,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\r\n "
+						"text": ",\n "
 					},
 					{
 						"kind": "code",
@@ -14000,7 +14000,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n wildcard ("
+						"text": "\n wildcard ("
 					},
 					{
 						"kind": "code",
@@ -14121,7 +14121,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\r\n "
+						"text": ",\n "
 					},
 					{
 						"kind": "code",
@@ -14339,7 +14339,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") —\r\n primary subtag + optional subtags. Closed-grammar, not full RFC 5646:\r\n matches every tag the platform emits."
+						"text": ") —\n primary subtag + optional subtags. Closed-grammar, not full RFC 5646:\n matches every tag the platform emits."
 					}
 				]
 			},
@@ -14530,7 +14530,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Validate one column's wire value (JSON fields already parsed).\r\n "
+								"text": "Validate one column's wire value (JSON fields already parsed).\n "
 							},
 							{
 								"kind": "code",
@@ -14632,7 +14632,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — update semantics: only present keys validated,\r\n absent required fields skipped. Default false (create semantics)."
+								"text": " — update semantics: only present keys validated,\n absent required fields skipped. Default false (create semantics)."
 							}
 						]
 					},
@@ -14700,7 +14700,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\r\nRequired = "
+								"text": ".\nRequired = "
 							},
 							{
 								"kind": "code",
@@ -14716,7 +14716,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\ncolumns, "
+								"text": "\ncolumns, "
 							},
 							{
 								"kind": "code",
@@ -14732,7 +14732,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " columns\r\n(server-filled keys, e.g. an identity "
+								"text": " columns\n(server-filled keys, e.g. an identity "
 							},
 							{
 								"kind": "code",
@@ -14744,11 +14744,11 @@
 							},
 							{
 								"kind": "code",
-								"text": "`kind:\"calculated\" /\r\n\"virtual\"`"
+								"text": "`kind:\"calculated\" /\n\"virtual\"`"
 							},
 							{
 								"kind": "text",
-								"text": " columns (server/decorator-computed read projections — never\r\nwritable) are system-managed and never arrive on the wire, so an\r\nabsent one is NOT a violation. A\r\nPRESENT empty value still fails "
+								"text": " columns (server/decorator-computed read projections — never\nwritable) are system-managed and never arrive on the wire, so an\nabsent one is NOT a violation. A\nPRESENT empty value still fails "
 							},
 							{
 								"kind": "code",
@@ -14756,7 +14756,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — clients must\r\nnot send managed fields at all. Mirrors the form, where required only\r\never applies to declared placements ("
+								"text": " — clients must\nnot send managed fields at all. Mirrors the form, where required only\never applies to declared placements ("
 							},
 							{
 								"kind": "code",
@@ -14764,7 +14764,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\r\nUnknown entity keys are ignored — system columns ("
+								"text": ").\nUnknown entity keys are ignored — system columns ("
 							},
 							{
 								"kind": "code",
@@ -14780,7 +14780,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\r\nneed no column."
+								"text": ")\nneed no column."
 							}
 						]
 					},
@@ -14884,7 +14884,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are mutually mandatory (at least one);\r\n"
+						"text": " are mutually mandatory (at least one);\n"
 					},
 					{
 						"kind": "code",
@@ -14916,7 +14916,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") and\r\n"
+						"text": ") and\n"
 					},
 					{
 						"kind": "code",
@@ -14924,7 +14924,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " requires an event source to forward auth\r\nheaders from; a one-shot "
+						"text": " requires an event source to forward auth\nheaders from; a one-shot "
 					},
 					{
 						"kind": "code",
@@ -14932,7 +14932,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " must lie in the future — a past\r\ntimestamp FIRES IMMEDIATELY at declare time (verified empirically:\r\nthe declaration PubAcks, the scheduler dispatches at once, then the\r\ndeclaration self-purges — an unintended execution, not a dead one).\r\n"
+						"text": " must lie in the future — a past\ntimestamp FIRES IMMEDIATELY at declare time (verified empirically:\nthe declaration PubAcks, the scheduler dispatches at once, then the\ndeclaration self-purges — an unintended execution, not a dead one).\n"
 					},
 					{
 						"kind": "code",
@@ -14940,7 +14940,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is injected so the predicate stays\r\npure — the form passes the client clock, the write guard the server\r\nclock. On "
+						"text": " is injected so the predicate stays\npure — the form passes the client clock, the write guard the server\nclock. On "
 					},
 					{
 						"kind": "code",
@@ -14956,7 +14956,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are\r\ntreated from the merged record the caller passes."
+						"text": " are\ntreated from the merged record the caller passes."
 					}
 				]
 			},
@@ -15253,7 +15253,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "'s schema)\r\ncompatible with "
+								"text": "'s schema)\ncompatible with "
 							},
 							{
 								"kind": "code",
@@ -15261,7 +15261,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (a callable's payload_schema property)?\r\nFormat/enum/const on the destination must be PROVABLE from the source\r\ndeclaration — a bare string never satisfies "
+								"text": " (a callable's payload_schema property)?\nFormat/enum/const on the destination must be PROVABLE from the source\ndeclaration — a bare string never satisfies "
 							},
 							{
 								"kind": "code",
@@ -15378,7 +15378,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Iterate every property schema a JSON schema declares — nested objects\r\n and array items included. "
+								"text": "Iterate every property schema a JSON schema declares — nested objects\n and array items included. "
 							},
 							{
 								"kind": "code",
@@ -15386,7 +15386,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " reflects the PARENT level's\r\n "
+								"text": " reflects the PARENT level's\n "
 							},
 							{
 								"kind": "code",
@@ -15606,7 +15606,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " honesty gate — the declared name implies a format the schema\r\nmust carry (on the prop, or on its array items). Returns an error string\r\nor "
+								"text": " honesty gate — the declared name implies a format the schema\nmust carry (on the prop, or on its array items). Returns an error string\nor "
 							},
 							{
 								"kind": "code",
@@ -15630,7 +15630,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " semantic slot — is what\r\nsatisfies the hint; a bare "
+								"text": " semantic slot — is what\nsatisfies the hint; a bare "
 							},
 							{
 								"kind": "code",
@@ -15739,7 +15739,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " document against the callable's emitted\r\n"
+								"text": " document against the callable's emitted\n"
 							},
 							{
 								"kind": "code",
@@ -15747,7 +15747,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". Reports:\r\n  - every "
+								"text": ". Reports:\n  - every "
 							},
 							{
 								"kind": "code",
@@ -15755,7 +15755,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " prop not satisfied by a map entry nor covered by\r\n    "
+								"text": " prop not satisfied by a map entry nor covered by\n    "
 							},
 							{
 								"kind": "code",
@@ -15771,7 +15771,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (declaration-materialized at fire time);\r\n  - every "
+								"text": " (declaration-materialized at fire time);\n  - every "
 							},
 							{
 								"kind": "code",
@@ -15779,7 +15779,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (leaf, list item, map value, fallback) failing the\r\n    prop's portable JSON-Schema constraints.\r\n"
+								"text": " (leaf, list item, map value, fallback) failing the\n    prop's portable JSON-Schema constraints.\n"
 							},
 							{
 								"kind": "code",
@@ -15934,11 +15934,11 @@
 									},
 									{
 										"kind": "code",
-										"text": "`{field: {key:\r\n schema | MapKeyDecl}}`"
+										"text": "`{field: {key:\n schema | MapKeyDecl}}`"
 									},
 									{
 										"kind": "text",
-										"text": " — the catalog-row contract (e.g. a\r\n template's "
+										"text": " — the catalog-row contract (e.g. a\n template's "
 									},
 									{
 										"kind": "code",
@@ -15946,7 +15946,7 @@
 									},
 									{
 										"kind": "text",
-										"text": "). Optional: callers that can't resolve\r\n catalog rows skip this layer. A bare schema only type-checks the\r\n mapped value; a "
+										"text": "). Optional: callers that can't resolve\n catalog rows skip this layer. A bare schema only type-checks the\n mapped value; a "
 									},
 									{
 										"kind": "code",
@@ -15962,7 +15962,7 @@
 									},
 									{
 										"kind": "text",
-										"text": " also demands the\r\n key be PRESENT in the "
+										"text": " also demands the\n key be PRESENT in the "
 									},
 									{
 										"kind": "code",
@@ -15978,7 +15978,7 @@
 									},
 									{
 										"kind": "text",
-										"text": " object — the\r\n same gate the editor applies on save."
+										"text": " object — the\n same gate the editor applies on save."
 									}
 								]
 							},
@@ -16071,7 +16071,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " forwards the event payload\r\nverbatim ("
+								"text": " forwards the event payload\nverbatim ("
 							},
 							{
 								"kind": "code",
@@ -16079,7 +16079,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " returns it unchanged; a schedule-only fire\r\ndispatches "
+								"text": " returns it unchanged; a schedule-only fire\ndispatches "
 							},
 							{
 								"kind": "code",
@@ -16095,7 +16095,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " prop is deliverable iff it is\r\n"
+								"text": " prop is deliverable iff it is\n"
 							},
 							{
 								"kind": "code",
@@ -16111,7 +16111,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "-satisfied at fire time, or the source event's\r\ndeclared schema guarantees it (required AND "
+								"text": "-satisfied at fire time, or the source event's\ndeclared schema guarantees it (required AND "
 							},
 							{
 								"kind": "code",
@@ -16119,7 +16119,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\r\n\r\n"
+								"text": ").\n\n"
 							},
 							{
 								"kind": "code",
@@ -16127,7 +16127,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " → schema-less emit: supply is not\r\n                               DEMONSTRABLE — same rejection as a\r\n                               proven-uncovered emit. An explicit map\r\n                               (unchecked path entries) stays the\r\n                               escape hatch for dynamic sources.\r\n"
+								"text": " → schema-less emit: supply is not\n                               DEMONSTRABLE — same rejection as a\n                               proven-uncovered emit. An explicit map\n                               (unchecked path entries) stays the\n                               escape hatch for dynamic sources.\n"
 							},
 							{
 								"kind": "code",
@@ -16135,7 +16135,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "      → no source event (schedule-only): the\r\n                               passthrough payload is "
+								"text": "      → no source event (schedule-only): the\n                               passthrough payload is "
 							},
 							{
 								"kind": "code",
@@ -16143,7 +16143,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — every\r\n                               uncovered required is undeliverable."
+								"text": " — every\n                               uncovered required is undeliverable."
 							}
 						]
 					},
@@ -16261,7 +16261,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Resolve a preset's active option id — the caller-provided selection when\r\nit names a declared option, otherwise "
+								"text": "Resolve a preset's active option id — the caller-provided selection when\nit names a declared option, otherwise "
 							},
 							{
 								"kind": "code",
@@ -16269,7 +16269,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (itself falling\r\nback to the first option when misconfigured, keeping the always-one\r\ninvariant rather than failing closed)."
+								"text": " (itself falling\nback to the first option when misconfigured, keeping the always-one\ninvariant rather than failing closed)."
 							}
 						]
 					},
@@ -16348,7 +16348,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Flatten the WHERE conditions of every preset's ACTIVE option — the\r\nconditions AND-ed into every "
+								"text": "Flatten the WHERE conditions of every preset's ACTIVE option — the\nconditions AND-ed into every "
 							},
 							{
 								"kind": "code",
@@ -16364,7 +16364,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " maps\r\npreset.id → option id; invalid/absent ids resolve per\r\n"
+								"text": " maps\npreset.id → option id; invalid/absent ids resolve per\n"
 							},
 							{
 								"kind": "inline-tag",
@@ -16481,7 +16481,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Service API base of an entity list basePath — strips the trailing\r\n"
+								"text": "Service API base of an entity list basePath — strips the trailing\n"
 							},
 							{
 								"kind": "code",
@@ -16489,7 +16489,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " segment so service-relative endpoints declared in\r\nmeta (e.g. sparkline "
+								"text": " segment so service-relative endpoints declared in\nmeta (e.g. sparkline "
 							},
 							{
 								"kind": "code",
@@ -16497,7 +16497,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") resolve to\r\n"
+								"text": ") resolve to\n"
 							},
 							{
 								"kind": "code",
@@ -16557,7 +16557,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "The name→format honesty matrix — the single source of truth consumed by:\r\n  - "
+						"text": "The name→format honesty matrix — the single source of truth consumed by:\n  - "
 					},
 					{
 						"kind": "code",
@@ -16565,7 +16565,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " in ./field-validation.ts (runtime contract),\r\n  - the sdk enrollment validators (registry gate),\r\n  - the check-standards lint ("
+						"text": " in ./field-validation.ts (runtime contract),\n  - the sdk enrollment validators (registry gate),\n  - the check-standards lint ("
 					},
 					{
 						"kind": "code",
@@ -16573,7 +16573,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), which imports this\r\n    file BY RELATIVE PATH so the tool stays zero-dep and CI can run it\r\n    against bare checkouts with no install.\r\nA new dishonesty case is added HERE — never re-invented per surface."
+						"text": "), which imports this\n    file BY RELATIVE PATH so the tool stays zero-dep and CI can run it\n    against bare checkouts with no install.\nA new dishonesty case is added HERE — never re-invented per surface."
 					}
 				]
 			},
@@ -16694,7 +16694,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Supported languages — THE canonical vocabulary for the whole platform.\r\n\r\nBCP-47 full tags (language + region) — en-GB and en-US are distinct\r\nfirst-class locales because they carry different date/number/address\r\nformatting, not just different dictionaries.\r\n\r\nConsumers:\r\n- "
+						"text": "Supported languages — THE canonical vocabulary for the whole platform.\n\nBCP-47 full tags (language + region) — en-GB and en-US are distinct\nfirst-class locales because they carry different date/number/address\nformatting, not just different dictionaries.\n\nConsumers:\n- "
 					},
 					{
 						"kind": "code",
@@ -16710,7 +16710,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " re-export (BE routers, FE pickers)\r\n- "
+						"text": " re-export (BE routers, FE pickers)\n- "
 					},
 					{
 						"kind": "code",
@@ -16718,7 +16718,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " lint (relative-path import, sibling checkout)\r\n- DB "
+						"text": " lint (relative-path import, sibling checkout)\n- DB "
 					},
 					{
 						"kind": "code",
@@ -16734,7 +16734,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " —\r\n  the SQL literals must mirror this list; the lint enforces it.\r\n\r\nAdding a language = add the tag here + seed translations + bump the\r\nCHECK constraints — a deliberate release-scoped change, never data."
+						"text": " —\n  the SQL literals must mirror this list; the lint enforces it.\n\nAdding a language = add the tag here + seed translations + bump the\nCHECK constraints — a deliberate release-scoped change, never data."
 					}
 				]
 			},
@@ -17244,7 +17244,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " list param\r\non the wire ("
+						"text": " list param\non the wire ("
 					},
 					{
 						"kind": "code",
@@ -17276,7 +17276,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\r\n"
+						"text": ",\n"
 					},
 					{
 						"kind": "code",
@@ -17292,7 +17292,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "; absent param means the BE default, currently\r\n"
+						"text": "; absent param means the BE default, currently\n"
 					},
 					{
 						"kind": "code",
@@ -17340,7 +17340,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "The paged list response returned by every entity list endpoint.\r\n"
+						"text": "The paged list response returned by every entity list endpoint.\n"
 					},
 					{
 						"kind": "code",
@@ -17356,7 +17356,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — parse JSON responses with a bigint-aware parser\r\n("
+						"text": " — parse JSON responses with a bigint-aware parser\n("
 					},
 					{
 						"kind": "code",
@@ -17850,7 +17850,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", applied\r\nwhenever "
+						"text": ", applied\nwhenever "
 					},
 					{
 						"kind": "code",
@@ -17858,7 +17858,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " carries no specific default. A declaration's explicit\r\n"
+						"text": " carries no specific default. A declaration's explicit\n"
 					},
 					{
 						"kind": "code",
@@ -17874,7 +17874,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " at emission, they never\r\noverride an authored value. Devs are never required to author one."
+						"text": " at emission, they never\noverride an authored value. Devs are never required to author one."
 					}
 				]
 			},
@@ -18024,7 +18024,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Remote component delivery format. Extensible — new literals are additive\r\nand non-breaking. "
+						"text": "Remote component delivery format. Extensible — new literals are additive\nand non-breaking. "
 					},
 					{
 						"kind": "code",
@@ -18032,7 +18032,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": a precompiled ESM chunk that exports\r\n"
+						"text": ": a precompiled ESM chunk that exports\n"
 					},
 					{
 						"kind": "code",
@@ -18067,7 +18067,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One declared frontend route owned by a module. Modules MUST declare every\r\nFE path they own that is not deducible from nav links or entity\r\nconventions — the AI route census (derived from the consolidated\r\n"
+						"text": "One declared frontend route owned by a module. Modules MUST declare every\nFE path they own that is not deducible from nav links or entity\nconventions — the AI route census (derived from the consolidated\n"
 					},
 					{
 						"kind": "code",
@@ -18075,7 +18075,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " discovery payload) depends on it.\r\n"
+						"text": " discovery payload) depends on it.\n"
 					},
 					{
 						"kind": "code",
@@ -18198,7 +18198,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "i18n key of the page description line rendered under the header title —\r\nroute-level, valid on EVERY "
+								"text": "i18n key of the page description line rendered under the header title —\nroute-level, valid on EVERY "
 							},
 							{
 								"kind": "code",
@@ -18214,7 +18214,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nprivilege is removed)."
+								"text": "\nprivilege is removed)."
 							}
 						]
 					},
@@ -18243,7 +18243,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Lucide icon name — used by host chrome that renders the route as an\r\naction (e.g. the toolbar create CTA for "
+								"text": "Lucide icon name — used by host chrome that renders the route as an\naction (e.g. the toolbar create CTA for "
 							},
 							{
 								"kind": "code",
@@ -18288,7 +18288,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (default): the host shell\r\nrenders the mandatory PageHeader (breadcrumb, star, title, description,\r\npresence) above the page body — including above a remote mount.\r\n"
+								"text": " (default): the host shell\nrenders the mandatory PageHeader (breadcrumb, star, title, description,\npresence) above the page body — including above a remote mount.\n"
 							},
 							{
 								"kind": "code",
@@ -18296,7 +18296,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": the remote chunk owns its chrome and the host header is\r\nsuppressed for this route. Ignored by host-rendered archetypes — their\r\nchrome is always host-owned."
+								"text": ": the remote chunk owns its chrome and the host header is\nsuppressed for this route. Ignored by host-rendered archetypes — their\nchrome is always host-owned."
 							}
 						]
 					},
@@ -18334,7 +18334,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Remote component delivery — when set, the host mounts the chunk at this\r\nsame-origin URL (typically "
+								"text": "Remote component delivery — when set, the host mounts the chunk at this\nsame-origin URL (typically "
 							},
 							{
 								"kind": "code",
@@ -18342,7 +18342,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\r\ninstead of resolving a local component."
+								"text": ")\ninstead of resolving a local component."
 							}
 						]
 					},
@@ -18436,7 +18436,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n(SRI form) or bare lowercase hex. The host verifies the fetched bytes via\r\nWeb Crypto before importing; a mismatch renders an in-content integrity\r\nerror and nothing is mounted."
+								"text": "\n(SRI form) or bare lowercase hex. The host verifies the fetched bytes via\nWeb Crypto before importing; a mismatch renders an in-content integrity\nerror and nothing is mounted."
 							}
 						]
 					},
@@ -18473,7 +18473,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (default): the\r\ncreate/edit CTA navigates to the route; "
+								"text": " (default): the\ncreate/edit CTA navigates to the route; "
 							},
 							{
 								"kind": "code",
@@ -18481,7 +18481,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ": it opens the SAME\r\narchetype content inside the host sheet surface (the route keeps\r\nworking when visited directly — the hint only steers CTA behavior).\r\nRead by host archetypes and list CTAs, never by remote pages."
+								"text": ": it opens the SAME\narchetype content inside the host sheet surface (the route keeps\nworking when visited directly — the hint only steers CTA behavior).\nRead by host archetypes and list CTAs, never by remote pages."
 							}
 						]
 					},
@@ -18519,7 +18519,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Archetype-agnostic page props — the metadata a route needs beyond the\r\nshared fields. "
+								"text": "Archetype-agnostic page props — the metadata a route needs beyond the\nshared fields. "
 							},
 							{
 								"kind": "code",
@@ -18585,7 +18585,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One field's placement + policy inside an entity form — PAGE-domain\r\nmetadata: it positions a field the ENTITY owns; it never redefines the\r\nfield's type or validation (those come from "
+						"text": "One field's placement + policy inside an entity form — PAGE-domain\nmetadata: it positions a field the ENTITY owns; it never redefines the\nfield's type or validation (those come from "
 					},
 					{
 						"kind": "code",
@@ -18593,7 +18593,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — class-derived\r\nconstraints + authored "
+						"text": " — class-derived\nconstraints + authored "
 					},
 					{
 						"kind": "code",
@@ -18601,7 +18601,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ").\r\n\r\n"
+						"text": ").\n\n"
 					},
 					{
 						"kind": "code",
@@ -18617,7 +18617,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the host archetype\r\nvalidates at render time and fails loudly on drift."
+						"text": " — the host archetype\nvalidates at render time and fails loudly on drift."
 					}
 				]
 			},
@@ -18825,7 +18825,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Section id grouping fields under a shared header (i18n key resolved\r\n by the host archetype)."
+								"text": "Section id grouping fields under a shared header (i18n key resolved\n by the host archetype)."
 							}
 						]
 					},
@@ -18920,7 +18920,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n ("
+								"text": "\n ("
 							},
 							{
 								"kind": "code",
@@ -18928,7 +18928,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " → required). May only LOOSEN to optional, never tighten\r\n past the physical contract."
+								"text": " → required). May only LOOSEN to optional, never tighten\n past the physical contract."
 							}
 						]
 					},
@@ -19023,7 +19023,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is the\r\nORDERED placement list: only declared keys render (absent columns are\r\nsimply not editable on this surface). "
+						"text": " is the\nORDERED placement list: only declared keys render (absent columns are\nsimply not editable on this surface). "
 					},
 					{
 						"kind": "code",
@@ -19031,7 +19031,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " names closed-vocab\r\ncross-field rules implemented host-side (e.g. "
+						"text": " names closed-vocab\ncross-field rules implemented host-side (e.g. "
 					},
 					{
 						"kind": "code",
@@ -19039,7 +19039,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") —\r\nthe host rejects unknown validator keys."
+						"text": ") —\nthe host rejects unknown validator keys."
 					}
 				]
 			},
@@ -19253,7 +19253,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\noptions always win over these — they are a hint, not a policy.\r\n"
+						"text": "\noptions always win over these — they are a hint, not a policy.\n"
 					},
 					{
 						"kind": "code",
@@ -19377,7 +19377,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n— the sheet analogue of a remote "
+						"text": "\n— the sheet analogue of a remote "
 					},
 					{
 						"kind": "inline-tag",
@@ -19387,7 +19387,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": the host\r\nowns the sheet ENGINE (open/close/chrome/state), the owning service owns\r\nthe CONTENT — an "
+						"text": ": the host\nowns the sheet ENGINE (open/close/chrome/state), the owning service owns\nthe CONTENT — an "
 					},
 					{
 						"kind": "code",
@@ -19403,7 +19403,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\r\nmounted at runtime into the host's global sheet surface.\r\n\r\n"
+						"text": ",\nmounted at runtime into the host's global sheet surface.\n\n"
 					},
 					{
 						"kind": "code",
@@ -19419,7 +19419,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " namespaced so a\r\ndeclared key can never collide across services (enforced at enrollment\r\nby the nav-declaration validator). Anyone holding the key can open it —\r\nhost "
+						"text": " namespaced so a\ndeclared key can never collide across services (enforced at enrollment\nby the nav-declaration validator). Anyone holding the key can open it —\nhost "
 					},
 					{
 						"kind": "code",
@@ -19435,7 +19435,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — visibility is gated by\r\nthe sheet's derived access key ("
+						"text": " — visibility is gated by\nthe sheet's derived access key ("
 					},
 					{
 						"kind": "code",
@@ -19443,7 +19443,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), never by import\r\nreachability."
+						"text": "), never by import\nreachability."
 					}
 				]
 			},
@@ -19697,7 +19697,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is the\r\ncollapsible-group mechanism (the shell renders children under the parent)."
+						"text": " is the\ncollapsible-group mechanism (the shell renders children under the parent)."
 					}
 				]
 			},
@@ -19792,7 +19792,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Marks the module's DEFAULT leaf — exactly one leaf nav item must carry\r\nit (validator-enforced). GOTO(module) resolves the default leaf's\r\nhref; when the user's grants filter that leaf out, the first\r\naccessible leaf wins. Leaf items only — never on a parent carrying\r\n"
+								"text": "Marks the module's DEFAULT leaf — exactly one leaf nav item must carry\nit (validator-enforced). GOTO(module) resolves the default leaf's\nhref; when the user's grants filter that leaf out, the first\naccessible leaf wins. Leaf items only — never on a parent carrying\n"
 							},
 							{
 								"kind": "code",
@@ -19876,7 +19876,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A sidebar-sibling declaration — lifts a SECOND module node next to the\r\nowning module under the same launcher root (e.g. CRM's \"Impostazioni\"\r\nnode sibling of the CRM module). The owning service declares it inside\r\n"
+						"text": "A sidebar-sibling declaration — lifts a SECOND module node next to the\nowning module under the same launcher root (e.g. CRM's \"Impostazioni\"\nnode sibling of the CRM module). The owning service declares it inside\n"
 					},
 					{
 						"kind": "code",
@@ -19884,7 +19884,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "; discovery emits it as an extra module entry\r\n("
+						"text": "; discovery emits it as an extra module entry\n("
 					},
 					{
 						"kind": "code",
@@ -19908,7 +19908,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " MUST\r\nnest strictly under one of the owner's — longest-prefix ownership then\r\nresolves the sibling's pages to the sibling node, never the parent.\r\nThe access namespace derives as "
+						"text": " MUST\nnest strictly under one of the owner's — longest-prefix ownership then\nresolves the sibling's pages to the sibling node, never the parent.\nThe access namespace derives as "
 					},
 					{
 						"kind": "code",
@@ -19916,7 +19916,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (e.g.\r\n"
+						"text": " (e.g.\n"
 					},
 					{
 						"kind": "code",
@@ -20030,7 +20030,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "FE path prefixes this sibling owns — each MUST nest strictly under\r\n one of the owning module's declared "
+								"text": "FE path prefixes this sibling owns — each MUST nest strictly under\n one of the owning module's declared "
 							},
 							{
 								"kind": "code",
@@ -20157,7 +20157,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A module's self-described navigation declaration — the payload a service\r\npublishes in "
+						"text": "A module's self-described navigation declaration — the payload a service\npublishes in "
 					},
 					{
 						"kind": "code",
@@ -20173,7 +20173,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") so the FE can render\r\nthe module's sidebar nav and the census can resolve its routes WITHOUT\r\nthe BE hardcoding another module's pages. This is the wiring that lets\r\neach module present its own nav — a remote page is owned by the service\r\nthat ships it, never declared inside a host module's registry.\r\n\r\n"
+						"text": ") so the FE can render\nthe module's sidebar nav and the census can resolve its routes WITHOUT\nthe BE hardcoding another module's pages. This is the wiring that lets\neach module present its own nav — a remote page is owned by the service\nthat ships it, never declared inside a host module's registry.\n\n"
 					},
 					{
 						"kind": "code",
@@ -20181,7 +20181,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " drive active-module resolution (longest-prefix match —\r\na page under a shared prefix like "
+						"text": " drive active-module resolution (longest-prefix match —\na page under a shared prefix like "
 					},
 					{
 						"kind": "code",
@@ -20189,7 +20189,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " resolves to the owning\r\nmodule, not to the module owning the broader "
+						"text": " resolves to the owning\nmodule, not to the module owning the broader "
 					},
 					{
 						"kind": "code",
@@ -20279,7 +20279,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nprefix under which every leaf key is derived ("
+								"text": "\nprefix under which every leaf key is derived ("
 							},
 							{
 								"kind": "code",
@@ -20287,7 +20287,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "):\r\n"
+								"text": "):\n"
 							},
 							{
 								"kind": "code",
@@ -20303,7 +20303,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ",\r\n"
+								"text": ",\n"
 							},
 							{
 								"kind": "code",
@@ -20319,7 +20319,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". A module that\r\ndeclares nav/routes/sheets is exposed surface, so the namespace is\r\nmandatory and must equal "
+								"text": ". A module that\ndeclares nav/routes/sheets is exposed surface, so the namespace is\nmandatory and must equal "
 							},
 							{
 								"kind": "code",
@@ -20327,7 +20327,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (validated\r\nat enrollment AND by write-time decl tests).\r\n\r\nModule visibility is DERIVED, never a gate key: the module exists for\r\na user iff at least one of its leaf keys is covered by their grants.\r\nCoverage is exact-or-wildcard only — "
+								"text": " (validated\nat enrollment AND by write-time decl tests).\n\nModule visibility is DERIVED, never a gate key: the module exists for\na user iff at least one of its leaf keys is covered by their grants.\nCoverage is exact-or-wildcard only — "
 							},
 							{
 								"kind": "code",
@@ -20335,7 +20335,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " bare is a\r\nnamespace, not a grant; "
+								"text": " bare is a\nnamespace, not a grant; "
 							},
 							{
 								"kind": "code",
@@ -20343,7 +20343,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " covers every leaf.\r\n\r\nThe access axis is a separate vocabulary inside the same permission\r\npipeline as entity RBAC ("
+								"text": " covers every leaf.\n\nThe access axis is a separate vocabulary inside the same permission\npipeline as entity RBAC ("
 							},
 							{
 								"kind": "code",
@@ -20351,7 +20351,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " grants, wildcard matching) —\r\n"
+								"text": " grants, wildcard matching) —\n"
 							},
 							{
 								"kind": "code",
@@ -20454,7 +20454,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Remote sheet panels this module owns — engine is host-side, content\r\nis service-delivered ("
+								"text": "Remote sheet panels this module owns — engine is host-side, content\nis service-delivered ("
 							},
 							{
 								"kind": "code",
@@ -20462,7 +20462,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " chunks). Travels the same\r\ndiscovery channel as "
+								"text": " chunks). Travels the same\ndiscovery channel as "
 							},
 							{
 								"kind": "code",
@@ -20533,7 +20533,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Sibling module nodes lifted next to this module under the same\r\nlauncher root — see "
+								"text": "Sibling module nodes lifted next to this module under the same\nlauncher root — see "
 							},
 							{
 								"kind": "inline-tag",
@@ -20543,7 +20543,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". The service declares\r\nthem once; discovery emits each as its own module entry."
+								"text": ". The service declares\nthem once; discovery emits each as its own module entry."
 							}
 						]
 					},
@@ -20600,7 +20600,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "One published subject — the ConfigEntry display anatomy mirrored:\r\n"
+						"text": "One published subject — the ConfigEntry display anatomy mirrored:\n"
 					},
 					{
 						"kind": "code",
@@ -20616,7 +20616,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n= human description (small secondary line), "
+						"text": "\n= human description (small secondary line), "
 					},
 					{
 						"kind": "code",
@@ -20624,7 +20624,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " = the raw key (mono\r\nline). Both keys point at translations in the EMITTING module's namespace\r\n("
+						"text": " = the raw key (mono\nline). Both keys point at translations in the EMITTING module's namespace\n("
 					},
 					{
 						"kind": "code",
@@ -20750,7 +20750,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Event payload contract (JSON Schema) — lets pickers show the real\r\npayload fields (e.g. a rule-form path picker) instead of free JSONPath."
+								"text": "Event payload contract (JSON Schema) — lets pickers show the real\npayload fields (e.g. a rule-form path picker) instead of free JSONPath."
 							}
 						]
 					},
@@ -20795,7 +20795,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Entity-context pointer — declares WHERE inside the payload the event\r\ncarries a domain-entity snapshot. Lets callable fields annotated\r\n"
+								"text": "Entity-context pointer — declares WHERE inside the payload the event\ncarries a domain-entity snapshot. Lets callable fields annotated\n"
 							},
 							{
 								"kind": "code",
@@ -20803,7 +20803,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " derive their source deterministically (no\r\nname-matching): "
+								"text": " derive their source deterministically (no\nname-matching): "
 							},
 							{
 								"kind": "code",
@@ -20827,7 +20827,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n→ "
+								"text": "\n→ "
 							},
 							{
 								"kind": "code",
@@ -21094,7 +21094,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " entry — a LISTEN subject the service is willing to\r\nserve as a work destination (schedulers, rules, external callers). Mirror\r\naxis of "
+						"text": " entry — a LISTEN subject the service is willing to\nserve as a work destination (schedulers, rules, external callers). Mirror\naxis of "
 					},
 					{
 						"kind": "code",
@@ -21102,7 +21102,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": emits = what a module publishes, callables = what it\r\nserves. Auto-collected from "
+						"text": ": emits = what a module publishes, callables = what it\nserves. Auto-collected from "
 					},
 					{
 						"kind": "code",
@@ -21118,7 +21118,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " route\r\ndeclarations carrying "
+						"text": " route\ndeclarations carrying "
 					},
 					{
 						"kind": "code",
@@ -21126,7 +21126,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the schema IS the listing opt-in\r\n(a callable without a contract is not mappable). The service declares its\r\nown domain subject only — nothing in this axis knows scheduling exists."
+						"text": " — the schema IS the listing opt-in\n(a callable without a contract is not mappable). The service declares its\nown domain subject only — nothing in this axis knows scheduling exists."
 					}
 				]
 			},
@@ -21443,7 +21443,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — host-bound step-up MFA bridge. The remote\r\ncalls it exactly like the host's "
+						"text": " — host-bound step-up MFA bridge. The remote\ncalls it exactly like the host's "
 					},
 					{
 						"kind": "code",
@@ -21451,7 +21451,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ":\r\n"
+						"text": ":\n"
 					},
 					{
 						"kind": "code",
@@ -21475,7 +21475,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " response carrying\r\n"
+						"text": " response carrying\n"
 					},
 					{
 						"kind": "code",
@@ -21483,7 +21483,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " the host shows ITS OWN step-up dialog (host root,\r\nhost runtime — nothing crosses the boundary), awaits verification, then\r\nretries "
+						"text": " the host shows ITS OWN step-up dialog (host root,\nhost runtime — nothing crosses the boundary), awaits verification, then\nretries "
 					},
 					{
 						"kind": "code",
@@ -21491,7 +21491,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " with the action-authorization token. The promise\r\nresolves with the final Response — success or failure."
+						"text": " with the action-authorization token. The promise\nresolves with the final Response — success or failure."
 					}
 				]
 			},
@@ -21697,7 +21697,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — opens a sheet panel by key: a host-registered\r\npanel ("
+						"text": " — opens a sheet panel by key: a host-registered\npanel ("
 					},
 					{
 						"kind": "code",
@@ -21721,7 +21721,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") or a remote-declared sheet\r\n("
+						"text": ") or a remote-declared sheet\n("
 					},
 					{
 						"kind": "code",
@@ -21737,7 +21737,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ", mounted at runtime). The panel\r\nregistry, remote declarations and sheet state all live in the host — a\r\nremote page requests the panel, it never ships the engine. "
+						"text": ", mounted at runtime). The panel\nregistry, remote declarations and sheet state all live in the host — a\nremote page requests the panel, it never ships the engine. "
 					},
 					{
 						"kind": "code",
@@ -21745,7 +21745,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are\r\nplain values (callback fns are allowed — they cross the boundary);\r\n"
+						"text": " are\nplain values (callback fns are allowed — they cross the boundary);\n"
 					},
 					{
 						"kind": "code",
@@ -21777,7 +21777,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ",\r\n"
+						"text": ",\n"
 					},
 					{
 						"kind": "code",
@@ -21785,7 +21785,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "). Unknown keys are rejected with a host notification —\r\nthe remote cannot smuggle an undeclared panel."
+						"text": "). Unknown keys are rejected with a host notification —\nthe remote cannot smuggle an undeclared panel."
 					}
 				]
 			},
@@ -21906,7 +21906,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the host's authenticated full-path fetch\r\n("
+						"text": " — the host's authenticated full-path fetch\n("
 					},
 					{
 						"kind": "code",
@@ -21930,7 +21930,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n(ws-bound to the owning service) cannot. Remote pages bind it through\r\n"
+						"text": "\n(ws-bound to the owning service) cannot. Remote pages bind it through\n"
 					},
 					{
 						"kind": "code",
@@ -22046,7 +22046,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the reserved well-known keys plus open caller-provided\r\nentries. "
+						"text": " — the reserved well-known keys plus open caller-provided\nentries. "
 					},
 					{
 						"kind": "code",
@@ -22054,7 +22054,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is assigned by the host loader after the chunk\r\nresolves; "
+						"text": " is assigned by the host loader after the chunk\nresolves; "
 					},
 					{
 						"kind": "code",
@@ -22078,7 +22078,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " are built-ins the host\r\nalways provides (a caller may override them in tests)."
+						"text": " are built-ins the host\nalways provides (a caller may override them in tests)."
 					}
 				]
 			},
@@ -22238,7 +22238,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the minimal shape of the\r\nhost's "
+						"text": " — the minimal shape of the\nhost's "
 					},
 					{
 						"kind": "code",
@@ -22477,7 +22477,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Host-side context base handed to EVERY remote mount — pages\r\n("
+						"text": "Host-side context base handed to EVERY remote mount — pages\n("
 					},
 					{
 						"kind": "code",
@@ -22493,7 +22493,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") alike. Versioned via\r\n"
+						"text": ") alike. Versioned via\n"
 					},
 					{
 						"kind": "code",
@@ -22501,7 +22501,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — remote chunks can refuse incompatible hosts.\r\n\r\nHARD CONSTRAINT — plain values and functions ONLY: Svelte rune state\r\n("
+						"text": " — remote chunks can refuse incompatible hosts.\n\nHARD CONSTRAINT — plain values and functions ONLY: Svelte rune state\n("
 					},
 					{
 						"kind": "code",
@@ -22525,7 +22525,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ") is bundle-local and cannot cross this\r\nboundary. UI building blocks come from "
+						"text": ") is bundle-local and cannot cross this\nboundary. UI building blocks come from "
 					},
 					{
 						"kind": "code",
@@ -22533,7 +22533,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " bundled inside\r\nthe remote chunk, not from ctx; "
+						"text": " bundled inside\nthe remote chunk, not from ctx; "
 					},
 					{
 						"kind": "code",
@@ -22541,7 +22541,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is reserved for the few\r\nhost-coupled cases (see "
+						"text": " is reserved for the few\nhost-coupled cases (see "
 					},
 					{
 						"kind": "code",
@@ -22591,7 +22591,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " base when\r\nderivable (paths are service-relative), else the host's raw API base."
+								"text": " base when\nderivable (paths are service-relative), else the host's raw API base."
 							}
 						]
 					},
@@ -22897,7 +22897,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Optional host-coupled components and helpers (opaque values at this\r\nboundary — components are host-compiled Svelte components, helpers are\r\nplain functions). Only for cases the remote page cannot self-render;\r\nNOT for sharing rune state.\r\n\r\n"
+								"text": "Optional host-coupled components and helpers (opaque values at this\nboundary — components are host-compiled Svelte components, helpers are\nplain functions). Only for cases the remote page cannot self-render;\nNOT for sharing rune state.\n\n"
 							},
 							{
 								"kind": "code",
@@ -22905,7 +22905,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " MAY also carry remote-agnostic plain functions the host\r\nowns (e.g. "
+								"text": " MAY also carry remote-agnostic plain functions the host\nowns (e.g. "
 							},
 							{
 								"kind": "code",
@@ -22921,7 +22921,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ").\r\n\r\nSNIPPETS DO NOT CROSS — in either direction. A Svelte snippet invoked\r\nunder the other bundle's render reads its own runtime's\r\n"
+								"text": ").\n\nSNIPPETS DO NOT CROSS — in either direction. A Svelte snippet invoked\nunder the other bundle's render reads its own runtime's\n"
 							},
 							{
 								"kind": "code",
@@ -22929,7 +22929,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (null while the other bundle is rendering) and dies on\r\n"
+								"text": " (null while the other bundle is rendering) and dies on\n"
 							},
 							{
 								"kind": "code",
@@ -22937,7 +22937,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". Verified by live\r\nE2E — what worked in the synchronous-mount spike fails in production\r\nrender order. The supported bridges are "
+								"text": ". Verified by live\nE2E — what worked in the synchronous-mount spike fails in production\nrender order. The supported bridges are "
 							},
 							{
 								"kind": "code",
@@ -22945,7 +22945,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (host root inside\r\nremote DOM) and the symmetric remote-mount slot (remote root inside\r\nhost DOM, see "
+								"text": " (host root inside\nremote DOM) and the symmetric remote-mount slot (remote root inside\nhost DOM, see "
 							},
 							{
 								"kind": "code",
@@ -22953,7 +22953,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " below).\r\n\r\nReserved key: "
+								"text": " below).\n\nReserved key: "
 							},
 							{
 								"kind": "code",
@@ -22961,7 +22961,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — the host loader assigns the imported module\r\nnamespace to "
+								"text": " — the host loader assigns the imported module\nnamespace to "
 							},
 							{
 								"kind": "code",
@@ -22969,7 +22969,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " after the chunk resolves, so\r\nhost-side code (e.g. shim snippets running under host render) can\r\nreach additional chunk exports such as a "
+								"text": " after the chunk resolves, so\nhost-side code (e.g. shim snippets running under host render) can\nreach additional chunk exports such as a "
 							},
 							{
 								"kind": "code",
@@ -22977,7 +22977,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nfunction for remote content inside host trees.\r\n\r\nBuilt-in keys the host always provides: "
+								"text": "\nfunction for remote content inside host trees.\n\nBuilt-in keys the host always provides: "
 							},
 							{
 								"kind": "code",
@@ -22985,7 +22985,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " (step-up MFA for\r\nguarded remote ops), "
+								"text": " (step-up MFA for\nguarded remote ops), "
 							},
 							{
 								"kind": "code",
@@ -23001,7 +23001,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n(full-path BE fetch) — see "
+								"text": "\n(full-path BE fetch) — see "
 							},
 							{
 								"kind": "inline-tag",
@@ -23011,7 +23011,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " /\r\n"
+								"text": " /\n"
 							},
 							{
 								"kind": "inline-tag",
@@ -23072,7 +23072,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Mount a host-compiled component as a separate Svelte root inside remote\r\nDOM. Rendering a host component inline ("
+								"text": "Mount a host-compiled component as a separate Svelte root inside remote\nDOM. Rendering a host component inline ("
 							},
 							{
 								"kind": "code",
@@ -23080,7 +23080,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") inside remote\r\nmarkup CANNOT work — each bundle has its own Svelte runtime/component\r\ninternals; this host-bound "
+								"text": ") inside remote\nmarkup CANNOT work — each bundle has its own Svelte runtime/component\ninternals; this host-bound "
 							},
 							{
 								"kind": "code",
@@ -23088,7 +23088,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " bridge is the supported path.\r\n\r\nThe returned handle pushes prop updates reactively ("
+								"text": " bridge is the supported path.\n\nThe returned handle pushes prop updates reactively ("
 							},
 							{
 								"kind": "code",
@@ -23096,7 +23096,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") and\r\ndestroys the root ("
+								"text": ") and\ndestroys the root ("
 							},
 							{
 								"kind": "code",
@@ -23104,7 +23104,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Props are plain values — NOT remote\r\nsnippets (see the "
+								"text": "). Props are plain values — NOT remote\nsnippets (see the "
 							},
 							{
 								"kind": "code",
@@ -23112,7 +23112,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " doc: cross-bundle snippet invocation\r\ncrashes; remote content inside the mounted host tree goes through a\r\nremote "
+								"text": " doc: cross-bundle snippet invocation\ncrashes; remote content inside the mounted host tree goes through a\nremote "
 							},
 							{
 								"kind": "code",
@@ -23256,7 +23256,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the shared\r\n"
+						"text": " — the shared\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -23405,7 +23405,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — the shared\r\n"
+						"text": " — the shared\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -23423,7 +23423,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " control surface: the declared\r\nkey, the caller's props (opaque at the boundary — the owning module\r\nknows their shape), the current chrome, and the commands to mutate the\r\nhost-owned frame. No "
+						"text": " control surface: the declared\nkey, the caller's props (opaque at the boundary — the owning module\nknows their shape), the current chrome, and the commands to mutate the\nhost-owned frame. No "
 					},
 					{
 						"kind": "code",
@@ -23439,7 +23439,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — a sheet is not a route; domain\r\ncontext arrives through "
+						"text": " — a sheet is not a route; domain\ncontext arrives through "
 					},
 					{
 						"kind": "code",
@@ -23848,7 +23848,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — imperative channel to a\r\nhost-mounted component root."
+						"text": " — imperative channel to a\nhost-mounted component root."
 					}
 				]
 			},
@@ -24040,7 +24040,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\r\nMay return the "
+						"text": ".\nMay return the "
 					},
 					{
 						"kind": "code",
@@ -24056,7 +24056,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), a custom dispose\r\nfunction, or a promise of either.\r\n\r\nNOTE: a raw "
+						"text": "), a custom dispose\nfunction, or a promise of either.\n\nNOTE: a raw "
 					},
 					{
 						"kind": "code",
@@ -24064,7 +24064,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " result is only safe when it was registered by the\r\nSAME svelte module instance that will call "
+						"text": " result is only safe when it was registered by the\nSAME svelte module instance that will call "
 					},
 					{
 						"kind": "code",
@@ -24072,7 +24072,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " on it. Remote\r\nchunks resolve svelte through the vendor import map while the host runs\r\nits own bundled copy — two "
+						"text": " on it. Remote\nchunks resolve svelte through the vendor import map while the host runs\nits own bundled copy — two "
 					},
 					{
 						"kind": "code",
@@ -24080,7 +24080,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " registries — so chunk\r\ncode MUST go through "
+						"text": " registries — so chunk\ncode MUST go through "
 					},
 					{
 						"kind": "code",
@@ -24088,7 +24088,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (or return an equivalent\r\ndispose closure over the mounting bundle's "
+						"text": " (or return an equivalent\ndispose closure over the mounting bundle's "
 					},
 					{
 						"kind": "code",
@@ -24096,7 +24096,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), never hand the\r\nhost a foreign mount record."
+						"text": "), never hand the\nhost a foreign mount record."
 					}
 				]
 			},
@@ -24182,7 +24182,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\r\nThe chunk is declared in "
+						"text": ".\nThe chunk is declared in "
 					},
 					{
 						"kind": "code",
@@ -24200,7 +24200,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ")\r\nand mounted inside the host's global sheet surface. Same dispose rules as\r\n"
+						"text": ")\nand mounted inside the host's global sheet surface. Same dispose rules as\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -24711,7 +24711,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " is optional on\r\n the leaf too: the builder keeps the honest \"kind picked, source not\r\n chosen yet\" state ("
+						"text": " is optional on\n the leaf too: the builder keeps the honest \"kind picked, source not\n chosen yet\" state ("
 					},
 					{
 						"kind": "code",
@@ -25025,7 +25025,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " entries — leaf kinds or a\r\n declared injector (the marker lands verbatim and the dispatcher\r\n resolves it per-fire)."
+						"text": " entries — leaf kinds or a\n declared injector (the marker lands verbatim and the dispatcher\n resolves it per-fire)."
 					}
 				]
 			},
@@ -25446,7 +25446,7 @@
 						},
 						{
 							"kind": "text",
-							"text": "),\r\n emits an "
+							"text": "),\n emits an "
 						},
 						{
 							"kind": "code",
@@ -25460,7 +25460,7 @@
 					[
 						{
 							"kind": "text",
-							"text": "Array field built element-by-element — each item one element;\r\n items resolving to undefined are dropped."
+							"text": "Array field built element-by-element — each item one element;\n items resolving to undefined are dropped."
 						}
 					],
 					[
@@ -25498,7 +25498,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " vocabulary — declared once, consumed by the DST enum\r\n ("
+						"text": " vocabulary — declared once, consumed by the DST enum\n ("
 					},
 					{
 						"kind": "code",
@@ -25506,7 +25506,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "), the widget's kind pickers and the wire conformance.\r\n A new member enters the union AND this list in the same edit."
+						"text": "), the widget's kind pickers and the wire conformance.\n A new member enters the union AND this list in the same edit."
 					}
 				]
 			},
@@ -25650,7 +25650,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Declared value domain per meta kind — the SAME vocabulary the form\r\n builder's compat filter and the resolver context share. "
+						"text": "Declared value domain per meta kind — the SAME vocabulary the form\n builder's compat filter and the resolver context share. "
 					},
 					{
 						"kind": "code",
@@ -25658,7 +25658,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "\r\n kinds describe who fired the event (forwarded auth headers);\r\n "
+						"text": "\n kinds describe who fired the event (forwarded auth headers);\n "
 					},
 					{
 						"kind": "code",
@@ -25666,7 +25666,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " describes who armed the rule (resolved via\r\n "
+						"text": " describes who armed the rule (resolved via\n "
 					},
 					{
 						"kind": "code",
@@ -25736,7 +25736,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Fire-time injector vocabulary — values generated by the DISPATCHER at\r\nrepublish time (never at arm: a scheduled payload would replay the same\r\nvalue every fire otherwise). Declaration-only via "
+						"text": "Fire-time injector vocabulary — values generated by the DISPATCHER at\nrepublish time (never at arm: a scheduled payload would replay the same\nvalue every fire otherwise). Declaration-only via "
 					},
 					{
 						"kind": "code",
@@ -25744,7 +25744,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " /\r\n"
+						"text": " /\n"
 					},
 					{
 						"kind": "code",
@@ -25752,7 +25752,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — not a user-picked source kind.\r\n  - "
+						"text": " — not a user-picked source kind.\n  - "
 					},
 					{
 						"kind": "code",
@@ -25760,7 +25760,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "          — fresh v4 uuid per dispatch (correlation ids)\r\n  - "
+						"text": "          — fresh v4 uuid per dispatch (correlation ids)\n  - "
 					},
 					{
 						"kind": "code",
@@ -25768,7 +25768,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "       — dispatch instant, ISO 8601\r\n  - "
+						"text": "       — dispatch instant, ISO 8601\n  - "
 					},
 					{
 						"kind": "code",
@@ -25776,7 +25776,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "        — dispatch instant, epoch ms\r\n  - "
+						"text": "        — dispatch instant, epoch ms\n  - "
 					},
 					{
 						"kind": "code",
@@ -25869,7 +25869,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " at arm time — the dispatcher\r\n replaces single-key "
+						"text": " at arm time — the dispatcher\n replaces single-key "
 					},
 					{
 						"kind": "code",
@@ -25922,7 +25922,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Actor uuid riding the due message's forwarded auth headers\r\n ("
+								"text": "Actor uuid riding the due message's forwarded auth headers\n ("
 							},
 							{
 								"kind": "code",
@@ -25938,7 +25938,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " resolves\r\n to undefined and the field is omitted (no invented identity)."
+								"text": " resolves\n to undefined and the field is omitted (no invented identity)."
 							}
 						]
 					},
@@ -25985,7 +25985,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Field whose value the dispatcher MAY generate — names a\r\n "
+						"text": "Field whose value the dispatcher MAY generate — names a\n "
 					},
 					{
 						"kind": "code",
@@ -25993,7 +25993,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ". Seeded automatically; an explicitly authored\r\n entry wins over the declaration."
+						"text": ". Seeded automatically; an explicitly authored\n entry wins over the declaration."
 					}
 				]
 			},
@@ -26023,7 +26023,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Private setter — a platform-owned field that MUST NOT render\r\n as a form input (reserved traceability/correlation fields)."
+						"text": "Private setter — a platform-owned field that MUST NOT render\n as a form input (reserved traceability/correlation fields)."
 					}
 				]
 			},
@@ -26053,7 +26053,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Semantic derivation slot — declares what context the field wants so\r\n the mapping is a lookup, never a guess."
+						"text": "Semantic derivation slot — declares what context the field wants so\n the mapping is a lookup, never a guess."
 					}
 				]
 			},
@@ -26083,7 +26083,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Catalog-backed const value — the form renders a ComboSelect fed by\r\n the declared source instead of free text."
+						"text": "Catalog-backed const value — the form renders a ComboSelect fed by\n the declared source instead of free text."
 					}
 				]
 			},
@@ -26121,7 +26121,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " fields — where the suggested entry keys come from:\r\n "
+						"text": " fields — where the suggested entry keys come from:\n "
 					},
 					{
 						"kind": "code",
@@ -26129,7 +26129,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " reads the selected option's\r\n source row property (e.g. a template's "
+						"text": " reads the selected option's\n source row property (e.g. a template's "
 					},
 					{
 						"kind": "code",
@@ -26167,7 +26167,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "i18n key for the field's user-facing help (the label tooltip). The\r\n service ships the key's translations in the shared dictionary; the\r\n plain "
+						"text": "i18n key for the field's user-facing help (the label tooltip). The\n service ships the key's translations in the shared dictionary; the\n plain "
 					},
 					{
 						"kind": "code",
@@ -26211,7 +26211,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " declaration (e.g. a template's\r\n "
+						"text": " declaration (e.g. a template's\n "
 					},
 					{
 						"kind": "code",
@@ -26219,7 +26219,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "): its synthesized schema drives icons, compat filtering\r\n and per-leaf target typing; "
+						"text": "): its synthesized schema drives icons, compat filtering\n and per-leaf target typing; "
 					},
 					{
 						"kind": "code",
@@ -26368,7 +26368,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\njsonb). Two shapes, one contract — **required by default, nullable\r\nexplicitly** (a declared placeholder must be filled):\r\n  - shorthand  "
+								"text": "\njsonb). Two shapes, one contract — **required by default, nullable\nexplicitly** (a declared placeholder must be filled):\n  - shorthand  "
 							},
 							{
 								"kind": "code",
@@ -26376,7 +26376,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — a bare type name; required.\r\n  - longhand   "
+								"text": " — a bare type name; required.\n  - longhand   "
 							},
 							{
 								"kind": "code",
@@ -26384,7 +26384,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n    — "
+								"text": "\n    — "
 							},
 							{
 								"kind": "code",
@@ -26416,7 +26416,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " type union\r\n    mark the key optional; the rest of the object IS the schema."
+								"text": " type union\n    mark the key optional; the rest of the object IS the schema."
 							}
 						]
 					},
@@ -26476,7 +26476,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Semantic slots — declared on BOTH sides (event emits + callable\r\n schema) so derivation is a lookup, never a guess:\r\n  - "
+						"text": "Semantic slots — declared on BOTH sides (event emits + callable\n schema) so derivation is a lookup, never a guess:\n  - "
 					},
 					{
 						"kind": "code",
@@ -26484,7 +26484,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "  — uuid of the event's declared entity snapshot\r\n  - "
+						"text": "  — uuid of the event's declared entity snapshot\n  - "
 					},
 					{
 						"kind": "code",
@@ -26492,7 +26492,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "    — numeric id of the declared entity snapshot\r\n  - "
+						"text": "    — numeric id of the declared entity snapshot\n  - "
 					},
 					{
 						"kind": "code",
@@ -26500,7 +26500,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — table name declared on the emit\r\n  - "
+						"text": " — table name declared on the emit\n  - "
 					},
 					{
 						"kind": "code",
@@ -26603,7 +26603,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " source\r\n contract (api_url+verb+fields OR built-in values_source)."
+						"text": " source\n contract (api_url+verb+fields OR built-in values_source)."
 					}
 				]
 			},
@@ -27103,7 +27103,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\n header. Absent on the system lane / anonymous events."
+								"text": "\n header. Absent on the system lane / anonymous events."
 							}
 						]
 					},
@@ -27140,7 +27140,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", resolved\r\n via "
+								"text": ", resolved\n via "
 							},
 							{
 								"kind": "code",
@@ -27148,7 +27148,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Absent when the creator no longer\r\n resolves — fallback clauses decide the field's fate."
+								"text": "). Absent when the creator no longer\n resolves — fallback clauses decide the field's fate."
 							}
 						]
 					},
@@ -27243,7 +27243,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") of the actor whose event triggered the\r\n arm — read off the message's auth headers ("
+								"text": ") of the actor whose event triggered the\n arm — read off the message's auth headers ("
 							},
 							{
 								"kind": "code",
@@ -27251,7 +27251,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Absent\r\n on the system lane / anonymous events."
+								"text": "). Absent\n on the system lane / anonymous events."
 							}
 						]
 					},
@@ -27400,7 +27400,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "\"Empty\" per the fallback contract — null, undefined, empty string,\r\n empty array, empty object. "
+								"text": "\"Empty\" per the fallback contract — null, undefined, empty string,\n empty array, empty object. "
 							},
 							{
 								"kind": "code",
@@ -27416,7 +27416,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " are legitimate values.\r\n Exported: the SAME predicate drives the wire conformance gate (an\r\n entry whose primary resolves empty and has no fallback delivers\r\n nothing — it is not a mapping)."
+								"text": " are legitimate values.\n Exported: the SAME predicate drives the wire conformance gate (an\n entry whose primary resolves empty and has no fallback delivers\n nothing — it is not a mapping)."
 							}
 						]
 					},
@@ -27473,7 +27473,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Apply a payload map: for each declared target field, resolve its entry\r\nagainst the source event payload + fire context. "
+								"text": "Apply a payload map: for each declared target field, resolve its entry\nagainst the source event payload + fire context. "
 							},
 							{
 								"kind": "code",
@@ -27481,7 +27481,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "/absent map →\r\nthe event payload verbatim (the default passthrough).\r\n\r\n"
+								"text": "/absent map →\nthe event payload verbatim (the default passthrough).\n\n"
 							},
 							{
 								"kind": "code",
@@ -27497,7 +27497,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", when the caller has it)\r\nenables the honest broadcast "
+								"text": ", when the caller has it)\nenables the honest broadcast "
 							},
 							{
 								"kind": "code",
@@ -27505,7 +27505,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " declares: a scalar source\r\nmapped onto an "
+								"text": " declares: a scalar source\nmapped onto an "
 							},
 							{
 								"kind": "code",
@@ -27521,7 +27521,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — without it the payload\r\nwould fail the destination's own "
+								"text": " — without it the payload\nwould fail the destination's own "
 							},
 							{
 								"kind": "code",
@@ -27654,7 +27654,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Fire-time pass run by the dispatcher on the armed payload: deep-walks\r\nand replaces every "
+								"text": "Fire-time pass run by the dispatcher on the armed payload: deep-walks\nand replaces every "
 							},
 							{
 								"kind": "code",
@@ -27662,7 +27662,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " marker with a freshly generated\r\nvalue. Unresolvable injectors ("
+								"text": " marker with a freshly generated\nvalue. Unresolvable injectors ("
 							},
 							{
 								"kind": "code",
@@ -27670,7 +27670,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " with no session) resolve\r\nto undefined — the field is omitted, never invented."
+								"text": " with no session) resolve\nto undefined — the field is omitted, never invented."
 							}
 						]
 					},
@@ -27740,7 +27740,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Derive the DECLARED auto-entries for a callable's payload_schema —\r\n"
+								"text": "Derive the DECLARED auto-entries for a callable's payload_schema —\n"
 							},
 							{
 								"kind": "code",
@@ -27764,7 +27764,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " /\r\nthe semantic suggestion when (and only when) the map doesn't already\r\ndeclare an entry. Explicitly authored entries ALWAYS win.\r\n\r\nThis is a pure data derivation: callers merge it into the form's\r\ninitial/baseline data (or the stored map) so machine-written values\r\nnever masquerade as user edits."
+								"text": " /\nthe semantic suggestion when (and only when) the map doesn't already\ndeclare an entry. Explicitly authored entries ALWAYS win.\n\nThis is a pure data derivation: callers merge it into the form's\ninitial/baseline data (or the stored map) so machine-written values\nnever masquerade as user edits."
 							}
 						]
 					},
@@ -27977,7 +27977,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Client → BE signal describing what the user is doing on an entity.\r\n\r\n- "
+						"text": "Client → BE signal describing what the user is doing on an entity.\n\n- "
 					},
 					{
 						"kind": "code",
@@ -27985,7 +27985,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": user opened the entity (loaded_version is what they fetched).\r\n- "
+						"text": ": user opened the entity (loaded_version is what they fetched).\n- "
 					},
 					{
 						"kind": "code",
@@ -27993,7 +27993,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": user is editing a field (field + value are the current draft).\r\n- "
+						"text": ": user is editing a field (field + value are the current draft).\n- "
 					},
 					{
 						"kind": "code",
@@ -28001,7 +28001,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ": keep-alive (refreshes the Redis TTL; no state change).\r\n- "
+						"text": ": keep-alive (refreshes the Redis TTL; no state change).\n- "
 					},
 					{
 						"kind": "code",
@@ -28053,7 +28053,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Persistent status derived from the latest non-heartbeat signal.\r\n"
+						"text": "Persistent status derived from the latest non-heartbeat signal.\n"
 					},
 					{
 						"kind": "code",
@@ -28121,7 +28121,7 @@
 					},
 					{
 						"kind": "text",
-						"text": ".\r\nSent by the FE on open, on field focus, on field blur, on heartbeat, and on close."
+						"text": ".\nSent by the FE on open, on field focus, on field blur, on heartbeat, and on close."
 					}
 				]
 			},
@@ -28303,7 +28303,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "A single user's presence on an entity. Stored in Redis as JSON.\r\nOne entry per (entity_type, entity_uuid, user_uuid)."
+						"text": "A single user's presence on an entity. Stored in Redis as JSON.\nOne entry per (entity_type, entity_uuid, user_uuid)."
 					}
 				]
 			},
@@ -28520,7 +28520,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Epoch ms of this user's last save on the entity — stamped server-side by\r\nthe audit hook when it publishes "
+								"text": "Epoch ms of this user's last save on the entity — stamped server-side by\nthe audit hook when it publishes "
 							},
 							{
 								"kind": "code",
@@ -28536,7 +28536,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ".\r\nAbsent until the user's first save while present. The FE compares it to a\r\n5-minute window (and to the client's own mount time) to render the\r\n\"recently saved\" affordance."
+								"text": ".\nAbsent until the user's first save while present. The FE compares it to a\n5-minute window (and to the client's own mount time) to render the\n\"recently saved\" affordance."
 							}
 						]
 					},
@@ -28592,7 +28592,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Tab session that produced this entry (FE-generated uuid, sent as\r\n"
+								"text": "Tab session that produced this entry (FE-generated uuid, sent as\n"
 							},
 							{
 								"kind": "code",
@@ -28600,7 +28600,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "). Presence entries are keyed\r\n"
+								"text": "). Presence entries are keyed\n"
 							},
 							{
 								"kind": "code",
@@ -28608,7 +28608,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " — two tabs of the same user are distinct entries,\r\nso a same-user second tab is visible to the first tab as a different\r\nsession (\"you — other tab\")."
+								"text": " — two tabs of the same user are distinct entries,\nso a same-user second tab is visible to the first tab as a different\nsession (\"you — other tab\")."
 							}
 						]
 					},
@@ -28663,7 +28663,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Marker published server-side when an auditable entity is saved.\r\nStored in Redis with a 5-minute TTL so late-joining clients can see the\r\nmost recent change without scanning the audit log."
+						"text": "Marker published server-side when an auditable entity is saved.\nStored in Redis with a 5-minute TTL so late-joining clients can see the\nmost recent change without scanning the audit log."
 					}
 				]
 			},
@@ -28751,7 +28751,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "The audit row key of the change — bigint for legacy surrogate-id\r\n audit tables, uuid string for post-eradication "
+								"text": "The audit row key of the change — bigint for legacy surrogate-id\n audit tables, uuid string for post-eradication "
 							},
 							{
 								"kind": "code",
@@ -28759,7 +28759,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " rows\r\n (PK "
+								"text": " rows\n (PK "
 							},
 							{
 								"kind": "code",
@@ -28840,7 +28840,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ", which\r\nthe FE sends as "
+								"text": ", which\nthe FE sends as "
 							},
 							{
 								"kind": "code",
@@ -28848,7 +28848,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " on writes. A save is \"self\" (silently\r\nrealign, no stale/chip) only when "
+								"text": " on writes. A save is \"self\" (silently\nrealign, no stale/chip) only when "
 							},
 							{
 								"kind": "code",
@@ -28864,7 +28864,7 @@
 							},
 							{
 								"kind": "text",
-								"text": "\r\nboth match this client; a save from another tab of the same user is\r\nforeign for merge/conflict purposes."
+								"text": "\nboth match this client; a save from another tab of the same user is\nforeign for merge/conflict purposes."
 							}
 						]
 					},
@@ -28950,7 +28950,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " and\r\nsent as the initial SSE "
+						"text": " and\nsent as the initial SSE "
 					},
 					{
 						"kind": "code",
@@ -29139,7 +29139,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " subject.\r\nConsumed by the BE SSE bridge and forwarded to connected FE clients."
+						"text": " subject.\nConsumed by the BE SSE bridge and forwarded to connected FE clients."
 					}
 				]
 			},
@@ -29183,7 +29183,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Tab session that emitted the signal — used by SSE subscribers to exclude\r\nonly echoes of their own session (another tab of the same user is NOT\r\nexcluded). Absent on synthetic deltas (e.g. "
+								"text": "Tab session that emitted the signal — used by SSE subscribers to exclude\nonly echoes of their own session (another tab of the same user is NOT\nexcluded). Absent on synthetic deltas (e.g. "
 							},
 							{
 								"kind": "code",
@@ -29349,7 +29349,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "search-gate — canonical \"should this search query hit the server\" predicate.\r\n\r\nMirrors the backend list-search gate: ≥3 \"real\" characters, or an escaped\r\nwildcard ("
+								"text": "search-gate — canonical \"should this search query hit the server\" predicate.\n\nMirrors the backend list-search gate: ≥3 \"real\" characters, or an escaped\nwildcard ("
 							},
 							{
 								"kind": "code",
@@ -29365,7 +29365,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") with ≥1 real char. Prevents per-keystroke queries\r\nwhile still allowing single-char wildcard searches.\r\n\r\nCanonical home for both the host FE and remote module pages — the gate\r\nmust match the server-side rule byte-for-byte."
+								"text": ") with ≥1 real char. Prevents per-keystroke queries\nwhile still allowing single-char wildcard searches.\n\nCanonical home for both the host FE and remote module pages — the gate\nmust match the server-side rule byte-for-byte."
 							}
 						]
 					},
@@ -29495,7 +29495,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Namespaces a module's meta/nav declarations may REFERENCE — the module's\r\nown namespace plus the CORE vocabularies ("
+								"text": "Namespaces a module's meta/nav declarations may REFERENCE — the module's\nown namespace plus the CORE vocabularies ("
 							},
 							{
 								"kind": "code",
@@ -29657,7 +29657,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " dot-separated segments, ≥2 segments.\r\nShared contract: BE guards, check-standards rules and the per-schema\r\n"
+						"text": " dot-separated segments, ≥2 segments.\nShared contract: BE guards, check-standards rules and the per-schema\n"
 					},
 					{
 						"kind": "code",
@@ -29665,7 +29665,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " CHECK constraint all enforce this exact shape\r\n(DAL engine and the zero-dep lint keep byte-identical local copies —\r\nchange here, mirror there)."
+						"text": " CHECK constraint all enforce this exact shape\n(DAL engine and the zero-dep lint keep byte-identical local copies —\nchange here, mirror there)."
 					}
 				]
 			},
@@ -29762,7 +29762,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " and the key is namespaced\r\n(≥2 segments). Namespace *ownership* is a separate check —\r\ncompare "
+								"text": " and the key is namespaced\n(≥2 segments). Namespace *ownership* is a separate check —\ncompare "
 							},
 							{
 								"kind": "code",
@@ -29843,7 +29843,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " when legal.\r\nConsumers compose it into their own error shape (HTTP 400, engine\r\nthrow, lint hint)."
+								"text": " when legal.\nConsumers compose it into their own error shape (HTTP 400, engine\nthrow, lint hint)."
 							}
 						]
 					},
@@ -29966,7 +29966,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Closed allowlist of bare specifiers remote chunks may import. A\r\npackage's specifiers normally union into ONE bundle file so the browser\r\ndedupes by URL — a single runtime instance is guaranteed. Exception:\r\n"
+						"text": "Closed allowlist of bare specifiers remote chunks may import. A\npackage's specifiers normally union into ONE bundle file so the browser\ndedupes by URL — a single runtime instance is guaranteed. Exception:\n"
 					},
 					{
 						"kind": "code",
@@ -29974,7 +29974,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "'s public subpaths (events/reactivity/store/attachments) get\r\ntheir own files — their export names collide with the internal signal\r\nAPI ("
+						"text": "'s public subpaths (events/reactivity/store/attachments) get\ntheir own files — their export names collide with the internal signal\nAPI ("
 					},
 					{
 						"kind": "code",
@@ -29990,7 +29990,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " exist in both), and a flat union module cannot hold\r\nboth. Shared internals still dedupe through the bundler's shared chunks."
+						"text": " exist in both), and a flat union module cannot hold\nboth. Shared internals still dedupe through the bundler's shared chunks."
 					}
 				]
 			},
@@ -30128,7 +30128,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Open-ended specifier prefixes — everything under a prefix is a sanctioned\r\nvendor specifier without central allowlisting per item. Unlike\r\n"
+						"text": "Open-ended specifier prefixes — everything under a prefix is a sanctioned\nvendor specifier without central allowlisting per item. Unlike\n"
 					},
 					{
 						"kind": "inline-tag",
@@ -30138,7 +30138,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " (one bundle file per specifier), each prefix\r\nmaps to a "
+						"text": " (one bundle file per specifier), each prefix\nmaps to a "
 					},
 					{
 						"kind": "code",
@@ -30146,7 +30146,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " URL directory: the specifier suffix resolves\r\nverbatim after the prefix.\r\n\r\n"
+						"text": " URL directory: the specifier suffix resolves\nverbatim after the prefix.\n\n"
 					},
 					{
 						"kind": "code",
@@ -30154,7 +30154,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " covers every lucide icon file the\r\nhost vendor build emits at "
+						"text": " covers every lucide icon file the\nhost vendor build emits at "
 					},
 					{
 						"kind": "code",
@@ -30162,7 +30162,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " —\r\nremote chunks never resolve icons through a barrel (a barrel would force\r\nthe whole catalog on every consumer), they emit one specifier per used\r\nicon. New lucide releases add icons with zero changes to this contract."
+						"text": " —\nremote chunks never resolve icons through a barrel (a barrel would force\nthe whole catalog on every consumer), they emit one specifier per used\nicon. New lucide releases add icons with zero changes to this contract."
 					}
 				]
 			},
@@ -30201,7 +30201,7 @@
 				"summary": [
 					{
 						"kind": "text",
-						"text": "Packages that MUST NOT be imported raw inside a remote chunk — they are\r\nalready served through a sanctioned vendor specifier (e.g. transformers is\r\nvendored behind "
+						"text": "Packages that MUST NOT be imported raw inside a remote chunk — they are\nalready served through a sanctioned vendor specifier (e.g. transformers is\nvendored behind "
 					},
 					{
 						"kind": "code",
@@ -30209,7 +30209,7 @@
 					},
 					{
 						"kind": "text",
-						"text": "). A raw import would bundle\r\na second runtime copy (split caches, split env config) — reject it."
+						"text": "). A raw import would bundle\na second runtime copy (split caches, split env config) — reject it."
 					}
 				]
 			},
@@ -30370,7 +30370,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "How a remote chunk's bundler must treat a bare import specifier. Both the\r\nhost vendor build and every module chunk build derive behavior from this\r\nsingle function so the plane stays deterministic."
+								"text": "How a remote chunk's bundler must treat a bare import specifier. Both the\nhost vendor build and every module chunk build derive behavior from this\nsingle function so the plane stays deterministic."
 							}
 						]
 					},
@@ -30418,7 +30418,7 @@
 					},
 					{
 						"kind": "text",
-						"text": " — emitted next to each remote chunk at build time,\r\ndeclaring the vendor specifiers/versions it was compiled against."
+						"text": " — emitted next to each remote chunk at build time,\ndeclaring the vendor specifiers/versions it was compiled against."
 					}
 				]
 			},
@@ -30807,7 +30807,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Vendor compatibility check — exact-match policy. A remote chunk compiled\r\nagainst a different version of a vendored package is incompatible:\r\n"
+								"text": "Vendor compatibility check — exact-match policy. A remote chunk compiled\nagainst a different version of a vendored package is incompatible:\n"
 							},
 							{
 								"kind": "code",
@@ -30815,7 +30815,7 @@
 							},
 							{
 								"kind": "text",
-								"text": " is not a stable API and each union bundle's export set\r\nmay change between versions. The remedy is rebuilding the remote chunk —\r\na semver-tolerant handshake would only defer an opaque import failure."
+								"text": " is not a stable API and each union bundle's export set\nmay change between versions. The remedy is rebuilding the remote chunk —\na semver-tolerant handshake would only defer an opaque import failure."
 							}
 						]
 					},
@@ -30906,7 +30906,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "CamelCase lucide export name → emitted icon specifier.\r\n"
+								"text": "CamelCase lucide export name → emitted icon specifier.\n"
 							},
 							{
 								"kind": "code",
@@ -30922,7 +30922,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ";\r\n"
+								"text": ";\n"
 							},
 							{
 								"kind": "code",
@@ -30938,7 +30938,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ". Matches the dist filename\r\nconvention ("
+								"text": ". Matches the dist filename\nconvention ("
 							},
 							{
 								"kind": "code",
@@ -30954,7 +30954,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ") resolve\r\nidentically — validation of existence is the remote build's job."
+								"text": ") resolve\nidentically — validation of existence is the remote build's job."
 							}
 						]
 					},
@@ -31086,7 +31086,7 @@
 						"summary": [
 							{
 								"kind": "text",
-								"text": "Remote-build transform: decomposes named imports of the lucide vendor\r\nbarrel into one bare specifier per icon — the chunk then carries only\r\nthe icons it actually uses. Type imports are stripped (they exist only\r\nfor the compiler, which checks the ORIGINAL source pre-transform).\r\n\r\nNon-decomposable forms ("
+								"text": "Remote-build transform: decomposes named imports of the lucide vendor\nbarrel into one bare specifier per icon — the chunk then carries only\nthe icons it actually uses. Type imports are stripped (they exist only\nfor the compiler, which checks the ORIGINAL source pre-transform).\n\nNon-decomposable forms ("
 							},
 							{
 								"kind": "code",
@@ -31110,7 +31110,7 @@
 							},
 							{
 								"kind": "text",
-								"text": ")\r\nthrow — the barrel surface cannot survive into an emitted chunk."
+								"text": ")\nthrow — the barrel surface cannot survive into an emitted chunk."
 							}
 						]
 					},
@@ -34836,7 +34836,7 @@
 		}
 	],
 	"packageName": "@primebrick/core",
-	"packageVersion": "3.4.4",
+	"packageVersion": "3.4.5",
 	"symbolIdMap": {
 		"0": {
 			"packageName": "@primebrick/core",
