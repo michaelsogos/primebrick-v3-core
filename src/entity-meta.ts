@@ -831,7 +831,8 @@ export interface EntityMeta {
    * Optional i18n key overriding the canonical page title.
    * When absent, list/create/edit titles are built from the generic
    * `system.entities.page_title.{list\|create\|edit}` templates interpolated
-   * with `system.entities.<translation_key>.{plural\|singular}`.
+   * with `{entities_ns}.entities.<translation_key>.{plural\|singular}` —
+   * `entities_ns` defaults to `system` for BE/core-owned entities.
    * Set only for custom pages needing a bespoke title — CRUD entity metas
    * must not declare it.
    */
