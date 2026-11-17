@@ -5844,16 +5844,48 @@
 							},
 							{
 								"kind": "text",
-								"text": " otherwise)."
+								"text": " otherwise).\n\n ⚠️ DESTRUCTIVE PRESENTATION — the cell renders red-italic\n ("
+							},
+							{
+								"kind": "code",
+								"text": "`text-destructive`"
+							},
+							{
+								"kind": "text",
+								"text": "), an alarm anatomy reserved for noteworthy or\n exceptional NULLs. An ordinary \"nothing here\" MUST render the\n standard "
+							},
+							{
+								"kind": "code",
+								"text": "`\"-\"`"
+							},
+							{
+								"kind": "text",
+								"text": ": leave "
+							},
+							{
+								"kind": "code",
+								"text": "`null_label`"
+							},
+							{
+								"kind": "text",
+								"text": " unset. Reaching for it without a\n "
+							},
+							{
+								"kind": "code",
+								"text": "`when`"
+							},
+							{
+								"kind": "text",
+								"text": " gate turns every absent value into a false alarm — the one\n legitimate ungated use is a column whose NULL is itself the signal."
 							}
 						]
 					},
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 393,
+							"line": 400,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L393"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L400"
 						}
 					],
 					"type": {
@@ -5874,9 +5906,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 393,
+											"line": 400,
 											"character": 17,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L393"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L400"
 										}
 									],
 									"type": {
@@ -5895,9 +5927,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 393,
+											"line": 400,
 											"character": 36,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L393"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L400"
 										}
 									],
 									"type": {
@@ -5918,9 +5950,9 @@
 													"sources": [
 														{
 															"fileName": "primebrick-v3-core/src/entity-meta.ts",
-															"line": 393,
+															"line": 400,
 															"character": 45,
-															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L393"
+															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L400"
 														}
 													],
 													"type": {
@@ -5939,9 +5971,9 @@
 													"sources": [
 														{
 															"fileName": "primebrick-v3-core/src/entity-meta.ts",
-															"line": 393,
+															"line": 400,
 															"character": 60,
-															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L393"
+															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L400"
 														}
 													],
 													"type": {
@@ -5960,9 +5992,9 @@
 													"sources": [
 														{
 															"fileName": "primebrick-v3-core/src/entity-meta.ts",
-															"line": 393,
+															"line": 400,
 															"character": 78,
-															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L393"
+															"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L400"
 														}
 													],
 													"type": {
@@ -6016,9 +6048,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 396,
+							"line": 403,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L396"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L403"
 						}
 					],
 					"type": {
@@ -6093,9 +6125,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 405,
+							"line": 412,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L405"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L412"
 						}
 					],
 					"type": {
@@ -6163,9 +6195,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 414,
+							"line": 421,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L414"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L421"
 						}
 					],
 					"type": {
@@ -6216,9 +6248,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 417,
+							"line": 424,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L417"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L424"
 						}
 					],
 					"type": {
@@ -6285,9 +6317,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 420,
+							"line": 427,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L420"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L427"
 						}
 					],
 					"type": {
@@ -6338,9 +6370,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 426,
+							"line": 433,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L426"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L433"
 						}
 					],
 					"type": {
@@ -6391,9 +6423,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 434,
+							"line": 441,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L434"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L441"
 						}
 					],
 					"type": {
@@ -6430,9 +6462,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 438,
+							"line": 445,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L438"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L445"
 						}
 					],
 					"type": {
@@ -6469,9 +6501,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 440,
+							"line": 447,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L440"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L447"
 						}
 					],
 					"type": {
@@ -6506,9 +6538,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 442,
+							"line": 449,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L442"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L449"
 						}
 					],
 					"type": {
@@ -6551,9 +6583,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 444,
+							"line": 451,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L444"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L451"
 						}
 					],
 					"type": {
@@ -6572,9 +6604,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 445,
+							"line": 452,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L445"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L452"
 						}
 					],
 					"type": {
@@ -6625,9 +6657,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 449,
+							"line": 456,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L449"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L456"
 						}
 					],
 					"type": {
@@ -6688,9 +6720,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 453,
+							"line": 460,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L453"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L460"
 						}
 					],
 					"type": {
@@ -6745,9 +6777,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 457,
+							"line": 464,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L457"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L464"
 						}
 					],
 					"type": {
@@ -6980,9 +7012,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 482,
+							"line": 489,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L482"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L489"
 						}
 					],
 					"type": {
@@ -7011,9 +7043,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 484,
+											"line": 491,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L484"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L491"
 										}
 									],
 									"type": {
@@ -7052,9 +7084,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 487,
+											"line": 494,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L487"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L494"
 										}
 									],
 									"type": {
@@ -7091,9 +7123,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 489,
+											"line": 496,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L489"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L496"
 										}
 									],
 									"type": {
@@ -7130,9 +7162,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 491,
+											"line": 498,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L491"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L498"
 										}
 									],
 									"type": {
@@ -7186,9 +7218,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 495,
+							"line": 502,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L495"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L502"
 						}
 					],
 					"type": {
@@ -7239,9 +7271,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 501,
+							"line": 508,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L501"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L508"
 						}
 					],
 					"type": {
@@ -7316,9 +7348,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 511,
+							"line": 518,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L511"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L518"
 						}
 					],
 					"type": {
@@ -7459,9 +7491,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 525,
+							"line": 532,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L525"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L532"
 						}
 					],
 					"type": {
@@ -7496,9 +7528,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 530,
+							"line": 537,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L530"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L537"
 						}
 					],
 					"type": {
@@ -7525,9 +7557,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 534,
+							"line": 541,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L534"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L541"
 						}
 					],
 					"type": {
@@ -7554,9 +7586,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 536,
+							"line": 543,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L536"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L543"
 						}
 					],
 					"type": {
@@ -7583,9 +7615,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 538,
+							"line": 545,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L538"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L545"
 						}
 					],
 					"type": {
@@ -7614,9 +7646,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 540,
+							"line": 547,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L540"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L547"
 						}
 					],
 					"type": {
@@ -7643,9 +7675,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 542,
+							"line": 549,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L542"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L549"
 						}
 					],
 					"type": {
@@ -7676,9 +7708,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 549,
+							"line": 556,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L549"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L556"
 						}
 					],
 					"type": {
@@ -7725,9 +7757,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 553,
+											"line": 560,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L553"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L560"
 										}
 									],
 									"type": {
@@ -7805,9 +7837,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 565,
+											"line": 572,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L565"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L572"
 										}
 									],
 									"type": {
@@ -7834,9 +7866,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 572,
+											"line": 579,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L572"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L579"
 										}
 									],
 									"type": {
@@ -7915,9 +7947,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 578,
+											"line": 585,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L578"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L585"
 										}
 									],
 									"type": {
@@ -7969,9 +8001,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 581,
+											"line": 588,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L581"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L588"
 										}
 									],
 									"type": {
@@ -8104,9 +8136,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 595,
+											"line": 602,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L595"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L602"
 										}
 									],
 									"type": {
@@ -8173,9 +8205,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 603,
+											"line": 610,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L603"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L610"
 										}
 									],
 									"type": {
@@ -8241,9 +8273,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 609,
+							"line": 616,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L609"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L616"
 						}
 					],
 					"type": {
@@ -8280,9 +8312,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 611,
+											"line": 618,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L611"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L618"
 										}
 									],
 									"type": {
@@ -8315,9 +8347,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 613,
+											"line": 620,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L613"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L620"
 										}
 									],
 									"type": {
@@ -8364,9 +8396,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 616,
+											"line": 623,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L616"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L623"
 										}
 									],
 									"type": {
@@ -8411,9 +8443,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 619,
+							"line": 626,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L619"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L626"
 						}
 					],
 					"type": {
@@ -8434,9 +8466,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 620,
+											"line": 627,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L620"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L627"
 										}
 									],
 									"type": {
@@ -8477,9 +8509,9 @@
 															"sources": [
 																{
 																	"fileName": "primebrick-v3-core/src/entity-meta.ts",
-																	"line": 624,
+																	"line": 631,
 																	"character": 8,
-																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L624"
+																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L631"
 																}
 															],
 															"type": {
@@ -8514,9 +8546,9 @@
 															"sources": [
 																{
 																	"fileName": "primebrick-v3-core/src/entity-meta.ts",
-																	"line": 626,
+																	"line": 633,
 																	"character": 8,
-																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L626"
+																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L633"
 																}
 															],
 															"type": {
@@ -8541,9 +8573,9 @@
 															"sources": [
 																{
 																	"fileName": "primebrick-v3-core/src/entity-meta.ts",
-																	"line": 628,
+																	"line": 635,
 																	"character": 8,
-																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L628"
+																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L635"
 																}
 															],
 															"type": {
@@ -8604,9 +8636,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 634,
+							"line": 641,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L634"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L641"
 						}
 					],
 					"type": {
@@ -8627,9 +8659,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 635,
+											"line": 642,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L635"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L642"
 										}
 									],
 									"type": {
@@ -8672,9 +8704,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 640,
+							"line": 647,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L640"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L647"
 						}
 					],
 					"type": {
@@ -8735,9 +8767,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 644,
+											"line": 651,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L644"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L651"
 										}
 									],
 									"type": {
@@ -8770,9 +8802,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 647,
+											"line": 654,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L647"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L654"
 										}
 									],
 									"type": {
@@ -8805,9 +8837,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 649,
+											"line": 656,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L649"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L656"
 										}
 									],
 									"type": {
@@ -8850,9 +8882,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 651,
+											"line": 658,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L651"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L658"
 										}
 									],
 									"type": {
@@ -8887,9 +8919,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 653,
+											"line": 660,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L653"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L660"
 										}
 									],
 									"type": {
@@ -8932,9 +8964,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 656,
+											"line": 663,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L656"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L663"
 										}
 									],
 									"type": {
@@ -8999,9 +9031,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 661,
+											"line": 668,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L661"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L668"
 										}
 									],
 									"type": {
@@ -9027,9 +9059,9 @@
 															"sources": [
 																{
 																	"fileName": "primebrick-v3-core/src/entity-meta.ts",
-																	"line": 661,
+																	"line": 668,
 																	"character": 23,
-																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L661"
+																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L668"
 																}
 															],
 															"type": {
@@ -9046,9 +9078,9 @@
 															"sources": [
 																{
 																	"fileName": "primebrick-v3-core/src/entity-meta.ts",
-																	"line": 661,
+																	"line": 668,
 																	"character": 38,
-																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L661"
+																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L668"
 																}
 															],
 															"type": {
@@ -9067,9 +9099,9 @@
 															"sources": [
 																{
 																	"fileName": "primebrick-v3-core/src/entity-meta.ts",
-																	"line": 661,
+																	"line": 668,
 																	"character": 53,
-																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L661"
+																	"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L668"
 																}
 															],
 															"type": {
@@ -9220,9 +9252,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 671,
+							"line": 678,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L671"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L678"
 						}
 					],
 					"type": {
@@ -9295,9 +9327,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 673,
+							"line": 680,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L673"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L680"
 						}
 					],
 					"type": {
@@ -9314,9 +9346,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 674,
+							"line": 681,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L674"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L681"
 						}
 					],
 					"type": {
@@ -9375,9 +9407,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 670,
+					"line": 677,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L670"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L677"
 				}
 			]
 		},
@@ -9413,9 +9445,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 680,
+							"line": 687,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L680"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L687"
 						}
 					],
 					"type": {
@@ -9472,9 +9504,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 684,
+							"line": 691,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L684"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L691"
 						}
 					],
 					"type": {
@@ -9517,9 +9549,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 687,
+							"line": 694,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L687"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L694"
 						}
 					],
 					"type": {
@@ -9570,9 +9602,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 690,
+							"line": 697,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L690"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L697"
 						}
 					],
 					"type": {
@@ -9615,9 +9647,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 696,
+							"line": 703,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L696"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L703"
 						}
 					],
 					"type": {
@@ -9650,9 +9682,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 678,
+					"line": 685,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L678"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L685"
 				}
 			]
 		},
@@ -9712,9 +9744,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 709,
+							"line": 716,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L709"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L716"
 						}
 					],
 					"type": {
@@ -9779,9 +9811,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 714,
+							"line": 721,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L714"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L721"
 						}
 					],
 					"type": {
@@ -9817,9 +9849,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 716,
+							"line": 723,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L716"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L723"
 						}
 					],
 					"type": {
@@ -9844,9 +9876,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 718,
+							"line": 725,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L718"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L725"
 						}
 					],
 					"type": {
@@ -9888,9 +9920,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 721,
+							"line": 728,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L721"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L728"
 						}
 					],
 					"type": {
@@ -9914,9 +9946,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 706,
+					"line": 713,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L706"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L713"
 				}
 			]
 		},
@@ -9960,9 +9992,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 728,
+							"line": 735,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L728"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L735"
 						}
 					],
 					"type": {
@@ -9987,9 +10019,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 730,
+							"line": 737,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L730"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L737"
 						}
 					],
 					"type": {
@@ -10016,9 +10048,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 732,
+							"line": 739,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L732"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L739"
 						}
 					],
 					"type": {
@@ -10053,9 +10085,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 734,
+							"line": 741,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L734"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L741"
 						}
 					],
 					"type": {
@@ -10084,9 +10116,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 736,
+							"line": 743,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L736"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L743"
 						}
 					],
 					"type": {
@@ -10113,9 +10145,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 739,
+							"line": 746,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L739"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L746"
 						}
 					],
 					"type": {
@@ -10202,9 +10234,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 745,
+							"line": 752,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L745"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L752"
 						}
 					],
 					"type": {
@@ -10271,9 +10303,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 750,
+							"line": 757,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L750"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L757"
 						}
 					],
 					"type": {
@@ -10294,9 +10326,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 750,
+											"line": 757,
 											"character": 17,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L750"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L757"
 										}
 									],
 									"type": {
@@ -10313,9 +10345,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 750,
+											"line": 757,
 											"character": 32,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L750"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L757"
 										}
 									],
 									"type": {
@@ -10371,9 +10403,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 725,
+					"line": 732,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L725"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L732"
 				}
 			]
 		},
@@ -10425,9 +10457,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 757,
+							"line": 764,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L757"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L764"
 						}
 					],
 					"type": {
@@ -10452,9 +10484,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 759,
+							"line": 766,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L759"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L766"
 						}
 					],
 					"type": {
@@ -10481,9 +10513,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 761,
+							"line": 768,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L761"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L768"
 						}
 					],
 					"type": {
@@ -10518,9 +10550,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 763,
+							"line": 770,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L763"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L770"
 						}
 					],
 					"type": {
@@ -10549,9 +10581,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 765,
+							"line": 772,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L765"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L772"
 						}
 					],
 					"type": {
@@ -10606,9 +10638,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 769,
+							"line": 776,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L769"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L776"
 						}
 					],
 					"type": {
@@ -10635,9 +10667,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 771,
+							"line": 778,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L771"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L778"
 						}
 					],
 					"type": {
@@ -10664,9 +10696,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 774,
+							"line": 781,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L774"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L781"
 						}
 					],
 					"type": {
@@ -10693,9 +10725,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 755,
+					"line": 762,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L755"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L762"
 				}
 			]
 		},
@@ -10733,9 +10765,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 780,
+							"line": 787,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L780"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L787"
 						}
 					],
 					"type": {
@@ -10756,9 +10788,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 781,
+							"line": 788,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L781"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L788"
 						}
 					],
 					"type": {
@@ -10779,9 +10811,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 781,
+											"line": 788,
 											"character": 19,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L781"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L788"
 										}
 									],
 									"type": {
@@ -10798,9 +10830,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 781,
+											"line": 788,
 											"character": 32,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L781"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L788"
 										}
 									],
 									"type": {
@@ -10834,9 +10866,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 782,
+							"line": 789,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L782"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L789"
 						}
 					],
 					"type": {
@@ -10855,9 +10887,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 783,
+							"line": 790,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L783"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L790"
 						}
 					],
 					"type": {
@@ -10895,9 +10927,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 787,
+							"line": 794,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L787"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L794"
 						}
 					],
 					"type": {
@@ -10945,9 +10977,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 791,
+							"line": 798,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L791"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L798"
 						}
 					],
 					"type": {
@@ -10989,9 +11021,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 795,
+							"line": 802,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L795"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L802"
 						}
 					],
 					"type": {
@@ -11026,9 +11058,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 778,
+					"line": 785,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L778"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L785"
 				}
 			]
 		},
@@ -11064,9 +11096,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 800,
+							"line": 807,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L800"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L807"
 						}
 					],
 					"type": {
@@ -11083,9 +11115,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 801,
+							"line": 808,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L801"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L808"
 						}
 					],
 					"type": {
@@ -11106,9 +11138,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 799,
+					"line": 806,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L799"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L806"
 				}
 			]
 		},
@@ -11160,9 +11192,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 811,
+							"line": 818,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L811"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L818"
 						}
 					],
 					"type": {
@@ -11187,9 +11219,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 813,
+							"line": 820,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L813"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L820"
 						}
 					],
 					"type": {
@@ -11264,9 +11296,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 822,
+							"line": 829,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L822"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L829"
 						}
 					],
 					"type": {
@@ -11309,9 +11341,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 831,
+							"line": 838,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L831"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L838"
 						}
 					],
 					"type": {
@@ -11344,9 +11376,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 833,
+							"line": 840,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L833"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L840"
 						}
 					],
 					"type": {
@@ -11397,9 +11429,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 842,
+							"line": 849,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L842"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L849"
 						}
 					],
 					"type": {
@@ -11450,9 +11482,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 850,
+							"line": 857,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L850"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L857"
 						}
 					],
 					"type": {
@@ -11495,9 +11527,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 853,
+							"line": 860,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L853"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L860"
 						}
 					],
 					"type": {
@@ -11524,9 +11556,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 855,
+							"line": 862,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L855"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L862"
 						}
 					],
 					"type": {
@@ -11558,9 +11590,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 858,
+							"line": 865,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L858"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L865"
 						}
 					],
 					"type": {
@@ -11591,9 +11623,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 809,
+					"line": 816,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L809"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L816"
 				}
 			]
 		},
@@ -11606,9 +11638,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 869,
+					"line": 876,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L869"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L876"
 				}
 			],
 			"signatures": [
@@ -11653,9 +11685,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 869,
+							"line": 876,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L869"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L876"
 						}
 					],
 					"parameters": [
@@ -11780,9 +11812,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 884,
+							"line": 891,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L884"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L891"
 						}
 					],
 					"type": {
@@ -11817,9 +11849,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 888,
+							"line": 895,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L888"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L895"
 						}
 					],
 					"type": {
@@ -11870,9 +11902,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 896,
+							"line": 903,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L896"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L903"
 						}
 					],
 					"type": {
@@ -11893,9 +11925,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 897,
+											"line": 904,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L897"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L904"
 										}
 									],
 									"type": {
@@ -11912,9 +11944,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 898,
+											"line": 905,
 											"character": 4,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L898"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L905"
 										}
 									],
 									"type": {
@@ -11949,9 +11981,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 881,
+					"line": 888,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L881"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L888"
 				}
 			]
 		},
@@ -12059,9 +12091,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 916,
+							"line": 923,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L916"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L923"
 						}
 					],
 					"type": {
@@ -12078,9 +12110,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 917,
+							"line": 924,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L917"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L924"
 						}
 					],
 					"type": {
@@ -12099,9 +12131,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 918,
+							"line": 925,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L918"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L925"
 						}
 					],
 					"type": {
@@ -12120,9 +12152,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 919,
+							"line": 926,
 							"character": 2,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L919"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L926"
 						}
 					],
 					"type": {
@@ -12145,9 +12177,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 915,
+					"line": 922,
 					"character": 17,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L915"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L922"
 				}
 			]
 		},
@@ -12200,9 +12232,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 926,
+					"line": 933,
 					"character": 12,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L926"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L933"
 				}
 			],
 			"type": {
@@ -12256,9 +12288,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 930,
+											"line": 937,
 											"character": 2,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L930"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L937"
 										}
 									],
 									"type": {
@@ -12284,9 +12316,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 931,
+											"line": 938,
 											"character": 2,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L931"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L938"
 										}
 									],
 									"type": {
@@ -12308,9 +12340,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 932,
+											"line": 939,
 											"character": 2,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L932"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L939"
 										}
 									],
 									"type": {
@@ -12349,9 +12381,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 934,
+											"line": 941,
 											"character": 2,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L934"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L941"
 										}
 									],
 									"type": {
@@ -12390,9 +12422,9 @@
 									"sources": [
 										{
 											"fileName": "primebrick-v3-core/src/entity-meta.ts",
-											"line": 936,
+											"line": 943,
 											"character": 2,
-											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L936"
+											"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L943"
 										}
 									],
 									"type": {
@@ -12429,9 +12461,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/entity-meta.ts",
-					"line": 948,
+					"line": 955,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L948"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L955"
 				}
 			],
 			"signatures": [
@@ -12492,9 +12524,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/entity-meta.ts",
-							"line": 948,
+							"line": 955,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L948"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/entity-meta.ts#L955"
 						}
 					],
 					"parameters": [

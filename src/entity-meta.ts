@@ -389,7 +389,14 @@ export type MetaColumn = {
   /** Null-state label: when the cell value is null/undefined render this
    *  translation key instead of `"-"`. `when` gates it on a sibling field
    *  (e.g. `{ field: "enabled", equals: false }` → "Disabled" only when
-   *  the row is actually disabled, plain `"-"` otherwise). */
+   *  the row is actually disabled, plain `"-"` otherwise).
+   *
+   *  ⚠️ DESTRUCTIVE PRESENTATION — the cell renders red-italic
+   *  (`text-destructive`), an alarm anatomy reserved for noteworthy or
+   *  exceptional NULLs. An ordinary "nothing here" MUST render the
+   *  standard `"-"`: leave `null_label` unset. Reaching for it without a
+   *  `when` gate turns every absent value into a false alarm — the one
+   *  legitimate ungated use is a column whose NULL is itself the signal. */
   null_label?: { label_key: string; when?: { field: string; equals?: unknown; not?: unknown } };
   /** System-managed auditing column (created_at, updated_by, …) —
    *  rendered last. */
