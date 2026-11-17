@@ -426,6 +426,21 @@ Table options — present only on entities with a table page.
  toolbar control; the active option's conditions AND into every list
  request (see FilterPreset). |
 
+### `VisibleKeyPrefs`
+
+Persisted column-visibility intent (storage schema v2): the user's
+deltas from `default_visible` — never the resolved set. Storing intent
+instead of the resolved array is what lets meta evolution (a column
+added later, a flipped `default_visible`) reach profiles that already
+persisted preferences: a key in neither list simply follows its own
+`default_visible`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| v | `2` |  |
+| shown | `string[]` | Served keys the user shows despite `default_visible:false`. |
+| hidden | `string[]` | Served keys the user hides despite `default_visible:true`. |
+
 ## Types & Enums
 
 ### `ActionColor`
@@ -1552,6 +1567,19 @@ Keys visible by default — from column flags.
 |-----------|------|-------------|
 | columns | `MetaColumn[]` |  |
 
+### `deriveVisibleKeyPrefs(visibleKeys, columns): VisibleKeyPrefs`
+
+Derive the persistable intent from the resolved set + served columns:
+ `shown` = visible keys that are not default-visible;
+ `hidden` = served columns absent from the visible set. A legacy v1
+ array migrates losslessly through the same derivation — identical
+ render, unlocked evolution.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| visibleKeys | `string[]` |  |
+| columns | `MetaColumn[]` |  |
+
 ### `diffVendorRequirements(requires, manifest): VendorMismatch[]`
 
 Vendor compatibility check — exact-match policy. A remote chunk compiled
@@ -2173,6 +2201,17 @@ single function so the plane stays deterministic.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | specifier | `string` |  |
+
+### `resolveVisibleKeyPrefs(prefs, columns): string[]`
+
+Resolve stored prefs → concrete visible keys:
+ `(defaultVisible ∪ shown) − hidden`, then sanitized (unknown keys
+ dropped, `hideable === false` re-injected, empty → defaults).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| prefs | `Pick<VisibleKeyPrefs, "shown" \| "hidden">` |  |
+| columns | `MetaColumn[]` |  |
 
 ### `rewriteLucideBarrelImports(code): LucideRewriteResult`
 

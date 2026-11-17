@@ -6,12 +6,14 @@ import {
   FILTER_OPERATOR_ICON,
   FILTER_OPERATOR_KEY,
   defaultVisibleColumnKeys,
+  deriveVisibleKeyPrefs,
   getOperatorsForColumnType,
   isColumnFilterable,
   isColumnSearchable,
   isColumnSortable,
   isColumnVisible,
   orderedColumns,
+  resolveVisibleKeyPrefs,
   searchableTextColumns,
 } from "./columns.js";
 
@@ -210,5 +212,56 @@ describe("FILTER_OPERATOR_KEY", () => {
     for (const op of operators) {
       expect(FILTER_OPERATOR_KEY[op], `invalid segment for ${op}`).toMatch(/^[a-z0-9_]+$/);
     }
+  });
+});
+
+describe("visibleKeys prefs v2 — {shown,hidden} intent", () => {
+  /** a,b default-visible; c hidden-by-default; pin = non-hideable. */
+  const COLS: MetaColumn[] = [
+    col({ key: "a", order: 10 }),
+    col({ key: "b", order: 20 }),
+    col({ key: "c", order: 30, default_visible: false }),
+    col({ key: "pin", order: 40, hideable: false }),
+  ];
+
+  it("legacy v1 array migrates losslessly — identical render", () => {
+    // Stored v1: user shows [a, c, pin] — hid default b, surfaced hidden c.
+    const legacy = ["a", "c", "pin"];
+    const prefs = deriveVisibleKeyPrefs(sanitizeVisibleKeys(legacy, COLS), COLS);
+    expect(prefs.hidden.sort()).toEqual(["b"]);
+    expect(prefs.shown).toEqual(["c"]);
+    expect(resolveVisibleKeyPrefs(prefs, COLS).sort()).toEqual(legacy.sort());
+  });
+
+  it("a column added to meta afterwards surfaces per its default_visible", () => {
+    // Profile persisted before `d` (visible) and `e` (hidden) existed.
+    const prefs = deriveVisibleKeyPrefs(["a", "pin"], COLS);
+    const evolved = [...COLS, col({ key: "d", order: 50 }), col({ key: "e", order: 60, default_visible: false })];
+    const resolved = resolveVisibleKeyPrefs(prefs, evolved);
+    expect(resolved).toContain("d"); // new default-visible column appears
+    expect(resolved).not.toContain("e"); // new hidden column stays hidden
+    expect(resolved).not.toContain("b"); // explicitly-hidden stays hidden
+    expect(resolved).toContain("pin");
+  });
+
+  it("hideable===false survives being listed in hidden", () => {
+    const resolved = resolveVisibleKeyPrefs({ shown: [], hidden: ["pin", "a"] }, COLS);
+    expect(resolved).toContain("pin"); // pin re-injected — declaration wins
+    expect(resolved).not.toContain("a");
+  });
+
+  it("empty resolution falls back to defaults", () => {
+    const resolved = resolveVisibleKeyPrefs({ shown: [], hidden: ["a", "b", "c"] }, COLS);
+    // pin (hideable:false) is the only key left → not empty → no fallback;
+    // hide pin too and the whole set empties → defaults.
+    expect(resolved).toEqual(["pin"]);
+    const allHidden = resolveVisibleKeyPrefs({ shown: [], hidden: ["a", "b", "c", "pin"] }, COLS);
+    expect(allHidden.sort()).toEqual(defaultVisibleColumnKeys(COLS).sort());
+  });
+
+  it("round-trips: derive ∘ resolve is idempotent on the resolved set", () => {
+    const visible = sanitizeVisibleKeys(["b", "c", "pin"], COLS);
+    const resolved = resolveVisibleKeyPrefs(deriveVisibleKeyPrefs(visible, COLS), COLS);
+    expect(resolved.sort()).toEqual(visible.sort());
   });
 });
