@@ -28869,7 +28869,9 @@
 													"name": "table",
 													"variant": "declaration",
 													"kind": 1024,
-													"flags": {},
+													"flags": {
+														"isOptional": true
+													},
 													"sources": [
 														{
 															"fileName": "primebrick-v3-core/src/payload-map.ts",

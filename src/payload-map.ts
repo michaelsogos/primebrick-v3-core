@@ -467,7 +467,7 @@ interface JsonSchemaLike {
 function semanticEntry(
   slot: PayloadSemanticSlot,
   sourceSchema: JsonSchemaLike | undefined,
-  sourceEntity: { key: string; entity: string; table: string } | undefined,
+  sourceEntity: { key: string; entity: string; table?: string } | undefined,
 ): PayloadMapEntry | undefined {
   switch (slot) {
     case "entity.uuid":
@@ -478,7 +478,7 @@ function semanticEntry(
       return { kind: "path", path: `$.${sourceEntity.key}.${leaf}` };
     }
     case "entity.table":
-      return sourceEntity ? { kind: "const", value: sourceEntity.table } : undefined;
+      return sourceEntity?.table ? { kind: "const", value: sourceEntity.table } : undefined;
     case "actor.uuid":
       return { kind: "inject", inject: "session_actor" };
   }
@@ -497,7 +497,7 @@ function semanticEntry(
 export function seedPayloadMapEntries(
   targetSchema: Record<string, unknown> | undefined,
   sourceSchema: Record<string, unknown> | undefined,
-  sourceEntity: { key: string; entity: string; table: string } | undefined,
+  sourceEntity: { key: string; entity: string; table?: string } | undefined,
   map: PayloadMap,
 ): PayloadMap {
   if (!targetSchema?.properties) return map;
