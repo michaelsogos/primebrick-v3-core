@@ -275,15 +275,39 @@ export type MetaColumnUomSource = "currencies" | { entity: string } | { api_url:
  * `"currency"`: money semantics — `field` names the SIBLING column that
  * persists the ISO code per row (mandatory); `source` defaults to
  * `"currencies"` (the shared ISO list).
- * `"custom"`: any other UoM (kg, ms, items, …) — `field` persists the code,
- * `source` drives the selector options, `symbol` overrides the adornment.
- * The `field` sibling requirement is verified by `withColumnConstraints`:
- * a uom'd numeric without its code column is a construction error.
+ * `"custom"`: any other UoM (kg, ms, items, …) — exactly ONE of:
+ *  - `field` + `source`: the code persists per row on a SIBLING column;
+ *    `source` drives the selector options, `symbol` overrides the adornment.
+ *  - `unit`: a FIXED unit from the Intl-sanctioned list — the same
+ *    vocabulary `Intl.supportedValuesOf("unit")` returns (millisecond,
+ *    kilogram, byte, …). Rendered via `style:"unit"` — locale-correct
+ *    inflection for free. Membership is a runtime contract verified by
+ *    `withColumnConstraints`, not a literal union (ICU-versioned).
+ *  - `symbol`: a FIXED arbitrary suffix for units Intl does not sanction
+ *    ("pz", "items", …) — plain suffix display, never `style:"unit"`.
+ * `withColumnConstraints` enforces the XOR — a `custom` uom with zero or
+ * several of field/unit/symbol is a construction error.
+ *
+ * TAXONOMY (the three declaration shapes):
+ *  1. UOM TYPE + VALUE both static      → `{kind:'custom', unit}` /
+ *     `{kind:'custom', symbol}` — the identifier carries both semantics
+ *     (millisecond IS time-family).
+ *  2. UOM TYPE static, VALUE per-row    → `{kind:'currency', field}` /
+ *     `{kind:'custom', field, source}` — the sibling column persists the
+ *     code (EUR, kg, …) and feeds the input's picker via `source`.
+ *  3. UOM TYPE + VALUE both per-row     → RESERVED, not expressible yet:
+ *     it needs the KIND itself on a persisted field (e.g.
+ *     `uom:{kind_field:'uom_kind', field:'uom_code'}` or `kind:'dynamic'`)
+ *     so a row can be currency and the next percent. Zero consumers today;
+ *     when one appears, extend this union — never shoehorn it into custom.
+ * Absent `uom` → plain decimal, no unit semantics.
  */
 export type MetaColumnUom =
   | { kind: "percent" }
   | { kind: "currency"; field: string; source?: "currencies" }
-  | { kind: "custom"; field: string; source: MetaColumnUomSource; symbol?: string };
+  | { kind: "custom"; field: string; source: MetaColumnUomSource; symbol?: string }
+  | { kind: "custom"; unit: string }
+  | { kind: "custom"; symbol: string };
 
 /**
  * Avatar renderer contract — the column renders the user/org avatar

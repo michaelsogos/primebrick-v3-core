@@ -35,3 +35,46 @@ per-row IANA timezone field.
 
 `translation_key` is branded `SnakeCaseSingular` in consumers that opt into
 runtime validation (`asSnakeCaseSingular` throws on any uppercase letter).
+
+### Numeric columns — kind and `uom`
+
+The numeric **kind** is never authored: `pg_type` is injected by
+`withColumnConstraints` from the entity class, and `numericKindOf(col)`
+maps it to `"bigint"` (int8/ref_count), `"number"` (float\*, int2/int4),
+or `"decimal"` (`numeric`/`money`). One resolver feeds every surface —
+form input, zod binding, filters, cell formatting — so a column can never
+be "number" on the form and "decimal" on the filter.
+
+`uom` is the authored **unit-of-measure** contract — three declaration
+shapes (the taxonomy):
+
+| Shape | Declaration | Example |
+|-------|-------------|---------|
+| TYPE + VALUE both static | `{kind:'custom', unit}` / `{kind:'custom', symbol}` | `uom:{kind:'custom', unit:'millisecond'}` → `"24 ms"` |
+| TYPE static, VALUE per row | `{kind:'currency', field}` / `{kind:'custom', field, source}` | `uom:{kind:'currency', field:'currency_code'}` → `"€9.99"` |
+| TYPE + VALUE both per row | **reserved** — needs the kind on a field (`kind_field`/`kind:'dynamic'`); zero consumers, extend the union — never shoehorn into `custom` | — |
+
+Plus `{kind:'percent'}` — the canonical value is a fraction; display is a
+pure ×100 transform, no sibling, no code.
+
+`custom` rules (enforced by `withColumnConstraints`, throws at boot):
+
+- exactly one of `field`+`source` / `unit` / `symbol` (`field` may also
+  carry `symbol` as adornment override);
+- `unit` MUST be an Intl-sanctioned identifier — the same vocabulary
+  `Intl.supportedValuesOf('unit')` returns (45 entries, CLDR via ECMA-402:
+  `millisecond`, `kilogram`, `byte`, …). Arbitrary codes belong in
+  `symbol` (fixed suffix) or `field` (per-row);
+- `field` names a PHYSICAL sibling column — it is itself a normal column
+  (form field, filter) persisting the code per row;
+- `uom` is legal on numeric columns only.
+
+Display contract downstream (the same `uom` drives them all):
+
+- table cell (`formatListNumberValue`): `style:'decimal'` +
+  `useGrouping:'always'`; `percent`/`currency`/`unit` via the native Intl
+  styles; `symbol` and non-sanctioned codes as `<grouped> <code>` suffix;
+- form input (`NumericUomSpec`): adornment + optional picker — fixed
+  variants are display-only;
+- fraction budget derives from the kind: `bigint` → 0 decimals,
+  `number`/`decimal` → full precision.
