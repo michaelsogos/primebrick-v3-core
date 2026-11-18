@@ -246,6 +246,7 @@ export type MetaColumnFormat =
   | "snake_key"
   | "dotted_key"
   | "dotted_glob"
+  | "rule_filter"
   | "slug"
   | "no_space"
   | "lang";

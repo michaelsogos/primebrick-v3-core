@@ -359,8 +359,10 @@ export type EmitDecl = {
     key: string;
     /** Entity name (singular, e.g. `customer`) — display/traceability. */
     entity: string;
-    /** Physical table name (e.g. `customers`) — feeds `entity.table`. */
-    table: string;
+    /** Physical table name (e.g. `customers`) — feeds `entity.table`.
+     *  Optional: entity-route declarations cannot reach the physical
+     *  table (the event payload already carries it under `table`). */
+    table?: string;
   };
 };
 
