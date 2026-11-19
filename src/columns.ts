@@ -124,10 +124,84 @@ export function sanitizeVisibleKeys(
   return next;
 }
 
-/** Text-physical searchable columns — the scope selector + default
- *  "all fields" search set. */
+/**
+ * Persisted column-visibility intent (storage schema v2): the user's
+ * deltas from `default_visible` — never the resolved set. Storing intent
+ * instead of the resolved array is what lets meta evolution (a column
+ * added later, a flipped `default_visible`) reach profiles that already
+ * persisted preferences: a key in neither list simply follows its own
+ * `default_visible`.
+ */
+export interface VisibleKeyPrefs {
+  v: 2;
+  /** Served keys the user shows despite `default_visible:false`. */
+  shown: string[];
+  /** Served keys the user hides despite `default_visible:true`. */
+  hidden: string[];
+}
+
+/** Resolve stored prefs → concrete visible keys:
+ *  `(defaultVisible ∪ shown) − hidden`, then sanitized (unknown keys
+ *  dropped, `hideable === false` re-injected, empty → defaults). */
+export function resolveVisibleKeyPrefs(
+  prefs: Pick<VisibleKeyPrefs, "shown" | "hidden">,
+  columns: MetaColumn[],
+): string[] {
+  const merged = new Set(defaultVisibleColumnKeys(columns));
+  for (const k of prefs.shown) merged.add(k);
+  for (const k of prefs.hidden) merged.delete(k);
+  return sanitizeVisibleKeys([...merged], columns);
+}
+
+/** Derive the persistable intent from the resolved set + served columns:
+ *  `shown` = visible keys that are not default-visible;
+ *  `hidden` = served columns absent from the visible set. A legacy v1
+ *  array migrates losslessly through the same derivation — identical
+ *  render, unlocked evolution. */
+export function deriveVisibleKeyPrefs(
+  visibleKeys: string[],
+  columns: MetaColumn[],
+): VisibleKeyPrefs {
+  const defaults = new Set(defaultVisibleColumnKeys(columns));
+  const visible = new Set(visibleKeys);
+  return {
+    v: 2,
+    shown: visibleKeys.filter((k) => !defaults.has(k)),
+    hidden: columns.map((c) => c.key).filter((k) => !visible.has(k)),
+  };
+}
+
+/** Physical PG types safe for `ILIKE` — `uuid` is searched via the
+ *  `CAST(col AS text)` the query-builder already applies. The single
+ *  vocabulary both the wire `search_in` allowlist (dal-pg
+ *  `deriveListWireSets`) and the FE scope derivations resolve against. */
+export const TEXTLIKE_PG_TYPES = new Set([
+  "character varying", "varchar", "character", "char",
+  "text", "citext", "name", "uuid",
+]);
+
+/** `pg_type` normalization — "varchar(200)" → "varchar". */
+export function isTextlikePgType(pgType: string | undefined): boolean {
+  return (
+    pgType !== undefined &&
+    TEXTLIKE_PG_TYPES.has(pgType.toLowerCase().replace(/\(.*\)/, ""))
+  );
+}
+
+/** Text-searchable columns — the scope selector + default "all fields"
+ *  search set: physical `type:"text"` columns plus `kind:"calculated"`
+ *  projections whose served `pg_type` is ILIKE-safe. The UI type is
+ *  presentation, never a statement about the rendered expression's
+ *  searchability — a calc `type:"ref"` identity column displays the
+ *  very name the search matches. Mirrors the wire `search_in`
+ *  allowlist derivation in dal-pg (`deriveListWireSets`). */
 export function searchableTextColumns(columns: MetaColumn[]): MetaColumn[] {
-  return columns.filter((c) => isColumnSearchable(c) && c.type === "text");
+  return columns.filter(
+    (c) =>
+      isColumnSearchable(c) &&
+      (c.type === "text" ||
+        (c.kind === "calculated" && isTextlikePgType(c.pg_type))),
+  );
 }
 
 /**

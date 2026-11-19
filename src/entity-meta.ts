@@ -246,6 +246,7 @@ export type MetaColumnFormat =
   | "snake_key"
   | "dotted_key"
   | "dotted_glob"
+  | "rule_filter"
   | "slug"
   | "no_space"
   | "lang";
@@ -269,21 +270,79 @@ export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "aud
 export type MetaColumnUomSource = "currencies" | { entity: string } | { api_url: string; value_field: string; label_field?: string };
 
 /**
+ * UoM macro-categories — the hardcoded CLDR grouping census. ECMA-402
+ * exposes `Intl.supportedValuesOf("unit")` as a FLAT list with no
+ * category accessor (the grouping lives in CLDR data, unreachable from
+ * JS) — this map is the single reusable categorization. Every member
+ * MUST be an Intl-sanctioned identifier; coverage matches the runtime
+ * vocabulary (45 units on ICU ≥ 2024-06). `percent` is intentionally
+ * absent — adimensional, it is a `kind` of its own.
+ */
+export type MetaColumnUomKind =
+  | "length" | "mass" | "volume" | "area"
+  | "time" | "temperature" | "digital" | "angle";
+
+export const UNIT_CATEGORIES: Record<MetaColumnUomKind, readonly string[]> = {
+  length: ["millimeter", "centimeter", "meter", "kilometer", "inch", "foot", "yard", "mile", "mile-scandinavian"],
+  mass: ["gram", "kilogram", "ounce", "pound", "stone"],
+  volume: ["milliliter", "liter", "gallon", "fluid-ounce"],
+  area: ["acre", "hectare"],
+  time: ["nanosecond", "microsecond", "millisecond", "second", "minute", "hour", "day", "week", "month", "year"],
+  temperature: ["celsius", "fahrenheit"],
+  digital: ["bit", "kilobit", "megabit", "gigabit", "terabit", "byte", "kilobyte", "megabyte", "gigabyte", "terabyte", "petabyte"],
+  angle: ["degree"],
+};
+
+/** Reverse lookup — `UNIT_TO_CATEGORY.meter === 'length'`; compound
+ *  `-per-` units are NOT sanctioned list members → absent here. */
+export const UNIT_TO_CATEGORY: Record<string, MetaColumnUomKind> = Object.freeze(
+  Object.fromEntries(
+    Object.entries(UNIT_CATEGORIES).flatMap(([kind, units]) =>
+      units.map((unit) => [unit, kind as MetaColumnUomKind]),
+    ),
+  ),
+);
+
+/**
  * Numeric unit-of-measure contract — the column's semantic quantity unit.
  * `"percent"`: pure display transform (display = canonical × 100, emitted =
  * display ÷ 100) — the canonical value stays a fraction; NO sibling field.
  * `"currency"`: money semantics — `field` names the SIBLING column that
  * persists the ISO code per row (mandatory); `source` defaults to
  * `"currencies"` (the shared ISO list).
- * `"custom"`: any other UoM (kg, ms, items, …) — `field` persists the code,
- * `source` drives the selector options, `symbol` overrides the adornment.
- * The `field` sibling requirement is verified by `withColumnConstraints`:
- * a uom'd numeric without its code column is a construction error.
+ * Category kinds (`"time"`, `"length"`, `"digital"`, …): Intl-sanctioned
+ * UoM grouped by {@link UNIT_CATEGORIES} — exactly ONE of:
+ *  - `unit`: a FIXED identifier, sanctioned ∩ category — rendered
+ *    `style:"unit"` with locale-correct inflection for free.
+ *  - `field`: a PER-ROW unit persisted on a SIBLING column, constrained
+ *    to the category — the picker needs NO `source`, the category itself
+ *    is the option vocabulary.
+ * `"custom"`: genuinely non-standard UoM only — exactly ONE of:
+ *  - `field` + `source`: a per-row code from a custom vocabulary (`entity`
+ *    rows, `api_url`, …); `symbol` overrides the adornment.
+ *  - `symbol`: a FIXED arbitrary suffix Intl does not sanction
+ *    ("pz", "items", …) — plain suffix display, never `style:"unit"`.
+ * `withColumnConstraints` enforces every XOR at meta bind.
+ *
+ * TAXONOMY (the declaration shapes):
+ *  1. UOM TYPE + VALUE both static      → `{kind:'<category>', unit}` /
+ *     `{kind:'custom', symbol}`.
+ *  2. UOM TYPE static, VALUE per-row    → `{kind:'currency', field}` /
+ *     `{kind:'<category>', field}` / `{kind:'custom', field, source}`.
+ *  3. UOM TYPE + VALUE both per-row     → RESERVED, not expressible yet:
+ *     it needs the KIND itself on a persisted field (e.g.
+ *     `uom:{kind_field:'uom_kind', field:'uom_code'}` or `kind:'dynamic'`)
+ *     so a row can be currency and the next percent. Zero consumers today;
+ *     when one appears, extend this union — never shoehorn it into custom.
+ * Absent `uom` → plain decimal, no unit semantics.
  */
 export type MetaColumnUom =
   | { kind: "percent" }
   | { kind: "currency"; field: string; source?: "currencies" }
-  | { kind: "custom"; field: string; source: MetaColumnUomSource; symbol?: string };
+  | { kind: MetaColumnUomKind; unit: string }
+  | { kind: MetaColumnUomKind; field: string }
+  | { kind: "custom"; field: string; source: MetaColumnUomSource; symbol?: string }
+  | { kind: "custom"; symbol: string };
 
 /**
  * Avatar renderer contract — the column renders the user/org avatar
@@ -389,7 +448,14 @@ export type MetaColumn = {
   /** Null-state label: when the cell value is null/undefined render this
    *  translation key instead of `"-"`. `when` gates it on a sibling field
    *  (e.g. `{ field: "enabled", equals: false }` → "Disabled" only when
-   *  the row is actually disabled, plain `"-"` otherwise). */
+   *  the row is actually disabled, plain `"-"` otherwise).
+   *
+   *  ⚠️ DESTRUCTIVE PRESENTATION — the cell renders red-italic
+   *  (`text-destructive`), an alarm anatomy reserved for noteworthy or
+   *  exceptional NULLs. An ordinary "nothing here" MUST render the
+   *  standard `"-"`: leave `null_label` unset. Reaching for it without a
+   *  `when` gate turns every absent value into a false alarm — the one
+   *  legitimate ungated use is a column whose NULL is itself the signal. */
   null_label?: { label_key: string; when?: { field: string; equals?: unknown; not?: unknown } };
   /** System-managed auditing column (created_at, updated_by, …) —
    *  rendered last. */
@@ -824,7 +890,8 @@ export interface EntityMeta {
    * Optional i18n key overriding the canonical page title.
    * When absent, list/create/edit titles are built from the generic
    * `system.entities.page_title.{list\|create\|edit}` templates interpolated
-   * with `system.entities.<translation_key>.{plural\|singular}`.
+   * with `{entities_ns}.entities.<translation_key>.{plural\|singular}` —
+   * `entities_ns` defaults to `system` for BE/core-owned entities.
    * Set only for custom pages needing a bespoke title — CRUD entity metas
    * must not declare it.
    */

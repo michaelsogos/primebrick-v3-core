@@ -9,7 +9,7 @@
  */
 export const HONEST_FORMAT_HINTS: { re: RegExp; formats: readonly string[]; why: string }[] = [
   { re: /_at$|At$/, formats: ["date-time"], why: "timestamp" },
-  { re: /_by$|By$/, formats: ["uuid"], why: "actor/uuid" },
+  { re: /_by$|By$/, formats: ["uuid", "actor_token"], why: "actor/uuid" },
   { re: /uuid/i, formats: ["uuid"], why: "uuid" },
   { re: /(?:^|_)e?_?mails?(?:_|$)|emails?$/i, formats: ["email"], why: "email" },
   { re: /(?:^|_)(?:phones?|tel|mobile)(?:_|$)|phones?$/i, formats: ["phone"], why: "phone" },

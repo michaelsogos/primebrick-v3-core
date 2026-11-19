@@ -35,3 +35,58 @@ per-row IANA timezone field.
 
 `translation_key` is branded `SnakeCaseSingular` in consumers that opt into
 runtime validation (`asSnakeCaseSingular` throws on any uppercase letter).
+
+### Numeric columns — kind and `uom`
+
+The numeric **kind** is never authored: `pg_type` is injected by
+`withColumnConstraints` from the entity class, and `numericKindOf(col)`
+maps it to `"bigint"` (int8/ref_count), `"number"` (float\*, int2/int4),
+or `"decimal"` (`numeric`/`money`). One resolver feeds every surface —
+form input, zod binding, filters, cell formatting — so a column can never
+be "number" on the form and "decimal" on the filter.
+
+`uom` is the authored **unit-of-measure** contract. The `kind` carries
+the UoM macro-category — `UNIT_CATEGORIES` (this package) is the
+hardcoded CLDR grouping census covering the full Intl-sanctioned
+vocabulary (Intl exposes `supportedValuesOf('unit')` as a flat list with
+NO category accessor — the grouping lives in CLDR data unreachable from
+JS). Kinds: `time`, `length`, `mass`, `volume`, `area`, `temperature`,
+`digital`, `angle` + the out-of-band `percent`/`currency`/`custom`.
+
+Three declaration shapes (the taxonomy):
+
+| Shape | Declaration | Example |
+|-------|-------------|---------|
+| TYPE + VALUE both static | `{kind:'<category>', unit}` / `{kind:'custom', symbol}` | `uom:{kind:'time', unit:'millisecond'}` → `"24 ms"` |
+| TYPE static, VALUE per row | `{kind:'currency', field}` / `{kind:'<category>', field}` / `{kind:'custom', field, source}` | `uom:{kind:'currency', field:'currency_code'}` → `"€9.99"` |
+| TYPE + VALUE both per row | **reserved** — needs the kind on a field (`kind_field`/`kind:'dynamic'`); zero consumers, extend the union — never shoehorn into `custom` | — |
+
+Plus `{kind:'percent'}` — the canonical value is a fraction; display is a
+pure ×100 transform, no sibling, no code.
+
+Kind rules (enforced by `withColumnConstraints`, throws at boot):
+
+- **category kinds** — exactly one of `unit` (FIXED identifier, must be
+  sanctioned ∩ category: `{kind:'time', unit:'kilogram'}` throws) or
+  `field` (PER-ROW code on a PHYSICAL sibling column — the category IS
+  the picker vocabulary, no `source` prop exists);
+- **`currency`** — `field` mandatory (physical sibling ISO column),
+  `source` optional (defaults `"currencies"`);
+- **`custom`** — genuinely non-standard UoM only: `field`+`source` (per-row
+  code from a custom vocabulary; `symbol` allowed as adornment override)
+  XOR standalone `symbol` (fixed arbitrary suffix). A `unit` on `custom`
+  throws — Intl-sanctioned units belong on category kinds;
+- compound `-per-` units are NOT sanctioned-list members → reserved for a
+  future category, never authored;
+- `uom` is legal on numeric columns only.
+
+Display contract downstream (the same `uom` drives them all):
+
+- table cell (`formatListNumberValue`): `style:'decimal'` +
+  `useGrouping:'always'`; `percent`/`currency`/`unit` via the native Intl
+  styles; `symbol` and non-sanctioned codes as `<grouped> <code>` suffix;
+- form input (`NumericUomSpec`): adornment + optional picker — fixed
+  variants are display-only; category `field` variants get options from
+  `UNIT_CATEGORIES[kind]` (dropdown under the ≤5 bound);
+- fraction budget derives from the kind: `bigint` → 0 decimals,
+  `number`/`decimal` → full precision.

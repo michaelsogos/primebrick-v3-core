@@ -173,7 +173,8 @@ keys actually live in that module's `<code>.translations` schema. |
 | title_key | `string` | Optional i18n key overriding the canonical page title.
 When absent, list/create/edit titles are built from the generic
 `system.entities.page_title.{list\|create\|edit}` templates interpolated
-with `system.entities.<translation_key>.{plural\|singular}`.
+with `{entities_ns}.entities.<translation_key>.{plural\|singular}` —
+`entities_ns` defaults to `system` for BE/core-owned entities.
 Set only for custom pages needing a bespoke title — CRUD entity metas
 must not declare it. |
 | uid | `string` | Field key holding the entity primary key (usually `uuid`). |
@@ -426,6 +427,21 @@ Table options — present only on entities with a table page.
  toolbar control; the active option's conditions AND into every list
  request (see FilterPreset). |
 
+### `VisibleKeyPrefs`
+
+Persisted column-visibility intent (storage schema v2): the user's
+deltas from `default_visible` — never the resolved set. Storing intent
+instead of the resolved array is what lets meta evolution (a column
+added later, a flipped `default_visible`) reach profiles that already
+persisted preferences: a key in neither list simply follows its own
+`default_visible`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| v | `2` |  |
+| shown | `string[]` | Served keys the user shows despite `default_visible:false`. |
+| hidden | `string[]` | Served keys the user hides despite `default_visible:true`. |
+
 ## Types & Enums
 
 ### `ActionColor`
@@ -627,7 +643,7 @@ Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
 compile error — the US→FE option boundary is enforced by the type.
 New formats are additive literals (never breaking).
 
-**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "slug" \| "no_space" \| "lang"`
+**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang"`
 
 ### `MetaColumnOptionsSource`
 
@@ -653,12 +669,45 @@ display ÷ 100) — the canonical value stays a fraction; NO sibling field.
 `"currency"`: money semantics — `field` names the SIBLING column that
 persists the ISO code per row (mandatory); `source` defaults to
 `"currencies"` (the shared ISO list).
-`"custom"`: any other UoM (kg, ms, items, …) — `field` persists the code,
-`source` drives the selector options, `symbol` overrides the adornment.
-The `field` sibling requirement is verified by `withColumnConstraints`:
-a uom'd numeric without its code column is a construction error.
+Category kinds (`"time"`, `"length"`, `"digital"`, …): Intl-sanctioned
+UoM grouped by UNIT_CATEGORIES — exactly ONE of:
+ - `unit`: a FIXED identifier, sanctioned ∩ category — rendered
+   `style:"unit"` with locale-correct inflection for free.
+ - `field`: a PER-ROW unit persisted on a SIBLING column, constrained
+   to the category — the picker needs NO `source`, the category itself
+   is the option vocabulary.
+`"custom"`: genuinely non-standard UoM only — exactly ONE of:
+ - `field` + `source`: a per-row code from a custom vocabulary (`entity`
+   rows, `api_url`, …); `symbol` overrides the adornment.
+ - `symbol`: a FIXED arbitrary suffix Intl does not sanction
+   ("pz", "items", …) — plain suffix display, never `style:"unit"`.
+`withColumnConstraints` enforces every XOR at meta bind.
 
-**Type:** `{ kind: "percent" } \| { kind: "currency"; field: string; source: "currencies" } \| { kind: "custom"; field: string; source: MetaColumnUomSource; symbol: string }`
+TAXONOMY (the declaration shapes):
+ 1. UOM TYPE + VALUE both static      → `{kind:'<category>', unit}` /
+    `{kind:'custom', symbol}`.
+ 2. UOM TYPE static, VALUE per-row    → `{kind:'currency', field}` /
+    `{kind:'<category>', field}` / `{kind:'custom', field, source}`.
+ 3. UOM TYPE + VALUE both per-row     → RESERVED, not expressible yet:
+    it needs the KIND itself on a persisted field (e.g.
+    `uom:{kind_field:'uom_kind', field:'uom_code'}` or `kind:'dynamic'`)
+    so a row can be currency and the next percent. Zero consumers today;
+    when one appears, extend this union — never shoehorn it into custom.
+Absent `uom` → plain decimal, no unit semantics.
+
+**Type:** `{ kind: "percent" } \| { kind: "currency"; field: string; source: "currencies" } \| { kind: MetaColumnUomKind; unit: string } \| { kind: MetaColumnUomKind; field: string } \| { kind: "custom"; field: string; source: MetaColumnUomSource; symbol: string } \| { kind: "custom"; symbol: string }`
+
+### `MetaColumnUomKind`
+
+UoM macro-categories — the hardcoded CLDR grouping census. ECMA-402
+exposes `Intl.supportedValuesOf("unit")` as a FLAT list with no
+category accessor (the grouping lives in CLDR data, unreachable from
+JS) — this map is the single reusable categorization. Every member
+MUST be an Intl-sanctioned identifier; coverage matches the runtime
+vocabulary (45 units on ICU ≥ 2024-06). `percent` is intentionally
+absent — adimensional, it is a `kind` of its own.
+
+**Type:** `"length" \| "mass" \| "volume" \| "area" \| "time" \| "temperature" \| "digital" \| "angle"`
 
 ### `MetaColumnUomSource`
 
@@ -1309,6 +1358,15 @@ CHECK constraints — a deliberate release-scoped change, never data.
 
 **Type:** `Decimal`
 
+### `TEXTLIKE_PG_TYPES`
+
+Physical PG types safe for `ILIKE` — `uuid` is searched via the
+ `CAST(col AS text)` the query-builder already applies. The single
+ vocabulary both the wire `search_in` allowlist (dal-pg
+ `deriveListWireSets`) and the FE scope derivations resolve against.
+
+**Type:** `Set<string>`
+
 ### `TRANSLATION_KEY_GRAMMAR`
 
 The ONE key grammar — `[a-z0-9_]+` dot-separated segments, ≥2 segments.
@@ -1324,6 +1382,17 @@ change here, mirror there).
 Single-segment grammar — the unit the full-key grammar repeats.
 
 **Type:** `RegExp`
+
+### `UNIT_CATEGORIES`
+
+**Type:** `Record<MetaColumnUomKind, readonly string[]>`
+
+### `UNIT_TO_CATEGORY`
+
+Reverse lookup — `UNIT_TO_CATEGORY.meter === 'length'`; compound
+ `-per-` units are NOT sanctioned list members → absent here.
+
+**Type:** `Record<string, MetaColumnUomKind>`
 
 ### `UUID_REGEX`
 
@@ -1550,6 +1619,19 @@ Keys visible by default — from column flags.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
+| columns | `MetaColumn[]` |  |
+
+### `deriveVisibleKeyPrefs(visibleKeys, columns): VisibleKeyPrefs`
+
+Derive the persistable intent from the resolved set + served columns:
+ `shown` = visible keys that are not default-visible;
+ `hidden` = served columns absent from the visible set. A legacy v1
+ array migrates losslessly through the same derivation — identical
+ render, unlocked evolution.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| visibleKeys | `string[]` |  |
 | columns | `MetaColumn[]` |  |
 
 ### `diffVendorRequirements(requires, manifest): VendorMismatch[]`
@@ -1840,6 +1922,14 @@ Type guard — is `tag` one of the platform-supported language tags?
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | tag | `string` |  |
+
+### `isTextlikePgType(pgType): boolean`
+
+`pg_type` normalization — "varchar(200)" → "varchar".
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| pgType | `string \| undefined` |  |
 
 ### `isUUID(v): v is string`
 
@@ -2174,6 +2264,17 @@ single function so the plane stays deterministic.
 |-----------|------|-------------|
 | specifier | `string` |  |
 
+### `resolveVisibleKeyPrefs(prefs, columns): string[]`
+
+Resolve stored prefs → concrete visible keys:
+ `(defaultVisible ∪ shown) − hidden`, then sanitized (unknown keys
+ dropped, `hideable === false` re-injected, empty → defaults).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| prefs | `Pick<VisibleKeyPrefs, "shown" \| "hidden">` |  |
+| columns | `MetaColumn[]` |  |
+
 ### `rewriteLucideBarrelImports(code): LucideRewriteResult`
 
 Remote-build transform: decomposes named imports of the lucide vendor
@@ -2244,8 +2345,13 @@ satisfies the hint; a bare `type:"string"` is a lie.
 
 ### `searchableTextColumns(columns): MetaColumn[]`
 
-Text-physical searchable columns — the scope selector + default
- "all fields" search set.
+Text-searchable columns — the scope selector + default "all fields"
+ search set: physical `type:"text"` columns plus `kind:"calculated"`
+ projections whose served `pg_type` is ILIKE-safe. The UI type is
+ presentation, never a statement about the rendered expression's
+ searchability — a calc `type:"ref"` identity column displays the
+ very name the search matches. Mirrors the wire `search_in`
+ allowlist derivation in dal-pg (`deriveListWireSets`).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
