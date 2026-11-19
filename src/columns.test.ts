@@ -90,6 +90,20 @@ describe("column-flag predicates", () => {
     ]).map((c) => c.key);
     expect(keys).toEqual(["a"]);
   });
+
+  it("searchableTextColumns admits calculated columns on their served pg_type, never their UI type", () => {
+    const keys = searchableTextColumns([
+      col({ key: "a", type: "text" }),
+      // `type:"ref"` identity calc — the UI type is the drill surface;
+      // the rendered expression is text and joins the scope (the name
+      // it displays IS what the search matches).
+      col({ key: "trigger", type: "ref", kind: "calculated", pg_type: "text" }),
+      col({ key: "fired_at", type: "datetime", kind: "calculated", pg_type: "timestamptz" }),
+      col({ key: "stats", type: "sparkline", kind: "virtual" }),
+      col({ key: "calc_no_pg", type: "ref", kind: "calculated" }),
+    ]).map((c) => c.key);
+    expect(keys).toEqual(["a", "trigger"]);
+  });
 });
 
 describe("orderedColumns", () => {

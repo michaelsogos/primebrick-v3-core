@@ -171,10 +171,37 @@ export function deriveVisibleKeyPrefs(
   };
 }
 
-/** Text-physical searchable columns — the scope selector + default
- *  "all fields" search set. */
+/** Physical PG types safe for `ILIKE` — `uuid` is searched via the
+ *  `CAST(col AS text)` the query-builder already applies. The single
+ *  vocabulary both the wire `search_in` allowlist (dal-pg
+ *  `deriveListWireSets`) and the FE scope derivations resolve against. */
+export const TEXTLIKE_PG_TYPES = new Set([
+  "character varying", "varchar", "character", "char",
+  "text", "citext", "name", "uuid",
+]);
+
+/** `pg_type` normalization — "varchar(200)" → "varchar". */
+export function isTextlikePgType(pgType: string | undefined): boolean {
+  return (
+    pgType !== undefined &&
+    TEXTLIKE_PG_TYPES.has(pgType.toLowerCase().replace(/\(.*\)/, ""))
+  );
+}
+
+/** Text-searchable columns — the scope selector + default "all fields"
+ *  search set: physical `type:"text"` columns plus `kind:"calculated"`
+ *  projections whose served `pg_type` is ILIKE-safe. The UI type is
+ *  presentation, never a statement about the rendered expression's
+ *  searchability — a calc `type:"ref"` identity column displays the
+ *  very name the search matches. Mirrors the wire `search_in`
+ *  allowlist derivation in dal-pg (`deriveListWireSets`). */
 export function searchableTextColumns(columns: MetaColumn[]): MetaColumn[] {
-  return columns.filter((c) => isColumnSearchable(c) && c.type === "text");
+  return columns.filter(
+    (c) =>
+      isColumnSearchable(c) &&
+      (c.type === "text" ||
+        (c.kind === "calculated" && isTextlikePgType(c.pg_type))),
+  );
 }
 
 /**
