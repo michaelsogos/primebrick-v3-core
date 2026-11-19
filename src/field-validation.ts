@@ -396,7 +396,7 @@ export function jsonSchemaCheck(
     }
     if (!formatFailed && typeof schema.pattern === "string") {
       try {
-        if (!new RegExp(schema.pattern).test(value)) at("invalid_string", "app.common.validation.regexMismatch");
+        if (!new RegExp(schema.pattern).test(value)) at("invalid_string", "app.common.validation.regex_mismatch");
       } catch {
         /* unverifiable pattern — never fail-closed on it */
       }
@@ -579,7 +579,7 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
   }
   if (out.length === formatBefore && typeof col.pattern === "string" && col.pattern !== "") {
     try {
-      if (!new RegExp(col.pattern).test(value)) at("invalid_string", "app.common.validation.regexMismatch");
+      if (!new RegExp(col.pattern).test(value)) at("invalid_string", "app.common.validation.regex_mismatch");
     } catch {
       /* authored pattern invalid — config bug, not a value failure */
     }
