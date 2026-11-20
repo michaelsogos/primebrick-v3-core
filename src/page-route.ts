@@ -28,7 +28,7 @@ export const DEFAULT_ROUTE_ICONS: Record<PageRouteKind, string> = {
   detail: "text-cursor-input",
   create: "text-cursor-input",
   page: DEFAULT_PAGE_ICON,
-  dict: "list",
+  dict: "table-dictionary",
 };
 
 /** The resolved default icon for `kind` — `file-box` outside the map. */
