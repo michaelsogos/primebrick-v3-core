@@ -2,7 +2,8 @@
   "rules": {
     "ext-json": {
       "allowPaths": [
-        "ext-json.ts"
+        "ext-json.ts",
+        "ext-json.test.ts"
       ]
     }
   }
