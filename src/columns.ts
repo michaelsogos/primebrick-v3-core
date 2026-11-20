@@ -57,7 +57,9 @@ export function orderedColumns(
   columns: readonly MetaColumn[] | null | undefined,
 ): MetaColumn[] {
   if (!columns?.length) return [];
-  const tagged = columns.map((c, i) => ({ c, k: c.order ?? i }));
+  // `order` is contract-typed `number` but wire ints arrive as bigint via
+  // ext-json — the comparator needs plain-number subtraction.
+  const tagged = columns.map((c, i) => ({ c, k: c.order === undefined ? i : Number(c.order) }));
   const byOrder = (a: { k: number }, b: { k: number }) => a.k - b.k;
   const pick = (pred: (c: MetaColumn) => boolean) =>
     tagged.filter(({ c }) => pred(c)).sort(byOrder).map(({ c }) => c);
