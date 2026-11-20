@@ -1685,11 +1685,15 @@ Numeric equality ignoring scale — `eq(1.0, 1.00)` is `true`.
 
 ### `extJsonParse(text): T`
 
-Parse an Ext-JSON string.
+Parse an Ext-JSON string — strict.
 
-ALL integers are returned as native `bigint` (via reviver).
-Floats (values with decimal point or scientific notation) are `number`.
-Strings, booleans, null are unaffected.
+ALL integer-valued numbers are returned as native `bigint`; non-integer
+floats stay `number`; strings/booleans/null are unaffected.
+
+Throws `SyntaxError` on malformed input, trailing commas, and
+duplicate keys at any depth (native JSON.parse silently last-wins —
+that failure mode is deliberately closed: a duplicated key is a wire
+contract violation, not data).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
