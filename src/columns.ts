@@ -7,7 +7,7 @@
  * time and runtime.
  */
 
-import type { MetaColumn } from "./entity-meta.js";
+import type { MetaColumn, MetaColumnFormat, MetaColumnType } from "./entity-meta.js";
 import type { FilterOperator } from "./list.js";
 
 /**
@@ -264,6 +264,64 @@ export const FILTER_OPERATOR_ICON: Record<FilterOperator, string> = {
   endsWith: "list-end",
   BETWEEN: "list-indent-increase",
 };
+
+/**
+ * Canonical `MetaColumnFormat → Lucide icon` map — the ONE format-icon
+ * vocabulary. Values mirror the established schema-icon vocabulary
+ * (`schemaTypeIcon` in the payload-map editor: string→type, uuid→file-key,
+ * `nats_subject`→zap matches the subject columns' declared icon).
+ * Formats without a distinct glyph simply fall through to the column's
+ * `type` icon via {@link columnIcon}.
+ */
+export const META_COLUMN_FORMAT_ICON: Partial<Record<MetaColumnFormat, string>> = {
+  email: "mail",
+  url: "link",
+  phone: "phone",
+  secret: "key-round",
+  nats_subject: "zap",
+  schedule_spec: "calendar-clock",
+  json: "braces",
+  rule_filter: "braces",
+  identifier: "file-key",
+  date: "calendar",
+  datetime: "calendar-clock",
+  time: "clock",
+  lang: "languages",
+};
+
+/**
+ * Canonical `MetaColumnType → Lucide icon` map — the ONE type-icon
+ * vocabulary for field pickers and column lists (`iconField` options
+ * consume it through {@link columnIcon}). Names are `@lucide/svelte`
+ * icons, same vocabulary family as `FILTER_OPERATOR_ICON`.
+ */
+export const META_COLUMN_TYPE_ICON: Record<MetaColumnType, string> = {
+  text: "type",
+  badge: "list",
+  boolean: "toggle-left",
+  color: "palette",
+  date: "calendar",
+  datetime: "calendar-clock",
+  number: "hash",
+  sparkline: "activity",
+  ref: "link",
+  ref_count: "link",
+  avatar: "square-user",
+};
+
+/**
+ * Resolve the icon a column picker should render: the column's OWN
+ * declared `icon` wins (semantic markers like zap/send on subjects),
+ * then its `format`, then its `type`. `undefined` only when the column
+ * carries none of the three — a plain-text column still resolves `type`.
+ */
+export function columnIcon(
+  col: Pick<MetaColumn, "type"> & Partial<Pick<MetaColumn, "icon" | "format">>,
+): string | undefined {
+  if (col.icon) return col.icon;
+  const fmt = col.format ? META_COLUMN_FORMAT_ICON[col.format] : undefined;
+  return fmt ?? META_COLUMN_TYPE_ICON[col.type as MetaColumnType] ?? undefined;
+}
 
 /**
  * Canonical `FilterOperator → translation-key segment` map — the ONE

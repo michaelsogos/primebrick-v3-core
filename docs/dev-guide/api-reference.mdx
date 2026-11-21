@@ -1186,6 +1186,26 @@ treated from the merged record the caller passes.
 
 **Type:** `RegExp`
 
+### `META_COLUMN_FORMAT_ICON`
+
+Canonical `MetaColumnFormat → Lucide icon` map — the ONE format-icon
+vocabulary. Values mirror the established schema-icon vocabulary
+(`schemaTypeIcon` in the payload-map editor: string→type, uuid→file-key,
+`nats_subject`→zap matches the subject columns' declared icon).
+Formats without a distinct glyph simply fall through to the column's
+`type` icon via columnIcon.
+
+**Type:** `Partial<Record<MetaColumnFormat, string>>`
+
+### `META_COLUMN_TYPE_ICON`
+
+Canonical `MetaColumnType → Lucide icon` map — the ONE type-icon
+vocabulary for field pickers and column lists (`iconField` options
+consume it through columnIcon). Names are `@lucide/svelte`
+icons, same vocabulary family as `FILTER_OPERATOR_ICON`.
+
+**Type:** `Record<MetaColumnType, string>`
+
 ### `MIN_SCHEDULE_INTERVAL_MS`
 
 The floor every recurring spec must respect: one minute. The 5-field
@@ -1581,6 +1601,17 @@ Numeric comparison ignoring scale: `cmp(1.0, 1.00) === 0`. Returns -1 | 0 | 1.
 |-----------|------|-------------|
 | a | `DecimalInput` |  |
 | b | `DecimalInput` |  |
+
+### `columnIcon(col): string \| undefined`
+
+Resolve the icon a column picker should render: the column's OWN
+declared `icon` wins (semantic markers like zap/send on subjects),
+then its `format`, then its `type`. `undefined` only when the column
+carries none of the three — a plain-text column still resolves `type`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `Pick<MetaColumn, "type"> & Partial<Pick<MetaColumn, "format" \| "icon">>` |  |
 
 ### `dec(input): Decimal`
 
