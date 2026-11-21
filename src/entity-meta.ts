@@ -194,6 +194,7 @@ export const STANDARD_OPS = [
   "delete.bulk",
   "restore.bulk",
   "duplicate.bulk",
+  "update.bulk",
 ] as const;
 
 export type StandardOp = (typeof STANDARD_OPS)[number];
