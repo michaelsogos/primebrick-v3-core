@@ -593,8 +593,10 @@ export type MetaColumn = {
   seq?: {
     /** DERIVED default sequence code — `<table>.<field>`. */
     code?: string;
-    /** AUTHORED — widget modes offered (default: both). */
-    modes?: SequenceMode[];
+    /** AUTHORED — widget modes offered (default: both). `readonly` so a
+     *  `DeepReadonly<MetaColumn>` (served-meta getter contract) stays
+     *  assignable to `readonly MetaColumn[]` consumers. */
+    modes?: readonly SequenceMode[];
     /** AUTHORED — initial mode (default: "generate"). */
     default_mode?: SequenceMode;
     /** AUTHORED — show the new-tab create-sequence CTA (default: true). */
