@@ -338,3 +338,42 @@ export function sequencePreview(
     last: renderSequenceValue(pattern, first + BigInt(count - 1) * step, at, opts),
   };
 }
+
+/**
+ * A sequence DEFINITION carried on the wire — the same shape
+ * `@SequenceField(decl)` declares on the entity class and the expr form
+ * of a write directive carries. `step`/`start` are bigint-only (ext-json
+ * decodes integers to bigint; plain-JSON clients cannot express the expr
+ * form — they select existing sequences by code/uuid instead).
+ */
+export interface SequenceDecl {
+  /** Pattern source — parsed by {@link parseSequencePattern} at every boundary. */
+  pattern: string;
+  /** Counter increment per emitted value — non-zero. */
+  step: bigint;
+  /** First emitted counter value when the sequence is materialized. */
+  start: bigint;
+  /** IANA zone for date tokens — `null`/`undefined` = server default. */
+  tz?: string | null;
+}
+
+/**
+ * The ONLY accepted wire value for a `format:"sequence"` (seq-bound)
+ * column — a literal value is never writable: the repository resolves
+ * the directive to the literal in-transaction. Four forms:
+ *
+ *   - `{seq:"<uuid>"}`            select a persisted sequence by uuid
+ *   - `{seq:{uuid:"<uuid>"}}`     same, explicit object form
+ *   - `{seq:{code:"<code>"}}`     select a persisted sequence by code
+ *   - `{seq:{pattern,step,start,tz?}}`  on-the-fly definition —
+ *     materialized + allocated in-transaction
+ *
+ * Omitting the field on create allocates from the column's default
+ * sequence (`<table>.<field>`, materialized at boot); omitting on update
+ * leaves the value untouched.
+ */
+export type SequenceDirective =
+  | { seq: string }
+  | { seq: { uuid: string } }
+  | { seq: { code: string } }
+  | { seq: SequenceDecl };

@@ -16,6 +16,7 @@ import {
   nextScheduleFire,
   scheduleEveryMs,
   scheduleSpecError,
+  parseSequenceDirective,
   jobTriggerShapeIssues,
   jsonSchemaCheck,
   pathCompatible,
@@ -649,5 +650,67 @@ describe("parseMapKeysDeclaration", () => {
     expect(parseMapKeysDeclaration("otp")).toEqual({});
     expect(parseMapKeysDeclaration(["a"])).toEqual({});
     expect(parseMapKeysDeclaration({})).toEqual({});
+  });
+});
+
+// ---------------------------------------------------------------------------
+// sequence directives — format:"sequence" columns take ONLY the directive
+// shape; literals are never writable values.
+// ---------------------------------------------------------------------------
+
+describe("sequence directives", () => {
+  const SEQ_UUID = "11111111-2222-4333-8444-555555555555";
+  const seqCol = () =>
+    col({ key: "code", nullable: false, max_length: 20, format: "sequence", seq: { code: "test_docs.code" } });
+
+  it("parseSequenceDirective — the four accepted forms", () => {
+    expect(parseSequenceDirective({ seq: SEQ_UUID })).toEqual({ seq: SEQ_UUID });
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID } })).toEqual({ seq: { uuid: SEQ_UUID } });
+    expect(parseSequenceDirective({ seq: { code: "docs.code" } })).toEqual({ seq: { code: "docs.code" } });
+    expect(parseSequenceDirective({ seq: { pattern: "D-{seq:4}", step: 1n, start: 5n } }))
+      .toEqual({ seq: { pattern: "D-{seq:4}", step: 1n, start: 5n, tz: undefined } });
+  });
+
+  it("parseSequenceDirective — literals and malformed shapes rejected", () => {
+    expect(parseSequenceDirective("DOC-00001")).toBeNull();
+    expect(parseSequenceDirective({ seq: "not-a-uuid" })).toBeNull();
+    expect(parseSequenceDirective({ seq: { code: "" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { code: "x", extra: 1 } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 0n, start: 1n } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 1, start: 1n } })).toBeNull(); // number, not bigint
+    expect(parseSequenceDirective({ seq: { pattern: "P-{{bad}}", step: 1n, start: 1n } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 1n, start: 1n, tz: "Bogus/Zone" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { code: "x" }, other: 1 })).toBeNull();
+  });
+
+  it("checkFieldValue — directive accepted; literal is schema_mismatch", () => {
+    expect(checkFieldValue(seqCol(), { seq: { code: "docs.code" } })).toEqual([]);
+    expect(checkFieldValue(seqCol(), { seq: { pattern: "C-{seq:5}", step: 1n, start: 1n } })).toEqual([]);
+    const literal = checkFieldValue(seqCol(), "DOC-00001");
+    expect(has(literal, "code", "schema_mismatch")).toBe(true);
+    expect(literal[0]!.message).toBe("app.common.validation.sequence_directive");
+  });
+
+  it("checkFieldValue — expr directive rendering over max_length → too_big", () => {
+    const tooLong = checkFieldValue(seqCol(), {
+      seq: { pattern: "INVOICE-2024-IT-{seq:8}", step: 1n, start: 1n },
+    });
+    expect(has(tooLong, "code", "too_big")).toBe(true);
+    // A 20-char render fits exactly.
+    expect(checkFieldValue(seqCol(), { seq: { pattern: "ABCDEFGHIJ-{seq:9}", step: 1n, start: 1n } })).toEqual([]);
+  });
+
+  it("checkEntityFields — seq-bound absent on create is NOT required", () => {
+    const m = meta([col({ key: "name", nullable: false }), seqCol()]);
+    // code absent → default-seq allocation, no violation; name still required.
+    const issues = checkEntityFields(m, {});
+    expect(has(issues, "code", "required")).toBe(false);
+    expect(has(issues, "name", "required")).toBe(true);
+    // present directive validated; literal rejected.
+    expect(checkEntityFields(m, { name: "x", code: { seq: { code: "s.x" } } })).toEqual([]);
+    expect(has(checkEntityFields(m, { name: "x", code: "LIT" }), "code", "schema_mismatch")).toBe(true);
+    // update: directive allowed (code is updatable), absent untouched.
+    expect(checkEntityFields(m, { code: { seq: SEQ_UUID } }, { partial: true })).toEqual([]);
+    expect(checkEntityFields(m, {}, { partial: true })).toEqual([]);
   });
 });

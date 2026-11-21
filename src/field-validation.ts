@@ -33,6 +33,12 @@ import {
   type PayloadMap,
   type PayloadMapMeta,
 } from "./payload-map.js";
+import {
+  parseSequencePattern,
+  renderSequenceValue,
+  type SequenceDecl,
+  type SequenceDirective,
+} from "./sequence.js";
 
 /** A single validation finding. `path` is the entity field key (or a
  *  dotted sub-path inside a JSON-Schema check). */
@@ -243,6 +249,54 @@ export function nextScheduleFire(spec: string, opts: { now?: Date; since?: Date 
 
 /** UUID (any version) — matches zod/JSON-Schema `format:"uuid"`. */
 export const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+/**
+ * The ONLY accepted wire shape for a `format:"sequence"` column — see
+ * {@link SequenceDirective} for the four forms. Returns the parsed
+ * directive or `null` (shape/decl violation — the caller emits the
+ * `app.common.validation.sequence_directive` issue). A literal value is
+ * never writable: the repository resolves the directive in-transaction.
+ */
+export function parseSequenceDirective(raw: unknown): SequenceDirective | null {
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return null;
+  const keys = Object.keys(raw);
+  if (keys.length !== 1 || keys[0] !== "seq") return null;
+  const seq = (raw as Record<string, unknown>).seq;
+  // `{seq:"<uuid>"}` — select by uuid.
+  if (typeof seq === "string") return UUID_REGEX.test(seq) ? { seq } : null;
+  if (typeof seq !== "object" || seq === null || Array.isArray(seq)) return null;
+  const skeys = Object.keys(seq);
+  const s = seq as Record<string, unknown>;
+  // `{seq:{uuid:"…"}}` / `{seq:{code:"…"}}` — select an existing sequence.
+  if (skeys.length === 1 && skeys[0] === "uuid" && typeof s.uuid === "string" && UUID_REGEX.test(s.uuid)) {
+    return { seq: { uuid: s.uuid } };
+  }
+  if (skeys.length === 1 && skeys[0] === "code" && typeof s.code === "string" && s.code.length > 0) {
+    return { seq: { code: s.code } };
+  }
+  // `{seq:{pattern, step, start, tz?}}` — on-the-fly definition; the same
+  // decl gate `@SequenceField` applies (closed key set, bigint-only
+  // step/start — plain-JSON clients cannot express this form).
+  if (!skeys.every((k) => k === "pattern" || k === "step" || k === "start" || k === "tz")) return null;
+  if (typeof s.pattern !== "string" || s.pattern.length === 0) return null;
+  try {
+    parseSequencePattern(s.pattern);
+  } catch {
+    return null;
+  }
+  if (typeof s.step !== "bigint" || s.step === 0n) return null;
+  if (typeof s.start !== "bigint") return null;
+  if (s.tz !== undefined && s.tz !== null) {
+    if (typeof s.tz !== "string") return null;
+    try {
+      new Intl.DateTimeFormat("en", { timeZone: s.tz });
+    } catch {
+      return null;
+    }
+  }
+  const decl: SequenceDecl = { pattern: s.pattern, step: s.step, start: s.start, tz: s.tz as string | null | undefined };
+  return { seq: decl };
+}
 
 // ---------------------------------------------------------------------------
 // Identifier-family tokens — the canonical name-grammar vocabulary.
@@ -482,6 +536,36 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
   const at = (code: FieldIssue["code"], message: string, sub?: string) =>
     out.push(issue(sub ?? p, code, message));
 
+  // Seq-bound: the wire value is a SEQUENCE DIRECTIVE, never the literal —
+  // the repository resolves it in-transaction (D1/D2 contract). Checked
+  // before every type branch: the directive object is not the column type.
+  if (col.format === "sequence") {
+    const dir = parseSequenceDirective(value);
+    if (dir === null) {
+      at("schema_mismatch", "app.common.validation.sequence_directive");
+      return out;
+    }
+    // D4-A: an expr directive whose rendered `start` value overflows the
+    // column can only fail at INSERT — reject it here (the resolver
+    // repeats the check with real partitions for sez patterns).
+    if (typeof dir.seq === "object" && "pattern" in dir.seq && typeof col.max_length === "number") {
+      try {
+        const rendered = renderSequenceValue(
+          parseSequencePattern(dir.seq.pattern),
+          dir.seq.start,
+          new Date(),
+          { tz: dir.seq.tz ?? undefined },
+        );
+        if (rendered.length > col.max_length) {
+          at("too_big", kmsg("app.common.validation.max_chars", { count: col.max_length }));
+        }
+      } catch {
+        // {sez} partitions are supplied at write — the resolver enforces.
+      }
+    }
+    return out;
+  }
+
   if (col.type === "boolean" || col.pg_type === "boolean") {
     if (typeof value !== "boolean") at("invalid_type", expectedTypeMsg(["boolean"]));
     return out;
@@ -628,7 +712,10 @@ export function checkEntityFields(
         col.key === meta.uid ||
         col.managed === true ||
         col.kind === "calculated" ||
-        col.kind === "virtual";
+        col.kind === "virtual" ||
+        // Seq-bound: absent on create = allocate from the field's default
+        // sequence — the directive is optional input, never a literal.
+        col.seq !== undefined;
       if (!opts.partial && col.nullable === false && !managed) {
         out.push(issue(col.key, "required", "app.common.validation.required"));
       }

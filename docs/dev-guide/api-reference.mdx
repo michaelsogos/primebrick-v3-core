@@ -407,6 +407,21 @@ UI configuration for a non-standard row CTA (route-backed bare op).
  rows. Absent = always visible. Scalar comparison — boolean/number
  fields are allowed (e.g. `enabled ∈ [false]` for an Enable CTA). |
 
+### `SequenceDecl`
+
+A sequence DEFINITION carried on the wire — the same shape
+`@SequenceField(decl)` declares on the entity class and the expr form
+of a write directive carries. `step`/`start` are bigint-only (ext-json
+decodes integers to bigint; plain-JSON clients cannot express the expr
+form — they select existing sequences by code/uuid instead).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| pattern | `string` | Pattern source — parsed by parseSequencePattern at every boundary. |
+| step | `bigint` | Counter increment per emitted value — non-zero. |
+| start | `bigint` | First emitted counter value when the sequence is materialized. |
+| tz | `string \| null` | IANA zone for date tokens — `null`/`undefined` = server default. |
+
 ### `SequencePattern`
 
 | Field | Type | Description |
@@ -1048,6 +1063,24 @@ Invariants:
    and ext-json carries bigint natively.
 
 **Type:** `"yyyy" \| "yy" \| "MM" \| "dd" \| "q"`
+
+### `SequenceDirective`
+
+The ONLY accepted wire value for a `format:"sequence"` (seq-bound)
+column — a literal value is never writable: the repository resolves
+the directive to the literal in-transaction. Four forms:
+
+  - `{seq:"<uuid>"}`            select a persisted sequence by uuid
+  - `{seq:{uuid:"<uuid>"}}`     same, explicit object form
+  - `{seq:{code:"<code>"}}`     select a persisted sequence by code
+  - `{seq:{pattern,step,start,tz?}}`  on-the-fly definition —
+    materialized + allocated in-transaction
+
+Omitting the field on create allocates from the column's default
+sequence (`<table>.<field>`, materialized at boot); omitting on update
+leaves the value untouched.
+
+**Type:** `{ seq: string } \| { seq: { uuid: string } } \| { seq: { code: string } } \| { seq: SequenceDecl }`
 
 ### `SequenceMode`
 
@@ -2220,6 +2253,18 @@ explicitly** (a declared placeholder must be filled):
   - longhand   `{"x":{"type":"string","optional":true,"description":…}}`
     — `optional`/`required:false`/`nullable` or a `null` type union
     mark the key optional; the rest of the object IS the schema.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| raw | `unknown` |  |
+
+### `parseSequenceDirective(raw): SequenceDirective \| null`
+
+The ONLY accepted wire shape for a `format:"sequence"` column — see
+SequenceDirective for the four forms. Returns the parsed
+directive or `null` (shape/decl violation — the caller emits the
+`app.common.validation.sequence_directive` issue). A literal value is
+never writable: the repository resolves the directive in-transaction.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
