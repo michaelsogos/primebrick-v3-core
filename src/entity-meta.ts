@@ -251,7 +251,12 @@ export type MetaColumnFormat =
   | "slug"
   | "no_space"
   | "lang"
-  | "sequence";
+  | "sequence"
+  /** Stored i18n key AS DATA (dict `label_key`/`description_key`) — renders
+   *  as a `languages`-icon badge carrying the resolved translation, raw
+   *  key in the tooltip; unresolved keys show mono-raw (same anatomy as
+   *  `nats_subject`/`service_code` governed-reference badges). */
+  | "i18n_key";
 
 /**
  * Dynamic option vocabulary for combo-backed controls — declared on the
