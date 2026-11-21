@@ -2,6 +2,7 @@ export * from "./entity-meta.js";
 export * from "./list.js";
 export * from "./list-filter-params.js";
 export * from "./columns.js";
+export * from "./sequence.js";
 export * from "./decimal.js";
 export * from "./numeric-kind.js";
 export * from "./ext-json.js";
