@@ -250,7 +250,8 @@ export type MetaColumnFormat =
   | "rule_filter"
   | "slug"
   | "no_space"
-  | "lang";
+  | "lang"
+  | "sequence";
 
 /**
  * Dynamic option vocabulary for combo-backed controls — declared on the
@@ -268,6 +269,16 @@ export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "aud
  * `{api_url}`: an explicit endpoint serving the options.
  * Closed union on purpose — an unknown source is a construction error.
  */
+/**
+ * Sequence-widget modes — the two write-path configurations a
+ * `format:"sequence"` control may offer. Closed union on purpose.
+ *  - `"generate"` — inline pattern builder emitting a `{seq:{pattern,…}}`
+ *    directive (resolved + materialized inside the write transaction);
+ *  - `"select"` — combobox over the module's `sequence` registry,
+ *    emitting `{seq:{code}}`/`{seq:"<uuid>"}`.
+ */
+export type SequenceMode = "generate" | "select";
+
 export type MetaColumnUomSource = "currencies" | { entity: string } | { api_url: string; value_field: string; label_field?: string };
 
 /**
@@ -560,6 +571,35 @@ export type MetaColumn = {
   /** `format:"json"` — JSON Schema driving the editor's lint/completion
    *  AND the structural validation in `buildEntityFormSchema`. */
   json_schema?: Record<string, unknown>;
+
+  /** `format:"sequence"` — the column is sequence-bound (`@SequenceField`
+   *  on the entity class). Two halves, one contract:
+   *
+   *   - `code` — the binding's DEFAULT sequence code, derived at
+   *     persistence-meta resolution as `<table>.<field>` (e.g.
+   *     `customers.code`). DERIVED — authoring it in a `*.meta.ts` file
+   *     throws (the entity class is the single source).
+   *   - `modes`/`default_mode`/`allow_create` — AUTHORED surface config:
+   *     which sequence widgets the control offers ("generate" emits an
+   *     inline pattern builder, "select" a registry combobox), which is
+   *     the initial mode, and whether the "create a new sequence in a
+   *     new tab" CTA renders. A single `modes` entry collapses the mode
+   *     picker — the only mini-widget renders directly.
+   *
+   *  Wire contract (write payloads): the column NEVER accepts a literal
+   *  string — only a sequence directive resolved inside the write
+   *  transaction. `default_mode` defaults to "generate"; `modes` to
+   *  both; `allow_create` to true. */
+  seq?: {
+    /** DERIVED default sequence code — `<table>.<field>`. */
+    code?: string;
+    /** AUTHORED — widget modes offered (default: both). */
+    modes?: SequenceMode[];
+    /** AUTHORED — initial mode (default: "generate"). */
+    default_mode?: SequenceMode;
+    /** AUTHORED — show the new-tab create-sequence CTA (default: true). */
+    allow_create?: boolean;
+  };
 
   /** Explicit control override — key of the host widget registry;
    *  bypasses the `format`→control derivation on EVERY surface (forms

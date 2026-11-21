@@ -653,7 +653,7 @@ Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
 compile error — the US→FE option boundary is enforced by the type.
 New formats are additive literals (never breaking).
 
-**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang"`
+**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang" \| "sequence"`
 
 ### `MetaColumnOptionsSource`
 
@@ -720,13 +720,6 @@ absent — adimensional, it is a `kind` of its own.
 **Type:** `"length" \| "mass" \| "volume" \| "area" \| "time" \| "temperature" \| "digital" \| "angle"`
 
 ### `MetaColumnUomSource`
-
-Option vocabulary a unit-of-measure selector may draw from.
-`"currencies"`: the ISO 4217 list resolved client-side (`getAllCurrencies`
-— same source the config-domain currency picker uses). `{entity}`: the
-UoM codes persist as rows of another entity (resolved via its `/list`).
-`{api_url}`: an explicit endpoint serving the options.
-Closed union on purpose — an unknown source is a construction error.
 
 **Type:** `"currencies" \| { entity: string } \| { api_url: string; value_field: string; label_field: string }`
 
@@ -1055,6 +1048,17 @@ Invariants:
    and ext-json carries bigint natively.
 
 **Type:** `"yyyy" \| "yy" \| "MM" \| "dd" \| "q"`
+
+### `SequenceMode`
+
+Sequence-widget modes — the two write-path configurations a
+`format:"sequence"` control may offer. Closed union on purpose.
+ - `"generate"` — inline pattern builder emitting a `{seq:{pattern,…}}`
+   directive (resolved + materialized inside the write transaction);
+ - `"select"` — combobox over the module's `sequence` registry,
+   emitting `{seq:{code}}`/`{seq:"<uuid>"}`.
+
+**Type:** `"generate" \| "select"`
 
 ### `SequencePartitions`
 
