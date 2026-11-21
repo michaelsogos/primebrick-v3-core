@@ -422,6 +422,21 @@ form — they select existing sequences by code/uuid instead).
 | start | `bigint` | First emitted counter value when the sequence is materialized. |
 | tz | `string \| null` | IANA zone for date tokens — `null`/`undefined` = server default. |
 
+### `SequenceDirectiveContext`
+
+Optional per-allocation context carried by the object directive forms —
+ the sezionale slot values (`sez`/`sez2`/`sez3` — the counter partitions
+ are persisted per `(sequence, period, partition_key)`; the pattern's
+ slots decide which are required/allowed) and the business date `at`
+ (ISO string — drives `period_key` + date tokens; default = write time).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| sez | `string` |  |
+| sez2 | `string` |  |
+| sez3 | `string` |  |
+| at | `string` |  |
+
 ### `SequencePattern`
 
 | Field | Type | Description |
@@ -1066,21 +1081,7 @@ Invariants:
 
 ### `SequenceDirective`
 
-The ONLY accepted wire value for a `format:"sequence"` (seq-bound)
-column — a literal value is never writable: the repository resolves
-the directive to the literal in-transaction. Four forms:
-
-  - `{seq:"<uuid>"}`            select a persisted sequence by uuid
-  - `{seq:{uuid:"<uuid>"}}`     same, explicit object form
-  - `{seq:{code:"<code>"}}`     select a persisted sequence by code
-  - `{seq:{pattern,step,start,tz?}}`  on-the-fly definition —
-    materialized + allocated in-transaction
-
-Omitting the field on create allocates from the column's default
-sequence (`<table>.<field>`, materialized at boot); omitting on update
-leaves the value untouched.
-
-**Type:** `{ seq: string } \| { seq: { uuid: string } } \| { seq: { code: string } } \| { seq: SequenceDecl }`
+**Type:** `{ seq: string } \| { seq: { uuid: string } & SequenceDirectiveContext } \| { seq: { code: string } & SequenceDirectiveContext } \| { seq: SequenceDecl & SequenceDirectiveContext }`
 
 ### `SequenceMode`
 

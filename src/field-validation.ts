@@ -36,8 +36,10 @@ import {
 import {
   parseSequencePattern,
   renderSequenceValue,
+  validateSequencePartitions,
   type SequenceDecl,
   type SequenceDirective,
+  type SequencePartitions,
 } from "./sequence.js";
 
 /** A single validation finding. `path` is the entity field key (or a
@@ -267,20 +269,33 @@ export function parseSequenceDirective(raw: unknown): SequenceDirective | null {
   if (typeof seq !== "object" || seq === null || Array.isArray(seq)) return null;
   const skeys = Object.keys(seq);
   const s = seq as Record<string, unknown>;
-  // `{seq:{uuid:"…"}}` / `{seq:{code:"…"}}` — select an existing sequence.
-  if (skeys.length === 1 && skeys[0] === "uuid" && typeof s.uuid === "string" && UUID_REGEX.test(s.uuid)) {
-    return { seq: { uuid: s.uuid } };
+  // Allocation context — sez slot values + business date; allowed on every
+  // object form, slot-compat checked against the pattern when it's known
+  // (expr form — validated here; select forms — at resolution time).
+  const CTX = ["sez", "sez2", "sez3", "at"] as const;
+  const ctx: { sez?: string; sez2?: string; sez3?: string; at?: string } = {};
+  for (const k of CTX) {
+    if (s[k] === undefined) continue;
+    if (typeof s[k] !== "string" || (s[k] as string).length === 0) return null;
+    ctx[k] = s[k] as string;
   }
-  if (skeys.length === 1 && skeys[0] === "code" && typeof s.code === "string" && s.code.length > 0) {
-    return { seq: { code: s.code } };
+  if (ctx.at !== undefined && Number.isNaN(new Date(ctx.at).getTime())) return null;
+  const base = new Set(skeys.filter((k) => !(CTX as readonly string[]).includes(k)));
+  // `{seq:{uuid:"…"}}` / `{seq:{code:"…"}}` — select an existing sequence.
+  if (base.size === 1 && base.has("uuid") && typeof s.uuid === "string" && UUID_REGEX.test(s.uuid)) {
+    return { seq: { uuid: s.uuid, ...ctx } };
+  }
+  if (base.size === 1 && base.has("code") && typeof s.code === "string" && s.code.length > 0) {
+    return { seq: { code: s.code, ...ctx } };
   }
   // `{seq:{pattern, step, start, tz?}}` — on-the-fly definition; the same
   // decl gate `@SequenceField` applies (closed key set, bigint-only
   // step/start — plain-JSON clients cannot express this form).
-  if (!skeys.every((k) => k === "pattern" || k === "step" || k === "start" || k === "tz")) return null;
+  if (![...base].every((k) => k === "pattern" || k === "step" || k === "start" || k === "tz")) return null;
   if (typeof s.pattern !== "string" || s.pattern.length === 0) return null;
+  let parsed;
   try {
-    parseSequencePattern(s.pattern);
+    parsed = parseSequencePattern(s.pattern);
   } catch {
     return null;
   }
@@ -294,8 +309,15 @@ export function parseSequenceDirective(raw: unknown): SequenceDirective | null {
       return null;
     }
   }
+  // Sez slots must match the pattern exactly — a missing slot or a surplus
+  // key mis-keys the counter silently.
+  try {
+    validateSequencePartitions(parsed, ctx as SequencePartitions);
+  } catch {
+    return null;
+  }
   const decl: SequenceDecl = { pattern: s.pattern, step: s.step, start: s.start, tz: s.tz as string | null | undefined };
-  return { seq: decl };
+  return { seq: { ...decl, ...ctx } };
 }
 
 // ---------------------------------------------------------------------------

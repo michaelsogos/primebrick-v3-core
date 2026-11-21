@@ -671,6 +671,25 @@ describe("sequence directives", () => {
       .toEqual({ seq: { pattern: "D-{seq:4}", step: 1n, start: 5n, tz: undefined } });
   });
 
+  it("parseSequenceDirective — sez/at context on every object form", () => {
+    expect(parseSequenceDirective({ seq: { code: "inv.num", sez: "A", at: "2026-12-01" } }))
+      .toEqual({ seq: { code: "inv.num", sez: "A", at: "2026-12-01" } });
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, sez2: "X" } }))
+      .toEqual({ seq: { uuid: SEQ_UUID, sez2: "X" } });
+    expect(parseSequenceDirective({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n, sez: "A" } }))
+      .toEqual({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n, tz: undefined, sez: "A" } });
+  });
+
+  it("parseSequenceDirective — sez slots must match the expr pattern", () => {
+    // {sez} slot required but missing → invalid
+    expect(parseSequenceDirective({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n } })).toBeNull();
+    // surplus slot the pattern doesn't use → invalid
+    expect(parseSequenceDirective({ seq: { pattern: "D-{seq:4}", step: 1n, start: 1n, sez: "A" } })).toBeNull();
+    // bad sez value charset / at not a date → invalid
+    expect(parseSequenceDirective({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n, sez: "A B!" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { code: "x", at: "not-a-date" } })).toBeNull();
+  });
+
   it("parseSequenceDirective — literals and malformed shapes rejected", () => {
     expect(parseSequenceDirective("DOC-00001")).toBeNull();
     expect(parseSequenceDirective({ seq: "not-a-uuid" })).toBeNull();

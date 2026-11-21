@@ -372,8 +372,20 @@ export interface SequenceDecl {
  * sequence (`<table>.<field>`, materialized at boot); omitting on update
  * leaves the value untouched.
  */
+/** Optional per-allocation context carried by the object directive forms —
+ *  the sezionale slot values (`sez`/`sez2`/`sez3` — the counter partitions
+ *  are persisted per `(sequence, period, partition_key)`; the pattern's
+ *  slots decide which are required/allowed) and the business date `at`
+ *  (ISO string — drives `period_key` + date tokens; default = write time). */
+export interface SequenceDirectiveContext {
+  sez?: string;
+  sez2?: string;
+  sez3?: string;
+  at?: string;
+}
+
 export type SequenceDirective =
   | { seq: string }
-  | { seq: { uuid: string } }
-  | { seq: { code: string } }
-  | { seq: SequenceDecl };
+  | { seq: { uuid: string } & SequenceDirectiveContext }
+  | { seq: { code: string } & SequenceDirectiveContext }
+  | { seq: SequenceDecl & SequenceDirectiveContext };
