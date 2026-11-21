@@ -4,16 +4,19 @@ import {
   parseSequencePattern,
   renderSequenceRange,
   renderSequenceValue,
+  sequencePartitionKey,
   sequencePreview,
+  validateSequencePartitions,
 } from "./sequence.js";
 
 const AT = new Date("2026-12-26T12:00:00Z"); // fixed instant — date tokens deterministic
 
 describe("parseSequencePattern — construction gate", () => {
   it("literals + one counter", () => {
-    const p = parseSequencePattern("CUST-{n:5}");
+    const p = parseSequencePattern("CUST-{seq:5}");
     expect(p.counter_width).toBe(5);
     expect(p.period_kind).toBe("none");
+    expect(p.sez_slots).toEqual([]);
     expect(p.segments).toEqual([
       { kind: "literal", text: "CUST-" },
       { kind: "counter", width: 5 },
@@ -21,7 +24,7 @@ describe("parseSequencePattern — construction gate", () => {
   });
 
   it("multi-segment with date tokens", () => {
-    const p = parseSequencePattern("FAT-{yyyy}-{MM}-{n:4}");
+    const p = parseSequencePattern("FAT-{yyyy}-{MM}-{seq:4}");
     expect(p.period_kind).toBe("month"); // finest token wins
     expect(p.segments.map((s) => s.kind)).toEqual([
       "literal",
@@ -33,51 +36,100 @@ describe("parseSequencePattern — construction gate", () => {
     ]);
   });
 
-  it("{n} without width → no padding", () => {
-    expect(parseSequencePattern("{n}").counter_width).toBe(0);
+  it("sezionale slots — any position, non-consecutive", () => {
+    const p = parseSequencePattern("FT-{sez}-{seq:7}/{yy}-{sez3}");
+    expect(p.sez_slots).toEqual(["sez", "sez3"]); // slot order, gap kept
+  });
+
+  it("{seq} without width → no padding", () => {
+    expect(parseSequencePattern("{seq}").counter_width).toBe(0);
   });
 
   it.each([
     ["", "non-empty"],
-    ["CUST-", "missing the {n}"],
-    ["{n}{n}", "exactly one"],
-    ["{n:0}", "width"],
-    ["{n:20}", "width"],
-    ["{n:abc}", "width"],
+    ["CUST-", "missing the {seq}"],
+    ["{seq}{seq}", "exactly one"],
+    ["{seq:0}", "width"],
+    ["{seq:20}", "width"],
+    ["{seq:abc}", "width"],
     ["{x}", "unknown token"],
-    ["{n", "unclosed"],
+    ["{n:5}", "unknown token"], // legacy spelling rejected — grammar is {seq:W}
+    ["{seq", "unclosed"],
     ["}", "unmatched"],
-    ["{yyyy}{yyyy}{n}", "twice"],
+    ["{yyyy}{yyyy}{seq}", "twice"],
+    ["{sez}{sez}{seq}", "twice"],
+    ["{sez4}{seq}", "unknown token"],
   ])("rejects %s (%s)", (src, msg) => {
-    expect(() => parseSequencePattern(src)).toThrowError(new RegExp(msg));
+    expect(() => parseSequencePattern(src)).toThrowError(new RegExp(msg.replace(/[{}]/g, "\\$&")));
   });
 
   it("escape braces render literally", () => {
-    const p = parseSequencePattern("A{{B}}-{n}");
+    const p = parseSequencePattern("A{{B}}-{seq}");
     expect(renderSequenceValue(p, 1n, AT)).toBe("A{B}-1");
+  });
+});
+
+describe("validateSequencePartitions + sequencePartitionKey", () => {
+  const p = parseSequencePattern("FT-{sez}-{seq:7}/{yy}-{sez3}");
+
+  it("all used slots required", () => {
+    expect(validateSequencePartitions(p, { sez: "IT", sez3: "NORD" })).toEqual({
+      sez: "IT",
+      sez3: "NORD",
+    });
+    expect(() => validateSequencePartitions(p, { sez: "IT" })).toThrow(/sez3/);
+  });
+
+  it("supplied-but-unused slot is rejected — silent mis-key forbidden", () => {
+    expect(() =>
+      validateSequencePartitions(p, { sez: "IT", sez2: "X", sez3: "N" }),
+    ).toThrow(/no \{sez2\}/);
+  });
+
+  it("values are charset-validated", () => {
+    expect(() => validateSequencePartitions(p, { sez: "", sez3: "N" })).toThrow();
+    expect(() => validateSequencePartitions(p, { sez: "a b", sez3: "N" })).toThrow();
+  });
+
+  it("partition key is slot-ordered — gaps stay meaningful", () => {
+    const key = sequencePartitionKey(p, { sez: "IT", sez3: "NORD" });
+    expect(key.split("\x1f")).toEqual(["IT", "", "NORD"]);
+    const solo3 = parseSequencePattern("X-{sez3}-{seq}");
+    expect(sequencePartitionKey(solo3, { sez3: "C" })).not.toBe("C");
   });
 });
 
 describe("renderSequenceValue — golden strings", () => {
   it.each([
-    ["CUST-{n:5}", 42n, "CUST-00042"],
-    ["{n}", 7n, "7"],
-    ["{n:3}", 1000n, "1000"], // overflow: min-width pad, never truncated
-    ["FAT-{yyyy}-{n:4}", 1n, "FAT-2026-0001"],
-    ["{yy}{MM}{dd}-{n:2}", 9n, "261226-09"],
-    ["{q}-{n:2}", 5n, "Q4-05"],
-    ["N{n:2}", -7n, "N-07"], // negative renders sign, never breaks
-  ])("%s + %s → %s", (src, c, want) => {
-    expect(renderSequenceValue(parseSequencePattern(src), c, AT)).toBe(want);
+    ["CUST-{seq:5}", 42n, {}, "CUST-00042"],
+    ["{seq}", 7n, {}, "7"],
+    ["{seq:3}", 1000n, {}, "1000"], // overflow: min-width pad, never truncated
+    ["FAT-{yyyy}-{seq:4}", 1n, {}, "FAT-2026-0001"],
+    ["{yy}{MM}{dd}-{seq:2}", 9n, {}, "261226-09"],
+    ["{q}-{seq:2}", 5n, {}, "Q4-05"],
+    ["N{seq:2}", -7n, {}, "N-07"], // negative renders sign, never breaks
+    [
+      "FT-{sez}-{seq:7}/{yy}-{sez3}",
+      1n,
+      { partitions: { sez: "IT-GOODS", sez3: "NORD" } },
+      "FT-IT-GOODS-0000001/26-NORD",
+    ],
+  ])("%s + %s → %s", (src, c, opts, want) => {
+    expect(renderSequenceValue(parseSequencePattern(src), c, AT, opts)).toBe(want);
+  });
+
+  it("sez token without value throws — never silent", () => {
+    const p = parseSequencePattern("X-{sez}-{seq}");
+    expect(() => renderSequenceValue(p, 1n, AT)).toThrow(/sez/);
   });
 
   it("bigint beyond MAX_SAFE_INTEGER renders exactly", () => {
-    const p = parseSequencePattern("{n}");
+    const p = parseSequencePattern("{seq}");
     expect(renderSequenceValue(p, 9007199254740993n, AT)).toBe("9007199254740993");
   });
 });
 
-describe("derivePeriodKey — period identity", () => {
+describe("derivePeriodKey — period identity (business date)", () => {
   it.each([
     ["none", ""],
     ["year", "2026"],
@@ -93,6 +145,13 @@ describe("derivePeriodKey — period identity", () => {
     expect(derivePeriodKey("year", new Date("2027-01-01T00:00:00Z"))).toBe("2027");
   });
 
+  it("backdated document lands in its own period — Jan issue, Dec invoice", () => {
+    const docDate = new Date("2026-12-31T00:00:00Z");
+    expect(derivePeriodKey("year", docDate)).toBe("2026");
+    const p = parseSequencePattern("FT/{seq:6}/{yy}");
+    expect(renderSequenceValue(p, 1n, docDate)).toBe("FT/000001/26");
+  });
+
   it("tz matters — Dec31 23:00 UTC is Jan1 in Rome", () => {
     const at = new Date("2026-12-31T23:00:00Z");
     expect(derivePeriodKey("day", at, "UTC")).toBe("2026-12-31");
@@ -102,7 +161,7 @@ describe("derivePeriodKey — period identity", () => {
 
 describe("renderSequenceRange / sequencePreview — forecast = generator", () => {
   it("range honors start+step", () => {
-    const p = parseSequencePattern("CUST-{n:3}");
+    const p = parseSequencePattern("CUST-{seq:3}");
     expect(renderSequenceRange(p, 10n, 5n, 3, AT)).toEqual([
       "CUST-010",
       "CUST-015",
@@ -111,12 +170,12 @@ describe("renderSequenceRange / sequencePreview — forecast = generator", () =>
   });
 
   it("negative step counts down", () => {
-    const p = parseSequencePattern("{n:2}");
+    const p = parseSequencePattern("{seq:2}");
     expect(renderSequenceRange(p, 10n, -1n, 3, AT)).toEqual(["10", "09", "08"]);
   });
 
   it("preview shows first..last of the same series", () => {
-    const p = parseSequencePattern("CUST-{n:3}");
+    const p = parseSequencePattern("CUST-{seq:3}");
     const pv = sequencePreview(p, 10n, 5n, 3, AT);
     expect(pv).toEqual({ first: "CUST-010", last: "CUST-020" });
     expect(sequencePreview(p, 1n, 1n, 0, AT)).toEqual({ first: null, last: null });
