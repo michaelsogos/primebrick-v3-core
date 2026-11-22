@@ -142,8 +142,6 @@ export type FormFieldPlacement = {
    *  (`false` → required). May only LOOSEN to optional, never tighten
    *  past the physical contract. */
   required?: boolean;
-  /** Render the control read-only (e.g. audit-ish fields on edit). */
-  readonly?: boolean;
   // `widget`/`options_source`/`allow_create` were REMOVED from the
   // placement — they are the column's semantic input contract and live
   // on `MetaColumn` (meta.columns), readable by every surface (forms,
