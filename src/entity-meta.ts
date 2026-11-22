@@ -969,6 +969,16 @@ export interface EntityMeta {
   /** Per-op enable overrides — may ONLY toggle `enabled` on route-backed
    *  ops; a missing route already produces `enabled: false`. */
   actions_overrides?: ActionsOverrides;
+  /** Create surface declaration — HOW `create.single` is exercised.
+   *  `"form"` (default when absent) → census `kind:"create"` route +
+   *  `page_props.form` → `EntityFormPage` page (the canonical archetype).
+   *  `"sheet"` → NO route required (a sheet is never a nav leaf): the
+   *  list create CTA opens `entity.record` in `mode:"create"` — the same
+   *  record panel, no fetch, empty draft, POST on commit.
+   *  Authored on the entity meta — never via component props. */
+  create?: {
+    surface?: "form" | "sheet";
+  };
   /** Entity field dictionary (root-level, transversal). */
   columns: MetaColumn[];
   /** Table options — omit when the entity has no table page
