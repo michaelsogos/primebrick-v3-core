@@ -420,12 +420,16 @@ export interface SequenceTokenSpec {
   example(ctx?: Partial<SequenceTokenContext>): string;
 }
 
-/** Illustrative defaults the catalog falls back to when the caller does
- *  not override the example context. */
-const TOKEN_EXAMPLE_DEFAULTS = {
+/** Illustrative defaults the catalog (and any pattern-builder preview)
+ *  falls back to when the caller does not override the example context —
+ *  exported so the authoring widget and the token sheet share ONE set
+ *  of sample values instead of re-declaring them. */
+export const sequenceTokenExampleDefaults = {
   counter: 42n,
   partitions: { sez: "A", sez2: "01", sez3: "X" },
 } as const;
+
+const TOKEN_EXAMPLE_DEFAULTS = sequenceTokenExampleDefaults;
 
 function tokenCtx(ctx?: Partial<SequenceTokenContext>): {
   counter: bigint; at: Date; tz?: string; partitions: Required<SequencePartitions>;

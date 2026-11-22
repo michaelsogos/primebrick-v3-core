@@ -1472,6 +1472,20 @@ label can never drift apart even by accident.
 
 **Type:** `Record<string, ActionColor>`
 
+### `sequenceTokenExampleDefaults`
+
+Illustrative defaults the catalog (and any pattern-builder preview)
+ falls back to when the caller does not override the example context —
+ exported so the authoring widget and the token sheet share ONE set
+ of sample values instead of re-declaring them.
+
+**Type:** `{ counter: {"value":"42","negative":false}; partitions: { sez: "A"; sez2: "01"; sez3: "X" } }`
+
+| Field | Value |
+|-------|-------|
+| counter | {"value":"42","negative":false} |
+| partitions | "" |
+
 ### `SLUG_RE`
 
 `slug` — letter-leading, internal `-` allowed (`test-role`,
