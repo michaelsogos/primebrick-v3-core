@@ -148,6 +148,9 @@ export type FormFieldPlacement = {
   // placement — they are the column's semantic input contract and live
   // on `MetaColumn` (meta.columns), readable by every surface (forms,
   // filters, docs). A placement carrying them is an enrollment error.
+  // `kind`/`managed`/`audited`/`uid`/`hidden` are likewise rejected:
+  // served/derived MetaColumn semantics — never authored in page layout
+  // (SDK `validateFormPage` enforces both sets at declaration time).
 };
 
 /**
