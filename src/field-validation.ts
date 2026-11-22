@@ -680,6 +680,16 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
     case "slug": if (!isSlug(value)) fmtFail(); break;
     case "no_space": if (!isNoSpace(value)) fmtFail(); break;
     case "lang": if (!isLang(value)) fmtFail(); break;
+    case "sequence_pattern": {
+      // Authored pattern string — the SAME parser the wire `vPattern`
+      // and the form widget run; the verdict can never drift.
+      try {
+        parseSequencePattern(value);
+      } catch {
+        fmtFail();
+      }
+      break;
+    }
   }
   if (out.length === formatBefore && typeof col.pattern === "string" && col.pattern !== "") {
     try {

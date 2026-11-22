@@ -252,6 +252,13 @@ export type MetaColumnFormat =
   | "no_space"
   | "lang"
   | "sequence"
+  /** Sequence PATTERN authoring — a plain string that must satisfy the
+   *  closed sequence grammar (`parseSequencePattern`). Renders the
+   *  pattern-builder widget (literal typing + token-catalog sheet +
+   *  interpolated preview). Distinct from `sequence`, which is the
+   *  seq-BOUND directive wire value (`{seq:uuid}`), never authored as
+   *  text. */
+  | "sequence_pattern"
   /** Stored i18n key AS DATA (dict `label_key`/`description_key`) — renders
    *  as a `languages`-icon badge carrying the resolved translation, raw
    *  key in the tooltip; unresolved keys show mono-raw (same anatomy as
