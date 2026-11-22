@@ -2,10 +2,13 @@ import { describe, expect, it } from "vitest";
 import {
   derivePeriodKey,
   parseSequencePattern,
+  removeSequenceToken,
   renderSequenceRange,
   renderSequenceValue,
   sequencePartitionKey,
   sequencePreview,
+  sequenceTokenCatalog,
+  usedSequenceTokens,
   validateSequencePartitions,
 } from "./sequence.js";
 
@@ -179,5 +182,72 @@ describe("renderSequenceRange / sequencePreview — forecast = generator", () =>
     const pv = sequencePreview(p, 10n, 5n, 3, AT);
     expect(pv).toEqual({ first: "CUST-010", last: "CUST-020" });
     expect(sequencePreview(p, 1n, 1n, 0, AT)).toEqual({ first: null, last: null });
+  });
+});
+
+describe("time tokens — cosmetic stamps, never period-scoped", () => {
+  const AT_TIME = new Date("2026-12-26T14:37:05Z");
+
+  it("render HH/hh/mm/ss zero-padded", () => {
+    const p = parseSequencePattern("L{seq:3}-{HH}:{mm}:{ss}");
+    expect(renderSequenceValue(p, 7n, AT_TIME)).toBe("L007-14:37:05");
+    expect(renderSequenceValue(parseSequencePattern("T{seq}-{hh}{mm}"), 1n, AT_TIME)).toBe("T1-0237");
+  });
+
+  it("hh renders 12-hour (0→12, 13→01)", () => {
+    const midnight = new Date("2026-12-26T00:05:00Z");
+    const afternoon = new Date("2026-12-26T13:05:00Z");
+    expect(renderSequenceValue(parseSequencePattern("{seq}-{hh}"), 1n, midnight)).toBe("1-12");
+    expect(renderSequenceValue(parseSequencePattern("{seq}-{hh}"), 1n, afternoon)).toBe("1-01");
+  });
+
+  it("time tokens never scope the period", () => {
+    expect(parseSequencePattern("{seq}-{HH}:{mm}").period_kind).toBe("none");
+    expect(parseSequencePattern("{seq}-{dd}{HH}").period_kind).toBe("day");
+  });
+
+  it("case is the grammar — {MM} month vs {mm} minutes coexist", () => {
+    const p = parseSequencePattern("{seq}-{MM}{mm}");
+    expect(p.segments.map((s) => s.kind)).toEqual(["counter", "literal", "date", "time"]);
+    expect(renderSequenceValue(p, 1n, AT_TIME)).toBe("1-1237");
+  });
+
+  it.each([
+    ["{seq}{mm}{mm}", "twice"],
+    ["{seq}{HH}{HH}", "twice"],
+  ])("rejects %s (%s)", (src, msg) => {
+    expect(() => parseSequencePattern(src)).toThrowError(new RegExp(msg));
+  });
+});
+
+describe("usedSequenceTokens / removeSequenceToken / catalog", () => {
+  it("used reports consumed slots including time", () => {
+    const used = usedSequenceTokens("INV-{yyyy}-{seq:4}-{mm}");
+    expect(used.has("seq")).toBe(true);
+    expect(used.has("yyyy")).toBe(true);
+    expect(used.has("mm")).toBe(true);
+    expect(used.has("MM")).toBe(false);
+  });
+
+  it("remove strips the whole {seq:W} span, escapes untouched", () => {
+    expect(removeSequenceToken("INV-{seq:4}-X", "seq")).toBe("INV--X");
+    expect(removeSequenceToken("INV-{seq}-X", "seq")).toBe("INV--X");
+    expect(removeSequenceToken("A-{{seq}}-{seq}", "seq")).toBe("A-{{seq}}-");
+    expect(removeSequenceToken("A-{yyyy}{seq}", "yyyy")).toBe("A-{seq}");
+    expect(removeSequenceToken("A-{seq}", "dd")).toBe("A-{seq}");
+  });
+
+  it("catalog carries collision-free keys + time specs", () => {
+    const cat = sequenceTokenCatalog();
+    expect(cat.filter((s) => s.kind === "counter")).toHaveLength(1);
+    expect(cat.map((s) => s.id)).toEqual(
+      expect.arrayContaining(["seq", "MM", "mm", "HH", "hh", "ss"]),
+    );
+    const keys = cat.map((s) => s.key);
+    expect(new Set(keys).size).toBe(keys.length);
+    expect(cat.find((s) => s.id === "mm")!.key).toBe("min");
+    expect(cat.find((s) => s.id === "MM")!.key).toBe("mm");
+    expect(cat.find((s) => s.id === "hh")!.key).toBe("hh12");
+    expect(cat.find((s) => s.id === "HH")!.key).toBe("hh");
   });
 });

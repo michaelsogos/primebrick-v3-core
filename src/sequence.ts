@@ -7,9 +7,10 @@
  *
  * Grammar (closed):
  *
- *   segment   := literal | counter | dateToken | partition
+ *   segment   := literal | counter | dateToken | timeToken | partition
  *   counter   := "{seq}" | "{seq:" width "}"     — exactly ONE per pattern
  *   dateToken := "{yyyy}" | "{yy}" | "{MM}" | "{dd}" | "{q}"
+ *   timeToken := "{HH}" | "{hh}" | "{mm}" | "{ss}" — at most once each
  *   partition := "{sez}" | "{sez2}" | "{sez3}"   — up to 3, any position
  *   literal   := any chars except unescaped braces; "{{"→"{", "}}"→"}"
  *
@@ -22,7 +23,13 @@
  *  - a pattern carrying date tokens is PERIOD-SCOPED by its finest
  *    token: `{yyyy}`→reset per year, `+{q}`→per quarter, `+{MM}`→per
  *    month, `+{dd}`→per day (Italian-invoice semantics — no holes,
- *    no duplicates inside one period);
+ *    no duplicates inside one period). TIME TOKENS NEVER SCOPE the
+ *    counter — `{mm}`/`{ss}` are claim-time cosmetics (a timestamp
+ *    suffix), not period granularity: an hourly counter reset would
+ *    be a different feature entirely;
+ *  - case IS the grammar: `{MM}` is month, `{mm}` is minutes; `{HH}`
+ *    is 24-hour, `{hh}` is 12-hour — the token sets are disjoint by
+ *    case, exactly like strftime/moment conventions;
  *  - `{sez}`/`{sez2}`/`{sez3}` are POSITIONAL sezionale slots rendered
  *    from directive fields (`sez`, `sez2`, `sez3`); the counter PK is
  *    `(sequence_id, period_key, partition_key)` where partition_key is
@@ -36,6 +43,10 @@
 
 export type SequenceDateToken = "yyyy" | "yy" | "MM" | "dd" | "q";
 
+/** `{HH}`=24h, `{hh}`=12h, `{mm}`=minutes, `{ss}`=seconds — cosmetic
+ *  claim-time stamps; NEVER participate in `period_key`. */
+export type SequenceTimeToken = "HH" | "hh" | "mm" | "ss";
+
 export type SequenceSezToken = "sez" | "sez2" | "sez3";
 
 export type SequencePeriodKind = "none" | "year" | "quarter" | "month" | "day";
@@ -44,6 +55,7 @@ export type SequenceSegment =
   | { kind: "literal"; text: string }
   | { kind: "counter"; width: number }
   | { kind: "date"; token: SequenceDateToken }
+  | { kind: "time"; token: SequenceTimeToken }
   | { kind: "sez"; slot: SequenceSezToken };
 
 /** Sezionale values supplied per assignment — positional per token. */
@@ -67,6 +79,7 @@ const DEFAULT_COUNTER_WIDTH = 0;
 const MAX_COUNTER_WIDTH = 19;
 
 const DATE_TOKENS = new Set<string>(["yyyy", "yy", "MM", "dd", "q"]);
+const TIME_TOKENS = new Set<string>(["HH", "hh", "mm", "ss"]);
 const SEZ_TOKENS = new Set<string>(["sez", "sez2", "sez3"]);
 
 /** Finest period each date token implies — `yyyy`/`yy` share `year`. */
@@ -96,6 +109,7 @@ export function parseSequencePattern(source: string): SequencePattern {
   }
   const segments: SequenceSegment[] = [];
   const seenDates = new Set<SequenceDateToken>();
+  const seenTimes = new Set<SequenceTimeToken>();
   const seenSez = new Set<SequenceSezToken>();
   let counter_width = DEFAULT_COUNTER_WIDTH;
   let counters = 0;
@@ -142,9 +156,16 @@ export function parseSequencePattern(source: string): SequencePattern {
         }
         seenDates.add(t);
         segments.push({ kind: "date", token: t });
+      } else if (TIME_TOKENS.has(token)) {
+        const t = token as SequenceTimeToken;
+        if (seenTimes.has(t)) {
+          throw new Error(`sequence pattern: {${t}} appears twice`);
+        }
+        seenTimes.add(t);
+        segments.push({ kind: "time", token: t });
       } else {
         throw new Error(
-          `sequence pattern: unknown token {${token}} — allowed: {seq[:W]}, {yyyy}, {yy}, {MM}, {dd}, {q}, {sez}, {sez2}, {sez3}`,
+          `sequence pattern: unknown token {${token}} — allowed: {seq[:W]}, {yyyy}, {yy}, {MM}, {dd}, {q}, {HH}, {hh}, {mm}, {ss}, {sez}, {sez2}, {sez3}`,
         );
       }
       i = end;
@@ -216,18 +237,27 @@ export function sequencePartitionKey(
  * day boundary is a business convention, declared per sequence/ad-hoc
  * directive, never ambient).
  */
-function dateParts(at: Date, tz?: string): { yyyy: number; yy: number; MM: number; dd: number; q: number } {
+function dateParts(at: Date, tz?: string): {
+  yyyy: number; yy: number; MM: number; dd: number; q: number;
+  HH: number; hh: number; mm: number; ss: number;
+} {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: tz ?? "UTC",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
   }).formatToParts(at);
   const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
   const y = Number(get("year"));
   const m = Number(get("month"));
   const d = Number(get("day"));
-  return { yyyy: y, yy: y % 100, MM: m, dd: d, q: Math.ceil(m / 3) };
+  const h24 = Number(get("hour"));
+  const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+  return { yyyy: y, yy: y % 100, MM: m, dd: d, q: Math.ceil(m / 3), HH: h24, hh: h12, mm: Number(get("minute")), ss: Number(get("second")) };
 }
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
@@ -238,6 +268,13 @@ function renderDateToken(token: SequenceDateToken, p: ReturnType<typeof datePart
     : token === "MM" ? pad2(p.MM)
     : token === "dd" ? pad2(p.dd)
     : `Q${p.q}`;
+}
+
+function renderTimeToken(token: SequenceTimeToken, p: ReturnType<typeof dateParts>): string {
+  return token === "HH" ? pad2(p.HH)
+    : token === "hh" ? pad2(p.hh)
+    : token === "mm" ? pad2(p.mm)
+    : pad2(p.ss);
 }
 
 function renderCounter(width: number, counter: bigint): string {
@@ -283,13 +320,15 @@ export function renderSequenceValue(
   at: Date,
   opts?: { tz?: string; partitions?: SequencePartitions },
 ): string {
-  const parts = pattern.segments.some((s) => s.kind === "date") ? dateParts(at, opts?.tz) : null;
+  const parts = pattern.segments.some((s) => s.kind === "date" || s.kind === "time") ? dateParts(at, opts?.tz) : null;
   let out = "";
   for (const seg of pattern.segments) {
     if (seg.kind === "literal") {
       out += seg.text;
     } else if (seg.kind === "counter") {
       out += renderCounter(seg.width, counter);
+    } else if (seg.kind === "time") {
+      out += renderTimeToken(seg.token, parts!);
     } else if (seg.kind === "sez") {
       const v = opts?.partitions?.[seg.slot];
       if (v === undefined) {
@@ -362,13 +401,19 @@ export interface SequenceTokenContext {
 /** One insertable entry of the pattern grammar — the SINGLE catalog the
  *  authoring widget lists, so the FE never re-declares the token set. */
 export interface SequenceTokenSpec {
-  /** i18n key suffix — `app.widgets.sequence_pattern.tokens.<id>`. */
+  /** Catalog identity — testids and the spec discriminator. */
   id: string;
-  /** Insertable source text — `{seq:5}` is the width *example*: the
-   *  digit stays literal text the user edits after insertion. */
+  /** i18n key suffix — `app.widgets.sequence_pattern.tokens.<key>`.
+   *  Explicit because the key grammar is lowercase-only and token ids
+   *  are case-meaningful: `{MM}` (month) and `{mm}` (minutes) would
+   *  both lowercase to `mm` — so minutes carries `min`, and `{HH}`/
+   *  `{hh}` carry `hh`/`hh12`. */
+  key: string;
+  /** Insertable source text — for `kind:"counter"` the panel composes
+   *  `{seq}`/`{seq:W}` from its padding form, so this stays `{seq}`. */
   insert: string;
-  kind: "counter" | "date" | "sez" | "literal";
-  /** The used-set slot this insert consumes (`seq`, `yyyy`, `sez`…).
+  kind: "counter" | "date" | "time" | "sez" | "literal";
+  /** The used-set slot this insert consumes (`seq`, `yyyy`, `HH`, `sez`…).
    *  `undefined` for repeatable literals — `{{`/`}}` never mark used. */
   slot?: string;
   /** Rendered example under ctx — shared render helpers, zero drift. */
@@ -403,22 +448,17 @@ export function sequenceTokenCatalog(): SequenceTokenSpec[] {
   const specs: SequenceTokenSpec[] = [
     {
       id: "seq",
+      key: "seq",
       insert: "{seq}",
       kind: "counter",
       slot: "seq",
       example: (ctx) => renderCounter(0, tokenCtx(ctx).counter),
     },
-    {
-      id: "seq_width",
-      insert: "{seq:5}",
-      kind: "counter",
-      slot: "seq",
-      example: (ctx) => renderCounter(5, tokenCtx(ctx).counter),
-    },
   ];
   for (const t of ["yyyy", "yy", "MM", "dd", "q"] as const) {
     specs.push({
       id: t,
+      key: t.toLowerCase(),
       insert: `{${t}}`,
       kind: "date",
       slot: t,
@@ -428,9 +468,26 @@ export function sequenceTokenCatalog(): SequenceTokenSpec[] {
       },
     });
   }
+  // `{MM}`/`{mm}` and `{HH}`/`{hh}` differ only by case — the lowercase
+  // key grammar forces explicit, collision-free key segments.
+  const TIME_KEYS: Record<SequenceTimeToken, string> = { HH: "hh", hh: "hh12", mm: "min", ss: "ss" };
+  for (const t of ["HH", "hh", "mm", "ss"] as const) {
+    specs.push({
+      id: t,
+      key: TIME_KEYS[t],
+      insert: `{${t}}`,
+      kind: "time",
+      slot: t,
+      example: (ctx) => {
+        const c = tokenCtx(ctx);
+        return renderTimeToken(t, dateParts(c.at, c.tz));
+      },
+    });
+  }
   for (const s of ["sez", "sez2", "sez3"] as const) {
     specs.push({
       id: s,
+      key: s,
       insert: `{${s}}`,
       kind: "sez",
       slot: s,
@@ -438,8 +495,8 @@ export function sequenceTokenCatalog(): SequenceTokenSpec[] {
     });
   }
   specs.push(
-    { id: "brace_open", insert: "{{", kind: "literal", example: () => "{" },
-    { id: "brace_close", insert: "}}", kind: "literal", example: () => "}" },
+    { id: "brace_open", key: "brace_open", insert: "{{", kind: "literal", example: () => "{" },
+    { id: "brace_close", key: "brace_close", insert: "}}", kind: "literal", example: () => "}" },
   );
   return specs;
 }
@@ -462,10 +519,36 @@ export function usedSequenceTokens(source: string): Set<string> {
     if (end === -1) break;
     const token = source.slice(i + 1, end);
     if (token === "seq" || token.startsWith("seq:")) used.add("seq");
-    else if (DATE_TOKENS.has(token) || SEZ_TOKENS.has(token)) used.add(token);
+    else if (DATE_TOKENS.has(token) || TIME_TOKENS.has(token) || SEZ_TOKENS.has(token)) used.add(token);
     i = end;
   }
   return used;
+}
+
+/**
+ * Remove the FIRST occurrence of a token slot from the pattern source —
+ * the sheet's "unuse" affordance (`-` on a consumed slot). `slot` is the
+ * used-set name: `seq` strips `{seq}` or `{seq:W}` whole (the width is
+ * part of the token, not trailing text); every other slot strips the
+ * literal `{slot}` span. Escaped `{{`/`}}` are skipped exactly like the
+ * tokenizer reads them, so `{{seq}}` literals are never stripped.
+ * Never throws — a slot not present returns the source unchanged.
+ */
+export function removeSequenceToken(source: string, slot: string): string {
+  for (let i = 0; i < source.length; i++) {
+    if (source[i] !== "{") continue;
+    if (source[i + 1] === "{") {
+      i++;
+      continue;
+    }
+    const end = source.indexOf("}", i + 1);
+    if (end === -1) break;
+    const token = source.slice(i + 1, end);
+    const match = slot === "seq" ? token === "seq" || token.startsWith("seq:") : token === slot;
+    if (match) return source.slice(0, i) + source.slice(end + 1);
+    i = end;
+  }
+  return source;
 }
 
 /**
