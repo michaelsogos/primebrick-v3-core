@@ -515,6 +515,26 @@ export type MetaColumn = {
    *  (idp_code, avatar_initials, onboarding_completed). Distinct from
    *  `managed` (DB-filled key) and `audited` (lifecycle facts). */
   immutable?: boolean;
+  /**
+   * `default` — the column's create-surface initial value. Two sources,
+   * ONE served key:
+   *
+   *   - DERIVED — injected by `withColumnConstraints` from the entity
+   *     class `@Column({defaultSql})` when the expression is a constant
+   *     literal, parsed to the column's wire type per `pg_type`
+   *     (`"1"` on int8 → `1n`, `"false"` on boolean → `false`,
+   *     `'x'` → `x`). Volatile expressions (`uuidv7()`, `now()`) are
+   *     NEVER served — nothing a form can prefill.
+   *   - AUTHORED — a `*.meta.ts` may declare `default` to override the
+   *     derived value: the legal and only override channel (e.g. a
+   *     domain default different from the physical one, or a value
+   *     not expressible as a SQL literal such as a `{seq:{…}}`
+   *     directive).
+   *
+   * Consumed ONLY as the create-surface prefill (update surfaces read
+   * the record); the placement-level `default_value` overrides it per
+   * form. Wire: ext-json typed — `bigint`/`Decimal` survive verbatim. */
+  default?: unknown;
 
   // AUTHORED — semantic contract the entity class cannot express.
   /** Field format — see {@link MetaColumnFormat}. */
