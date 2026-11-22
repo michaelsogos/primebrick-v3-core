@@ -280,7 +280,7 @@ export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "aud
  *  - `"generate"` — inline pattern builder emitting a `{seq:{pattern,…}}`
  *    directive (resolved + materialized inside the write transaction);
  *  - `"select"` — combobox over the module's `sequence` registry,
- *    emitting `{seq:{code}}`/`{seq:"<uuid>"}`.
+ *    emitting `{seq:{uuid}}` (uuid is the ONLY sequence identity).
  */
 export type SequenceMode = "generate" | "select";
 
@@ -596,8 +596,11 @@ export type MetaColumn = {
    *  transaction. `default_mode` defaults to "generate"; `modes` to
    *  both; `allow_create` to true. */
   seq?: {
-    /** DERIVED default sequence code — `<table>.<field>`. */
-    code?: string;
+    /** DERIVED default sequence identity — deterministic uuid of the
+     *  `<table>.<field>` bound row (computable before the row exists). */
+    uuid?: string;
+    /** DERIVED bound name — `<table>.<field>` (display only). */
+    name?: string;
     /** AUTHORED — widget modes offered (default: both). `readonly` so a
      *  `DeepReadonly<MetaColumn>` (served-meta getter contract) stays
      *  assignable to `readonly MetaColumn[]` consumers. */

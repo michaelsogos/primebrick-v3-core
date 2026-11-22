@@ -661,19 +661,18 @@ describe("parseMapKeysDeclaration", () => {
 describe("sequence directives", () => {
   const SEQ_UUID = "11111111-2222-4333-8444-555555555555";
   const seqCol = () =>
-    col({ key: "code", nullable: false, max_length: 20, format: "sequence", seq: { code: "test_docs.code" } });
+    col({ key: "code", nullable: false, max_length: 20, format: "sequence", seq: { uuid: SEQ_UUID, name: "test_docs.code" } });
 
-  it("parseSequenceDirective — the four accepted forms", () => {
+  it("parseSequenceDirective — the three accepted forms", () => {
     expect(parseSequenceDirective({ seq: SEQ_UUID })).toEqual({ seq: SEQ_UUID });
     expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID } })).toEqual({ seq: { uuid: SEQ_UUID } });
-    expect(parseSequenceDirective({ seq: { code: "docs.code" } })).toEqual({ seq: { code: "docs.code" } });
     expect(parseSequenceDirective({ seq: { pattern: "D-{seq:4}", step: 1n, start: 5n } }))
       .toEqual({ seq: { pattern: "D-{seq:4}", step: 1n, start: 5n, tz: undefined } });
   });
 
   it("parseSequenceDirective — sez/at context on every object form", () => {
-    expect(parseSequenceDirective({ seq: { code: "inv.num", sez: "A", at: "2026-12-01" } }))
-      .toEqual({ seq: { code: "inv.num", sez: "A", at: "2026-12-01" } });
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, sez: "A", at: "2026-12-01" } }))
+      .toEqual({ seq: { uuid: SEQ_UUID, sez: "A", at: "2026-12-01" } });
     expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, sez2: "X" } }))
       .toEqual({ seq: { uuid: SEQ_UUID, sez2: "X" } });
     expect(parseSequenceDirective({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n, sez: "A" } }))
@@ -687,23 +686,26 @@ describe("sequence directives", () => {
     expect(parseSequenceDirective({ seq: { pattern: "D-{seq:4}", step: 1n, start: 1n, sez: "A" } })).toBeNull();
     // bad sez value charset / at not a date → invalid
     expect(parseSequenceDirective({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n, sez: "A B!" } })).toBeNull();
-    expect(parseSequenceDirective({ seq: { code: "x", at: "not-a-date" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, at: "not-a-date" } })).toBeNull();
   });
 
   it("parseSequenceDirective — literals and malformed shapes rejected", () => {
     expect(parseSequenceDirective("DOC-00001")).toBeNull();
     expect(parseSequenceDirective({ seq: "not-a-uuid" })).toBeNull();
+    // the code/name form is gone — uuid is the ONLY sequence identity
+    expect(parseSequenceDirective({ seq: { code: "docs.code" } })).toBeNull();
     expect(parseSequenceDirective({ seq: { code: "" } })).toBeNull();
-    expect(parseSequenceDirective({ seq: { code: "x", extra: 1 } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { name: "docs.code" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, code: "x" } })).toBeNull();
     expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 0n, start: 1n } })).toBeNull();
     expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 1, start: 1n } })).toBeNull(); // number, not bigint
     expect(parseSequenceDirective({ seq: { pattern: "P-{{bad}}", step: 1n, start: 1n } })).toBeNull();
     expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 1n, start: 1n, tz: "Bogus/Zone" } })).toBeNull();
-    expect(parseSequenceDirective({ seq: { code: "x" }, other: 1 })).toBeNull();
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID }, other: 1 })).toBeNull();
   });
 
   it("checkFieldValue — directive accepted; literal is schema_mismatch", () => {
-    expect(checkFieldValue(seqCol(), { seq: { code: "docs.code" } })).toEqual([]);
+    expect(checkFieldValue(seqCol(), { seq: { uuid: SEQ_UUID } })).toEqual([]);
     expect(checkFieldValue(seqCol(), { seq: { pattern: "C-{seq:5}", step: 1n, start: 1n } })).toEqual([]);
     const literal = checkFieldValue(seqCol(), "DOC-00001");
     expect(has(literal, "code", "schema_mismatch")).toBe(true);
@@ -726,7 +728,7 @@ describe("sequence directives", () => {
     expect(has(issues, "code", "required")).toBe(false);
     expect(has(issues, "name", "required")).toBe(true);
     // present directive validated; literal rejected.
-    expect(checkEntityFields(m, { name: "x", code: { seq: { code: "s.x" } } })).toEqual([]);
+    expect(checkEntityFields(m, { name: "x", code: { seq: { uuid: SEQ_UUID } } })).toEqual([]);
     expect(has(checkEntityFields(m, { name: "x", code: "LIT" }), "code", "schema_mismatch")).toBe(true);
     // update: directive allowed (code is updatable), absent untouched.
     expect(checkEntityFields(m, { code: { seq: SEQ_UUID } }, { partial: true })).toEqual([]);

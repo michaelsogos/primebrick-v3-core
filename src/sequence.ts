@@ -360,17 +360,18 @@ export interface SequenceDecl {
 /**
  * The ONLY accepted wire value for a `format:"sequence"` (seq-bound)
  * column — a literal value is never writable: the repository resolves
- * the directive to the literal in-transaction. Four forms:
+ * the directive to the literal in-transaction. Three forms:
  *
  *   - `{seq:"<uuid>"}`            select a persisted sequence by uuid
  *   - `{seq:{uuid:"<uuid>"}}`     same, explicit object form
- *   - `{seq:{code:"<code>"}}`     select a persisted sequence by code
  *   - `{seq:{pattern,step,start,tz?}}`  on-the-fly definition —
  *     materialized + allocated in-transaction
  *
- * Omitting the field on create allocates from the column's default
- * sequence (`<table>.<field>`, materialized at boot); omitting on update
- * leaves the value untouched.
+ * uuid is the ONLY sequence identity — a sequence `name` is display
+ * data, never an address. Omitting the field on create allocates from
+ * the column's default sequence (`<table>.<field>` bound row,
+ * materialized on first use); omitting on update leaves the value
+ * untouched.
  */
 /** Optional per-allocation context carried by the object directive forms —
  *  the sezionale slot values (`sez`/`sez2`/`sez3` — the counter partitions
@@ -387,5 +388,4 @@ export interface SequenceDirectiveContext {
 export type SequenceDirective =
   | { seq: string }
   | { seq: { uuid: string } & SequenceDirectiveContext }
-  | { seq: { code: string } & SequenceDirectiveContext }
   | { seq: SequenceDecl & SequenceDirectiveContext };

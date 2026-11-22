@@ -254,7 +254,7 @@ export const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-f
 
 /**
  * The ONLY accepted wire shape for a `format:"sequence"` column — see
- * {@link SequenceDirective} for the four forms. Returns the parsed
+ * {@link SequenceDirective} for the three forms. Returns the parsed
  * directive or `null` (shape/decl violation — the caller emits the
  * `app.common.validation.sequence_directive` issue). A literal value is
  * never writable: the repository resolves the directive in-transaction.
@@ -281,12 +281,10 @@ export function parseSequenceDirective(raw: unknown): SequenceDirective | null {
   }
   if (ctx.at !== undefined && Number.isNaN(new Date(ctx.at).getTime())) return null;
   const base = new Set(skeys.filter((k) => !(CTX as readonly string[]).includes(k)));
-  // `{seq:{uuid:"…"}}` / `{seq:{code:"…"}}` — select an existing sequence.
+  // `{seq:{uuid:"…"}}` — select an existing sequence (uuid is the ONLY
+  // identity; a sequence `name` is display data, never an address).
   if (base.size === 1 && base.has("uuid") && typeof s.uuid === "string" && UUID_REGEX.test(s.uuid)) {
     return { seq: { uuid: s.uuid, ...ctx } };
-  }
-  if (base.size === 1 && base.has("code") && typeof s.code === "string" && s.code.length > 0) {
-    return { seq: { code: s.code, ...ctx } };
   }
   // `{seq:{pattern, step, start, tz?}}` — on-the-fly definition; the same
   // decl gate `@SequenceField` applies (closed key set, bigint-only
