@@ -271,7 +271,7 @@ export type MetaColumnFormat =
  * the same contract feeds forms, list filters and docs generation.
  * Closed union on purpose — an unknown source is a construction error.
  */
-export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors" | "system.roles";
+export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors" | "system.roles" | "iana.tzones";
 
 /**
  * Option vocabulary a unit-of-measure selector may draw from.
@@ -651,6 +651,10 @@ export type MetaColumn = {
    * `callables.callables` — governed LISTEN subjects a rule/scheduler
    * may invoke. Census sources only offer declared values — see
    * `allow_create`.
+   * `"iana.tzones"`: the IANA time-zone list resolved CLIENT-SIDE via
+   * `Intl.supportedValuesOf("timeZone")` (same source the date picker's
+   * zone selector uses) — a closed vocabulary, `allow_create` is a
+   * construction error.
    */
   options_source?: MetaColumnOptionsSource;
   /**
