@@ -42,6 +42,7 @@ UI configuration for a selection-aware bulk CTA (endpoint-backed op
 | translation_key | `string` | i18n key for the CTA label. |
 | icon | `string` | Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. |
 | color | `ActionColor` | Semantic color for icon + label together — see `ActionColor`. |
+| variant | `ActionVariant` | CTA shape — `default` or `outline` (CTA-only axis, never dialogs). |
 | required_permission | `string \| string[]` | Permission required to see/use the action. |
 | requires_selection | `boolean` | When true, the CTA is enabled only with rows selected and the body
  receives `selected_uuids`; false = fires with an empty body
@@ -114,6 +115,10 @@ unavailable for everyone (route missing or product-disabled).
  `crud_action` route, or `meta.actions_overrides[op]`. |
 | icon | `string` |  |
 | color | `ActionColor` |  |
+| variant | `ActionVariant` | CTA shape — `default` (filled severity variant) or `outline`
+ (gradient-outline ghost). CTA-only axis: it never reaches the
+ dialog surface — dialog `tone="soft"` stays the reserved
+ auth/security family, unreachable from meta. |
 | confirm_key | `string` | Confirm-dialog message template override (`{entity}`/`{name}` for
  single ops, `{count}`/`{entity}` for bulk). When set it replaces the
  standard `app.common.{delete,restore}Entit{y,ies}Confirm` copy —
@@ -401,6 +406,7 @@ UI configuration for a non-standard row CTA (route-backed bare op).
 | translation_key | `string` | i18n key for the CTA label. |
 | icon | `string` | Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. |
 | color | `ActionColor` | Semantic color for icon + label together — see `ActionColor`. |
+| variant | `ActionVariant` | CTA shape — `default` or `outline` (CTA-only axis, never dialogs). |
 | disabled_when_deleted | `boolean` | Disable the CTA on soft-deleted rows. |
 | required_permission | `string \| string[]` | Permission required to see/use the action (filtered client-side
  against the user's permission set). |
@@ -542,7 +548,21 @@ Closed action-color vocabulary — ONE semantic drives BOTH the icon and
 Per-op overrides — `enabled` toggles route-backed ops; chrome fields
  restyle the standard CTA without touching its logic.
 
-**Type:** `Record<string, { enabled: boolean; label_key: string; icon: string; color: ActionColor; confirm_key: string; busy_key: string }>`
+**Type:** `Record<string, { enabled: boolean; label_key: string; icon: string; color: ActionColor; variant: ActionVariant; confirm_key: string; busy_key: string }>`
+
+### `ActionVariant`
+
+Closed action-variant vocabulary — the CTA SHAPE axis, orthogonal to
+`color`. Same names as the svelte `Button` shape prop:
+`default` = filled severity variant (the standard look);
+`outline` = gradient-outline ghost (secondary affordance, e.g. export).
+`variant` reaches ONLY the CTA — never the dialog: an "outline dialog"
+would be the `tone="soft"` security-family style, and that tone is
+semantically reserved (MFA/OTP/session), not a shape pick.
+A meta may never smuggle a shape outside this set — the enum IS the
+contract.
+
+**Type:** `"default" \| "outline"`
 
 ### `CallableDecl`
 
@@ -1233,6 +1253,13 @@ anything outside this closed set (raw strings on the wire can never reach
 the renderer).
 
 **Type:** `readonly ActionColor[]`
+
+### `ACTION_VARIANTS`
+
+The full `ActionVariant` vocabulary — construction/lint validation
+ rejects anything outside this closed set.
+
+**Type:** `readonly ActionVariant[]`
 
 ### `DEFAULT_PAGE_ICON`
 
@@ -2784,7 +2811,7 @@ reports `seq` used — the UI affordance must survive invalid states.
 |-----------|------|-------------|
 | source | `string` |  |
 
-### `validateActionChrome(icon, color): string \| null`
+### `validateActionChrome(icon, color, variant): string \| null`
 
 Validates the icon↔color contract of a single action chrome override.
 Returns a diagnostic string on violation, `null` when the pair is legal:
@@ -2796,6 +2823,7 @@ Returns a diagnostic string on violation, `null` when the pair is legal:
 |-----------|------|-------------|
 | icon | `string \| undefined` |  |
 | color | `string \| undefined` |  |
+| variant | `string` |  |
 
 ### `validateSequencePartitions(pattern, partitions): SequencePartitions`
 

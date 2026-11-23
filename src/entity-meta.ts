@@ -69,6 +69,11 @@ export interface EntityAction {
   label_key?: string;
   icon?: string;
   color?: ActionColor;
+  /** CTA shape — `default` (filled severity variant) or `outline`
+   *  (gradient-outline ghost). CTA-only axis: it never reaches the
+   *  dialog surface — dialog `tone="soft"` stays the reserved
+   *  auth/security family, unreachable from meta. */
+  variant?: ActionVariant;
   /** Confirm-dialog message template override (`{entity}`/`{name}` for
    *  single ops, `{count}`/`{entity}` for bulk). When set it replaces the
    *  standard `app.common.{delete,restore}Entit{y,ies}Confirm` copy —
@@ -88,6 +93,7 @@ export type ActionsOverrides = Record<
     label_key?: string;
     icon?: string;
     color?: ActionColor;
+    variant?: ActionVariant;
     confirm_key?: string;
     busy_key?: string;
   }
@@ -123,6 +129,23 @@ export const ACTION_COLORS: readonly ActionColor[] = [
   "destructive",
   "violet",
 ];
+
+/**
+ * Closed action-variant vocabulary — the CTA SHAPE axis, orthogonal to
+ * `color`. Same names as the svelte `Button` shape prop:
+ * `default` = filled severity variant (the standard look);
+ * `outline` = gradient-outline ghost (secondary affordance, e.g. export).
+ * `variant` reaches ONLY the CTA — never the dialog: an "outline dialog"
+ * would be the `tone="soft"` security-family style, and that tone is
+ * semantically reserved (MFA/OTP/session), not a shape pick.
+ * A meta may never smuggle a shape outside this set — the enum IS the
+ * contract.
+ */
+export type ActionVariant = "default" | "outline";
+
+/** The full `ActionVariant` vocabulary — construction/lint validation
+ *  rejects anything outside this closed set. */
+export const ACTION_VARIANTS: readonly ActionVariant[] = ["default", "outline"];
 
 /**
  * Semantic action icons — names whose COLOR IS PART OF THE ICON's meaning.
@@ -164,9 +187,18 @@ export function actionColorClass(color: ActionColor | undefined | null): string 
 export function validateActionChrome(
   icon: string | undefined,
   color: string | undefined,
+  variant?: string | undefined,
 ): string | null {
   if (color !== undefined && !ACTION_COLORS.includes(color as ActionColor)) {
     return `color "${color}" is not an ActionColor — allowed: ${ACTION_COLORS.join("|")}`;
+  }
+  if (variant !== undefined && !ACTION_VARIANTS.includes(variant as ActionVariant)) {
+    return `variant "${variant}" is not an ActionVariant — allowed: ${ACTION_VARIANTS.join("|")}`;
+  }
+  // `outline` without an explicit non-neutral color has no designed look —
+  // reject the ambiguous pair at construction instead of guessing one.
+  if (variant === "outline" && (color === undefined || color === "neutral")) {
+    return `variant "outline" requires an explicit non-neutral "color" — outline has no defined look without one`;
   }
   const bound = icon !== undefined ? SEMANTIC_ICON_COLORS[icon] : undefined;
   if (bound !== undefined && color !== undefined && color !== bound) {
@@ -880,6 +912,8 @@ export interface RowCustomAction {
   icon?: string;
   /** Semantic color for icon + label together — see `ActionColor`. */
   color?: ActionColor;
+  /** CTA shape — `default` or `outline` (CTA-only axis, never dialogs). */
+  variant?: ActionVariant;
   /** Disable the CTA on soft-deleted rows. */
   disabled_when_deleted?: boolean;
   /** Permission required to see/use the action (filtered client-side
@@ -909,6 +943,8 @@ export interface BulkCustomAction {
   icon?: string;
   /** Semantic color for icon + label together — see `ActionColor`. */
   color?: ActionColor;
+  /** CTA shape — `default` or `outline` (CTA-only axis, never dialogs). */
+  variant?: ActionVariant;
   /** Permission required to see/use the action. */
   required_permission?: string | string[];
   /** When true, the CTA is enabled only with rows selected and the body
