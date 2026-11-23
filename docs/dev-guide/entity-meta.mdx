@@ -25,6 +25,25 @@ the declared path and never hand-build `/api/v1/entities/{entity}/{uuid}` URLs.
 Permission evaluation against the current user is the consumer's job (e.g. FE
 `isEntityOpAllowed` composes this with the session permission check).
 
+### Action chrome
+
+Enabled actions may carry cosmetics from `entity_op.cta` or
+`actions_overrides` (explicit override wins over the served default):
+`label_key`, `icon`, `color`, `confirm_key`, `busy_key`, `variant`.
+
+- **`color?: ActionColor`** — closed set (`neutral|primary|info|success|
+  warning|destructive|violet`). ONE semantic drives both surfaces: the CTA
+  tone AND the dialog severity — a delete CTA and its confirm dialog can
+  never disagree by construction.
+- **`variant?: ActionVariant`** — closed set (`'default'|'outline'`),
+  Button naming. CTA **shape only** — it is never read by dialogs; the
+  "outline dialog" is the reserved security family (`BorderedDialog
+  tone="soft"`), not a metadata pick.
+- **`validateActionChrome`** runs at route construction on the RESOLVED
+  triple: unknown color/icon/variant throw, and `variant:'outline'`
+  without an explicit non-neutral `color` throws — a ghost button with no
+  designed look is a contract error, not a fallback case.
+
 ## Columns
 
 `MetaColumn` is transversal — table cells, form tooltips, labels. Ordering is
