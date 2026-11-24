@@ -35,6 +35,14 @@
  *    `(sequence_id, period_key, partition_key)` where partition_key is
  *    the used slots joined in slot order — `{sez3}` alone ≠ `{sez}`
  *    with the same value: empty slots stay meaningful;
+ *  - the two period axes are ORTHOGONAL: date tokens always render `at`
+ *    (the business date on the directive ctx, default now — never
+ *    ambient wall-clock of the caller's choosing) and drive the
+ *    counter-level auto-roll via `period_key`; sez slots are the
+ *    ROW-OWNED period axis — a reviving sequence clones the row and
+ *    advances the `revive_slot` value via `derivePeriodLabel`, the
+ *    counter resets because the successor is a new uuid (new counter
+ *    namespace), never because a counter row is rewritten;
  *  - `step` is a non-zero bigint — negative steps are honest arithmetic
  *    (countdown sequences exist) and are NOT special-cased;
  *  - counters are `bigint` end to end: width 19 is PG bigint capacity
@@ -309,6 +317,202 @@ export function derivePeriodKey(
   }
 }
 
+/* ------------------------------------------------------------------ *
+ *  Revive — row-owned period labels                                    *
+ *                                                                     *
+ *  `revive_every`/`revive_grace` travel on the wire as `'N unit'` text  *
+ *  (closed vocabulary — PG interval is the storage form). A reviving    *
+ *  row carries its period in a sez slot (`revive_slot`); the job        *
+ *  advances that slot's label with `derivePeriodLabel`, which parses    *
+ *  the CURRENT value's shape and adds the configured unit —             *
+ *  parse-and-preserve, never a declared format.                         *
+ * ------------------------------------------------------------------ */
+
+export type SequenceReviveUnit = "day" | "week" | "month" | "quarter" | "year";
+
+export const SEQUENCE_REVIVE_UNITS: readonly SequenceReviveUnit[] = [
+  "day",
+  "week",
+  "month",
+  "quarter",
+  "year",
+];
+
+/** `'15 days'`, `'1 month'`, `'2 years'` — the closed wire format. */
+export const REVIVE_INTERVAL_RE = /^(\d+) (day|week|month|quarter|year)s?$/;
+
+/** Parse a `'N unit'` revive interval — null on anything outside the
+ *  closed format (validators turn null into the construction error). */
+export function parseReviveInterval(
+  text: string,
+): { count: number; unit: SequenceReviveUnit } | null {
+  const m = REVIVE_INTERVAL_RE.exec(text);
+  if (!m) return null;
+  return { count: Number(m[1]), unit: m[2] as SequenceReviveUnit };
+}
+
+/** Granularity order for the compatibility rule — an increment unit may
+ *  be coarser than the label's shape, never finer (`'1 year'` advances
+ *  `2026-03` → `2027-03`; `'1 month'` cannot render on `2026`). */
+const UNIT_GRAIN: Record<SequenceReviveUnit, number> = {
+  day: 0,
+  week: 1,
+  month: 2,
+  quarter: 3,
+  year: 4,
+};
+
+type LabelShape =
+  | "YYYY"
+  | "YY"
+  | "MM"
+  | "YYYY-MM"
+  | "YYYY-Q"
+  | "YYYY-Www"
+  | "YYYY-MM-DD";
+
+const LABEL_SHAPES: { re: RegExp; shape: LabelShape; grain: number }[] = [
+  { re: /^\d{4}-Q[1-4]$/, shape: "YYYY-Q", grain: 3 },
+  { re: /^\d{4}-W(0[1-9]|[1-4]\d|5[0-3])$/, shape: "YYYY-Www", grain: 1 },
+  { re: /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/, shape: "YYYY-MM-DD", grain: 0 },
+  { re: /^\d{4}-(0[1-9]|1[0-2])$/, shape: "YYYY-MM", grain: 2 },
+  { re: /^\d{4}$/, shape: "YYYY", grain: 4 },
+  { re: /^\d{2}$/, shape: "YY", grain: 4 }, // bare 2-digit: YY or MM — the unit disambiguates
+];
+
+/** ISO-8601 week number + week-year of a UTC date (Thursday rule). */
+function isoWeekParts(d: Date): { wy: number; wn: number } {
+  const thu = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  // Thursday of the containing ISO week — (day+6)%7 = Mon..Sun index.
+  thu.setUTCDate(thu.getUTCDate() + (3 - ((thu.getUTCDay() + 6) % 7)));
+  const wy = thu.getUTCFullYear();
+  const wn = Math.floor((thu.getTime() - Date.UTC(wy, 0, 1)) / 86_400_000 / 7) + 1;
+  return { wy, wn };
+}
+
+/**
+ * Advance a row-owned period label by one `revive_every` interval —
+ * parse-and-preserve: the CURRENT value's shape decides the render,
+ * never a declared format. `2026`→`2027`, `26`→`27`,
+ * `2026-Q1`→`2026-Q2` (or `2027-Q1` by year unit), `2026-03`→`2026-04`,
+ * `2026-W14`→`2026-W15`, `2026-03-16`→`2026-03-17`.
+ *
+ * Compatibility rule: the unit must not be FINER than the label's
+ * granularity — `'1 month'` on `2026` cannot render (throw);
+ * `'1 year'` on `2026-03` renders `2027-03`. A bare 2-digit label is
+ * `YY` under a year unit, `MM` under a month unit — anything else is a
+ * construction error. Throws on unparseable values: create-time
+ * validation calls this same function so a reviving row can never be
+ * built with an un-incrementable slot.
+ */
+export function derivePeriodLabel(current: string, every: string): string {
+  const interval = parseReviveInterval(every);
+  if (!interval) {
+    throw new Error(
+      `derivePeriodLabel: invalid revive interval "${every}" — expected 'N (day|week|month|quarter|year)[s]'`,
+    );
+  }
+  const { count, unit } = interval;
+
+  let shape = LABEL_SHAPES.find((s) => s.re.test(current));
+  // Bare 2-digit is ambiguous — the unit disambiguates it: '26' under a
+  // year unit is YY; under a month/quarter unit it must also be a valid
+  // month (01–12), anything else is unparseable.
+  if (shape?.shape === "YY") {
+    const n = Number(current);
+    if ((unit === "month" || unit === "quarter") && n >= 1 && n <= 12) {
+      shape = { re: shape.re, shape: "MM", grain: 2 };
+    } else if (unit !== "year") {
+      shape = undefined;
+    }
+  }
+  if (!shape) {
+    throw new Error(
+      `derivePeriodLabel: unparseable period label "${current}" for '${every}'`,
+    );
+  }
+  if (UNIT_GRAIN[unit] < shape.grain) {
+    throw new Error(
+      `derivePeriodLabel: '${every}' is finer than the label shape of "${current}" — cannot render`,
+    );
+  }
+
+  // Month-delta per unit — day/week advance on the UTC instant instead
+  // (only reachable on day/week-grained shapes). addMonths clamps the
+  // day to the target month's last day — 2026-01-31 + '1 month' →
+  // 2026-02-28, honest period arithmetic, never a Mar-3 rollover.
+  const DAY_MS = 86_400_000;
+  const MONTH_DELTA: Record<SequenceReviveUnit, number> = {
+    day: 0,
+    week: 0,
+    month: count,
+    quarter: 3 * count,
+    year: 12 * count,
+  };
+  const addMonths = (y0: number, m0: number, d0: number): Date => {
+    const total = y0 * 12 + (m0 - 1) + MONTH_DELTA[unit];
+    const y = Math.floor(total / 12);
+    const m = (total % 12) + 1;
+    const last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    return new Date(Date.UTC(y, m - 1, Math.min(d0, last)));
+  };
+
+  let next: Date;
+  switch (shape.shape) {
+    case "YYYY":
+      return String(Number(current) + count);
+    case "YY":
+      return pad2((Number(current) + count) % 100);
+    case "MM":
+      // The label carries no year — a year-multiple increment renders
+      // the SAME month value (an un-advancing successor is invalid).
+      if (MONTH_DELTA[unit] % 12 === 0) {
+        throw new Error(
+          `derivePeriodLabel: '${every}' does not advance the label "${current}" — bare month shape cannot express it`,
+        );
+      }
+      return pad2(((Number(current) - 1 + MONTH_DELTA[unit]) % 12) + 1);
+    case "YYYY-MM": {
+      const [y, m] = current.split("-").map(Number);
+      next = addMonths(y, m, 1);
+      return `${next.getUTCFullYear()}-${pad2(next.getUTCMonth() + 1)}`;
+    }
+    case "YYYY-Q": {
+      const y = Number(current.slice(0, 4));
+      const q = Number(current.slice(6));
+      next = addMonths(y, (q - 1) * 3 + 1, 1);
+      return `${next.getUTCFullYear()}-Q${Math.ceil((next.getUTCMonth() + 1) / 3)}`;
+    }
+    case "YYYY-MM-DD": {
+      const [y, m, d] = current.split("-").map(Number);
+      next =
+        unit === "day" || unit === "week"
+          ? new Date(Date.UTC(y, m - 1, d) + (unit === "day" ? count : 7 * count) * DAY_MS)
+          : addMonths(y, m, d);
+      return `${next.getUTCFullYear()}-${pad2(next.getUTCMonth() + 1)}-${pad2(next.getUTCDate())}`;
+    }
+    case "YYYY-Www": {
+      const wy = Number(current.slice(0, 4));
+      const wn = Number(current.slice(6));
+      // Anchor on the week's Monday, add the interval as a UTC delta,
+      // recompute the ISO week — week units stay week-true, coarser
+      // units land on the same weekday.
+      const jan4 = new Date(Date.UTC(wy, 0, 4));
+      const monday = new Date(jan4.getTime() - (((jan4.getUTCDay() + 6) % 7) * DAY_MS));
+      monday.setUTCDate(monday.getUTCDate() + (wn - 1) * 7);
+      next =
+        unit === "day" || unit === "week"
+          ? new Date(monday.getTime() + (unit === "day" ? count : 7 * count) * DAY_MS)
+          : addMonths(monday.getUTCFullYear(), monday.getUTCMonth() + 1, monday.getUTCDate());
+      const p = isoWeekParts(next);
+      return `${p.wy}-W${pad2(p.wn)}`;
+    }
+  }
+  throw new Error(
+    `derivePeriodLabel: '${every}' cannot advance a ${shape.shape} label ("${current}")`,
+  );
+}
+
 /**
  * Render ONE counter value through the pattern. Padding is min-width:
  * `String(abs(counter)).padStart(width,"0")`; a negative counter renders
@@ -571,6 +775,26 @@ export interface SequenceDecl {
   start: bigint;
   /** IANA zone for date tokens — `null`/`undefined` = server default. */
   tz?: string | null;
+  /** Row-owned sezionale defaults materialized onto the sequence row —
+   *  the pattern's `{sez}`/`{sez2}`/`{sez3}` slots take the row's value
+   *  when the directive doesn't supply them (owned slots are immutable
+   *  at claim time — a directive may only supply non-owned slots). */
+  sez?: string;
+  sez2?: string;
+  sez3?: string;
+  /** Revive cadence `'N (day|week|month|quarter|year)[s]'` — the row is
+   *  cloned on a chained calendar (`expire_at` boundary, `switch_at`
+   *  retirement); NULL/absent = the row never revives. IMMUTABLE
+   *  post-create (the period contract is the row's identity). */
+  revive_every?: string;
+  /** Overlap window `'N unit'` — how long the retired row survives
+   *  `expire_at` so backdated `at` values still resolve it. Editable —
+   *  only moves `switch_at`. Default `'0'`. */
+  revive_grace?: string;
+  /** Which sez slot the period label advances at revive — must be a
+   *  slot the pattern uses; its value must parse under
+   *  {@link derivePeriodLabel} for the unit. Default `'sez'`. */
+  revive_slot?: SequenceSezToken;
 }
 
 /**
@@ -580,8 +804,8 @@ export interface SequenceDecl {
  *
  *   - `{seq:"<uuid>"}`            select a persisted sequence by uuid
  *   - `{seq:{uuid:"<uuid>"}}`     same, explicit object form
- *   - `{seq:{pattern,step,start,tz?}}`  on-the-fly definition —
- *     materialized + allocated in-transaction
+ *   - `{seq:{pattern,step,start,tz?,sez?,revive_*?}}`  on-the-fly
+ *     definition — materialized + allocated in-transaction
  *
  * uuid is the ONLY sequence identity — a sequence `name` is display
  * data, never an address. Omitting the field on create allocates from
@@ -592,13 +816,16 @@ export interface SequenceDecl {
 /** Optional per-allocation context carried by the object directive forms —
  *  the sezionale slot values (`sez`/`sez2`/`sez3` — the counter partitions
  *  are persisted per `(sequence, period, partition_key)`; the pattern's
- *  slots decide which are required/allowed) and the business date `at`
- *  (ISO string — drives `period_key` + date tokens; default = write time). */
+ *  slots decide which are required/allowed), the business date `at`
+ *  (ISO string — drives `period_key` + date tokens; default = write
+ *  time), and `tz` (IANA zone overriding the row's for THIS allocation —
+ *  resolve-time context, never stored on the counter). */
 export interface SequenceDirectiveContext {
   sez?: string;
   sez2?: string;
   sez3?: string;
   at?: string;
+  tz?: string | null;
 }
 
 export type SequenceDirective =
