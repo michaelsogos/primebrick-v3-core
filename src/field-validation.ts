@@ -36,8 +36,10 @@ import {
 import {
   derivePeriodLabel,
   parseReviveInterval,
+  parseReviveSpec,
   parseSequencePattern,
   renderSequenceValue,
+  reviveAdvanceSpec,
   validateSequencePartitions,
   type SequenceDecl,
   type SequenceDirective,
@@ -892,8 +894,25 @@ export function sequenceReviveShapeIssues(row: {
     );
     return out;
   }
+  // The advance interval the clone will apply — the authored cadence,
+  // or `'1 <period_kind>'` under an `'at'` pin (the pattern's own grain).
+  // `null` on an unparseable spec or `'at'` over a period-free pattern.
+  const spec = parseReviveSpec(row.revive_every);
+  const adv = spec && reviveAdvanceSpec(row.revive_every, parsed.period_kind);
+  if (!adv) {
+    out.push(
+      issue(
+        "revive_every",
+        "schema_mismatch",
+        spec?.kind === "at"
+          ? "app.common.validation.sequence_revive_at_needs_period"
+          : kmsg("app.common.validation.sequence_revive_every_invalid", { value: row.revive_every }),
+      ),
+    );
+    return out;
+  }
   try {
-    derivePeriodLabel(value, row.revive_every);
+    derivePeriodLabel(value, `${adv.count} ${adv.unit}`);
   } catch {
     out.push(
       issue(

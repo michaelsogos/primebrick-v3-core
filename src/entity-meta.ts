@@ -295,8 +295,14 @@ export type MetaColumnFormat =
    *  varchar canonical (`parseReviveInterval` grammar), NEVER a pg
    *  `interval` (pg output normalizes '3 months'→'3 mons' and breaks
    *  round-trip). Renders the numeric+unit composite control — number
-   *  input with the closed 5-unit dropdown on the trailing CTA. */
+   *  input with the closed 5-unit dropdown on the trailing CTA.
+   *  Grammar: `'N unit' | 'at <RFC3339>'` (explicit-instant pin). */
   | "revive_interval"
+  /** Revive offset `'N unit' | 'until <RFC3339>'` — same composite
+   *  anatomy as `revive_interval` but the instant literal carries the
+   *  `until` keyword (`switch_at` pin — the moment the successor takes
+   *  over), never `at`. `parseGraceSpec` grammar. */
+  | "revive_offset"
   /** Stored i18n key AS DATA (dict `label_key`/`description_key`) — renders
    *  as a `languages`-icon badge carrying the resolved translation, raw
    *  key in the tooltip; unresolved keys show mono-raw (same anatomy as

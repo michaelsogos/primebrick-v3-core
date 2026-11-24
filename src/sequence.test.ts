@@ -3,6 +3,9 @@ import {
   derivePeriodKey,
   derivePeriodLabel,
   parseReviveInterval,
+  parseReviveSpec,
+  parseGraceSpec,
+  reviveAdvanceSpec,
   parseSequencePattern,
   removeSequenceToken,
   renderSequenceRange,
@@ -383,5 +386,58 @@ describe("reviveAddInterval — wall-calendar grace arithmetic", () => {
     const exp = new Date("2027-01-01T00:00:00Z");
     expect(reviveAddInterval(exp, "10 days", "Europe/Rome").toISOString())
       .toBe("2027-01-11T00:00:00.000Z");
+  });
+
+  it("'until <RFC3339>' returns the literal instant verbatim", () => {
+    const exp = new Date("2027-01-01T00:00:00Z");
+    expect(reviveAddInterval(exp, "until 2027-01-15T00:00:00Z", "UTC").toISOString())
+      .toBe("2027-01-15T00:00:00.000Z");
+    // tz is irrelevant — the literal is absolute
+    expect(reviveAddInterval(exp, "until 2027-01-15T12:30:00+02:00", "Europe/Rome").toISOString())
+      .toBe("2027-01-15T10:30:00.000Z");
+  });
+});
+
+describe("instant literals — 'at'/'until' explicit-moment grammar", () => {
+  it("parseReviveSpec accepts 'N unit' and 'at <RFC3339>'", () => {
+    expect(parseReviveSpec("1 year")).toEqual({ kind: "interval", count: 1, unit: "year" });
+    expect(parseReviveSpec("at 2027-06-16T00:00:00Z")).toEqual({
+      kind: "at", at: new Date("2027-06-16T00:00:00Z"),
+    });
+    expect(parseReviveSpec("at 2027-06-16T12:30:00+02:00")).toEqual({
+      kind: "at", at: new Date("2027-06-16T10:30:00Z"),
+    });
+  });
+
+  it("parseGraceSpec accepts 'N unit' and 'until <RFC3339>' — keywords are axis-bound", () => {
+    expect(parseGraceSpec("10 days")).toEqual({ kind: "interval", count: 10, unit: "day" });
+    expect(parseGraceSpec("until 2027-01-15T00:00:00Z")).toEqual({
+      kind: "at", at: new Date("2027-01-15T00:00:00Z"),
+    });
+    // cross-axis keywords rejected — 'until' is not a revive_every spec
+    expect(parseReviveSpec("until 2027-01-15T00:00:00Z")).toBeNull();
+    expect(parseGraceSpec("at 2027-06-16T00:00:00Z")).toBeNull();
+  });
+
+  it("rejects ambiguous literals — bare dates and missing offsets", () => {
+    expect(parseReviveSpec("at 2027-06-16")).toBeNull();
+    expect(parseReviveSpec("at 2027-06-16T12:30:00")).toBeNull(); // no offset
+    expect(parseReviveSpec("at tomorrow")).toBeNull();
+    expect(parseReviveSpec("at")).toBeNull();
+    expect(parseReviveSpec("AT 2027-06-16T00:00:00Z")).toBeNull();
+  });
+
+  it("reviveExpireAt returns the 'at' instant verbatim — no boundary snap", () => {
+    expect(reviveExpireAt(new Date("2026-03-15T10:30:00Z"), "at 2027-06-16T00:00:00Z", "UTC").toISOString())
+      .toBe("2027-06-16T00:00:00.000Z");
+  });
+
+  it("reviveAdvanceSpec: interval → itself; 'at' → '1 <period_kind>'; 'at'+none → null", () => {
+    expect(reviveAdvanceSpec("3 months", "year")).toEqual({ count: 3, unit: "month" });
+    expect(reviveAdvanceSpec("at 2027-06-16T00:00:00Z", "year")).toEqual({ count: 1, unit: "year" });
+    expect(reviveAdvanceSpec("at 2027-06-16T00:00:00Z", "quarter")).toEqual({ count: 1, unit: "quarter" });
+    expect(reviveAdvanceSpec("at 2027-06-16T00:00:00Z", "day")).toEqual({ count: 1, unit: "day" });
+    expect(reviveAdvanceSpec("at 2027-06-16T00:00:00Z", "none")).toBeNull();
+    expect(reviveAdvanceSpec("bogus", "year")).toBeNull();
   });
 });

@@ -776,7 +776,7 @@ Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
 compile error — the US→FE option boundary is enforced by the type.
 New formats are additive literals (never breaking).
 
-**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang" \| "sequence" \| "sequence_pattern" \| "revive_interval" \| "i18n_key"`
+**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang" \| "sequence" \| "sequence_pattern" \| "revive_interval" \| "revive_offset" \| "i18n_key"`
 
 ### `MetaColumnOptionsSource`
 
@@ -1122,6 +1122,12 @@ Persistent status derived from the latest non-heartbeat signal.
 
 `<chunk>.deps.json` — emitted next to each remote chunk at build time,
 declaring the vendor specifiers/versions it was compiled against.
+
+### `ReviveSpec`
+
+A revive axis value: a `'N unit'` interval or a pinned instant.
+
+**Type:** `{ kind: "interval"; count: number; unit: SequenceReviveUnit } \| { kind: "at"; at: Date }`
 
 ### `RoundingMode`
 
@@ -1531,9 +1537,17 @@ Semantic derivation slot — declares what context the field wants so
 
 **Type:** `"x_semantic"`
 
+### `REVIVE_AT_RE`
+
+**Type:** `RegExp`
+
 ### `REVIVE_INTERVAL_RE`
 
 `'15 days'`, `'1 month'`, `'2 years'` — the closed wire format.
+
+**Type:** `RegExp`
+
+### `REVIVE_UNTIL_RE`
 
 **Type:** `RegExp`
 
@@ -2434,6 +2448,14 @@ Scale is preserved as written (`"1.230"` → scale 3).
 |-----------|------|-------------|
 | input | `string` |  |
 
+### `parseGraceSpec(text): ReviveSpec \| null`
+
+`revive_grace` spec — `'N unit'` offset or `'until <RFC3339>'` pin.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| text | `string` |  |
+
 ### `parseMapKeysDeclaration(raw): Record<string, MapKeyDecl>`
 
 Parse an `x_map_keys.prop` declaration row (the template's `variables`
@@ -2452,6 +2474,14 @@ explicitly** (a declared placeholder must be filled):
 
 Parse a `'N unit'` revive interval — null on anything outside the
  closed format (validators turn null into the construction error).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| text | `string` |  |
+
+### `parseReviveSpec(text): ReviveSpec \| null`
+
+`revive_every` spec — `'N unit'` cadence or `'at <RFC3339>'` pin.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -2697,6 +2727,19 @@ the interval walks its zoned wall time forward, then converts back.
 | at | `Date` |  |
 | interval | `string` |  |
 | tz | `string` |  |
+
+### `reviveAdvanceSpec(every, period_kind): { count: number; unit: SequenceReviveUnit } \| null`
+
+The interval a successor's sez label advances by — the authored
+ interval itself, or `'1 <period_kind>'` under an `'at'` pin (the
+ pattern's own grain is the natural advance — `'26'`→`'27'` under a
+ yearly pattern). `null` when the spec is unparseable or `'at'` meets
+ a period-free pattern (`period_kind:'none'` — no grain to advance).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| every | `string` |  |
+| period_kind | `SequencePeriodKind` |  |
 
 ### `reviveExpireAt(at, every, tz): Date`
 

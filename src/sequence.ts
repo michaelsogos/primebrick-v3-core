@@ -351,6 +351,67 @@ export function parseReviveInterval(
   return { count: Number(m[1]), unit: m[2] as SequenceReviveUnit };
 }
 
+/* ------------------------------------------------------------------ *
+ *  Instant literals — `'at <RFC3339>'` pins `expire_at` directly,       *
+ *  `'until <RFC3339>'` pins `switch_at` directly: the same authored     *
+ *  axis, a different way to express the moment (interval → derived,     *
+ *  literal → direct). The literal NEVER propagates to a successor —     *
+ *  the clone sanitizes it to NULL, so an arbitrary date fires exactly   *
+ *  once and the successor lives as the permanent final generation.      *
+ * ------------------------------------------------------------------ */
+
+export const REVIVE_AT_RE = /^at (.+)$/;
+export const REVIVE_UNTIL_RE = /^until (.+)$/;
+
+/** Literal instants are absolute — full RFC3339 with an explicit offset
+ *  (`Z` or `±hh:mm`); a bare date would be tz-ambiguous. */
+const RFC3339_RE =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})$/;
+
+/** A revive axis value: a `'N unit'` interval or a pinned instant. */
+export type ReviveSpec =
+  | { kind: "interval"; count: number; unit: SequenceReviveUnit }
+  | { kind: "at"; at: Date };
+
+function parseInstantLiteral(text: string, keywordRe: RegExp): Date | null {
+  const m = keywordRe.exec(text);
+  if (!m || !RFC3339_RE.test(m[1])) return null;
+  const d = new Date(m[1]);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+/** `revive_every` spec — `'N unit'` cadence or `'at <RFC3339>'` pin. */
+export function parseReviveSpec(text: string): ReviveSpec | null {
+  const iv = parseReviveInterval(text);
+  if (iv) return { kind: "interval", ...iv };
+  const at = parseInstantLiteral(text, REVIVE_AT_RE);
+  return at ? { kind: "at", at } : null;
+}
+
+/** `revive_grace` spec — `'N unit'` offset or `'until <RFC3339>'` pin. */
+export function parseGraceSpec(text: string): ReviveSpec | null {
+  const iv = parseReviveInterval(text);
+  if (iv) return { kind: "interval", ...iv };
+  const at = parseInstantLiteral(text, REVIVE_UNTIL_RE);
+  return at ? { kind: "at", at } : null;
+}
+
+/** The interval a successor's sez label advances by — the authored
+ *  interval itself, or `'1 <period_kind>'` under an `'at'` pin (the
+ *  pattern's own grain is the natural advance — `'26'`→`'27'` under a
+ *  yearly pattern). `null` when the spec is unparseable or `'at'` meets
+ *  a period-free pattern (`period_kind:'none'` — no grain to advance). */
+export function reviveAdvanceSpec(
+  every: string,
+  period_kind: SequencePeriodKind,
+): { count: number; unit: SequenceReviveUnit } | null {
+  const spec = parseReviveSpec(every);
+  if (!spec) return null;
+  if (spec.kind === "interval") return { count: spec.count, unit: spec.unit };
+  if (period_kind === "none") return null;
+  return { count: 1, unit: period_kind };
+}
+
 /** Wall-clock → instant for a tz — iterative offset correction
  *  (converges in ≤3 passes; revive boundaries are local midnights,
  *  which always exist on the wall clock). */
@@ -377,8 +438,10 @@ function wallToInstant(
  * the interval walks its zoned wall time forward, then converts back.
  */
 export function reviveAddInterval(at: Date, interval: string, tz?: string): Date {
-  const iv = parseReviveInterval(interval);
-  if (!iv) throw new Error(`revive interval: invalid format "${interval}"`);
+  const spec = parseGraceSpec(interval);
+  if (!spec) throw new Error(`revive interval: invalid format "${interval}"`);
+  if (spec.kind === "at") return spec.at;
+  const iv = spec;
   const zone = tz ?? "UTC";
   const p = dateParts(at, zone);
   const wall = new Date(Date.UTC(p.yyyy, p.MM - 1, p.dd, p.HH, p.mm, p.ss));
@@ -405,8 +468,10 @@ export function reviveAddInterval(at: Date, interval: string, tz?: string): Date
  * This is the successor's `default_from` — the `at`-axis boundary.
  */
 export function reviveExpireAt(at: Date, every: string, tz?: string): Date {
-  const iv = parseReviveInterval(every);
-  if (!iv) throw new Error(`revive_every: invalid format "${every}"`);
+  const spec = parseReviveSpec(every);
+  if (!spec) throw new Error(`revive_every: invalid format "${every}"`);
+  if (spec.kind === "at") return spec.at;
+  const iv = spec;
   const zone = tz ?? "UTC";
   const p = dateParts(at, zone);
   const start = new Date(Date.UTC(p.yyyy, p.MM - 1, p.dd));
