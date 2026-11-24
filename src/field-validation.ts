@@ -35,6 +35,7 @@ import {
 } from "./payload-map.js";
 import {
   derivePeriodLabel,
+  parseGraceSpec,
   parseReviveInterval,
   parseReviveSpec,
   parseSequencePattern,
@@ -695,7 +696,13 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
       break;
     }
     case "revive_interval":
-      if (!parseReviveInterval(value)) fmtFail();
+      // axis grammar: `'N unit'` interval or the `'at <ISO>'` pin — the
+      // same spec parser the wire validator and the widget share.
+      if (!parseReviveSpec(value)) fmtFail();
+      break;
+    case "revive_offset":
+      // the switch axis — interval or `'until <ISO>'`.
+      if (!parseGraceSpec(value)) fmtFail();
       break;
   }
   if (out.length === formatBefore && typeof col.pattern === "string" && col.pattern !== "") {
