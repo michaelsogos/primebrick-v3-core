@@ -34,6 +34,8 @@ import {
   type PayloadMapMeta,
 } from "./payload-map.js";
 import {
+  derivePeriodLabel,
+  parseReviveInterval,
   parseSequencePattern,
   renderSequenceValue,
   validateSequencePartitions,
@@ -690,6 +692,9 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
       }
       break;
     }
+    case "revive_interval":
+      if (!parseReviveInterval(value)) fmtFail();
+      break;
   }
   if (out.length === formatBefore && typeof col.pattern === "string" && col.pattern !== "") {
     try {
@@ -811,6 +816,92 @@ export function jobTriggerShapeIssues(entity: Record<string, unknown>, now: Date
         out.push(issue("schedule_spec", "schema_mismatch", "app.common.validation.schedule_spec_past"));
       }
     }
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// sequenceReviveShapeIssues — the `sequence` revive contract (create/update).
+// ---------------------------------------------------------------------------
+
+/** The three positional sezionale slots — the only legal `revive_slot`
+ *  values, and the slots a pattern's `{sez}`/`{sez2}`/`{sez3}` tokens map. */
+export const SEQUENCE_REVIVE_SLOTS = ["sez", "sez2", "sez3"] as const;
+export type SequenceReviveSlot = (typeof SEQUENCE_REVIVE_SLOTS)[number];
+
+/**
+ * The revive contract on a (possibly merged) sequence row — ONE predicate
+ * consumed by the form's cross-field registry, the wire validator, and
+ * the service's merged-row check, so the three surfaces can never drift:
+ *
+ *   - a supplied `sez*` value must name a slot the pattern declares;
+ *   - `revive_slot` requires `revive_every` and is required by it;
+ *   - `revive_slot` must be a slot the pattern uses;
+ *   - the slot's row-owned value must be present and advanceable by
+ *     `derivePeriodLabel` — a free-text sezionale can never revive.
+ *
+ * An unparseable `pattern` contributes NO issues — the `sequence_pattern`
+ * format check owns that finding; this predicate is the shape layer.
+ */
+export function sequenceReviveShapeIssues(row: {
+  pattern: string;
+  sez?: string | null;
+  sez2?: string | null;
+  sez3?: string | null;
+  revive_every?: string | null;
+  revive_slot?: string | null;
+}): FieldIssue[] {
+  const out: FieldIssue[] = [];
+  let parsed: ReturnType<typeof parseSequencePattern>;
+  try {
+    parsed = parseSequencePattern(row.pattern);
+  } catch {
+    return out;
+  }
+  for (const slot of SEQUENCE_REVIVE_SLOTS) {
+    const v = row[slot];
+    if (v !== null && v !== undefined && !parsed.sez_slots.includes(slot)) {
+      out.push(
+        issue(slot, "schema_mismatch", kmsg("app.common.validation.sequence_sez_not_in_pattern", { slot })),
+      );
+    }
+  }
+  if (!row.revive_every) {
+    if (row.revive_slot) {
+      out.push(
+        issue("revive_slot", "schema_mismatch", "app.common.validation.sequence_revive_slot_requires_every"),
+      );
+    }
+    return out;
+  }
+  if (!row.revive_slot) {
+    out.push(issue("revive_slot", "required", "app.common.validation.sequence_revive_slot_required"));
+    return out;
+  }
+  const slot = row.revive_slot as SequenceReviveSlot;
+  if (!SEQUENCE_REVIVE_SLOTS.includes(slot) || !parsed.sez_slots.includes(slot)) {
+    out.push(
+      issue("revive_slot", "schema_mismatch", kmsg("app.common.validation.sequence_revive_slot_not_in_pattern", { slot: row.revive_slot })),
+    );
+    return out;
+  }
+  const value = row[slot];
+  if (value === null || value === undefined) {
+    out.push(
+      issue(slot, "required", kmsg("app.common.validation.sequence_revive_slot_value_required", { slot })),
+    );
+    return out;
+  }
+  try {
+    derivePeriodLabel(value, row.revive_every);
+  } catch {
+    out.push(
+      issue(
+        slot,
+        "schema_mismatch",
+        kmsg("app.common.validation.sequence_revive_value_not_advancable", { value, every: row.revive_every }),
+      ),
+    );
   }
   return out;
 }

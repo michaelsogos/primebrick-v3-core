@@ -205,6 +205,14 @@ comboboxes, lists, chips. |
  list create CTA opens `entity.record` in `mode:"create"` — the same
  record panel, no fetch, empty draft, POST on commit.
  Authored on the entity meta — never via component props. |
+| form | `{ validators: string[] }` | Entity-level form policy — the surface an entity declares for
+ surfaces that have no authored `page_props.form` (builtin/platform
+ entities have no route decl to author against: their record-sheet
+ forms ride the synthesized fallback). Consumed by
+ `synthesizeFormDecl`, which attaches `validators` verbatim — an
+ authored route `page_props.form` always wins (page-domain
+ placement beats entity policy). Field census stays synthesized:
+ `meta.columns` order is the single source, never duplicated. |
 | columns | `MetaColumn[]` | Entity field dictionary (root-level, transversal). |
 | table | `TableMeta` | Table options — omit when the entity has no table page
  (e.g. a self-service form meta). |
@@ -593,6 +601,18 @@ declarations carrying `payload_schema` — the schema IS the listing opt-in
 (a callable without a contract is not mappable). The service declares its
 own domain subject only — nothing in this axis knows scheduling exists.
 
+### `ColumnDefaultSpec`
+
+`ColumnDefaultSpec` — the computed-default vocabulary a `MetaColumn.default`
+may carry instead of a literal. Closed union — consumers recognize the
+spec by `kind` membership, never by object shape alone (a jsonb column
+may legitimately hold a literal object default).
+
+  - `"next_day_start_local"` — the form seeds tomorrow at 00:00 in the
+    USER's local zone, serialized to the column's wire type (`datetime`
+    → UTC ISO). The anchor-default for "starts from" fields (e.g.
+    `sequence.default_from`).
+
 ### `ConfigEntry`
 
 Standard Config Table entry.
@@ -745,13 +765,6 @@ crosses the wire. Same physical-column rule as `color_field`.
 
 ### `MetaColumnDependsCondition`
 
-A sibling-value condition — the SAME vocabulary `null_label.when` and
-`visible_on` already use for row-gated rendering, lifted to form scope.
-`prop` compares against the pivot ROW's prop (the picked ref option's
-raw row — e.g. its `code`); absent `prop` compares the pivot's stored
-value directly. `equals`/`not` take a single literal, `values` a set
-(IN semantics).
-
 ### `MetaColumnFormat`
 
 Authored field-format vocabulary — the SEMANTIC input contract of a
@@ -763,7 +776,7 @@ Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
 compile error — the US→FE option boundary is enforced by the type.
 New formats are additive literals (never breaking).
 
-**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang" \| "sequence" \| "sequence_pattern" \| "i18n_key"`
+**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang" \| "sequence" \| "sequence_pattern" \| "revive_interval" \| "i18n_key"`
 
 ### `MetaColumnOptionsSource`
 
@@ -1199,6 +1212,10 @@ Sezionale values supplied per assignment — positional per token.
 
 **Type:** `"none" \| "year" \| "quarter" \| "month" \| "day"`
 
+### `SequenceReviveSlot`
+
+**Type:** `typeof SEQUENCE_REVIVE_SLOTS[number]`
+
 ### `SequenceReviveUnit`
 
 **Type:** `"day" \| "week" \| "month" \| "quarter" \| "year"`
@@ -1535,6 +1552,13 @@ label can never drift apart even by accident.
 - `exec-stop`  → destructive (stop/disable is a destructive op)
 
 **Type:** `Record<string, ActionColor>`
+
+### `SEQUENCE_REVIVE_SLOTS`
+
+The three positional sezionale slots — the only legal `revive_slot`
+ values, and the slots a pattern's `{sez}`/`{sez2}`/`{sez3}` tokens map.
+
+**Type:** `readonly ["sez", "sez2", "sez3"]`
 
 ### `SEQUENCE_REVIVE_UNITS`
 
@@ -2817,6 +2841,25 @@ the claim RETURNING is the only truth).
 | count | `number` |  |
 | at | `Date` |  |
 | opts | `{ tz: string; partitions: Partial<Record<SequenceSezToken, string>> }` |  |
+
+### `sequenceReviveShapeIssues(row): FieldIssue[]`
+
+The revive contract on a (possibly merged) sequence row — ONE predicate
+consumed by the form's cross-field registry, the wire validator, and
+the service's merged-row check, so the three surfaces can never drift:
+
+  - a supplied `sez*` value must name a slot the pattern declares;
+  - `revive_slot` requires `revive_every` and is required by it;
+  - `revive_slot` must be a slot the pattern uses;
+  - the slot's row-owned value must be present and advanceable by
+    `derivePeriodLabel` — a free-text sezionale can never revive.
+
+An unparseable `pattern` contributes NO issues — the `sequence_pattern`
+format check owns that finding; this predicate is the shape layer.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| row | `{ pattern: string; sez: string \| null; sez2: string \| null; sez3: string \| null; revive_every: string \| null; revive_slot: string \| null }` |  |
 
 ### `sequenceTokenCatalog(): SequenceTokenSpec[]`
 

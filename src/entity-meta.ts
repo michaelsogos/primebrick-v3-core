@@ -291,6 +291,12 @@ export type MetaColumnFormat =
    *  seq-BOUND directive wire value (`{seq:uuid}`), never authored as
    *  text. */
   | "sequence_pattern"
+  /** Revive interval `'N (day|week|month|quarter|year)[s]'` — the closed
+   *  varchar canonical (`parseReviveInterval` grammar), NEVER a pg
+   *  `interval` (pg output normalizes '3 months'→'3 mons' and breaks
+   *  round-trip). Renders the numeric+unit composite control — number
+   *  input with the closed 5-unit dropdown on the trailing CTA. */
+  | "revive_interval"
   /** Stored i18n key AS DATA (dict `label_key`/`description_key`) — renders
    *  as a `languages`-icon badge carrying the resolved translation, raw
    *  key in the tooltip; unresolved keys show mono-raw (same anatomy as
@@ -423,6 +429,19 @@ export type MetaColumnAvatar = { color_field: string; initials_field?: string };
  * value directly. `equals`/`not` take a single literal, `values` a set
  * (IN semantics).
  */
+/**
+ * `ColumnDefaultSpec` — the computed-default vocabulary a `MetaColumn.default`
+ * may carry instead of a literal. Closed union — consumers recognize the
+ * spec by `kind` membership, never by object shape alone (a jsonb column
+ * may legitimately hold a literal object default).
+ *
+ *   - `"next_day_start_local"` — the form seeds tomorrow at 00:00 in the
+ *     USER's local zone, serialized to the column's wire type (`datetime`
+ *     → UTC ISO). The anchor-default for "starts from" fields (e.g.
+ *     `sequence.default_from`).
+ */
+export type ColumnDefaultSpec = { kind: "next_day_start_local" };
+
 export type MetaColumnDependsCondition = {
   /** Pivot ROW prop to compare — requires the pivot to be `type:"ref"`. */
   prop?: string;
@@ -556,7 +575,8 @@ export type MetaColumn = {
   immutable?: boolean;
   /**
    * `default` — the column's create-surface initial value. Two sources,
-   * ONE served key:
+   * ONE served key. May carry a `ColumnDefaultSpec` (computed spec —
+   * closed vocab) instead of a literal when the prefill is dynamic.
    *
    *   - DERIVED — injected by `withColumnConstraints` from the entity
    *     class `@Column({defaultSql})` when the expression is a constant
@@ -1045,6 +1065,21 @@ export interface EntityMeta {
    *  Authored on the entity meta — never via component props. */
   create?: {
     surface?: "form" | "sheet";
+  };
+  /** Entity-level form policy — the surface an entity declares for
+   *  surfaces that have no authored `page_props.form` (builtin/platform
+   *  entities have no route decl to author against: their record-sheet
+   *  forms ride the synthesized fallback). Consumed by
+   *  `synthesizeFormDecl`, which attaches `validators` verbatim — an
+   *  authored route `page_props.form` always wins (page-domain
+   *  placement beats entity policy). Field census stays synthesized:
+   *  `meta.columns` order is the single source, never duplicated. */
+  form?: {
+    /** Closed-vocab cross-field validator keys — the same registry
+     *  `FormPageDecl.validators` names, host-implemented, unknown keys
+     *  throw. Applies to BOTH create and update surfaces (the merged-row
+     *  contract is one rule). */
+    validators?: string[];
   };
   /** Entity field dictionary (root-level, transversal). */
   columns: MetaColumn[];
