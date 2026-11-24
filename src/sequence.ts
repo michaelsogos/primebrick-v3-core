@@ -103,7 +103,7 @@ const PERIOD_ORDER: SequencePeriodKind[] = ["none", "year", "quarter", "month", 
 
 /** Sezionale value charset — alphanumerics and separators; the join
  *  separator (US \x1f) can never appear inside a value. */
-const SEZ_VALUE_RE = /^[A-Za-z0-9][A-Za-z0-9_.\-/]*$/;
+export const SEZ_VALUE_RE = /^[A-Za-z0-9][A-Za-z0-9_.\-/]*$/;
 const SEZ_JOIN = "\x1f";
 
 /**
@@ -349,6 +349,93 @@ export function parseReviveInterval(
   const m = REVIVE_INTERVAL_RE.exec(text);
   if (!m) return null;
   return { count: Number(m[1]), unit: m[2] as SequenceReviveUnit };
+}
+
+/** Wall-clock → instant for a tz — iterative offset correction
+ *  (converges in ≤3 passes; revive boundaries are local midnights,
+ *  which always exist on the wall clock). */
+function wallToInstant(
+  y: number, mo: number, d: number, h: number, mi: number, s: number,
+  tz: string,
+): Date {
+  let guess = Date.UTC(y, mo - 1, d, h, mi, s);
+  for (let i = 0; i < 4; i++) {
+    const q = dateParts(new Date(guess), tz);
+    const wall = Date.UTC(q.yyyy, q.MM - 1, q.dd, q.HH, q.mm, q.ss);
+    const diff = Date.UTC(y, mo - 1, d, h, mi, s) - wall;
+    if (diff === 0) break;
+    guess += diff;
+  }
+  return new Date(guess);
+}
+
+/**
+ * Add a `'N unit'` interval to `at` on the WALL calendar of `tz`
+ * (grace arithmetic — DST-safe, the wall clock owns the semantics;
+ * `'1 day'` after a DST-jump boundary still lands on the next local
+ * midnight, not +24h into the wrong offset). `at` is an instant;
+ * the interval walks its zoned wall time forward, then converts back.
+ */
+export function reviveAddInterval(at: Date, interval: string, tz?: string): Date {
+  const iv = parseReviveInterval(interval);
+  if (!iv) throw new Error(`revive interval: invalid format "${interval}"`);
+  const zone = tz ?? "UTC";
+  const p = dateParts(at, zone);
+  const wall = new Date(Date.UTC(p.yyyy, p.MM - 1, p.dd, p.HH, p.mm, p.ss));
+  switch (iv.unit) {
+    case "day": wall.setUTCDate(wall.getUTCDate() + iv.count); break;
+    case "week": wall.setUTCDate(wall.getUTCDate() + 7 * iv.count); break;
+    case "month": wall.setUTCMonth(wall.getUTCMonth() + iv.count); break;
+    case "quarter": wall.setUTCMonth(wall.getUTCMonth() + 3 * iv.count); break;
+    case "year": wall.setUTCFullYear(wall.getUTCFullYear() + iv.count); break;
+  }
+  return wallToInstant(
+    wall.getUTCFullYear(), wall.getUTCMonth() + 1, wall.getUTCDate(),
+    wall.getUTCHours(), wall.getUTCMinutes(), wall.getUTCSeconds(), zone,
+  );
+}
+
+/**
+ * The calendar-anchored expiry instant for a reviving row — the first
+ * period boundary strictly after `at` in the row's timezone:
+ *   start of current period (midnight today / ISO-week Monday /
+ *   1st-of-month / quarter start / Jan-1) + `count` units.
+ * `'15 days'` is day-aligned rolling from today's local midnight;
+ * `'1 year'` created Mar-15-2026 expires Jan-1-2027 00:00 local.
+ * This is the successor's `default_from` — the `at`-axis boundary.
+ */
+export function reviveExpireAt(at: Date, every: string, tz?: string): Date {
+  const iv = parseReviveInterval(every);
+  if (!iv) throw new Error(`revive_every: invalid format "${every}"`);
+  const zone = tz ?? "UTC";
+  const p = dateParts(at, zone);
+  const start = new Date(Date.UTC(p.yyyy, p.MM - 1, p.dd));
+  switch (iv.unit) {
+    case "day": break;
+    case "week": {
+      // ISO week starts Monday — back up (dow+6)%7 days.
+      const dow = start.getUTCDay();
+      start.setUTCDate(start.getUTCDate() - ((dow + 6) % 7));
+      break;
+    }
+    case "month": start.setUTCDate(1); break;
+    case "quarter": {
+      start.setUTCMonth(Math.floor(start.getUTCMonth() / 3) * 3, 1);
+      break;
+    }
+    case "year": start.setUTCMonth(0, 1); break;
+  }
+  switch (iv.unit) {
+    case "day": start.setUTCDate(start.getUTCDate() + iv.count); break;
+    case "week": start.setUTCDate(start.getUTCDate() + 7 * iv.count); break;
+    case "month": start.setUTCMonth(start.getUTCMonth() + iv.count); break;
+    case "quarter": start.setUTCMonth(start.getUTCMonth() + 3 * iv.count); break;
+    case "year": start.setUTCFullYear(start.getUTCFullYear() + iv.count); break;
+  }
+  return wallToInstant(
+    start.getUTCFullYear(), start.getUTCMonth() + 1, start.getUTCDate(),
+    0, 0, 0, zone,
+  );
 }
 
 /** Granularity order for the compatibility rule — an increment unit may

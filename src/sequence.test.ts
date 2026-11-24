@@ -7,6 +7,8 @@ import {
   removeSequenceToken,
   renderSequenceRange,
   renderSequenceValue,
+  reviveAddInterval,
+  reviveExpireAt,
   sequencePartitionKey,
   sequencePreview,
   sequenceTokenCatalog,
@@ -310,5 +312,76 @@ describe("derivePeriodLabel — parse-and-preserve sez increment", () => {
     // bare MM + year-multiple → same month label forever
     expect(() => derivePeriodLabel("03", "12 months")).toThrow(/does not advance/);
     expect(() => derivePeriodLabel("03", "4 quarters")).toThrow(/does not advance/);
+  });
+});
+
+describe("reviveExpireAt — calendar-anchored expiry instant", () => {
+  const at = (s: string) => new Date(s);
+
+  it("year: created mid-year expires on the next Jan-1 in row tz", () => {
+    // UTC row
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "1 year", "UTC").toISOString())
+      .toBe("2027-01-01T00:00:00.000Z");
+    // Europe/Rome row — local midnight Jan-1 = Dec-31 23:00 UTC
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "1 year", "Europe/Rome").toISOString())
+      .toBe("2026-12-31T23:00:00.000Z");
+  });
+
+  it("month/quarter/day land on their calendar boundaries", () => {
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "1 month", "UTC").toISOString())
+      .toBe("2026-04-01T00:00:00.000Z");
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "1 quarter", "UTC").toISOString())
+      .toBe("2026-04-01T00:00:00.000Z");
+    expect(reviveExpireAt(at("2026-02-10T10:30:00Z"), "1 quarter", "UTC").toISOString())
+      .toBe("2026-04-01T00:00:00.000Z");
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "1 day", "UTC").toISOString())
+      .toBe("2026-03-16T00:00:00.000Z");
+  });
+
+  it("week: ISO week starts Monday — mid-week create expires next Monday", () => {
+    // 2026-03-15 is a Sunday → next Monday is 2026-03-16
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "1 week", "UTC").toISOString())
+      .toBe("2026-03-16T00:00:00.000Z");
+    // 2026-03-16 Monday 00:00 itself → next Monday (strictly after)
+    expect(reviveExpireAt(at("2026-03-16T00:00:00Z"), "1 week", "UTC").toISOString())
+      .toBe("2026-03-23T00:00:00.000Z");
+  });
+
+  it("rolling counts anchor on the current period start, then add units", () => {
+    // '15 days' on Mar-15 → Mar-15-midnight + 15d = Mar-30-midnight
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "15 days", "UTC").toISOString())
+      .toBe("2026-03-30T00:00:00.000Z");
+    // '3 months' on Mar-15 → Mar-1 + 3mo = Jun-1
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "3 months", "UTC").toISOString())
+      .toBe("2026-06-01T00:00:00.000Z");
+    // '2 years' on Mar-15-2026 → Jan-1-2028
+    expect(reviveExpireAt(at("2026-03-15T10:30:00Z"), "2 years", "UTC").toISOString())
+      .toBe("2028-01-01T00:00:00.000Z");
+  });
+
+  it("rejects invalid interval formats", () => {
+    expect(() => reviveExpireAt(at("2026-03-15T00:00:00Z"), "soon", "UTC")).toThrow(/invalid format/);
+  });
+});
+
+describe("reviveAddInterval — wall-calendar grace arithmetic", () => {
+  it("adds days/weeks/months/years on the zoned wall clock", () => {
+    const exp = new Date("2027-01-01T00:00:00Z"); // Jan-1 00:00 UTC
+    expect(reviveAddInterval(exp, "10 days", "UTC").toISOString())
+      .toBe("2027-01-11T00:00:00.000Z");
+    expect(reviveAddInterval(exp, "2 weeks", "UTC").toISOString())
+      .toBe("2027-01-15T00:00:00.000Z");
+    expect(reviveAddInterval(exp, "1 month", "UTC").toISOString())
+      .toBe("2027-02-01T00:00:00.000Z");
+    expect(reviveAddInterval(exp, "1 year", "UTC").toISOString())
+      .toBe("2028-01-01T00:00:00.000Z");
+  });
+
+  it("tz-aware: midnight in Rome is not midnight in UTC", () => {
+    // Jan-1 00:00 UTC = Jan-1 01:00 Rome; +10 days on Rome wall →
+    // Jan-11 01:00 Rome = Jan-11 00:00 UTC
+    const exp = new Date("2027-01-01T00:00:00Z");
+    expect(reviveAddInterval(exp, "10 days", "Europe/Rome").toISOString())
+      .toBe("2027-01-11T00:00:00.000Z");
   });
 });
