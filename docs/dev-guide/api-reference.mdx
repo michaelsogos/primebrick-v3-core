@@ -2034,6 +2034,12 @@ Parse an Ext-JSON string — strict.
 ALL integer-valued numbers are returned as native `bigint`; non-integer
 floats stay `number`; strings/booleans/null are unaffected.
 
+The single sanctioned exception: the `status` integer of an RFC7807
+problem-details object (shape-detected by type+title+detail strings)
+stays `number` — the error model is HTTP-native and its status is
+classified with typeof guards across the ecosystem. An integer `status`
+outside that shape is a domain integer and stays bigint, always.
+
 Throws `SyntaxError` on malformed input, trailing commas, and
 duplicate keys at any depth (native JSON.parse silently last-wins —
 that failure mode is deliberately closed: a duplicated key is a wire

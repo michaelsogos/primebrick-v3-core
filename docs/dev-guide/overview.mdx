@@ -23,6 +23,23 @@ DAL and SDK.
 - **snake_case end-to-end** — contract field names match the DB column names
   and the JSON wire shape exactly; no DTO renaming.
 
+## Wire codec (ext-json)
+
+`extJsonParse`/`extJsonStringify` are the only sanctioned parse/serialize path
+for Primebrick wire payloads. The contract is strict: **every integer-valued
+JSON number becomes a native `bigint`** — no `number | bigint` ambiguity for
+consumers, no silent precision loss beyond 2^53.
+
+Exactly one exception exists, and it is **by construction, never by key or by
+caller choice**: inside an RFC7807 problem-details object — shape-detected by
+the presence of `type`, `title` and `detail` as strings, a shape the emission
+contract guarantees in full — the `status` integer stays a `number`. The error
+model is HTTP-native: its status is never a domain integer, never persists,
+never exceeds 2^53, and is classified with `typeof x === "number"` guards
+across the ecosystem. Serialization needs no special case — on the wire the
+token is a bare JSON number in both directions already. An integer `status`
+anywhere outside that shape is a domain integer and stays bigint, always.
+
 ## Modules
 
 | Subpath | Contents |

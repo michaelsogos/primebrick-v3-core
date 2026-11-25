@@ -15137,9 +15137,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/ext-json.ts",
-					"line": 209,
+					"line": 240,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L209"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L240"
 				}
 			],
 			"signatures": [
@@ -15169,7 +15169,31 @@
 							},
 							{
 								"kind": "text",
-								"text": "; strings/booleans/null are unaffected.\n\nThrows "
+								"text": "; strings/booleans/null are unaffected.\n\nThe single sanctioned exception: the "
+							},
+							{
+								"kind": "code",
+								"text": "`status`"
+							},
+							{
+								"kind": "text",
+								"text": " integer of an RFC7807\nproblem-details object (shape-detected by type+title+detail strings)\nstays "
+							},
+							{
+								"kind": "code",
+								"text": "`number`"
+							},
+							{
+								"kind": "text",
+								"text": " — the error model is HTTP-native and its status is\nclassified with typeof guards across the ecosystem. An integer "
+							},
+							{
+								"kind": "code",
+								"text": "`status`"
+							},
+							{
+								"kind": "text",
+								"text": "\noutside that shape is a domain integer and stays bigint, always.\n\nThrows "
 							},
 							{
 								"kind": "code",
@@ -15184,9 +15208,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/ext-json.ts",
-							"line": 209,
+							"line": 240,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L209"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L240"
 						}
 					],
 					"typeParameters": [
@@ -15234,9 +15258,9 @@
 			"sources": [
 				{
 					"fileName": "primebrick-v3-core/src/ext-json.ts",
-					"line": 233,
+					"line": 264,
 					"character": 16,
-					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L233"
+					"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L264"
 				}
 			],
 			"signatures": [
@@ -15273,9 +15297,9 @@
 					"sources": [
 						{
 							"fileName": "primebrick-v3-core/src/ext-json.ts",
-							"line": 233,
+							"line": 264,
 							"character": 16,
-							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L233"
+							"url": "https://github.com/michaelsogos/primebrick-v3-core/blob/main/src/ext-json.ts#L264"
 						}
 					],
 					"parameters": [
