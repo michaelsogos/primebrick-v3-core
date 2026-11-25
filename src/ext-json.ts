@@ -16,6 +16,14 @@
  *   ALL integer-valued numbers become native `bigint` — including
  *   e-notation/decimal-point forms (1e3 → 1000n, 1.0 → 1n); floats stay
  *   `number`. No `number | bigint` ambiguity for consumers.
+ *   ONE exception, by construction: inside an RFC7807 problem-details
+ *   object (carrying type+title+detail strings — the emission contract
+ *   makes all four members mandatory) the `status` integer stays a
+ *   NUMBER. The error model is HTTP-native — its status is never a
+ *   domain integer, never persists, never exceeds 2^53, and consumers
+ *   classify it with typeof guards the ecosystem writes as
+ *   `typeof x === "number"`. The exception belongs to the shape, never
+ *   to the key: an integer `status` anywhere else stays bigint.
  *   Faster than the previous json-bigint parse (~1.2-1.4x both runtimes):
  *   the tokenizer never materializes objects.
  *
@@ -191,7 +199,24 @@ function bigintWalk(
     return v;
   }
   const rec = v as Record<string, unknown>;
-  for (const k in rec) rec[k] = bigintWalk(rec[k], flags, unsafe, fi, ui);
+  // RFC7807 problem-details shape discriminator — type+title+detail strings
+  // are never transformed by the walk, so pre-walk reads are exact.
+  const isProblemDetails =
+    typeof rec.type === "string" && typeof rec.title === "string" && typeof rec.detail === "string";
+  for (const k in rec) {
+    const leaf = rec[k];
+    if (isProblemDetails && k === "status" && typeof leaf === "number") {
+      // Exempt leaf — stays number. Consume the positional flag exactly as
+      // any number leaf would, and discard the unsafe-digit entry when the
+      // value is beyond 2^53, or every later unsafe int in a mixed payload
+      // desyncs (http codes never reach 2^53 — the discard is the alignment
+      // invariant, not data).
+      const isInt = flags[fi.i++];
+      if (isInt && !Number.isSafeInteger(leaf)) ui.i++;
+      continue;
+    }
+    rec[k] = bigintWalk(leaf, flags, unsafe, fi, ui);
+  }
   return v;
 }
 
@@ -200,6 +225,12 @@ function bigintWalk(
  *
  * ALL integer-valued numbers are returned as native `bigint`; non-integer
  * floats stay `number`; strings/booleans/null are unaffected.
+ *
+ * The single sanctioned exception: the `status` integer of an RFC7807
+ * problem-details object (shape-detected by type+title+detail strings)
+ * stays `number` — the error model is HTTP-native and its status is
+ * classified with typeof guards across the ecosystem. An integer `status`
+ * outside that shape is a domain integer and stays bigint, always.
  *
  * Throws `SyntaxError` on malformed input, trailing commas, and
  * duplicate keys at any depth (native JSON.parse silently last-wins —

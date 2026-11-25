@@ -180,6 +180,81 @@ describe("ext-json codec contract", () => {
   });
 });
 
+describe("RFC7807 problem-details status exemption", () => {
+  const PROBLEM =
+    '{"type":"/errors/unauthorized","title":"Unauthorized","status":401,"detail":"No refresh token"}';
+
+  it("keeps the status integer of a problem-details object as number", () => {
+    const p = extJsonParse<{ status: unknown; type: unknown }>(PROBLEM);
+    expect(p.status).toBe(401);
+    expect(typeof p.status).toBe("number");
+    expect(p.type).toBe("/errors/unauthorized");
+  });
+
+  it("applies the exemption at any depth — envelope-nested and array-carried problems", () => {
+    const p = extJsonParse<{ error: { status: unknown }; errors: { status: unknown }[] }>(
+      `{"error":${PROBLEM},"errors":[${PROBLEM}]}`,
+    );
+    expect(p.error.status).toBe(401);
+    expect(p.errors[0].status).toBe(401);
+  });
+
+  it("keeps every OTHER integer inside the problem object as bigint", () => {
+    const p = extJsonParse<{ status: unknown; retry_after: unknown }>(
+      '{"type":"/errors/x","title":"X","detail":"x","status":503,"retry_after":30}',
+    );
+    expect(p.status).toBe(503);
+    expect(p.retry_after).toBe(30n); // domain/extension integers are not the http code
+  });
+
+  it("leaves an integer status outside the problem shape as bigint — the exception is never key-based", () => {
+    const p = extJsonParse<{ status: unknown; nested: { status: unknown } }>(
+      '{"status":3,"nested":{"type":"not-a-problem","status":7}}',
+    );
+    expect(p.status).toBe(3n);
+    expect(p.nested.status).toBe(7n);
+  });
+
+  it("requires the full type+title+detail shape — a partial shape keeps status bigint", () => {
+    const missingDetail = extJsonParse<{ status: unknown }>(
+      '{"type":"/errors/x","title":"X","status":404}',
+    );
+    expect(missingDetail.status).toBe(404n);
+    const nonStringDetail = extJsonParse<{ status: unknown }>(
+      '{"type":"/errors/x","title":"X","detail":42,"status":404}',
+    );
+    expect(nonStringDetail.status).toBe(404n);
+  });
+
+  it("preserves unsafe-digit alignment in mixed payloads — problem status followed by >2^53 ints", () => {
+    const p = extJsonParse<{ problem: { status: unknown }; id: unknown; after: unknown }>(
+      `{"problem":${PROBLEM},"id":9007199254740993,"after":45}`,
+    );
+    expect(p.problem.status).toBe(401);
+    expect(p.id).toBe(9007199254740993n); // exact — would corrupt if the exempt leaf desynced the digit stream
+    expect(p.after).toBe(45n);
+  });
+
+  it("round-trips a problem object through SER+DES with status staying number", () => {
+    const wire = extJsonStringify({
+      type: "/errors/x",
+      title: "X",
+      detail: "x",
+      status: 422,
+    });
+    expect(wire).toContain('"status":422');
+    const back = extJsonParse<{ status: unknown }>(wire);
+    expect(back.status).toBe(422);
+    expect(typeof back.status).toBe("number");
+  });
+
+  it("keeps strictness inside problem objects — duplicate keys still throw", () => {
+    expect(() =>
+      extJsonParse('{"type":"/x","title":"X","detail":"x","status":401,"status":402}'),
+    ).toThrow(/duplicate key/);
+  });
+});
+
 describe.skipIf(!process.env.EXT_BENCH)("ext-json perf matrix", () => {
   it("prints parse/stringify timings vs JSON and fast-path candidates", () => {
     const runtime = typeof (globalThis as { Bun?: unknown }).Bun !== "undefined" ? "bun" : "node";
