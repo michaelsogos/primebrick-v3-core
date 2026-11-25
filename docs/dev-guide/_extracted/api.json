@@ -2861,7 +2861,7 @@
 					],
 					"type": {
 						"type": "intrinsic",
-						"name": "number"
+						"name": "bigint"
 					}
 				},
 				{
@@ -32221,7 +32221,7 @@
 					],
 					"type": {
 						"type": "intrinsic",
-						"name": "number"
+						"name": "bigint"
 					}
 				},
 				{
