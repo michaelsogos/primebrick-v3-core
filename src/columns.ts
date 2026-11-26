@@ -387,6 +387,7 @@ const COLUMN_SCHEMA_FORMAT: Partial<Record<MetaColumnFormat, string>> = {
   schedule_spec: "schedule_spec",
   revive_interval: "revive_interval",
   revive_offset: "revive_offset",
+  i18n_key: "i18n_key",
 };
 
 /**
