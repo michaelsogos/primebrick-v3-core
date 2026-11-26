@@ -381,6 +381,12 @@ const COLUMN_SCHEMA_FORMAT: Partial<Record<MetaColumnFormat, string>> = {
   time: "time",
   identifier: "uuid",
   lang: "lang",
+  // Cadence wire vocabularies — distinct schema formats (the wires differ)
+  // but ONE icon family downstream: scheduler and reviver share the
+  // clipboard-clock glyph (user-ratified convention 2026-11-26).
+  schedule_spec: "schedule_spec",
+  revive_interval: "revive_interval",
+  revive_offset: "revive_offset",
 };
 
 /**
