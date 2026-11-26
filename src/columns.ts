@@ -7,7 +7,7 @@
  * time and runtime.
  */
 
-import type { MetaColumn } from "./entity-meta.js";
+import type { MetaColumn, MetaColumnFormat } from "./entity-meta.js";
 import type { FilterOperator } from "./list.js";
 
 /**
@@ -57,7 +57,9 @@ export function orderedColumns(
   columns: readonly MetaColumn[] | null | undefined,
 ): MetaColumn[] {
   if (!columns?.length) return [];
-  const tagged = columns.map((c, i) => ({ c, k: c.order ?? i }));
+  // `order` is contract-typed `number` but wire ints arrive as bigint via
+  // ext-json — the comparator needs plain-number subtraction.
+  const tagged = columns.map((c, i) => ({ c, k: c.order === undefined ? i : Number(c.order) }));
   const byOrder = (a: { k: number }, b: { k: number }) => a.k - b.k;
   const pick = (pred: (c: MetaColumn) => boolean) =>
     tagged.filter(({ c }) => pred(c)).sort(byOrder).map(({ c }) => c);
@@ -261,6 +263,80 @@ export const FILTER_OPERATOR_ICON: Record<FilterOperator, string> = {
   startsWith: "list-start",
   endsWith: "list-end",
   BETWEEN: "list-indent-increase",
+};
+
+/**
+ * Canonical `MetaColumn → JSON-schema leaf` conversion — the honest WIRE
+ * shape of the column so schema-driven resolvers (`schemaTypeIcon`,
+ * `schemaLeafSub`, `schemaToNavNodes` — the ONE vocabulary shared with
+ * the payload-map editor and rule-filter picker) can render it without a
+ * second icon map:
+ *
+ *   - the declared `format` wins over the bare `type` (`email`→`"email"`
+ *     → mail, `identifier`→`"uuid"` → file-key, `json`/`rule_filter`→
+ *     `"object"` → braces);
+ *   - a `badge` column exposes its value vocabulary as `enum` (→ tags),
+ *     `ref` is its uuid wire shape, `sparkline` is an array;
+ *   - `nullable` flags the type union with `"null"` — the resolver
+ *     renders the base icon dashed.
+ *
+ * Icon names live ONLY in `schemaTypeIcon`; this function must never
+ * carry a glyph of its own.
+ */
+export function columnSchemaLeaf(
+  col: Pick<MetaColumn, "type"> &
+    Partial<Pick<MetaColumn, "format" | "nullable" | "badge">>,
+): { type: string | string[]; format?: string; enum?: string[] } {
+  const base = columnLeafBase(col);
+  if (!col.nullable) return base;
+  const types = Array.isArray(base.type) ? base.type : [base.type];
+  return { ...base, type: [...types, "null"] };
+}
+
+function columnLeafBase(
+  col: Pick<MetaColumn, "type"> & Partial<Pick<MetaColumn, "format" | "badge">>,
+): { type: string; format?: string; enum?: string[] } {
+  // The declared format IS the wire contract where the schema vocabulary
+  // carries it; formats with no schema sibling fall through to `type`.
+  const fmt = col.format ? COLUMN_SCHEMA_FORMAT[col.format as MetaColumnFormat] : undefined;
+  if (fmt) return { type: "string", format: fmt };
+  if (col.format === "json" || col.format === "rule_filter") return { type: "object" };
+  if (col.format === "number" || col.format === "money") return { type: "number" };
+  switch (col.type) {
+    case "badge":
+      return { type: "string", enum: Object.keys(col.badge?.values ?? {}) };
+    case "date":
+      return { type: "string", format: "date" };
+    case "datetime":
+      return { type: "string", format: "date-time" };
+    case "ref":
+      return { type: "string", format: "uuid" };
+    case "ref_count":
+    case "number":
+      return { type: "number" };
+    case "boolean":
+      return { type: "boolean" };
+    case "color":
+      return { type: "string", format: "color_hex" };
+    case "sparkline":
+      return { type: "array" };
+    default:
+      return { type: "string" };
+  }
+}
+
+/** `MetaColumnFormat` → the sibling JSON-schema `format` — mirrors the
+ *  `FORMAT_TYPE_ICONS` vocabulary the shared `schemaTypeIcon` resolves. */
+const COLUMN_SCHEMA_FORMAT: Partial<Record<MetaColumnFormat, string>> = {
+  email: "email",
+  url: "url",
+  phone: "phone",
+  color_hex: "color_hex",
+  date: "date",
+  datetime: "date-time",
+  time: "time",
+  identifier: "uuid",
+  lang: "lang",
 };
 
 /**

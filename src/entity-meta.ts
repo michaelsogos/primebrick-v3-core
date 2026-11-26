@@ -69,6 +69,11 @@ export interface EntityAction {
   label_key?: string;
   icon?: string;
   color?: ActionColor;
+  /** CTA shape — `default` (filled severity variant) or `outline`
+   *  (gradient-outline ghost). CTA-only axis: it never reaches the
+   *  dialog surface — dialog `tone="soft"` stays the reserved
+   *  auth/security family, unreachable from meta. */
+  variant?: ActionVariant;
   /** Confirm-dialog message template override (`{entity}`/`{name}` for
    *  single ops, `{count}`/`{entity}` for bulk). When set it replaces the
    *  standard `app.common.{delete,restore}Entit{y,ies}Confirm` copy —
@@ -88,6 +93,7 @@ export type ActionsOverrides = Record<
     label_key?: string;
     icon?: string;
     color?: ActionColor;
+    variant?: ActionVariant;
     confirm_key?: string;
     busy_key?: string;
   }
@@ -123,6 +129,23 @@ export const ACTION_COLORS: readonly ActionColor[] = [
   "destructive",
   "violet",
 ];
+
+/**
+ * Closed action-variant vocabulary — the CTA SHAPE axis, orthogonal to
+ * `color`. Same names as the svelte `Button` shape prop:
+ * `default` = filled severity variant (the standard look);
+ * `outline` = gradient-outline ghost (secondary affordance, e.g. export).
+ * `variant` reaches ONLY the CTA — never the dialog: an "outline dialog"
+ * would be the `tone="soft"` security-family style, and that tone is
+ * semantically reserved (MFA/OTP/session), not a shape pick.
+ * A meta may never smuggle a shape outside this set — the enum IS the
+ * contract.
+ */
+export type ActionVariant = "default" | "outline";
+
+/** The full `ActionVariant` vocabulary — construction/lint validation
+ *  rejects anything outside this closed set. */
+export const ACTION_VARIANTS: readonly ActionVariant[] = ["default", "outline"];
 
 /**
  * Semantic action icons — names whose COLOR IS PART OF THE ICON's meaning.
@@ -164,9 +187,18 @@ export function actionColorClass(color: ActionColor | undefined | null): string 
 export function validateActionChrome(
   icon: string | undefined,
   color: string | undefined,
+  variant?: string | undefined,
 ): string | null {
   if (color !== undefined && !ACTION_COLORS.includes(color as ActionColor)) {
     return `color "${color}" is not an ActionColor — allowed: ${ACTION_COLORS.join("|")}`;
+  }
+  if (variant !== undefined && !ACTION_VARIANTS.includes(variant as ActionVariant)) {
+    return `variant "${variant}" is not an ActionVariant — allowed: ${ACTION_VARIANTS.join("|")}`;
+  }
+  // `outline` without an explicit non-neutral color has no designed look —
+  // reject the ambiguous pair at construction instead of guessing one.
+  if (variant === "outline" && (color === undefined || color === "neutral")) {
+    return `variant "outline" requires an explicit non-neutral "color" — outline has no defined look without one`;
   }
   const bound = icon !== undefined ? SEMANTIC_ICON_COLORS[icon] : undefined;
   if (bound !== undefined && color !== undefined && color !== bound) {
@@ -194,6 +226,7 @@ export const STANDARD_OPS = [
   "delete.bulk",
   "restore.bulk",
   "duplicate.bulk",
+  "update.bulk",
 ] as const;
 
 export type StandardOp = (typeof STANDARD_OPS)[number];
@@ -249,7 +282,32 @@ export type MetaColumnFormat =
   | "rule_filter"
   | "slug"
   | "no_space"
-  | "lang";
+  | "lang"
+  | "sequence"
+  /** Sequence PATTERN authoring — a plain string that must satisfy the
+   *  closed sequence grammar (`parseSequencePattern`). Renders the
+   *  pattern-builder widget (literal typing + token-catalog sheet +
+   *  interpolated preview). Distinct from `sequence`, which is the
+   *  seq-BOUND directive wire value (`{seq:uuid}`), never authored as
+   *  text. */
+  | "sequence_pattern"
+  /** Revive interval `'N (day|week|month|quarter|year)[s]'` — the closed
+   *  varchar canonical (`parseReviveInterval` grammar), NEVER a pg
+   *  `interval` (pg output normalizes '3 months'→'3 mons' and breaks
+   *  round-trip). Renders the numeric+unit composite control — number
+   *  input with the closed 5-unit dropdown on the trailing CTA.
+   *  Grammar: `'N unit' | 'at <RFC3339>'` (explicit-instant pin). */
+  | "revive_interval"
+  /** Revive offset `'N unit' | 'until <RFC3339>'` — same composite
+   *  anatomy as `revive_interval` but the instant literal carries the
+   *  `until` keyword (`switch_at` pin — the moment the successor takes
+   *  over), never `at`. `parseGraceSpec` grammar. */
+  | "revive_offset"
+  /** Stored i18n key AS DATA (dict `label_key`/`description_key`) — renders
+   *  as a `languages`-icon badge carrying the resolved translation, raw
+   *  key in the tooltip; unresolved keys show mono-raw (same anatomy as
+   *  `nats_subject`/`service_code` governed-reference badges). */
+  | "i18n_key";
 
 /**
  * Dynamic option vocabulary for combo-backed controls — declared on the
@@ -257,7 +315,7 @@ export type MetaColumnFormat =
  * the same contract feeds forms, list filters and docs generation.
  * Closed union on purpose — an unknown source is a construction error.
  */
-export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors" | "system.roles";
+export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "audit.actors" | "system.roles" | "iana.tzones";
 
 /**
  * Option vocabulary a unit-of-measure selector may draw from.
@@ -267,6 +325,16 @@ export type MetaColumnOptionsSource = "census.emits" | "census.callables" | "aud
  * `{api_url}`: an explicit endpoint serving the options.
  * Closed union on purpose — an unknown source is a construction error.
  */
+/**
+ * Sequence-widget modes — the two write-path configurations a
+ * `format:"sequence"` control may offer. Closed union on purpose.
+ *  - `"generate"` — inline pattern builder emitting a `{seq:{pattern,…}}`
+ *    directive (resolved + materialized inside the write transaction);
+ *  - `"select"` — combobox over the module's `sequence` registry,
+ *    emitting `{seq:{uuid}}` (uuid is the ONLY sequence identity).
+ */
+export type SequenceMode = "generate" | "select";
+
 export type MetaColumnUomSource = "currencies" | { entity: string } | { api_url: string; value_field: string; label_field?: string };
 
 /**
@@ -367,6 +435,19 @@ export type MetaColumnAvatar = { color_field: string; initials_field?: string };
  * value directly. `equals`/`not` take a single literal, `values` a set
  * (IN semantics).
  */
+/**
+ * `ColumnDefaultSpec` — the computed-default vocabulary a `MetaColumn.default`
+ * may carry instead of a literal. Closed union — consumers recognize the
+ * spec by `kind` membership, never by object shape alone (a jsonb column
+ * may legitimately hold a literal object default).
+ *
+ *   - `"next_day_start_local"` — the form seeds tomorrow at 00:00 in the
+ *     USER's local zone, serialized to the column's wire type (`datetime`
+ *     → UTC ISO). The anchor-default for "starts from" fields (e.g.
+ *     `sequence.default_from`).
+ */
+export type ColumnDefaultSpec = { kind: "next_day_start_local" };
+
 export type MetaColumnDependsCondition = {
   /** Pivot ROW prop to compare — requires the pivot to be `type:"ref"`. */
   prop?: string;
@@ -498,6 +579,27 @@ export type MetaColumn = {
    *  (idp_code, avatar_initials, onboarding_completed). Distinct from
    *  `managed` (DB-filled key) and `audited` (lifecycle facts). */
   immutable?: boolean;
+  /**
+   * `default` — the column's create-surface initial value. Two sources,
+   * ONE served key. May carry a `ColumnDefaultSpec` (computed spec —
+   * closed vocab) instead of a literal when the prefill is dynamic.
+   *
+   *   - DERIVED — injected by `withColumnConstraints` from the entity
+   *     class `@Column({defaultSql})` when the expression is a constant
+   *     literal, parsed to the column's wire type per `pg_type`
+   *     (`"1"` on int8 → `1n`, `"false"` on boolean → `false`,
+   *     `'x'` → `x`). Volatile expressions (`uuidv7()`, `now()`) are
+   *     NEVER served — nothing a form can prefill.
+   *   - AUTHORED — a `*.meta.ts` may declare `default` to override the
+   *     derived value: the legal and only override channel (e.g. a
+   *     domain default different from the physical one, or a value
+   *     not expressible as a SQL literal such as a `{seq:{…}}`
+   *     directive).
+   *
+   * Consumed ONLY as the create-surface prefill (update surfaces read
+   * the record); the placement-level `default_value` overrides it per
+   * form. Wire: ext-json typed — `bigint`/`Decimal` survive verbatim. */
+  default?: unknown;
 
   // AUTHORED — semantic contract the entity class cannot express.
   /** Field format — see {@link MetaColumnFormat}. */
@@ -560,6 +662,40 @@ export type MetaColumn = {
    *  AND the structural validation in `buildEntityFormSchema`. */
   json_schema?: Record<string, unknown>;
 
+  /** `format:"sequence"` — the column is sequence-bound (`@SequenceField`
+   *  on the entity class). Two halves, one contract:
+   *
+   *   - `code` — the binding's DEFAULT sequence code, derived at
+   *     persistence-meta resolution as `<table>.<field>` (e.g.
+   *     `customers.code`). DERIVED — authoring it in a `*.meta.ts` file
+   *     throws (the entity class is the single source).
+   *   - `modes`/`default_mode`/`allow_create` — AUTHORED surface config:
+   *     which sequence widgets the control offers ("generate" emits an
+   *     inline pattern builder, "select" a registry combobox), which is
+   *     the initial mode, and whether the "create a new sequence in a
+   *     new tab" CTA renders. A single `modes` entry collapses the mode
+   *     picker — the only mini-widget renders directly.
+   *
+   *  Wire contract (write payloads): the column NEVER accepts a literal
+   *  string — only a sequence directive resolved inside the write
+   *  transaction. `default_mode` defaults to "generate"; `modes` to
+   *  both; `allow_create` to true. */
+  seq?: {
+    /** DERIVED default sequence identity — deterministic uuid of the
+     *  `<table>.<field>` bound row (computable before the row exists). */
+    uuid?: string;
+    /** DERIVED bound name — `<table>.<field>` (display only). */
+    name?: string;
+    /** AUTHORED — widget modes offered (default: both). `readonly` so a
+     *  `DeepReadonly<MetaColumn>` (served-meta getter contract) stays
+     *  assignable to `readonly MetaColumn[]` consumers. */
+    modes?: readonly SequenceMode[];
+    /** AUTHORED — initial mode (default: "generate"). */
+    default_mode?: SequenceMode;
+    /** AUTHORED — show the new-tab create-sequence CTA (default: true). */
+    allow_create?: boolean;
+  };
+
   /** Explicit control override — key of the host widget registry;
    *  bypasses the `format`→control derivation on EVERY surface (forms
    *  AND filters read the same declaration — it is the column's
@@ -573,6 +709,10 @@ export type MetaColumn = {
    * `callables.callables` — governed LISTEN subjects a rule/scheduler
    * may invoke. Census sources only offer declared values — see
    * `allow_create`.
+   * `"iana.tzones"`: the IANA time-zone list resolved CLIENT-SIDE via
+   * `Intl.supportedValuesOf("timeZone")` (same source the date picker's
+   * zone selector uses) — a closed vocabulary, `allow_create` is a
+   * construction error.
    */
   options_source?: MetaColumnOptionsSource;
   /**
@@ -798,6 +938,8 @@ export interface RowCustomAction {
   icon?: string;
   /** Semantic color for icon + label together — see `ActionColor`. */
   color?: ActionColor;
+  /** CTA shape — `default` or `outline` (CTA-only axis, never dialogs). */
+  variant?: ActionVariant;
   /** Disable the CTA on soft-deleted rows. */
   disabled_when_deleted?: boolean;
   /** Permission required to see/use the action (filtered client-side
@@ -827,6 +969,8 @@ export interface BulkCustomAction {
   icon?: string;
   /** Semantic color for icon + label together — see `ActionColor`. */
   color?: ActionColor;
+  /** CTA shape — `default` or `outline` (CTA-only axis, never dialogs). */
+  variant?: ActionVariant;
   /** Permission required to see/use the action. */
   required_permission?: string | string[];
   /** When true, the CTA is enabled only with rows selected and the body
@@ -918,6 +1062,31 @@ export interface EntityMeta {
   /** Per-op enable overrides — may ONLY toggle `enabled` on route-backed
    *  ops; a missing route already produces `enabled: false`. */
   actions_overrides?: ActionsOverrides;
+  /** Create surface declaration — HOW `create.single` is exercised.
+   *  `"form"` (default when absent) → census `kind:"create"` route +
+   *  `page_props.form` → `EntityFormPage` page (the canonical archetype).
+   *  `"sheet"` → NO route required (a sheet is never a nav leaf): the
+   *  list create CTA opens `entity.record` in `mode:"create"` — the same
+   *  record panel, no fetch, empty draft, POST on commit.
+   *  Authored on the entity meta — never via component props. */
+  create?: {
+    surface?: "form" | "sheet";
+  };
+  /** Entity-level form policy — the surface an entity declares for
+   *  surfaces that have no authored `page_props.form` (builtin/platform
+   *  entities have no route decl to author against: their record-sheet
+   *  forms ride the synthesized fallback). Consumed by
+   *  `synthesizeFormDecl`, which attaches `validators` verbatim — an
+   *  authored route `page_props.form` always wins (page-domain
+   *  placement beats entity policy). Field census stays synthesized:
+   *  `meta.columns` order is the single source, never duplicated. */
+  form?: {
+    /** Closed-vocab cross-field validator keys — the same registry
+     *  `FormPageDecl.validators` names, host-implemented, unknown keys
+     *  throw. Applies to BOTH create and update surfaces (the merged-row
+     *  contract is one rule). */
+    validators?: string[];
+  };
   /** Entity field dictionary (root-level, transversal). */
   columns: MetaColumn[];
   /** Table options — omit when the entity has no table page

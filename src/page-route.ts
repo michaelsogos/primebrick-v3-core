@@ -28,7 +28,7 @@ export const DEFAULT_ROUTE_ICONS: Record<PageRouteKind, string> = {
   detail: "text-cursor-input",
   create: "text-cursor-input",
   page: DEFAULT_PAGE_ICON,
-  dict: "list",
+  dict: "table-dictionary",
 };
 
 /** The resolved default icon for `kind` — `file-box` outside the map. */
@@ -142,12 +142,13 @@ export type FormFieldPlacement = {
    *  (`false` → required). May only LOOSEN to optional, never tighten
    *  past the physical contract. */
   required?: boolean;
-  /** Render the control read-only (e.g. audit-ish fields on edit). */
-  readonly?: boolean;
   // `widget`/`options_source`/`allow_create` were REMOVED from the
   // placement — they are the column's semantic input contract and live
   // on `MetaColumn` (meta.columns), readable by every surface (forms,
   // filters, docs). A placement carrying them is an enrollment error.
+  // `kind`/`managed`/`audited`/`uid`/`hidden` are likewise rejected:
+  // served/derived MetaColumn semantics — never authored in page layout
+  // (SDK `validateFormPage` enforces both sets at declaration time).
 };
 
 /**

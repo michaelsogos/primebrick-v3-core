@@ -23,6 +23,40 @@ DAL and SDK.
 - **snake_case end-to-end** — contract field names match the DB column names
   and the JSON wire shape exactly; no DTO renaming.
 
+## Wire codec (ext-json)
+
+`extJsonParse`/`extJsonStringify` are the only sanctioned parse/serialize path
+for Primebrick wire payloads. The contract is strict: **every integer-valued
+JSON number becomes a native `bigint`** — no `number | bigint` ambiguity for
+consumers, no silent precision loss beyond 2^53.
+
+Exactly one exception exists, and it is **by construction, never by key or by
+caller choice**: inside an RFC7807 problem-details object — shape-detected by
+the presence of `type`, `title` and `detail` as strings, a shape the emission
+contract guarantees in full — the `status` integer stays a `number`. The error
+model is HTTP-native: its status is never a domain integer, never persists,
+never exceeds 2^53, and is classified with `typeof x === "number"` guards
+across the ecosystem. Serialization needs no special case — on the wire the
+token is a bare JSON number in both directions already. An integer `status`
+anywhere outside that shape is a domain integer and stays bigint, always.
+
+**`version` is bigint by construction, on every transport.** HTTP bodies
+(extJsonBodyParser), SSE markers, MCP results, NATS events — every channel
+parses through the same codec, so the optimistic-concurrency version of any
+row is native `bigint` the moment it exists in any runtime. Type declarations
+across the platform (`AuditParams`, `EntityService` write contracts, entity
+events, `EntityChangedMarker`, fe API signatures) are aligned to this reality:
+where a declaration says `number` for version, that is drift — report it.
+Dual-guards of the form `typeof v === "number" || typeof v === "bigint"` are
+tolerance-by-accident and mask exactly this drift; the enforced pattern is
+bigint-only types plus explicit normalization at genuine representation
+boundaries: zod `.transform(BigInt)` on HTTP write schemas (legacy/plain-JSON
+clients may still send number tokens), `BigInt()` at the pg-driver edge where
+an `integer`(int4) column genuinely reads back as number, and `vBigint`-style
+input normalization where SQL deliberately reads `::text`. Write-path version
+increments happen in SQL (`version = table.version + 1`) — never in JS, so no
+bigint arithmetic exists on this path anywhere.
+
 ## Modules
 
 | Subpath | Contents |
