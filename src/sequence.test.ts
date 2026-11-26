@@ -419,6 +419,23 @@ describe("instant literals — 'at'/'until' explicit-moment grammar", () => {
     expect(parseGraceSpec("at 2027-06-16T00:00:00Z")).toBeNull();
   });
 
+  it("@-sigil forms parse identically — machine-syntax canonical, bare legacy read", () => {
+    // the canonical emission carries the schedule-grammar sigil; both
+    // forms parse to the SAME spec (zero-migration backwards compat).
+    expect(parseReviveSpec("@at 2027-06-16T00:00:00Z")).toEqual({
+      kind: "at", at: new Date("2027-06-16T00:00:00Z"),
+    });
+    expect(parseGraceSpec("@until 2027-01-15T00:00:00Z")).toEqual({
+      kind: "at", at: new Date("2027-01-15T00:00:00Z"),
+    });
+    // cross-axis rejection holds under the sigil too
+    expect(parseReviveSpec("@until 2027-01-15T00:00:00Z")).toBeNull();
+    expect(parseGraceSpec("@at 2027-06-16T00:00:00Z")).toBeNull();
+    // sigil without keyword / doubled sigil are not specs
+    expect(parseReviveSpec("@ 2027-06-16T00:00:00Z")).toBeNull();
+    expect(parseReviveSpec("@@at 2027-06-16T00:00:00Z")).toBeNull();
+  });
+
   it("rejects ambiguous literals — bare dates and missing offsets", () => {
     expect(parseReviveSpec("at 2027-06-16")).toBeNull();
     expect(parseReviveSpec("at 2027-06-16T12:30:00")).toBeNull(); // no offset

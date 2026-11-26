@@ -360,8 +360,14 @@ export function parseReviveInterval(
  *  once and the successor lives as the permanent final generation.      *
  * ------------------------------------------------------------------ */
 
-export const REVIVE_AT_RE = /^at (.+)$/;
-export const REVIVE_UNTIL_RE = /^until (.+)$/;
+/*  The canonical emission is machine-prefixed (`@at`/`@until`) — the    *
+ *  same `@`-sigil family as the schedule grammar (`@every`/`@at`), so  *
+ *  the keyword reads as syntax rather than untranslated prose in the   *
+ *  canonical-visible inputs. The bare forms stay valid on READ: rows   *
+ *  authored before the sigil parse unchanged, zero migration.          */
+
+export const REVIVE_AT_RE = /^@?at (.+)$/;
+export const REVIVE_UNTIL_RE = /^@?until (.+)$/;
 
 /** Literal instants are absolute — full RFC3339 with an explicit offset
  *  (`Z` or `±hh:mm`); a bare date would be tz-ambiguous. */
