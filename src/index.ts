@@ -1,3 +1,4 @@
+export * from "./logger.js";
 export * from "./entity-meta.js";
 export * from "./list.js";
 export * from "./list-filter-params.js";

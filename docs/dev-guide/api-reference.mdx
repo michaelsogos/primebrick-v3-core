@@ -67,6 +67,15 @@ Collaboration fragment injected by `assembleMeta` at serve time.
 | enabled | `boolean` |  |
 | expose_editing_value | `boolean` |  |
 
+### `CoreLogEntry`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| level | `CoreLogLevel` |  |
+| msg | `string` |  |
+| meta | `Record<string, unknown>` |  |
+| at | `string` | UTC ISO-8601 timestamp of emission. |
+
 ### `DictFacet`
 
 The `dict` facet — runtime-injected on served meta when the entity
@@ -637,6 +646,14 @@ Mirrors the SDK `ConfigType` and the BE `type` column.
 - `money`:  numeric amount with currency metadata in `type_config`
 
 **Type:** `"string" \| "text" \| "boolean" \| "bigint" \| "number" \| "money" \| "badge" \| "single_select" \| "multi_select" \| "url" \| "secret" \| "json" \| "date" \| "datetime" \| "time" \| "email" \| "phone"`
+
+### `CoreLogLevel`
+
+**Type:** `"debug" \| "info" \| "warn" \| "error"`
+
+### `CoreLogTransport`
+
+**Type:** `(entry: CoreLogEntry) => void`
 
 ### `DecimalInput`
 
@@ -1426,6 +1443,17 @@ treated from the merged record the caller passes.
 
 **Type:** `RegExp`
 
+### `logger`
+
+**Type:** `{ debug: (msg: string, meta: Record<string, unknown>) => void; info: (msg: string, meta: Record<string, unknown>) => void; warn: (msg: string, meta: Record<string, unknown>) => void; error: (msg: string, meta: Record<string, unknown>) => void }`
+
+| Field | Value |
+|-------|-------|
+| debug | "" |
+| info | "" |
+| warn | "" |
+| error | "" |
+
 ### `MIN_SCHEDULE_INTERVAL_MS`
 
 The floor every recurring spec must respect: one minute. The 5-field
@@ -2083,6 +2111,10 @@ Largest integer `<= d`.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | n | `number` |  |
+
+### `getCoreLogTransport(): CoreLogTransport \| null`
+
+Current transport — exposed for tests that need to snapshot/restore.
 
 ### `getOperatorsForColumnType(columnType): FilterOperator[]`
 
@@ -2927,6 +2959,16 @@ meta (e.g. sparkline `endpoint: "/actions/job-run-stats"`) resolve to
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | listBasePath | `string` |  |
+
+### `setCoreLogTransport(t): void`
+
+Install the host transport. Idempotent-by-replacement: the last install
+wins (test harnesses may re-wire; production installs exactly once at
+boot). Pass `null` to restore the default console transport.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| t | `CoreLogTransport \| null` |  |
 
 ### `signum(d): -1 \| 0 \| 1`
 
