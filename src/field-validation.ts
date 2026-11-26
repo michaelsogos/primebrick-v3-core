@@ -33,6 +33,19 @@ import {
   type PayloadMap,
   type PayloadMapMeta,
 } from "./payload-map.js";
+import {
+  derivePeriodLabel,
+  parseGraceSpec,
+  parseReviveInterval,
+  parseReviveSpec,
+  parseSequencePattern,
+  renderSequenceValue,
+  reviveAdvanceSpec,
+  validateSequencePartitions,
+  type SequenceDecl,
+  type SequenceDirective,
+  type SequencePartitions,
+} from "./sequence.js";
 
 /** A single validation finding. `path` is the entity field key (or a
  *  dotted sub-path inside a JSON-Schema check). */
@@ -243,6 +256,72 @@ export function nextScheduleFire(spec: string, opts: { now?: Date; since?: Date 
 
 /** UUID (any version) — matches zod/JSON-Schema `format:"uuid"`. */
 export const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+/**
+ * The ONLY accepted wire shape for a `format:"sequence"` column — see
+ * {@link SequenceDirective} for the three forms. Returns the parsed
+ * directive or `null` (shape/decl violation — the caller emits the
+ * `app.common.validation.sequence_directive` issue). A literal value is
+ * never writable: the repository resolves the directive in-transaction.
+ */
+export function parseSequenceDirective(raw: unknown): SequenceDirective | null {
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return null;
+  const keys = Object.keys(raw);
+  if (keys.length !== 1 || keys[0] !== "seq") return null;
+  const seq = (raw as Record<string, unknown>).seq;
+  // `{seq:"<uuid>"}` — select by uuid.
+  if (typeof seq === "string") return UUID_REGEX.test(seq) ? { seq } : null;
+  if (typeof seq !== "object" || seq === null || Array.isArray(seq)) return null;
+  const skeys = Object.keys(seq);
+  const s = seq as Record<string, unknown>;
+  // Allocation context — sez slot values + business date; allowed on every
+  // object form, slot-compat checked against the pattern when it's known
+  // (expr form — validated here; select forms — at resolution time).
+  const CTX = ["sez", "sez2", "sez3", "at"] as const;
+  const ctx: { sez?: string; sez2?: string; sez3?: string; at?: string } = {};
+  for (const k of CTX) {
+    if (s[k] === undefined) continue;
+    if (typeof s[k] !== "string" || (s[k] as string).length === 0) return null;
+    ctx[k] = s[k] as string;
+  }
+  if (ctx.at !== undefined && Number.isNaN(new Date(ctx.at).getTime())) return null;
+  const base = new Set(skeys.filter((k) => !(CTX as readonly string[]).includes(k)));
+  // `{seq:{uuid:"…"}}` — select an existing sequence (uuid is the ONLY
+  // identity; a sequence `name` is display data, never an address).
+  if (base.size === 1 && base.has("uuid") && typeof s.uuid === "string" && UUID_REGEX.test(s.uuid)) {
+    return { seq: { uuid: s.uuid, ...ctx } };
+  }
+  // `{seq:{pattern, step, start, tz?}}` — on-the-fly definition; the same
+  // decl gate `@SequenceField` applies (closed key set, bigint-only
+  // step/start — plain-JSON clients cannot express this form).
+  if (![...base].every((k) => k === "pattern" || k === "step" || k === "start" || k === "tz")) return null;
+  if (typeof s.pattern !== "string" || s.pattern.length === 0) return null;
+  let parsed;
+  try {
+    parsed = parseSequencePattern(s.pattern);
+  } catch {
+    return null;
+  }
+  if (typeof s.step !== "bigint" || s.step === 0n) return null;
+  if (typeof s.start !== "bigint") return null;
+  if (s.tz !== undefined && s.tz !== null) {
+    if (typeof s.tz !== "string") return null;
+    try {
+      new Intl.DateTimeFormat("en", { timeZone: s.tz });
+    } catch {
+      return null;
+    }
+  }
+  // Sez slots must match the pattern exactly — a missing slot or a surplus
+  // key mis-keys the counter silently.
+  try {
+    validateSequencePartitions(parsed, ctx as SequencePartitions);
+  } catch {
+    return null;
+  }
+  const decl: SequenceDecl = { pattern: s.pattern, step: s.step, start: s.start, tz: s.tz as string | null | undefined };
+  return { seq: { ...decl, ...ctx } };
+}
 
 // ---------------------------------------------------------------------------
 // Identifier-family tokens — the canonical name-grammar vocabulary.
@@ -482,6 +561,36 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
   const at = (code: FieldIssue["code"], message: string, sub?: string) =>
     out.push(issue(sub ?? p, code, message));
 
+  // Seq-bound: the wire value is a SEQUENCE DIRECTIVE, never the literal —
+  // the repository resolves it in-transaction (D1/D2 contract). Checked
+  // before every type branch: the directive object is not the column type.
+  if (col.format === "sequence") {
+    const dir = parseSequenceDirective(value);
+    if (dir === null) {
+      at("schema_mismatch", "app.common.validation.sequence_directive");
+      return out;
+    }
+    // D4-A: an expr directive whose rendered `start` value overflows the
+    // column can only fail at INSERT — reject it here (the resolver
+    // repeats the check with real partitions for sez patterns).
+    if (typeof dir.seq === "object" && "pattern" in dir.seq && typeof col.max_length === "number") {
+      try {
+        const rendered = renderSequenceValue(
+          parseSequencePattern(dir.seq.pattern),
+          dir.seq.start,
+          new Date(),
+          { tz: dir.seq.tz ?? undefined },
+        );
+        if (rendered.length > col.max_length) {
+          at("too_big", kmsg("app.common.validation.max_chars", { count: col.max_length }));
+        }
+      } catch {
+        // {sez} partitions are supplied at write — the resolver enforces.
+      }
+    }
+    return out;
+  }
+
   if (col.type === "boolean" || col.pg_type === "boolean") {
     if (typeof value !== "boolean") at("invalid_type", expectedTypeMsg(["boolean"]));
     return out;
@@ -576,6 +685,25 @@ export function checkFieldValue(col: MetaColumn, value: unknown, path?: string):
     case "slug": if (!isSlug(value)) fmtFail(); break;
     case "no_space": if (!isNoSpace(value)) fmtFail(); break;
     case "lang": if (!isLang(value)) fmtFail(); break;
+    case "sequence_pattern": {
+      // Authored pattern string — the SAME parser the wire `vPattern`
+      // and the form widget run; the verdict can never drift.
+      try {
+        parseSequencePattern(value);
+      } catch {
+        fmtFail();
+      }
+      break;
+    }
+    case "revive_interval":
+      // axis grammar: `'N unit'` interval or the `'at <ISO>'` pin — the
+      // same spec parser the wire validator and the widget share.
+      if (!parseReviveSpec(value)) fmtFail();
+      break;
+    case "revive_offset":
+      // the switch axis — interval or `'until <ISO>'`.
+      if (!parseGraceSpec(value)) fmtFail();
+      break;
   }
   if (out.length === formatBefore && typeof col.pattern === "string" && col.pattern !== "") {
     try {
@@ -628,7 +756,10 @@ export function checkEntityFields(
         col.key === meta.uid ||
         col.managed === true ||
         col.kind === "calculated" ||
-        col.kind === "virtual";
+        col.kind === "virtual" ||
+        // Seq-bound: absent on create = allocate from the field's default
+        // sequence — the directive is optional input, never a literal.
+        col.seq !== undefined;
       if (!opts.partial && col.nullable === false && !managed) {
         out.push(issue(col.key, "required", "app.common.validation.required"));
       }
@@ -694,6 +825,109 @@ export function jobTriggerShapeIssues(entity: Record<string, unknown>, now: Date
         out.push(issue("schedule_spec", "schema_mismatch", "app.common.validation.schedule_spec_past"));
       }
     }
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// sequenceReviveShapeIssues — the `sequence` revive contract (create/update).
+// ---------------------------------------------------------------------------
+
+/** The three positional sezionale slots — the only legal `revive_slot`
+ *  values, and the slots a pattern's `{sez}`/`{sez2}`/`{sez3}` tokens map. */
+export const SEQUENCE_REVIVE_SLOTS = ["sez", "sez2", "sez3"] as const;
+export type SequenceReviveSlot = (typeof SEQUENCE_REVIVE_SLOTS)[number];
+
+/**
+ * The revive contract on a (possibly merged) sequence row — ONE predicate
+ * consumed by the form's cross-field registry, the wire validator, and
+ * the service's merged-row check, so the three surfaces can never drift:
+ *
+ *   - a supplied `sez*` value must name a slot the pattern declares;
+ *   - `revive_slot` requires `revive_every` and is required by it;
+ *   - `revive_slot` must be a slot the pattern uses;
+ *   - the slot's row-owned value must be present and advanceable by
+ *     `derivePeriodLabel` — a free-text sezionale can never revive.
+ *
+ * An unparseable `pattern` contributes NO issues — the `sequence_pattern`
+ * format check owns that finding; this predicate is the shape layer.
+ */
+export function sequenceReviveShapeIssues(row: {
+  pattern: string;
+  sez?: string | null;
+  sez2?: string | null;
+  sez3?: string | null;
+  revive_every?: string | null;
+  revive_slot?: string | null;
+}): FieldIssue[] {
+  const out: FieldIssue[] = [];
+  let parsed: ReturnType<typeof parseSequencePattern>;
+  try {
+    parsed = parseSequencePattern(row.pattern);
+  } catch {
+    return out;
+  }
+  for (const slot of SEQUENCE_REVIVE_SLOTS) {
+    const v = row[slot];
+    if (v !== null && v !== undefined && !parsed.sez_slots.includes(slot)) {
+      out.push(
+        issue(slot, "schema_mismatch", kmsg("app.common.validation.sequence_sez_not_in_pattern", { slot })),
+      );
+    }
+  }
+  if (!row.revive_every) {
+    if (row.revive_slot) {
+      out.push(
+        issue("revive_slot", "schema_mismatch", "app.common.validation.sequence_revive_slot_requires_every"),
+      );
+    }
+    return out;
+  }
+  if (!row.revive_slot) {
+    out.push(issue("revive_slot", "required", "app.common.validation.sequence_revive_slot_required"));
+    return out;
+  }
+  const slot = row.revive_slot as SequenceReviveSlot;
+  if (!SEQUENCE_REVIVE_SLOTS.includes(slot) || !parsed.sez_slots.includes(slot)) {
+    out.push(
+      issue("revive_slot", "schema_mismatch", kmsg("app.common.validation.sequence_revive_slot_not_in_pattern", { slot: row.revive_slot })),
+    );
+    return out;
+  }
+  const value = row[slot];
+  if (value === null || value === undefined) {
+    out.push(
+      issue(slot, "required", kmsg("app.common.validation.sequence_revive_slot_value_required", { slot })),
+    );
+    return out;
+  }
+  // The advance interval the clone will apply — the authored cadence,
+  // or `'1 <period_kind>'` under an `'at'` pin (the pattern's own grain).
+  // `null` on an unparseable spec or `'at'` over a period-free pattern.
+  const spec = parseReviveSpec(row.revive_every);
+  const adv = spec && reviveAdvanceSpec(row.revive_every, parsed.period_kind);
+  if (!adv) {
+    out.push(
+      issue(
+        "revive_every",
+        "schema_mismatch",
+        spec?.kind === "at"
+          ? "app.common.validation.sequence_revive_at_needs_period"
+          : kmsg("app.common.validation.sequence_revive_every_invalid", { value: row.revive_every }),
+      ),
+    );
+    return out;
+  }
+  try {
+    derivePeriodLabel(value, `${adv.count} ${adv.unit}`);
+  } catch {
+    out.push(
+      issue(
+        slot,
+        "schema_mismatch",
+        kmsg("app.common.validation.sequence_revive_value_not_advancable", { value, every: row.revive_every }),
+      ),
+    );
   }
   return out;
 }

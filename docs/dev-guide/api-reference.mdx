@@ -42,6 +42,7 @@ UI configuration for a selection-aware bulk CTA (endpoint-backed op
 | translation_key | `string` | i18n key for the CTA label. |
 | icon | `string` | Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. |
 | color | `ActionColor` | Semantic color for icon + label together — see `ActionColor`. |
+| variant | `ActionVariant` | CTA shape — `default` or `outline` (CTA-only axis, never dialogs). |
 | required_permission | `string \| string[]` | Permission required to see/use the action. |
 | requires_selection | `boolean` | When true, the CTA is enabled only with rows selected and the body
  receives `selected_uuids`; false = fires with an empty body
@@ -65,6 +66,15 @@ Collaboration fragment injected by `assembleMeta` at serve time.
 |-------|------|-------------|
 | enabled | `boolean` |  |
 | expose_editing_value | `boolean` |  |
+
+### `CoreLogEntry`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| level | `CoreLogLevel` |  |
+| msg | `string` |  |
+| meta | `Record<string, unknown>` |  |
+| at | `string` | UTC ISO-8601 timestamp of emission. |
 
 ### `DictFacet`
 
@@ -114,6 +124,10 @@ unavailable for everyone (route missing or product-disabled).
  `crud_action` route, or `meta.actions_overrides[op]`. |
 | icon | `string` |  |
 | color | `ActionColor` |  |
+| variant | `ActionVariant` | CTA shape — `default` (filled severity variant) or `outline`
+ (gradient-outline ghost). CTA-only axis: it never reaches the
+ dialog surface — dialog `tone="soft"` stays the reserved
+ auth/security family, unreachable from meta. |
 | confirm_key | `string` | Confirm-dialog message template override (`{entity}`/`{name}` for
  single ops, `{count}`/`{entity}` for bulk). When set it replaces the
  standard `app.common.{delete,restore}Entit{y,ies}Confirm` copy —
@@ -142,7 +156,7 @@ most recent change without scanning the audit log.
 |-------|------|-------------|
 | entity_type | `string` |  |
 | entity_uuid | `string` |  |
-| version | `number` | The new `version` after the save. |
+| version | `bigint` | The new `version` after the save. |
 | audit_log_id | `string \| number` | The audit row key of the change — bigint for legacy surrogate-id
  audit tables, uuid string for post-eradication `*_audit` rows
  (PK `(uuid, changed_at)`). |
@@ -193,6 +207,21 @@ served response. Used automatically for edit-page titles; reusable for
 comboboxes, lists, chips. |
 | actions_overrides | `ActionsOverrides` | Per-op enable overrides — may ONLY toggle `enabled` on route-backed
  ops; a missing route already produces `enabled: false`. |
+| create | `{ surface: "form" \| "sheet" }` | Create surface declaration — HOW `create.single` is exercised.
+ `"form"` (default when absent) → census `kind:"create"` route +
+ `page_props.form` → `EntityFormPage` page (the canonical archetype).
+ `"sheet"` → NO route required (a sheet is never a nav leaf): the
+ list create CTA opens `entity.record` in `mode:"create"` — the same
+ record panel, no fetch, empty draft, POST on commit.
+ Authored on the entity meta — never via component props. |
+| form | `{ validators: string[] }` | Entity-level form policy — the surface an entity declares for
+ surfaces that have no authored `page_props.form` (builtin/platform
+ entities have no route decl to author against: their record-sheet
+ forms ride the synthesized fallback). Consumed by
+ `synthesizeFormDecl`, which attaches `validators` verbatim — an
+ authored route `page_props.form` always wins (page-domain
+ placement beats entity policy). Field census stays synthesized:
+ `meta.columns` order is the single source, never duplicated. |
 | columns | `MetaColumn[]` | Entity field dictionary (root-level, transversal). |
 | table | `TableMeta` | Table options — omit when the entity has no table page
  (e.g. a self-service form meta). |
@@ -394,6 +423,7 @@ UI configuration for a non-standard row CTA (route-backed bare op).
 | translation_key | `string` | i18n key for the CTA label. |
 | icon | `string` | Icon name (Lucide in the reference FE) — absent renders an icon-less CTA. |
 | color | `ActionColor` | Semantic color for icon + label together — see `ActionColor`. |
+| variant | `ActionVariant` | CTA shape — `default` or `outline` (CTA-only axis, never dialogs). |
 | disabled_when_deleted | `boolean` | Disable the CTA on soft-deleted rows. |
 | required_permission | `string \| string[]` | Permission required to see/use the action (filtered client-side
  against the user's permission set). |
@@ -406,6 +436,99 @@ UI configuration for a non-standard row CTA (route-backed bare op).
  equals one of these values — e.g. show `resume` only on `paused`
  rows. Absent = always visible. Scalar comparison — boolean/number
  fields are allowed (e.g. `enabled ∈ [false]` for an Enable CTA). |
+
+### `SequenceDecl`
+
+A sequence DEFINITION carried on the wire — the same shape
+`@SequenceField(decl)` declares on the entity class and the expr form
+of a write directive carries. `step`/`start` are bigint-only (ext-json
+decodes integers to bigint; plain-JSON clients cannot express the expr
+form — they select existing sequences by code/uuid instead).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| pattern | `string` | Pattern source — parsed by parseSequencePattern at every boundary. |
+| step | `bigint` | Counter increment per emitted value — non-zero. |
+| start | `bigint` | First emitted counter value when the sequence is materialized. |
+| tz | `string \| null` | IANA zone for date tokens — `null`/`undefined` = server default. |
+| sez | `string` | Row-owned sezionale defaults materialized onto the sequence row —
+ the pattern's `{sez}`/`{sez2}`/`{sez3}` slots take the row's value
+ when the directive doesn't supply them (owned slots are immutable
+ at claim time — a directive may only supply non-owned slots). |
+| sez2 | `string` |  |
+| sez3 | `string` |  |
+| revive_every | `string` | Revive cadence `'N (day|week|month|quarter|year)[s]'` — the row is
+ cloned on a chained calendar (`expire_at` boundary, `switch_at`
+ retirement); NULL/absent = the row never revives. IMMUTABLE
+ post-create (the period contract is the row's identity). |
+| revive_grace | `string` | Overlap window `'N unit'` — how long the retired row survives
+ `expire_at` so backdated `at` values still resolve it. Editable —
+ only moves `switch_at`. Default `'0'`. |
+| revive_slot | `SequenceSezToken` | Which sez slot the period label advances at revive — must be a
+ slot the pattern uses; its value must parse under
+ derivePeriodLabel for the unit. Default `'sez'`. |
+
+### `SequenceDirectiveContext`
+
+Optional per-allocation context carried by the object directive forms —
+ the sezionale slot values (`sez`/`sez2`/`sez3` — the counter partitions
+ are persisted per `(sequence, period, partition_key)`; the pattern's
+ slots decide which are required/allowed), the business date `at`
+ (ISO string — drives `period_key` + date tokens; default = write
+ time), and `tz` (IANA zone overriding the row's for THIS allocation —
+ resolve-time context, never stored on the counter).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| sez | `string` |  |
+| sez2 | `string` |  |
+| sez3 | `string` |  |
+| at | `string` |  |
+| tz | `string \| null` |  |
+
+### `SequencePattern`
+
+| Field | Type | Description |
+|-------|------|-------------|
+| source | `string` | The authored pattern string — persisted verbatim on the sequence row. |
+| segments | `SequenceSegment[]` |  |
+| counter_width | `number` | `{seq:W}` pad width (0 → no padding). |
+| period_kind | `SequencePeriodKind` | Counter-identity granularity implied by the date tokens present. |
+| sez_slots | `SequenceSezToken[]` | Sezionale slots the pattern uses, in slot order (`[]` → partition-free). |
+
+### `SequenceTokenContext`
+
+Authoring context for token examples/previews — the pattern-builder
+widget renders "what this token would emit" through the same helpers
+the real renderer uses. `counter`/`partitions` are ILLUSTRATIVE sample
+values (partitions are claim-time context, never persisted on the
+sequence row); `at` defaults to now, `tz` to UTC.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| counter | `bigint` |  |
+| at | `Date` |  |
+| tz | `string` |  |
+| partitions | `SequencePartitions` |  |
+
+### `SequenceTokenSpec`
+
+One insertable entry of the pattern grammar — the SINGLE catalog the
+ authoring widget lists, so the FE never re-declares the token set.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| id | `string` | Catalog identity — testids and the spec discriminator. |
+| key | `string` | i18n key suffix — `app.widgets.sequence_pattern.tokens.<key>`.
+ Explicit because the key grammar is lowercase-only and token ids
+ are case-meaningful: `{MM}` (month) and `{mm}` (minutes) would
+ both lowercase to `mm` — so minutes carries `min`, and `{HH}`/
+ `{hh}` carry `hh`/`hh12`. |
+| insert | `string` | Insertable source text — for `kind:"counter"` the panel composes
+ `{seq}`/`{seq:W}` from its padding form, so this stays `{seq}`. |
+| kind | `"date" \| "time" \| "sez" \| "literal" \| "counter"` |  |
+| slot | `string` | The used-set slot this insert consumes (`seq`, `yyyy`, `HH`, `sez`…).
+ `undefined` for repeatable literals — `{{`/`}}` never mark used. |
 
 ### `TableMeta`
 
@@ -461,7 +584,21 @@ Closed action-color vocabulary — ONE semantic drives BOTH the icon and
 Per-op overrides — `enabled` toggles route-backed ops; chrome fields
  restyle the standard CTA without touching its logic.
 
-**Type:** `Record<string, { enabled: boolean; label_key: string; icon: string; color: ActionColor; confirm_key: string; busy_key: string }>`
+**Type:** `Record<string, { enabled: boolean; label_key: string; icon: string; color: ActionColor; variant: ActionVariant; confirm_key: string; busy_key: string }>`
+
+### `ActionVariant`
+
+Closed action-variant vocabulary — the CTA SHAPE axis, orthogonal to
+`color`. Same names as the svelte `Button` shape prop:
+`default` = filled severity variant (the standard look);
+`outline` = gradient-outline ghost (secondary affordance, e.g. export).
+`variant` reaches ONLY the CTA — never the dialog: an "outline dialog"
+would be the `tone="soft"` security-family style, and that tone is
+semantically reserved (MFA/OTP/session), not a shape pick.
+A meta may never smuggle a shape outside this set — the enum IS the
+contract.
+
+**Type:** `"default" \| "outline"`
 
 ### `CallableDecl`
 
@@ -472,6 +609,18 @@ serves. Auto-collected from `makeNatsRoutes`/`makeNatsRequestRoute` route
 declarations carrying `payload_schema` — the schema IS the listing opt-in
 (a callable without a contract is not mappable). The service declares its
 own domain subject only — nothing in this axis knows scheduling exists.
+
+### `ColumnDefaultSpec`
+
+`ColumnDefaultSpec` — the computed-default vocabulary a `MetaColumn.default`
+may carry instead of a literal. Closed union — consumers recognize the
+spec by `kind` membership, never by object shape alone (a jsonb column
+may legitimately hold a literal object default).
+
+  - `"next_day_start_local"` — the form seeds tomorrow at 00:00 in the
+    USER's local zone, serialized to the column's wire type (`datetime`
+    → UTC ISO). The anchor-default for "starts from" fields (e.g.
+    `sequence.default_from`).
 
 ### `ConfigEntry`
 
@@ -497,6 +646,14 @@ Mirrors the SDK `ConfigType` and the BE `type` column.
 - `money`:  numeric amount with currency metadata in `type_config`
 
 **Type:** `"string" \| "text" \| "boolean" \| "bigint" \| "number" \| "money" \| "badge" \| "single_select" \| "multi_select" \| "url" \| "secret" \| "json" \| "date" \| "datetime" \| "time" \| "email" \| "phone"`
+
+### `CoreLogLevel`
+
+**Type:** `"debug" \| "info" \| "warn" \| "error"`
+
+### `CoreLogTransport`
+
+**Type:** `(entry: CoreLogEntry) => void`
 
 ### `DecimalInput`
 
@@ -625,13 +782,6 @@ crosses the wire. Same physical-column rule as `color_field`.
 
 ### `MetaColumnDependsCondition`
 
-A sibling-value condition — the SAME vocabulary `null_label.when` and
-`visible_on` already use for row-gated rendering, lifted to form scope.
-`prop` compares against the pivot ROW's prop (the picked ref option's
-raw row — e.g. its `code`); absent `prop` compares the pivot's stored
-value directly. `equals`/`not` take a single literal, `values` a set
-(IN semantics).
-
 ### `MetaColumnFormat`
 
 Authored field-format vocabulary — the SEMANTIC input contract of a
@@ -643,7 +793,7 @@ Closed union on purpose: an unknown `format` in a `*.meta.ts` file is a
 compile error — the US→FE option boundary is enforced by the type.
 New formats are additive literals (never breaking).
 
-**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang"`
+**Type:** `"text" \| "textarea" \| "email" \| "url" \| "phone" \| "secret" \| "nats_subject" \| "service_code" \| "schedule_spec" \| "json" \| "display_name" \| "idp_name" \| "color_hex" \| "number" \| "money" \| "date" \| "datetime" \| "time" \| "identifier" \| "snake_key" \| "dotted_key" \| "dotted_glob" \| "rule_filter" \| "slug" \| "no_space" \| "lang" \| "sequence" \| "sequence_pattern" \| "revive_interval" \| "revive_offset" \| "i18n_key"`
 
 ### `MetaColumnOptionsSource`
 
@@ -652,7 +802,7 @@ COLUMN (`MetaColumn.options_source`), never on a form placement:
 the same contract feeds forms, list filters and docs generation.
 Closed union on purpose — an unknown source is a construction error.
 
-**Type:** `"census.emits" \| "census.callables" \| "audit.actors" \| "system.roles"`
+**Type:** `"census.emits" \| "census.callables" \| "audit.actors" \| "system.roles" \| "iana.tzones"`
 
 ### `MetaColumnType`
 
@@ -710,13 +860,6 @@ absent — adimensional, it is a `kind` of its own.
 **Type:** `"length" \| "mass" \| "volume" \| "area" \| "time" \| "temperature" \| "digital" \| "angle"`
 
 ### `MetaColumnUomSource`
-
-Option vocabulary a unit-of-measure selector may draw from.
-`"currencies"`: the ISO 4217 list resolved client-side (`getAllCurrencies`
-— same source the config-domain currency picker uses). `{entity}`: the
-UoM codes persist as rows of another entity (resolved via its `/list`).
-`{api_url}`: an explicit endpoint serving the options.
-Closed union on purpose — an unknown source is a construction error.
 
 **Type:** `"currencies" \| { entity: string } \| { api_url: string; value_field: string; label_field: string }`
 
@@ -997,6 +1140,12 @@ Persistent status derived from the latest non-heartbeat signal.
 `<chunk>.deps.json` — emitted next to each remote chunk at build time,
 declaring the vendor specifiers/versions it was compiled against.
 
+### `ReviveSpec`
+
+A revive axis value: a `'N unit'` interval or a pinned instant.
+
+**Type:** `{ kind: "interval"; count: number; unit: SequenceReviveUnit } \| { kind: "at"; at: Date }`
+
 ### `RoundingMode`
 
 **Type:** `"UP" \| "DOWN" \| "CEILING" \| "FLOOR" \| "HALF_UP" \| "HALF_DOWN" \| "HALF_EVEN"`
@@ -1007,6 +1156,107 @@ declaring the vendor specifiers/versions it was compiled against.
  issue key so the form can say WHY, not just THAT it failed.
 
 **Type:** `"invalid" \| "below_min_interval"`
+
+### `SequenceDateToken`
+
+Sequence pattern engine — the ONE generator shared by ad-hoc (runtime)
+and persisted (counter-in-DB) sequences. String interpolation NEVER
+happens in SQL: the database only escrows integer counters; this module
+turns `{pattern, counter, step}` into rendered codes, identically for
+the FE forecast and the BE assignment (same function → no drift).
+
+Grammar (closed):
+
+  segment   := literal | counter | dateToken | timeToken | partition
+  counter   := "&#123;seq&#125;" | "&#123;seq:" width "&#125;"     — exactly ONE per pattern
+  dateToken := "&#123;yyyy&#125;" | "&#123;yy&#125;" | "&#123;MM&#125;" | "&#123;dd&#125;" | "&#123;q&#125;"
+  timeToken := "&#123;HH&#125;" | "&#123;hh&#125;" | "&#123;mm&#125;" | "&#123;ss&#125;" — at most once each
+  partition := "&#123;sez&#125;" | "&#123;sez2&#125;" | "&#123;sez3&#125;"   — up to 3, any position
+  literal   := any chars except unescaped braces; "&#123;&#123;"→"&#123;", "&#125;&#125;"→"&#125;"
+
+Invariants:
+ - exactly one `{seq[:W]}` slot — two numeric slots would need two
+   counters, and that is scope creep not a pattern;
+ - `width` is a MIN-width zero-pad, never a max — a counter that
+   overflows its width renders honestly (`{seq:5}` + 100000 →
+   `"100000"`): uniqueness beats aesthetics, always;
+ - a pattern carrying date tokens is PERIOD-SCOPED by its finest
+   token: `{yyyy}`→reset per year, `+{q}`→per quarter, `+{MM}`→per
+   month, `+{dd}`→per day (Italian-invoice semantics — no holes,
+   no duplicates inside one period). TIME TOKENS NEVER SCOPE the
+   counter — `{mm}`/`{ss}` are claim-time cosmetics (a timestamp
+   suffix), not period granularity: an hourly counter reset would
+   be a different feature entirely;
+ - case IS the grammar: `{MM}` is month, `{mm}` is minutes; `{HH}`
+   is 24-hour, `{hh}` is 12-hour — the token sets are disjoint by
+   case, exactly like strftime/moment conventions;
+ - `{sez}`/`{sez2}`/`{sez3}` are POSITIONAL sezionale slots rendered
+   from directive fields (`sez`, `sez2`, `sez3`); the counter PK is
+   `(sequence_id, period_key, partition_key)` where partition_key is
+   the used slots joined in slot order — `{sez3}` alone ≠ `{sez}`
+   with the same value: empty slots stay meaningful;
+ - the two period axes are ORTHOGONAL: date tokens always render `at`
+   (the business date on the directive ctx, default now — never
+   ambient wall-clock of the caller's choosing) and drive the
+   counter-level auto-roll via `period_key`; sez slots are the
+   ROW-OWNED period axis — a reviving sequence clones the row and
+   advances the `revive_slot` value via `derivePeriodLabel`, the
+   counter resets because the successor is a new uuid (new counter
+   namespace), never because a counter row is rewritten;
+ - `step` is a non-zero bigint — negative steps are honest arithmetic
+   (countdown sequences exist) and are NOT special-cased;
+ - counters are `bigint` end to end: width 19 is PG bigint capacity
+   and ext-json carries bigint natively.
+
+**Type:** `"yyyy" \| "yy" \| "MM" \| "dd" \| "q"`
+
+### `SequenceDirective`
+
+**Type:** `{ seq: string } \| { seq: { uuid: string } & SequenceDirectiveContext } \| { seq: SequenceDecl & SequenceDirectiveContext }`
+
+### `SequenceMode`
+
+Sequence-widget modes — the two write-path configurations a
+`format:"sequence"` control may offer. Closed union on purpose.
+ - `"generate"` — inline pattern builder emitting a `{seq:{pattern,…}}`
+   directive (resolved + materialized inside the write transaction);
+ - `"select"` — combobox over the module's `sequence` registry,
+   emitting `{seq:{uuid}}` (uuid is the ONLY sequence identity).
+
+**Type:** `"generate" \| "select"`
+
+### `SequencePartitions`
+
+Sezionale values supplied per assignment — positional per token.
+
+**Type:** `Partial<Record<SequenceSezToken, string>>`
+
+### `SequencePeriodKind`
+
+**Type:** `"none" \| "year" \| "quarter" \| "month" \| "day"`
+
+### `SequenceReviveSlot`
+
+**Type:** `typeof SEQUENCE_REVIVE_SLOTS[number]`
+
+### `SequenceReviveUnit`
+
+**Type:** `"day" \| "week" \| "month" \| "quarter" \| "year"`
+
+### `SequenceSegment`
+
+**Type:** `{ kind: "literal"; text: string } \| { kind: "counter"; width: number } \| { kind: "date"; token: SequenceDateToken } \| { kind: "time"; token: SequenceTimeToken } \| { kind: "sez"; slot: SequenceSezToken }`
+
+### `SequenceSezToken`
+
+**Type:** `"sez" \| "sez2" \| "sez3"`
+
+### `SequenceTimeToken`
+
+`{HH}`=24h, `{hh}`=12h, `{mm}`=minutes, `{ss}`=seconds — cosmetic
+ claim-time stamps; NEVER participate in `period_key`.
+
+**Type:** `"HH" \| "hh" \| "mm" \| "ss"`
 
 ### `SnakeCaseSingular`
 
@@ -1074,6 +1324,13 @@ anything outside this closed set (raw strings on the wire can never reach
 the renderer).
 
 **Type:** `readonly ActionColor[]`
+
+### `ACTION_VARIANTS`
+
+The full `ActionVariant` vocabulary — construction/lint validation
+ rejects anything outside this closed set.
+
+**Type:** `readonly ActionVariant[]`
 
 ### `DEFAULT_PAGE_ICON`
 
@@ -1186,6 +1443,17 @@ treated from the merged record the caller passes.
 
 **Type:** `RegExp`
 
+### `logger`
+
+**Type:** `{ debug: (msg: string, meta: Record<string, unknown>) => void; info: (msg: string, meta: Record<string, unknown>) => void; warn: (msg: string, meta: Record<string, unknown>) => void; error: (msg: string, meta: Record<string, unknown>) => void }`
+
+| Field | Value |
+|-------|-------|
+| debug | "" |
+| info | "" |
+| warn | "" |
+| error | "" |
+
 ### `MIN_SCHEDULE_INTERVAL_MS`
 
 The floor every recurring spec must respect: one minute. The 5-field
@@ -1297,6 +1565,20 @@ Semantic derivation slot — declares what context the field wants so
 
 **Type:** `"x_semantic"`
 
+### `REVIVE_AT_RE`
+
+**Type:** `RegExp`
+
+### `REVIVE_INTERVAL_RE`
+
+`'15 days'`, `'1 month'`, `'2 years'` — the closed wire format.
+
+**Type:** `RegExp`
+
+### `REVIVE_UNTIL_RE`
+
+**Type:** `RegExp`
+
 ### `SEMANTIC_ICON_COLORS`
 
 Semantic action icons — names whose COLOR IS PART OF THE ICON's meaning.
@@ -1312,6 +1594,38 @@ label can never drift apart even by accident.
 - `exec-stop`  → destructive (stop/disable is a destructive op)
 
 **Type:** `Record<string, ActionColor>`
+
+### `SEQUENCE_REVIVE_SLOTS`
+
+The three positional sezionale slots — the only legal `revive_slot`
+ values, and the slots a pattern's `{sez}`/`{sez2}`/`{sez3}` tokens map.
+
+**Type:** `readonly ["sez", "sez2", "sez3"]`
+
+### `SEQUENCE_REVIVE_UNITS`
+
+**Type:** `readonly SequenceReviveUnit[]`
+
+### `sequenceTokenExampleDefaults`
+
+Illustrative defaults the catalog (and any pattern-builder preview)
+ falls back to when the caller does not override the example context —
+ exported so the authoring widget and the token sheet share ONE set
+ of sample values instead of re-declaring them.
+
+**Type:** `{ counter: {"value":"42","negative":false}; partitions: { sez: "A"; sez2: "01"; sez3: "X" } }`
+
+| Field | Value |
+|-------|-------|
+| counter | {"value":"42","negative":false} |
+| partitions | "" |
+
+### `SEZ_VALUE_RE`
+
+Sezionale value charset — alphanumerics and separators; the join
+ separator (US \x1f) can never appear inside a value.
+
+**Type:** `RegExp`
 
 ### `SLUG_RE`
 
@@ -1333,7 +1647,7 @@ The canonical vocabulary of standard entity ops. Every op is always
 present in `meta.actions` — ops whose route is not registered are emitted
 with `enabled: false` (explicitly unavailable) instead of being omitted.
 
-**Type:** `readonly ["list", "meta", "get", "create.single", "update.single", "delete.single", "purge.single", "restore.single", "read.audit", "export", "delete.bulk", "restore.bulk", "duplicate.bulk"]`
+**Type:** `readonly ["list", "meta", "get", "create.single", "update.single", "delete.single", "purge.single", "restore.single", "read.audit", "export", "delete.bulk", "restore.bulk", "duplicate.bulk", "update.bulk"]`
 
 ### `SUPPORTED_LANGUAGES`
 
@@ -1582,6 +1896,29 @@ Numeric comparison ignoring scale: `cmp(1.0, 1.00) === 0`. Returns -1 | 0 | 1.
 | a | `DecimalInput` |  |
 | b | `DecimalInput` |  |
 
+### `columnSchemaLeaf(col): { type: string \| string[]; format: string; enum: string[] }`
+
+Canonical `MetaColumn → JSON-schema leaf` conversion — the honest WIRE
+shape of the column so schema-driven resolvers (`schemaTypeIcon`,
+`schemaLeafSub`, `schemaToNavNodes` — the ONE vocabulary shared with
+the payload-map editor and rule-filter picker) can render it without a
+second icon map:
+
+  - the declared `format` wins over the bare `type` (`email`→`"email"`
+    → mail, `identifier`→`"uuid"` → file-key, `json`/`rule_filter`→
+    `"object"` → braces);
+  - a `badge` column exposes its value vocabulary as `enum` (→ tags),
+    `ref` is its uuid wire shape, `sparkline` is an array;
+  - `nullable` flags the type union with `"null"` — the resolver
+    renders the base icon dashed.
+
+Icon names live ONLY in `schemaTypeIcon`; this function must never
+carry a glyph of its own.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `Pick<MetaColumn, "type"> & Partial<Pick<MetaColumn, "badge" \| "nullable" \| "format">>` |  |
+
 ### `dec(input): Decimal`
 
 `Decimal` — pass-through. `string` — parsed (PG text form or `"…d"` wire form). `number` — via shortest round-trip `toString` so `0.1` stays `"0.1"`. `bigint` — scale 0.
@@ -1620,6 +1957,41 @@ Keys visible by default — from column flags.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | columns | `MetaColumn[]` |  |
+
+### `derivePeriodKey(kind, at, tz): string`
+
+The counter-identity key for `period_kind` at `at` — `''` for
+period-free patterns. `derivePeriodKey` + `INSERT..ON CONFLICT` make
+the first allocation of a period atomic (no create-if-missing race).
+`at` is the BUSINESS date (document date on the directive, default
+now()): a Jan-issued invoice dated December lands in the Dec period.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| kind | `SequencePeriodKind` |  |
+| at | `Date` |  |
+| tz | `string` |  |
+
+### `derivePeriodLabel(current, every): string`
+
+Advance a row-owned period label by one `revive_every` interval —
+parse-and-preserve: the CURRENT value's shape decides the render,
+never a declared format. `2026`→`2027`, `26`→`27`,
+`2026-Q1`→`2026-Q2` (or `2027-Q1` by year unit), `2026-03`→`2026-04`,
+`2026-W14`→`2026-W15`, `2026-03-16`→`2026-03-17`.
+
+Compatibility rule: the unit must not be FINER than the label's
+granularity — `'1 month'` on `2026` cannot render (throw);
+`'1 year'` on `2026-03` renders `2027-03`. A bare 2-digit label is
+`YY` under a year unit, `MM` under a month unit — anything else is a
+construction error. Throws on unparseable values: create-time
+validation calls this same function so a reviving row can never be
+built with an un-incrementable slot.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| current | `string` |  |
+| every | `string` |  |
 
 ### `deriveVisibleKeyPrefs(visibleKeys, columns): VisibleKeyPrefs`
 
@@ -1685,11 +2057,21 @@ Numeric equality ignoring scale — `eq(1.0, 1.00)` is `true`.
 
 ### `extJsonParse(text): T`
 
-Parse an Ext-JSON string.
+Parse an Ext-JSON string — strict.
 
-ALL integers are returned as native `bigint` (via reviver).
-Floats (values with decimal point or scientific notation) are `number`.
-Strings, booleans, null are unaffected.
+ALL integer-valued numbers are returned as native `bigint`; non-integer
+floats stay `number`; strings/booleans/null are unaffected.
+
+The single sanctioned exception: the `status` integer of an RFC7807
+problem-details object (shape-detected by type+title+detail strings)
+stays `number` — the error model is HTTP-native and its status is
+classified with typeof guards across the ecosystem. An integer `status`
+outside that shape is a domain integer and stays bigint, always.
+
+Throws `SyntaxError` on malformed input, trailing commas, and
+duplicate keys at any depth (native JSON.parse silently last-wins —
+that failure mode is deliberately closed: a duplicated key is a wire
+contract violation, not data).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -1729,6 +2111,10 @@ Largest integer `<= d`.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | n | `number` |  |
+
+### `getCoreLogTransport(): CoreLogTransport \| null`
+
+Current transport — exposed for tests that need to snapshot/restore.
 
 ### `getOperatorsForColumnType(columnType): FilterOperator[]`
 
@@ -2100,6 +2486,14 @@ Scale is preserved as written (`"1.230"` → scale 3).
 |-----------|------|-------------|
 | input | `string` |  |
 
+### `parseGraceSpec(text): ReviveSpec \| null`
+
+`revive_grace` spec — `'N unit'` offset or `'until <RFC3339>'` pin.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| text | `string` |  |
+
 ### `parseMapKeysDeclaration(raw): Record<string, MapKeyDecl>`
 
 Parse an `x_map_keys.prop` declaration row (the template's `variables`
@@ -2113,6 +2507,45 @@ explicitly** (a declared placeholder must be filled):
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | raw | `unknown` |  |
+
+### `parseReviveInterval(text): { count: number; unit: SequenceReviveUnit } \| null`
+
+Parse a `'N unit'` revive interval — null on anything outside the
+ closed format (validators turn null into the construction error).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| text | `string` |  |
+
+### `parseReviveSpec(text): ReviveSpec \| null`
+
+`revive_every` spec — `'N unit'` cadence or `'at <RFC3339>'` pin.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| text | `string` |  |
+
+### `parseSequenceDirective(raw): SequenceDirective \| null`
+
+The ONLY accepted wire shape for a `format:"sequence"` column — see
+SequenceDirective for the three forms. Returns the parsed
+directive or `null` (shape/decl violation — the caller emits the
+`app.common.validation.sequence_directive` issue). A literal value is
+never writable: the repository resolves the directive in-transaction.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| raw | `unknown` |  |
+
+### `parseSequencePattern(source): SequencePattern`
+
+Parse a pattern string into segments — the construction gate: anything
+outside the closed grammar throws, so an invalid pattern can never be
+persisted on a sequence row nor accepted on the wire.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| source | `string` |  |
 
 ### `pathCompatible(target, source): boolean`
 
@@ -2187,6 +2620,50 @@ Verified live: `1/3`→20, `10/4`→16, `1.00/8`→20, `2/1`→16, `100/3`→16.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | n | `number` |  |
+
+### `removeSequenceToken(source, slot): string`
+
+Remove the FIRST occurrence of a token slot from the pattern source —
+the sheet's "unuse" affordance (`-` on a consumed slot). `slot` is the
+used-set name: `seq` strips `{seq}` or `{seq:W}` whole (the width is
+part of the token, not trailing text); every other slot strips the
+literal `{slot}` span. Escaped `{{`/`}}` are skipped exactly like the
+tokenizer reads them, so `{{seq}}` literals are never stripped.
+Never throws — a slot not present returns the source unchanged.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| source | `string` |  |
+| slot | `string` |  |
+
+### `renderSequenceRange(pattern, first, step, count, at, opts): string[]`
+
+Render the full code series for `count` items starting at `first` —
+`codes[i] = render(first + i*step)`. THE shared function: the FE calls
+it for forecast display, the BE calls it inside the claim transaction
+for the actual assignment. `count === 0` → `[]`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| pattern | `SequencePattern` |  |
+| first | `bigint` |  |
+| step | `bigint` |  |
+| count | `number` |  |
+| at | `Date` |  |
+| opts | `{ tz: string; partitions: Partial<Record<SequenceSezToken, string>> }` |  |
+
+### `renderSequenceValue(pattern, counter, at, opts): string`
+
+Render ONE counter value through the pattern. Padding is min-width:
+`String(abs(counter)).padStart(width,"0")`; a negative counter renders
+the sign before the digits (`-0042`) — honest, never truncated.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| pattern | `SequencePattern` |  |
+| counter | `bigint` |  |
+| at | `Date` |  |
+| opts | `{ tz: string; partitions: Partial<Record<SequenceSezToken, string>> }` |  |
 
 ### `rescale(d, newScale, mode): Decimal`
 
@@ -2274,6 +2751,49 @@ Resolve stored prefs → concrete visible keys:
 |-----------|------|-------------|
 | prefs | `Pick<VisibleKeyPrefs, "shown" \| "hidden">` |  |
 | columns | `MetaColumn[]` |  |
+
+### `reviveAddInterval(at, interval, tz): Date`
+
+Add a `'N unit'` interval to `at` on the WALL calendar of `tz`
+(grace arithmetic — DST-safe, the wall clock owns the semantics;
+`'1 day'` after a DST-jump boundary still lands on the next local
+midnight, not +24h into the wrong offset). `at` is an instant;
+the interval walks its zoned wall time forward, then converts back.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| at | `Date` |  |
+| interval | `string` |  |
+| tz | `string` |  |
+
+### `reviveAdvanceSpec(every, period_kind): { count: number; unit: SequenceReviveUnit } \| null`
+
+The interval a successor's sez label advances by — the authored
+ interval itself, or `'1 <period_kind>'` under an `'at'` pin (the
+ pattern's own grain is the natural advance — `'26'`→`'27'` under a
+ yearly pattern). `null` when the spec is unparseable or `'at'` meets
+ a period-free pattern (`period_kind:'none'` — no grain to advance).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| every | `string` |  |
+| period_kind | `SequencePeriodKind` |  |
+
+### `reviveExpireAt(at, every, tz): Date`
+
+The calendar-anchored expiry instant for a reviving row — the first
+period boundary strictly after `at` in the row's timezone:
+  start of current period (midnight today / ISO-week Monday /
+  1st-of-month / quarter start / Jan-1) + `count` units.
+`'15 days'` is day-aligned rolling from today's local midnight;
+`'1 year'` created Mar-15-2026 expires Jan-1-2027 00:00 local.
+This is the successor's `default_from` — the `at`-axis boundary.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| at | `Date` |  |
+| every | `string` |  |
+| tz | `string` |  |
 
 ### `rewriteLucideBarrelImports(code): LucideRewriteResult`
 
@@ -2375,6 +2895,60 @@ never masquerade as user edits.
 | sourceEntity | `{ key: string; entity: string; table: string } \| undefined` |  |
 | map | `PayloadMap` |  |
 
+### `sequencePartitionKey(_pattern, partitions): string`
+
+Deterministic counter partition identity — the FIXED 3-slot tuple
+ `sez|sez2|sez3` (unused slots empty), so a `{sez3}`-only pattern can
+ never collide with a `{sez}`-only one even if the pattern is edited
+ over the sequence's life: the slot position IS the identity.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| _pattern | `SequencePattern` |  |
+| partitions | `SequencePartitions` |  |
+
+### `sequencePreview(pattern, first, step, count, at, opts): { first: string \| null; last: string \| null }`
+
+Forecast `{first, last}` — what the bulk editor shows before apply.
+For a persisted sequence `first` is the counter read WITHOUT
+incrementing (optimistic preview; a concurrent claim may shift it —
+the claim RETURNING is the only truth).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| pattern | `SequencePattern` |  |
+| first | `bigint` |  |
+| step | `bigint` |  |
+| count | `number` |  |
+| at | `Date` |  |
+| opts | `{ tz: string; partitions: Partial<Record<SequenceSezToken, string>> }` |  |
+
+### `sequenceReviveShapeIssues(row): FieldIssue[]`
+
+The revive contract on a (possibly merged) sequence row — ONE predicate
+consumed by the form's cross-field registry, the wire validator, and
+the service's merged-row check, so the three surfaces can never drift:
+
+  - a supplied `sez*` value must name a slot the pattern declares;
+  - `revive_slot` requires `revive_every` and is required by it;
+  - `revive_slot` must be a slot the pattern uses;
+  - the slot's row-owned value must be present and advanceable by
+    `derivePeriodLabel` — a free-text sezionale can never revive.
+
+An unparseable `pattern` contributes NO issues — the `sequence_pattern`
+format check owns that finding; this predicate is the shape layer.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| row | `{ pattern: string; sez: string \| null; sez2: string \| null; sez3: string \| null; revive_every: string \| null; revive_slot: string \| null }` |  |
+
+### `sequenceTokenCatalog(): SequenceTokenSpec[]`
+
+The closed token vocabulary of the pattern grammar — counter slot
+(`{seq}` plain and `{seq:W}` width example), date tokens, sezionale
+slots, literal braces. Derived from the same token sets/render helpers
+the parser and renderer use — extending the grammar extends the sheet.
+
 ### `serviceApiBase(listBasePath): string`
 
 Service API base of an entity list basePath — strips the trailing
@@ -2385,6 +2959,16 @@ meta (e.g. sparkline `endpoint: "/actions/job-run-stats"`) resolve to
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | listBasePath | `string` |  |
+
+### `setCoreLogTransport(t): void`
+
+Install the host transport. Idempotent-by-replacement: the last install
+wins (test harnesses may re-wire; production installs exactly once at
+boot). Pass `null` to restore the default console transport.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| t | `CoreLogTransport \| null` |  |
 
 ### `signum(d): -1 \| 0 \| 1`
 
@@ -2458,7 +3042,18 @@ Integer part, toward zero.
 |-----------|------|-------------|
 | d | `DecimalInput` |  |
 
-### `validateActionChrome(icon, color): string \| null`
+### `usedSequenceTokens(source): Set<string>`
+
+Best-effort scan of the pattern source for already-consumed slots —
+the sheet marks used tokens (grammar: one counter, each date/sez at
+most once). NEVER throws: mid-typing text like `INV-{seq:}` still
+reports `seq` used — the UI affordance must survive invalid states.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| source | `string` |  |
+
+### `validateActionChrome(icon, color, variant): string \| null`
 
 Validates the icon↔color contract of a single action chrome override.
 Returns a diagnostic string on violation, `null` when the pair is legal:
@@ -2470,6 +3065,18 @@ Returns a diagnostic string on violation, `null` when the pair is legal:
 |-----------|------|-------------|
 | icon | `string \| undefined` |  |
 | color | `string \| undefined` |  |
+| variant | `string` |  |
+
+### `validateSequencePartitions(pattern, partitions): SequencePartitions`
+
+Validate the directive's sezionale fields against the pattern's slots —
+every used token requires its field; unused slots must NOT be supplied
+(a sez the pattern ignores would silently mis-key the counter).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| pattern | `SequencePattern` |  |
+| partitions | `Partial<Record<SequenceSezToken, string>> \| undefined` |  |
 
 ### `walkSchemaProps(schema, prefix): Generator<{ field: string; path: string; prop: Record<string, unknown>; required: boolean }>`
 

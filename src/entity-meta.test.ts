@@ -19,7 +19,8 @@ describe("STANDARD_OPS", () => {
     expect(STANDARD_OPS).toContain("list");
     expect(STANDARD_OPS).toContain("create.single");
     expect(STANDARD_OPS).toContain("delete.bulk");
-    expect(STANDARD_OPS).toHaveLength(13);
+    expect(STANDARD_OPS).toContain("update.bulk");
+    expect(STANDARD_OPS).toHaveLength(14);
   });
 });
 

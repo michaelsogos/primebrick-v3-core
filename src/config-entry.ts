@@ -56,7 +56,7 @@ export type ConfigEntry = {
 	description_key?: string | null;
 	group_key?: string | null;
 	reserved: boolean;
-	version: number;
+	version: bigint;
 	updated_at?: string;
 	updated_by?: string;
 	updated_by_name?: string | null;

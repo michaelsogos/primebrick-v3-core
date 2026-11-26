@@ -16,6 +16,7 @@ import {
   nextScheduleFire,
   scheduleEveryMs,
   scheduleSpecError,
+  parseSequenceDirective,
   jobTriggerShapeIssues,
   jsonSchemaCheck,
   pathCompatible,
@@ -649,5 +650,88 @@ describe("parseMapKeysDeclaration", () => {
     expect(parseMapKeysDeclaration("otp")).toEqual({});
     expect(parseMapKeysDeclaration(["a"])).toEqual({});
     expect(parseMapKeysDeclaration({})).toEqual({});
+  });
+});
+
+// ---------------------------------------------------------------------------
+// sequence directives — format:"sequence" columns take ONLY the directive
+// shape; literals are never writable values.
+// ---------------------------------------------------------------------------
+
+describe("sequence directives", () => {
+  const SEQ_UUID = "11111111-2222-4333-8444-555555555555";
+  const seqCol = () =>
+    col({ key: "code", nullable: false, max_length: 20, format: "sequence", seq: { uuid: SEQ_UUID, name: "test_docs.code" } });
+
+  it("parseSequenceDirective — the three accepted forms", () => {
+    expect(parseSequenceDirective({ seq: SEQ_UUID })).toEqual({ seq: SEQ_UUID });
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID } })).toEqual({ seq: { uuid: SEQ_UUID } });
+    expect(parseSequenceDirective({ seq: { pattern: "D-{seq:4}", step: 1n, start: 5n } }))
+      .toEqual({ seq: { pattern: "D-{seq:4}", step: 1n, start: 5n, tz: undefined } });
+  });
+
+  it("parseSequenceDirective — sez/at context on every object form", () => {
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, sez: "A", at: "2026-12-01" } }))
+      .toEqual({ seq: { uuid: SEQ_UUID, sez: "A", at: "2026-12-01" } });
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, sez2: "X" } }))
+      .toEqual({ seq: { uuid: SEQ_UUID, sez2: "X" } });
+    expect(parseSequenceDirective({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n, sez: "A" } }))
+      .toEqual({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n, tz: undefined, sez: "A" } });
+  });
+
+  it("parseSequenceDirective — sez slots must match the expr pattern", () => {
+    // {sez} slot required but missing → invalid
+    expect(parseSequenceDirective({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n } })).toBeNull();
+    // surplus slot the pattern doesn't use → invalid
+    expect(parseSequenceDirective({ seq: { pattern: "D-{seq:4}", step: 1n, start: 1n, sez: "A" } })).toBeNull();
+    // bad sez value charset / at not a date → invalid
+    expect(parseSequenceDirective({ seq: { pattern: "INV-{sez}-{seq:4}", step: 1n, start: 1n, sez: "A B!" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, at: "not-a-date" } })).toBeNull();
+  });
+
+  it("parseSequenceDirective — literals and malformed shapes rejected", () => {
+    expect(parseSequenceDirective("DOC-00001")).toBeNull();
+    expect(parseSequenceDirective({ seq: "not-a-uuid" })).toBeNull();
+    // the code/name form is gone — uuid is the ONLY sequence identity
+    expect(parseSequenceDirective({ seq: { code: "docs.code" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { code: "" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { name: "docs.code" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID, code: "x" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 0n, start: 1n } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 1, start: 1n } })).toBeNull(); // number, not bigint
+    expect(parseSequenceDirective({ seq: { pattern: "P-{{bad}}", step: 1n, start: 1n } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { pattern: "P-{seq:2}", step: 1n, start: 1n, tz: "Bogus/Zone" } })).toBeNull();
+    expect(parseSequenceDirective({ seq: { uuid: SEQ_UUID }, other: 1 })).toBeNull();
+  });
+
+  it("checkFieldValue — directive accepted; literal is schema_mismatch", () => {
+    expect(checkFieldValue(seqCol(), { seq: { uuid: SEQ_UUID } })).toEqual([]);
+    expect(checkFieldValue(seqCol(), { seq: { pattern: "C-{seq:5}", step: 1n, start: 1n } })).toEqual([]);
+    const literal = checkFieldValue(seqCol(), "DOC-00001");
+    expect(has(literal, "code", "schema_mismatch")).toBe(true);
+    expect(literal[0]!.message).toBe("app.common.validation.sequence_directive");
+  });
+
+  it("checkFieldValue — expr directive rendering over max_length → too_big", () => {
+    const tooLong = checkFieldValue(seqCol(), {
+      seq: { pattern: "INVOICE-2024-IT-{seq:8}", step: 1n, start: 1n },
+    });
+    expect(has(tooLong, "code", "too_big")).toBe(true);
+    // A 20-char render fits exactly.
+    expect(checkFieldValue(seqCol(), { seq: { pattern: "ABCDEFGHIJ-{seq:9}", step: 1n, start: 1n } })).toEqual([]);
+  });
+
+  it("checkEntityFields — seq-bound absent on create is NOT required", () => {
+    const m = meta([col({ key: "name", nullable: false }), seqCol()]);
+    // code absent → default-seq allocation, no violation; name still required.
+    const issues = checkEntityFields(m, {});
+    expect(has(issues, "code", "required")).toBe(false);
+    expect(has(issues, "name", "required")).toBe(true);
+    // present directive validated; literal rejected.
+    expect(checkEntityFields(m, { name: "x", code: { seq: { uuid: SEQ_UUID } } })).toEqual([]);
+    expect(has(checkEntityFields(m, { name: "x", code: "LIT" }), "code", "schema_mismatch")).toBe(true);
+    // update: directive allowed (code is updatable), absent untouched.
+    expect(checkEntityFields(m, { code: { seq: SEQ_UUID } }, { partial: true })).toEqual([]);
+    expect(checkEntityFields(m, {}, { partial: true })).toEqual([]);
   });
 });
