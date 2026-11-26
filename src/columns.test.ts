@@ -12,6 +12,7 @@ import {
   isColumnSearchable,
   isColumnSortable,
   isColumnVisible,
+  migrateVisibleKeyPrefs,
   orderedColumns,
   resolveVisibleKeyPrefs,
   searchableTextColumns,
@@ -229,7 +230,7 @@ describe("FILTER_OPERATOR_KEY", () => {
   });
 });
 
-describe("visibleKeys prefs v2 — {shown,hidden} intent", () => {
+describe("visibleKeys prefs v3 — {shown,hidden} intent", () => {
   /** a,b default-visible; c hidden-by-default; pin = non-hideable. */
   const COLS: MetaColumn[] = [
     col({ key: "a", order: 10 }),
@@ -277,5 +278,51 @@ describe("visibleKeys prefs v2 — {shown,hidden} intent", () => {
     const visible = sanitizeVisibleKeys(["b", "c", "pin"], COLS);
     const resolved = resolveVisibleKeyPrefs(deriveVisibleKeyPrefs(visible, COLS), COLS);
     expect(resolved.sort()).toEqual(visible.sort());
+  });
+
+  it("never records default-hidden columns as intent — the v2 pollution regression", () => {
+    // User merely VISITS the list under this decl: visible = defaults, zero
+    // toggles. `c` is default-hidden and absent — it must land in NEITHER
+    // list, or a future default_visible flip can never reach this profile.
+    const prefs = deriveVisibleKeyPrefs(["a", "b", "pin"], COLS);
+    expect(prefs.hidden).toEqual([]);
+    expect(prefs.shown).toEqual([]);
+    expect(prefs.v).toBe(3);
+  });
+
+  it("a false→true default_visible flip reaches profiles that visited before", () => {
+    // The exact sequence-registry scenario: profile persisted under the old
+    // decl where `c` was default-hidden; the new decl flips it visible.
+    const prefs = deriveVisibleKeyPrefs(["a", "b", "pin"], COLS);
+    const flipped = COLS.map((c) => (c.key === "c" ? { ...c, default_visible: true } : c));
+    const resolved = resolveVisibleKeyPrefs(prefs, flipped);
+    expect(resolved).toContain("c");
+    expect(resolved).toContain("a");
+    expect(resolved).toContain("b");
+  });
+
+  it("genuine explicit hides still survive the flip machinery", () => {
+    // User hides default-visible `b` — true intent, must persist.
+    const prefs = deriveVisibleKeyPrefs(["a", "pin"], COLS);
+    expect(prefs.hidden).toEqual(["b"]);
+    expect(resolveVisibleKeyPrefs(prefs, COLS)).not.toContain("b");
+  });
+
+  it("migrateVisibleKeyPrefs: v2 blobs drop polluted hidden, keep genuine shown", () => {
+    // v2 bootstrap pollution wrote every default-hidden column into hidden —
+    // indistinguishable from intent → dropped wholesale. shown is genuine in
+    // every version (only an explicit toggle surfaces a default-hidden key).
+    const migrated = migrateVisibleKeyPrefs({ v: 2, shown: ["c"], hidden: ["b", "c"] });
+    expect(migrated).toEqual({ v: 3, shown: ["c"], hidden: [] });
+    const resolved = resolveVisibleKeyPrefs(migrated, COLS);
+    expect(resolved).toContain("c"); // genuine show survives
+    expect(resolved).toContain("b"); // polluted hide heals
+  });
+
+  it("migrateVisibleKeyPrefs: v3 passes through, unversioned treated as v2", () => {
+    const v3 = migrateVisibleKeyPrefs({ v: 3, shown: ["c"], hidden: ["b"] });
+    expect(v3).toEqual({ v: 3, shown: ["c"], hidden: ["b"] });
+    const unversioned = migrateVisibleKeyPrefs({ shown: [], hidden: ["b"] });
+    expect(unversioned).toEqual({ v: 3, shown: [], hidden: [] });
   });
 });

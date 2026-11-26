@@ -127,19 +127,41 @@ export function sanitizeVisibleKeys(
 }
 
 /**
- * Persisted column-visibility intent (storage schema v2): the user's
+ * Persisted column-visibility intent (storage schema v3): the user's
  * deltas from `default_visible` — never the resolved set. Storing intent
  * instead of the resolved array is what lets meta evolution (a column
  * added later, a flipped `default_visible`) reach profiles that already
  * persisted preferences: a key in neither list simply follows its own
  * `default_visible`.
+ *
+ * v2 → v3: the v2 derivation wrote EVERY non-visible column into `hidden`
+ * — including default-hidden columns the user never chose to hide — and
+ * the persist effect fires at bootstrap, so merely visiting a list stored
+ * fake intent. When a decl later flipped `default_visible` false→true the
+ * polluted entries actively defeated the new default. v2 `hidden` arrays
+ * are irretrievably indistinguishable from genuine intent → the migration
+ * (`migrateVisibleKeyPrefs`) drops them wholesale; `shown` is genuine in
+ * every version (a default-hidden column can only enter the visible set
+ * through an explicit user toggle).
  */
 export interface VisibleKeyPrefs {
-  v: 2;
+  v: 3;
   /** Served keys the user shows despite `default_visible:false`. */
   shown: string[];
   /** Served keys the user hides despite `default_visible:true`. */
   hidden: string[];
+}
+
+/** Migrate a stored prefs blob of any version to the current schema.
+ *  v3 passes through; v2 (or unversioned) keeps `shown` and drops
+ *  `hidden` — see the schema note for the pollution contract. */
+export function migrateVisibleKeyPrefs(stored: {
+  v?: number;
+  shown: string[];
+  hidden: string[];
+}): VisibleKeyPrefs {
+  if (stored.v === 3) return { v: 3, shown: stored.shown, hidden: stored.hidden };
+  return { v: 3, shown: stored.shown, hidden: [] };
 }
 
 /** Resolve stored prefs → concrete visible keys:
@@ -157,9 +179,12 @@ export function resolveVisibleKeyPrefs(
 
 /** Derive the persistable intent from the resolved set + served columns:
  *  `shown` = visible keys that are not default-visible;
- *  `hidden` = served columns absent from the visible set. A legacy v1
- *  array migrates losslessly through the same derivation — identical
- *  render, unlocked evolution. */
+ *  `hidden` = DEFAULT-VISIBLE columns absent from the visible set — the
+ *  user's explicit hides, never the default-hidden columns (recording
+ *  those as intent would pin them against any future `default_visible`
+ *  flip — the v2 pollution bug). A legacy v1 array migrates through the
+ *  same derivation: columns hidden because the old decl default-hid them
+ *  are correctly NOT captured as intent. */
 export function deriveVisibleKeyPrefs(
   visibleKeys: string[],
   columns: MetaColumn[],
@@ -167,9 +192,11 @@ export function deriveVisibleKeyPrefs(
   const defaults = new Set(defaultVisibleColumnKeys(columns));
   const visible = new Set(visibleKeys);
   return {
-    v: 2,
+    v: 3,
     shown: visibleKeys.filter((k) => !defaults.has(k)),
-    hidden: columns.map((c) => c.key).filter((k) => !visible.has(k)),
+    hidden: columns
+      .filter((c) => defaults.has(c.key) && !visible.has(c.key))
+      .map((c) => c.key),
   };
 }
 
