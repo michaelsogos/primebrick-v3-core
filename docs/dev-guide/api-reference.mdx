@@ -552,16 +552,26 @@ Table options — present only on entities with a table page.
 
 ### `VisibleKeyPrefs`
 
-Persisted column-visibility intent (storage schema v2): the user's
+Persisted column-visibility intent (storage schema v3): the user's
 deltas from `default_visible` — never the resolved set. Storing intent
 instead of the resolved array is what lets meta evolution (a column
 added later, a flipped `default_visible`) reach profiles that already
 persisted preferences: a key in neither list simply follows its own
 `default_visible`.
 
+v2 → v3: the v2 derivation wrote EVERY non-visible column into `hidden`
+— including default-hidden columns the user never chose to hide — and
+the persist effect fires at bootstrap, so merely visiting a list stored
+fake intent. When a decl later flipped `default_visible` false→true the
+polluted entries actively defeated the new default. v2 `hidden` arrays
+are irretrievably indistinguishable from genuine intent → the migration
+(`migrateVisibleKeyPrefs`) drops them wholesale; `shown` is genuine in
+every version (a default-hidden column can only enter the visible set
+through an explicit user toggle).
+
 | Field | Type | Description |
 |-------|------|-------------|
-| v | `2` |  |
+| v | `3` |  |
 | shown | `string[]` | Served keys the user shows despite `default_visible:false`. |
 | hidden | `string[]` | Served keys the user hides despite `default_visible:true`. |
 
@@ -1454,6 +1464,17 @@ treated from the merged record the caller passes.
 | warn | "" |
 | error | "" |
 
+### `MACHINE_SYNTAX_TEXT_FORMATS`
+
+Machine-syntax varchar formats — columns whose wire strings are canonical
+ encodings parsed by a dedicated codec/widget, NOT prose (`every 1 year`
+ is a reviver payload, not searchable text). Excluded from the `search_in`
+ scope even though their declared type is `text` — user-ratified 2026-11-26:
+ `sequence`/`actor_token` STAY searchable (ref display names/ref_keys are
+ human-meaningful text).
+
+**Type:** `ReadonlySet<string>`
+
 ### `MIN_SCHEDULE_INTERVAL_MS`
 
 The floor every recurring spec must respect: one minute. The 5-field
@@ -1997,9 +2018,12 @@ built with an un-incrementable slot.
 
 Derive the persistable intent from the resolved set + served columns:
  `shown` = visible keys that are not default-visible;
- `hidden` = served columns absent from the visible set. A legacy v1
- array migrates losslessly through the same derivation — identical
- render, unlocked evolution.
+ `hidden` = DEFAULT-VISIBLE columns absent from the visible set — the
+ user's explicit hides, never the default-hidden columns (recording
+ those as intent would pin them against any future `default_visible`
+ flip — the v2 pollution bug). A legacy v1 array migrates through the
+ same derivation: columns hidden because the old decl default-hid them
+ are correctly NOT captured as intent.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -2115,6 +2139,21 @@ Largest integer `<= d`.
 ### `getCoreLogTransport(): CoreLogTransport \| null`
 
 Current transport — exposed for tests that need to snapshot/restore.
+
+### `getOperatorsForColumn(col): FilterOperator[]`
+
+Column-aware operator set — the SEMANTIC derivation every filter surface
+must use. A governed-vocabulary column (`options_source` — timezones,
+currencies, census subjects…) or an entity `ref` renders a combobox
+value picker: the user picks whole values, never free text, so textual
+operators (contains/startsWith/endsWith) are unfillable nonsense and
+ordering comparisons on uuid refs are meaningless — equality only. The
+bare-type `getOperatorsForColumnType` remains for callers that only
+have a type string; surfaces with the column contract use THIS.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| col | `Pick<MetaColumn, "type"> & Partial<Pick<MetaColumn, "options_source">>` |  |
 
 ### `getOperatorsForColumnType(columnType): FilterOperator[]`
 
@@ -2405,6 +2444,16 @@ identically — validation of existence is the remote build's job.
 |-----------|------|-------------|
 | a | `DecimalInput` |  |
 | b | `DecimalInput` |  |
+
+### `migrateVisibleKeyPrefs(stored): VisibleKeyPrefs`
+
+Migrate a stored prefs blob of any version to the current schema.
+ v3 passes through; v2 (or unversioned) keeps `shown` and drops
+ `hidden` — see the schema note for the pollution contract.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| stored | `{ v: number; shown: string[]; hidden: string[] }` |  |
 
 ### `min(a, b): Decimal`
 
@@ -2870,8 +2919,9 @@ Text-searchable columns — the scope selector + default "all fields"
  projections whose served `pg_type` is ILIKE-safe. The UI type is
  presentation, never a statement about the rendered expression's
  searchability — a calc `type:"ref"` identity column displays the
- very name the search matches. Mirrors the wire `search_in`
- allowlist derivation in dal-pg (`deriveListWireSets`).
+ very name the search matches. Machine-syntax formats are not prose —
+ they are excluded regardless of the declared text type. Mirrors the
+ wire `search_in` allowlist derivation in dal-pg (`deriveListWireSets`).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -2962,9 +3012,12 @@ meta (e.g. sparkline `endpoint: "/actions/job-run-stats"`) resolve to
 
 ### `setCoreLogTransport(t): void`
 
-Install the host transport. Idempotent-by-replacement: the last install
-wins (test harnesses may re-wire; production installs exactly once at
-boot). Pass `null` to restore the default console transport.
+Install the host transport. The first non-null install replays the
+pre-wiring backlog through the host pipeline (in emission order) and then
+switches to passthrough. Idempotent-by-replacement: the last install wins
+(test harnesses may re-wire; production installs exactly once at boot).
+Pass `null` to detach — the backlog is dropped without replay, and later
+emissions fall back to the default console writer once a host was seen.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|

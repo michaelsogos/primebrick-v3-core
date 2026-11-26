@@ -217,17 +217,31 @@ export function isTextlikePgType(pgType: string | undefined): boolean {
   );
 }
 
+/** Machine-syntax varchar formats — columns whose wire strings are canonical
+ *  encodings parsed by a dedicated codec/widget, NOT prose (`every 1 year`
+ *  is a reviver payload, not searchable text). Excluded from the `search_in`
+ *  scope even though their declared type is `text` — user-ratified 2026-11-26:
+ *  `sequence`/`actor_token` STAY searchable (ref display names/ref_keys are
+ *  human-meaningful text). */
+export const MACHINE_SYNTAX_TEXT_FORMATS: ReadonlySet<string> = new Set([
+  "revive_interval",
+  "revive_offset",
+  "sequence_pattern",
+]);
+
 /** Text-searchable columns — the scope selector + default "all fields"
  *  search set: physical `type:"text"` columns plus `kind:"calculated"`
  *  projections whose served `pg_type` is ILIKE-safe. The UI type is
  *  presentation, never a statement about the rendered expression's
  *  searchability — a calc `type:"ref"` identity column displays the
- *  very name the search matches. Mirrors the wire `search_in`
- *  allowlist derivation in dal-pg (`deriveListWireSets`). */
+ *  very name the search matches. Machine-syntax formats are not prose —
+ *  they are excluded regardless of the declared text type. Mirrors the
+ *  wire `search_in` allowlist derivation in dal-pg (`deriveListWireSets`). */
 export function searchableTextColumns(columns: MetaColumn[]): MetaColumn[] {
   return columns.filter(
     (c) =>
       isColumnSearchable(c) &&
+      !(c.format && MACHINE_SYNTAX_TEXT_FORMATS.has(c.format)) &&
       (c.type === "text" ||
         (c.kind === "calculated" && isTextlikePgType(c.pg_type))),
   );
