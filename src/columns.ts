@@ -274,6 +274,23 @@ export function getOperatorsForColumnType(columnType: string): FilterOperator[] 
 }
 
 /**
+ * Column-aware operator set — the SEMANTIC derivation every filter surface
+ * must use. A governed-vocabulary column (`options_source` — timezones,
+ * currencies, census subjects…) or an entity `ref` renders a combobox
+ * value picker: the user picks whole values, never free text, so textual
+ * operators (contains/startsWith/endsWith) are unfillable nonsense and
+ * ordering comparisons on uuid refs are meaningless — equality only. The
+ * bare-type `getOperatorsForColumnType` remains for callers that only
+ * have a type string; surfaces with the column contract use THIS.
+ */
+export function getOperatorsForColumn(
+  col: Pick<MetaColumn, "type"> & Partial<Pick<MetaColumn, "options_source">>,
+): FilterOperator[] {
+  if (col.options_source || col.type === "ref") return ["=", "!="];
+  return getOperatorsForColumnType(col.type);
+}
+
+/**
  * Canonical `FilterOperator → Lucide icon` map — the ONE operator-icon
  * vocabulary every filter surface renders (advanced operator combobox,
  * filter chips, summaries). Values are `@lucide/svelte` icon names,

@@ -8,6 +8,7 @@ import {
   defaultVisibleColumnKeys,
   deriveVisibleKeyPrefs,
   getOperatorsForColumnType,
+  getOperatorsForColumn,
   isColumnFilterable,
   isColumnSearchable,
   isColumnSortable,
@@ -324,5 +325,17 @@ describe("visibleKeys prefs v3 — {shown,hidden} intent", () => {
     expect(v3).toEqual({ v: 3, shown: ["c"], hidden: ["b"] });
     const unversioned = migrateVisibleKeyPrefs({ shown: [], hidden: ["b"] });
     expect(unversioned).toEqual({ v: 3, shown: [], hidden: [] });
+  });
+});
+
+describe('getOperatorsForColumn', () => {
+  it('collapses governed-vocabulary columns (options_source) to equality — textual operators are unfillable in a combo', () => {
+    expect(getOperatorsForColumn(col({ type: 'text', options_source: 'iana.tzones' }))).toEqual(['=', '!=']);
+  });
+  it('collapses entity refs to equality — ordering on uuids is meaningless', () => {
+    expect(getOperatorsForColumn(col({ type: 'ref' }))).toEqual(['=', '!=']);
+  });
+  it('plain text keeps the ILIKE-capable set', () => {
+    expect(getOperatorsForColumn(col({ type: 'text' }))).toEqual(['=', '!=', 'contains', 'startsWith', 'endsWith']);
   });
 });
