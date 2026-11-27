@@ -26,7 +26,7 @@ export const DEFAULT_PAGE_ICON = "file-box";
 export const DEFAULT_ROUTE_ICONS: Record<PageRouteKind, string> = {
   list: "table-2",
   detail: "text-cursor-input",
-  create: "text-cursor-input",
+  create: "file-plus",
   page: DEFAULT_PAGE_ICON,
   dict: "table-dictionary",
 };
