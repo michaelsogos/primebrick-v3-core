@@ -241,6 +241,15 @@ export type ModuleNavLink = {
    * colliding pins tie-break alphabetically. Absent = unpinned.
    */
   order?: number;
+  /**
+   * false = popover-only leaf — the sidebar never renders it (auto-wired
+   * create leaves, user-ratified 2026-11-27: creates surface ONLY in the
+   * launcher popover; the sidebar stays flat single-level). Absent or
+   * true keeps the leaf in every surface. Pure visibility semantics —
+   * the leaf's route is unaffected, and everything that impacts the
+   * route impacts the leaf regardless.
+   */
+  sidebar?: boolean;
   children?: ModuleNavLink[];
 };
 
