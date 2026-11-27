@@ -230,6 +230,17 @@ export type ModuleNavLink = {
    * `children`.
    */
   default?: boolean;
+  /**
+   * Explicit pin position (1-based) in the leaf array — the ONLY ordering
+   * semantic the contract carries (user-ratified 2026-11-27). Leaves with
+   * `order` are pinned at their position in declaration order of the pin
+   * value; every unpinned leaf fills the remaining slots ALPHABETICALLY by
+   * its translated label. The sort happens at render time in the FE — the
+   * only place the translation exists — never in this payload, which stays
+   * language-neutral. A pin beyond the array length clamps to last;
+   * colliding pins tie-break alphabetically. Absent = unpinned.
+   */
+  order?: number;
   children?: ModuleNavLink[];
 };
 
