@@ -148,11 +148,11 @@ export type VendorMismatch =
 	| { specifier: string; kind: "version"; required: string; provided: string };
 
 /**
- * Vendor compatibility check — exact-match policy. A remote chunk compiled
- * against a different version of a vendored package is incompatible:
- * `svelte/internal/*` is not a stable API and each union bundle's export set
- * may change between versions. The remedy is rebuilding the remote chunk —
- * a semver-tolerant handshake would only defer an opaque import failure.
+ * Vendor compatibility diff — exact-match detection. The diff itself stays
+ * exact (every difference is reported); what a mismatch MEANS is the
+ * caller's policy, informed by {@link versionDrift} severity — see the
+ * proportional drift policy (2026-11-27): enforcement lives at lint time,
+ * runtime blocks are reserved for genuinely incompatible shapes.
  */
 export function diffVendorRequirements(
 	requires: Record<string, string>,
@@ -181,6 +181,42 @@ export function diffVendorRequirements(
 		}
 	}
 	return mismatches;
+}
+
+export type VersionDrift = "none" | "patch" | "minor" | "major";
+
+/**
+ * Semver severity of the distance between two `x.y.z` versions — direction-
+ * agnostic (a chunk ahead of the host drifts exactly like a host ahead of
+ * the chunk). The proportional drift policy keys on this: `patch` is noise
+ * a runtime must tolerate, `minor`/`major` is where internal API shapes
+ * genuinely change. An unparseable version is conservatively `major` —
+ * unknown shape, never assumed safe.
+ */
+export function versionDrift(a: string, b: string): VersionDrift {
+	if (a === b) return "none";
+	const parse = (v: string) => {
+		const m = /^(\d+)\.(\d+)\.(\d+)/.exec(v.trim());
+		return m ? { major: Number(m[1]), minor: Number(m[2]), patch: Number(m[3]) } : null;
+	};
+	const pa = parse(a);
+	const pb = parse(b);
+	if (!pa || !pb) return "major";
+	if (pa.major !== pb.major) return "major";
+	if (pa.minor !== pb.minor) return "minor";
+	if (pa.patch !== pb.patch) return "patch";
+	// same numeric triple but different strings (pre-release tags) — treat
+	// as patch-level noise: the numeric shape is identical.
+	return "patch";
+}
+
+/**
+ * `@primebrick/*` specifiers are OUR libs (core/ui/sdk/dal surface) — the
+ * runtime leniency policy applies to them unconditionally: first-party
+ * drift is enforced at lint time, never in the user's face.
+ */
+export function isPrimebrickVendorSpecifier(specifier: string): boolean {
+	return specifier.startsWith("@primebrick/");
 }
 
 /**

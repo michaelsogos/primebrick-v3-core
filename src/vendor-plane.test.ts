@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
 	VENDOR_SPECIFIERS,
 	diffVendorRequirements,
+	isPrimebrickVendorSpecifier,
 	lucideIconSpecifier,
 	resolveVendorSpecifier,
 	rewriteLucideBarrelImports,
 	specifierTopPackage,
+	versionDrift,
 	type VendorManifest,
 } from "./vendor-plane.js";
 
@@ -119,6 +121,36 @@ describe("diffVendorRequirements", () => {
 				provided: "1.59.0",
 			},
 		]);
+	});
+});
+
+describe("versionDrift", () => {
+	it("none for identical versions", () => {
+		expect(versionDrift("3.5.1", "3.5.1")).toBe("none");
+	});
+	it("patch for patch-only distance, either direction", () => {
+		expect(versionDrift("3.5.0", "3.5.1")).toBe("patch");
+		expect(versionDrift("3.5.1", "3.5.0")).toBe("patch");
+	});
+	it("minor for same-major minor distance", () => {
+		expect(versionDrift("3.5.0", "3.6.0")).toBe("minor");
+		expect(versionDrift("5.57.2", "5.58.0")).toBe("minor");
+	});
+	it("major for major distance or unparseable input", () => {
+		expect(versionDrift("3.5.0", "4.0.0")).toBe("major");
+		expect(versionDrift("not-a-version", "3.5.0")).toBe("major");
+	});
+	it("pre-release tags on identical numerics are patch-level noise", () => {
+		expect(versionDrift("5.57.2", "5.57.2-beta.1")).toBe("patch");
+	});
+});
+
+describe("isPrimebrickVendorSpecifier", () => {
+	it("detects first-party specifiers", () => {
+		expect(isPrimebrickVendorSpecifier("@primebrick/ui")).toBe(true);
+		expect(isPrimebrickVendorSpecifier("@primebrick/ui/vendor/clsx")).toBe(true);
+		expect(isPrimebrickVendorSpecifier("svelte")).toBe(false);
+		expect(isPrimebrickVendorSpecifier("bits-ui")).toBe(false);
 	});
 });
 
