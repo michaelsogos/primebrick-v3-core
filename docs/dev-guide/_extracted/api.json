@@ -8883,10 +8883,14 @@
 						}
 					],
 					"type": {
-						"type": "array",
-						"elementType": {
-							"type": "intrinsic",
-							"name": "string"
+						"type": "typeOperator",
+						"operator": "readonly",
+						"target": {
+							"type": "array",
+							"elementType": {
+								"type": "intrinsic",
+								"name": "string"
+							}
 						}
 					}
 				},

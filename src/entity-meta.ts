@@ -641,7 +641,7 @@ export type MetaColumn = {
    * validation against one group's field set) and by the form wiring
    * that schedules the async probe — the BE constraint remains the
    * enforcement, this is the UX surface that anticipates it. */
-  uniques?: string[];
+  uniques?: readonly string[];
 
   // AUTHORED — semantic contract the entity class cannot express.
   /**
