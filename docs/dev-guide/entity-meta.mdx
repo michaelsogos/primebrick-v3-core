@@ -109,3 +109,138 @@ Display contract downstream (the same `uom` drives them all):
   `UNIT_CATEGORIES[kind]` (dropdown under the ≤5 bound);
 - fraction budget derives from the kind: `bigint` → 0 decimals,
   `number`/`decimal` → full precision.
+
+## The two axes — visibility vs ownership
+
+Every column boolean answers exactly ONE of two orthogonal questions.
+Overlap confusion (is `hidden` like `managed`?) dissolves once the axis is
+named: **visibility props decide what the user can see; ownership props
+decide who writes the value.** They never intersect — a column can be
+fully visible yet server-owned (a `managed` uuid in the table), or
+invisible for pure presentation reasons while staying user-owned.
+
+### Visibility axis
+
+| prop | meaning | BE impact | FE impact |
+|---|---|---|---|
+| `hidden` | **Total suppression** — the column is dropped from the served meta entirely (never reaches table, picker, filters or forms) AND blocks auto-derivation from the entity class. The ONLY opt-out of a column's existence in the contract | column absent from every payload projection | nothing renders — the key is unknown to consumers |
+| `default_visible` | initial table visibility (default true) | none — presentation only | table default; the user can still toggle via picker |
+| `hideable` | false → the user cannot hide the column via the picker | none | picker checkbox disabled |
+| `sticky` | pinned left, before normal columns | none | table rendering group order |
+
+### Ownership axis (the bool matrix — zero overlap by construction)
+
+| prop | who writes | create form | update form | validation |
+|---|---|---|---|---|
+| *(none)* | the user, always | editable | editable | required per `nullable` |
+| `managed` | the database fills it (identity `@Key()`) — derived by `withColumnConstraints`, never authored | **excluded from the form entirely** | excluded | never required, never client-supplied |
+| `system_generated` | the server generates it inside the create write-transaction (sequence allocation) — derived, never authored | **visible, always disabled** — the forecast preview shows the indicative next value with a "generated at save" hint | visible, disabled, renders the stored literal | never required — the empty slot is omitted from the payload and the server allocates |
+| `immutable` | the user writes once at creation OR a dedicated process derives it — authored | editable | visible, **disabled**, excluded from update payloads | required per `nullable` on create only |
+| `audited` | the server records lifecycle facts (`created_at`, `updated_by`, …) | excluded from forms | excluded | never client-supplied |
+
+Disambiguation rules of thumb:
+
+- `hidden` vs `managed` is **not** an overlap: `hidden` erases the column
+  from the contract (existence), `managed` only removes it from forms
+  (write-ownership) — the column still serves and renders in tables.
+- `immutable` vs `system_generated`: immutable is editable ON create and
+  frozen after; system_generated is NEVER editable, not even on create,
+  because the user never owns the value at any point in the lifecycle.
+- `managed` vs `system_generated`: both are server-filled, but `managed`
+  is form-invisible identity plumbing while `system_generated` is a
+  user-meaningful value (a customer code) the user wants to SEE being
+  promised — visibility is the whole point.
+- `audited` is lifecycle bookkeeping, never a business value.
+
+## `system_generated` — the sequence-bound auto-allocation contract
+
+Derived by `withColumnConstraints` — authors MUST NOT set it. Set when a
+column carries `format:"sequence"` AND a bound default sequence
+(`seq.uuid` — the deterministic `<table>.<field>` identity, materialized
+lazily on first write). Detection is therefore total and automatic:
+`@SequenceField` on the entity class is the single source.
+
+Behaviour contract:
+
+1. **create** — the field renders visible and ALWAYS disabled, with no
+   assist chrome (no popover, no manual directive): the value will be
+   auto-allocated. The widget presents the forecast next value (the
+   `emitted_next` of the bound sequence, resolved live via
+   `sequence-forecast` when sezionale context matters) as a ghost
+   preview INSIDE the field, with a hint that the value is indicative
+   and is detached for real only at save, inside the write transaction.
+   The preview NEVER increments the sequence — two open tabs may show
+   the same next value; the allocation decides.
+2. **update** — visible, disabled, renders the stored literal (same
+   surface semantics as `immutable`).
+3. **validation** — never required on any surface: the server
+   guarantees the value. The empty/untouched slot is valid by
+   construction, resolving the historical contradiction where a
+   required sequence column blocked submission despite the documented
+   auto-allocation design.
+4. **payload** — omitted when untouched (the write tx allocates); a
+   sequence column WITHOUT a bound default (`seq.uuid` absent) is NOT
+   system_generated: the assist modes stay available and the directive
+   contract applies unchanged.
+
+## Column reference — every prop
+
+Identity and labels:
+
+| prop | what | BE | FE |
+|---|---|---|---|
+| `key` | entity property name — must match exactly | wire field name | form/table field identity |
+| `label_key` | i18n key of the label | — | labels everywhere |
+| `type` | renderer discriminator, open set | cell wire type | cell renderer pick |
+| `order` | deterministic display position; uuid `-1`, display_field `0` | — | sticky → normal → audited groups |
+
+Table flags: `sortable` (ORDER BY, default true), `filterable` (filters
+sheet), `searchable` (search-in-fields scope, default true — set false
+for sensitive/non-text), plus the visibility-axis props above.
+
+Materialization: `kind` — absent physical; `"calculated"` SQL-projected
+(`@Calculated`, sort/filter/search stay on); `"virtual"` post-query
+enrichment (sort/filter/search FORCED OFF — declaring them true is a
+construction error). Read-only either way: never in forms.
+
+Form constraint props (DERIVED by `withColumnConstraints` from the entity
+class — authors MUST NOT set them; the helper throws on contradiction):
+`nullable` (physical nullability → required-ness), `max_length` (control
+maxlength + zod max), `pg_type` (control pick when format absent),
+`managed`, `system_generated`.
+
+`immutable` is the one AUTHORED ownership bool (see matrix).
+
+`default` — create-surface prefill, two sources ONE served key: derived
+from `@Column({defaultSql})` constant literals (volatile expressions
+never served) or authored override in the meta (the only legal override
+channel). Consumed ONLY as create prefill; placement-level
+`default_value` wins per form.
+
+Semantic authored contract: `format` (the closed MetaColumnFormat
+vocabulary — sequence, i18n_key, json, rule_filter, schedule, nats_subject…),
+`pattern` (extra regex), `min_length`/`min`/`max`/`unsigned` (semantic
+bounds — zod and wire predicates), `uom` (unit-of-measure spec driving
+numeric rendering), `json_schema` (structural validation shared form/wire).
+
+`seq` — sequence binding: `uuid`/`name` derived (bound default identity),
+`modes`/`default_mode`/`allow_create` authored widget behaviour. Presence
+with `uuid` ⇒ `system_generated` derived.
+
+`depends_on` — cross-field dependency declaration.
+`options_source` — closed dynamic vocabularies: `census.emits` /
+`census.callables` (declared-only), `iana.tzones` (client-side closed),
+`audit.actors` (auto-injected on `*_by` columns).
+`allow_create` — combo free-entry flag; construction error with census
+sources or closed vocabularies.
+`widget` — explicit control override, bypasses format→control derivation
+on EVERY surface (forms and filters alike).
+`ref` — entity reference declaration for ref columns.
+
+Presentation cosmetics: `color` (semantic token ONLY, never class
+strings — served meta is invisible to the FE content scan), `null_label`
+(destructive red-italic null presentation — reserve for noteworthy NULLs,
+never ordinary absence), `icon` (lucide name before form labels).
+
+Tooltips: `tooltip`/`tooltip_title` (i18n keys), `tooltip_priority`,
+`show_form_tooltip`, `show_list_tooltip` — the hint surface per column.
