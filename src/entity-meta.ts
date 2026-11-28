@@ -611,8 +611,50 @@ export type MetaColumn = {
    * the record); the placement-level `default_value` overrides it per
    * form. Wire: ext-json typed — `bigint`/`Decimal` survive verbatim. */
   default?: unknown;
+  /**
+   * `uniques` — unique-group membership keys this column participates in.
+   * DERIVED by `withColumnConstraints` from the entity class `@Unique()` /
+   * `@UniqueIndex()` declarations — authors MUST NOT set it (the helper
+   * throws). Semantic keys only, never the physical `{name, order}`:
+   *
+   *   - a bare `@Unique()` projects the deterministic opaque key
+   *     `solo:<column>`;
+   *   - a `@Unique(name, order)` membership projects the class-level
+   *     `@UniqueIndex` name;
+   *   - one column may carry multiple keys.
+   *
+   * A group is projected ONLY when mechanically checkable end-to-end:
+   * every member column is served (a `hidden` member drops the whole
+   * group — a partial filter set would answer false availability), and
+   * the index predicate is either absent, `aliveOnly` (native to the
+   * DAL's `deletedRecords` semantics — the prospective row is alive by
+   * definition) or a flat AND of equality literals on entity columns.
+   * In the equality-literal case the PREDICATE columns carry the group
+   * key too — they join the resolver exactly like composite members, and
+   * the conjunction self-corrects outside the partition (a row with a
+   * different predicate value can never collide inside that index).
+   * Complex predicates (ranges, functions, non-flat SQL) never project —
+   * they are authored `remote_check` territory. The uid column's own
+   * bare `@Unique()` never enters this surface.
+   *
+   * Consumed by the derived `GET check-exists` route (exact-match
+   * validation against one group's field set) and by the form wiring
+   * that schedules the async probe — the BE constraint remains the
+   * enforcement, this is the UX surface that anticipates it. */
+  uniques?: string[];
 
   // AUTHORED — semantic contract the entity class cannot express.
+  /**
+   * `remote_check` — closed-vocab key into the host-injected remote-check
+   * REGISTRY, for availability probes the entity class cannot deduce:
+   * transformations (organization `idp_code` from owner+name), external
+   * probes (username → Casdoor), business rules without a physical unique
+   * (email). Same discipline as `validators`: the key is declared here,
+   * the implementation lives in the host registry (route + param shape
+   * are registry-owned), unknown keys throw at construction. Mutually
+   * exclusive with `uniques` on the same column — a mechanically derived
+   * group needs no authored override. */
+  remote_check?: string;
   /** Field format — see {@link MetaColumnFormat}. */
   format?: MetaColumnFormat;
   /** Extra regex applied to text-ish fields (zod `.regex()`). */
