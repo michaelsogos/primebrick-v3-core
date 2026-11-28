@@ -571,6 +571,17 @@ export type MetaColumn = {
    *  key stays client-writable instead. Derived by
    *  `withColumnConstraints` — authors MUST NOT set it. */
   managed?: boolean;
+  /** System-generated sequence value — derived ONLY when the entity class
+   *  binds `@SequenceField` (the served `format:"sequence"` carries the
+   *  deterministic bound `seq.uuid`). The field stays visible but disabled
+   *  on create AND update: create shows the next-value forecast as an
+   *  in-field ghost preview, update shows the persisted literal; the form
+   *  payload omits the untouched slot and the write transaction allocates
+   *  the real value. Never required merely because the physical column is
+   *  non-nullable. Derived by `withColumnConstraints` — authors MUST NOT
+   *  set it. Distinct from `managed` (DB-filled identity keys, excluded
+   *  from forms) and `immutable` (editable on create, frozen on update). */
+  system_generated?: boolean;
   /** Authored: set once at creation OR derived by a dedicated process —
    *  never editable afterwards. Editable on `kind:"create"` forms,
    *  rendered disabled on update/detail surfaces, and excluded from
